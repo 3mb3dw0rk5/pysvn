@@ -188,7 +188,7 @@ bool pysvn_callbacks::contextSslServerTrustPrompt (SslServerTrustData & data)
 svn::ContextListener::SslServerTrustAnswer pysvn_callbacks::contextSslServerTrustPrompt
 		( 
 		const SslServerTrustData & data, 
-		long & acceptedFailures
+		apr_uint32_t & acceptedFailures
 		)
 	{
 	PythonDisallowThreads callback_permission( permission );

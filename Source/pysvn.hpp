@@ -120,7 +120,7 @@ private:// methods
 	SslServerTrustAnswer
 	contextSslServerTrustPrompt(
 		const SslServerTrustData & data, 
-		long & acceptedFailures );
+		apr_uint32_t & acceptedFailures );
 
 	//
 	// this method is called to retrieve client side

@@ -9,7 +9,6 @@ subst b: %CD%\testroot
 mkdir b:\repo
 svnadmin create b:\repos
 
-
 %PYSVN% mkdir file:///b:/repos/trunk -m "test-01 add trunk"
 %PYSVN% ls file:///b:/repos -v -R
 endlocal
