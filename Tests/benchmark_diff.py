@@ -86,9 +86,12 @@ class ReplaceDirtInString:
 
 
 	if self.workdir:
-		workdir_re = LiteralCaseBlindSearch( self.workdir )
+		workdir_re1 = LiteralCaseBlindSearch( self.workdir )
+		workdir_re2 = LiteralCaseBlindSearch( os.path.realpath( self.workdir ) )
 		self.replacement_list.append(
-		     (workdir_re,	'<workdir>') )
+		     (workdir_re1,	'<workdir>') )
+		self.replacement_list.append(
+		     (workdir_re2,	'<workdir>') )
 
 	if self.python:
 		python_re = LiteralCaseBlindSearch( self.python )
