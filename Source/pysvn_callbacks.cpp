@@ -57,7 +57,7 @@ void pysvn_callbacks::clearPermission()
 bool pysvn_callbacks::contextGetLogin( const std::string & _realm,
 		std::string & _username, 
 		std::string & _password,
-		bool may_save )
+		bool &_may_save )
 	{
 	PythonDisallowThreads callback_permission( permission );
 
@@ -70,13 +70,14 @@ bool pysvn_callbacks::contextGetLogin( const std::string & _realm,
 	Py::Tuple args( 3 );
 	args[0] = Py::String( _realm );
 	args[1] = Py::String( _username );
-	args[2] = Py::Int( (long)may_save );
+	args[2] = Py::Int( (long)_may_save );
 
 	// bool, username, password
 	Py::Tuple results;
 	Py::Int retcode;
 	Py::String username;
 	Py::String password;
+	Py::Int may_save_out;
 
 	try
 		{
@@ -84,6 +85,7 @@ bool pysvn_callbacks::contextGetLogin( const std::string & _realm,
 		retcode = results[0];
 		username = results[1];
 		password = results[2];
+		may_save_out = results[3];
 
 		// true returned
 		if( long( retcode ) != 0 )
@@ -91,6 +93,7 @@ bool pysvn_callbacks::contextGetLogin( const std::string & _realm,
 			// copy out the answers
 			_username = username.as_std_string();
 			_password = password.as_std_string();
+			_may_save = long( may_save_out ) != 0;
 
 			return true;
 			}

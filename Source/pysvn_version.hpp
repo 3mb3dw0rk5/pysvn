@@ -11,6 +11,6 @@
 //	pysvn_version.h
 //
 const int version_major( 0 );
-const int version_minor( 6 );
+const int version_minor( 7 );
 const int version_patch( 0 );
 const int version_build( 0 );

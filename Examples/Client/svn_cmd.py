@@ -120,18 +120,24 @@ class SvnCommand:
 		if arg_dict['path'] != '':
 			print '%s %s' % (wc_notify_action_map[ arg_dict['action'] ], arg_dict['path'])
 
-	def callback_getLogin( self, realm, username ):
+	def callback_getLogin( self, realm, username, may_save ):
 		print 'Realm:',realm
 		print 'Username:',username
+		print 'May save:',may_save
 		sys.stdout.write( 'Username: ' )
 		username = sys.stdin.readline().strip()
 		sys.stdout.write( 'Password: ' )
 		password = sys.stdin.readline().strip()
-
+		sys.stdout.write( 'Save password? [y/n] ' )
+		save_password = 'x'
+		while save_password.lower() not in ['y','ye','yes','n', 'no']:
+			sys.stdout.write( 'Save password? [y/n] ' )
+			save_password = sys.stdin.readline().strip()
+		
 		if username:
-			return 1, username, password
+			return 1, username, password, save_password in ['y','ye','yes']
 		else:
-			return 0, '', ''
+			return 0, '', '', False
 
 	def getLogMessage( self ):
 		sys.stdout.write( 'Log message\n' )

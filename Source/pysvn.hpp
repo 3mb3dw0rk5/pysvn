@@ -81,7 +81,7 @@ private:// methods
 	bool contextGetLogin (const std::string & realm,
                      std::string & username, 
                      std::string & password,
-		     bool may_save);
+		     bool &may_save);
 
 	// 
 	// this method will be called to notify about
