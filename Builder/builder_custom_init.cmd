@@ -26,6 +26,7 @@ set APR=%TARGET%\httpd-%HTTPD_VER%\srclib
 set PY=c:\python%PY_MAJ%%PY_MIN%
 set PYLIB=python%PY_MAJ%%PY_MIN%
 set PYTHONPATH=%WORKDIR%\Source
+set PYTHON=%PY%\python.exe
 
 rem Need python and DB4 on the path
 PATH %PY%;%SUBVERSION%\db4-win32\bin;%SUBVERSION%\Release\subversion\svnadmin;%APR%\apr\Release;%APR%\apr-util\Release;%APR%\apr-iconv\Release;%PATH%
