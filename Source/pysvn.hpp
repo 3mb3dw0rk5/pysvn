@@ -28,6 +28,14 @@
 #define PYSVN_HAS_REPOS_ROOT
 #endif
 
+#ifndef PYCXX_MAKEVERSION
+#error PyCXX version 5.3.3 is required
+#endif
+
+#if PYCXX_VERSION < PYCXX_MAKEVERSION( 5, 3, 3 )
+#error PyCXX version 5.3.3 is required
+#endif
+
 //--------------------------------------------------------------------------------
 class pysvn_module : public Py::ExtensionModule<pysvn_module>
 {

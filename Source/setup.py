@@ -114,8 +114,8 @@ def find_pycxx( argv ):
     return find_dir( argv,
                 'PyCXX include',
                 '--pycxx-dir=',
-                [   '../Import/pycxx_5_3_2'],
-                'CXX\Extensions.hxx' )
+                [   '../Import/pycxx_5_3_3'],
+                'CXX\Version.hxx' )
 
 def find_svn_inc( argv ):
     return find_dir( argv,
