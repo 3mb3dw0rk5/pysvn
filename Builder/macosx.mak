@@ -1,6 +1,6 @@
 BUILD_TYPE=Release
 
-build: all kit
+build: all test kit
 
 all:
 	cd ../Source && $(MAKE) -f pysvn_macosx_py$(PY_MAJ)$(PY_MIN).mak
@@ -10,3 +10,6 @@ clean:
 
 kit:
 	pwd && cd ../Kit/MacOSX && $(PYTHON) make_pkg.py
+
+test:
+	cd ../Tests && $(MAKE) -f unix.mak all
