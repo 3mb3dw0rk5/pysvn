@@ -23,10 +23,20 @@ extern const char *class_revision_doc;
 extern const char *class_client_doc;
 extern const char *class_revision_doc;
 
+#define GET_AUTH_CACHE_DOC \
+"enable = get_auth_cache()\n\
+return true if credential caching is enabled\n\
+otherwise return false\n"
+
 #define SET_AUTH_CACHE_DOC \
 "set_auth_cache( enable )\n\
 Allow authorisation credential caching if enable is true\n\
 otherwise disable caching\n"
+
+#define GET_AUTO_PROPS_DOC \
+"enable = get_auto_props()\n\
+Returns true When svn will automatically set properties\n\
+when adding files otherwise return false\n"
 
 #define SET_AUTO_PROPS_DOC \
 "set_auto_props( enable )\n\

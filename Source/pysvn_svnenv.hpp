@@ -4,6 +4,8 @@
 #include <svn_client.h>
 #include <string>
 
+#include "CXX/Objects.hxx"
+
 class SvnPool;
 class SvnContext;
 
@@ -17,11 +19,13 @@ public:
 
     // access methods
     const std::string &message() const;
+    Py::Object pythonExceptionArg();
     apr_status_t code() const;
 
 private:
     apr_status_t	m_code;
     std::string         m_message;
+    Py::Object          m_exception_arg;
 
 private:
     SvnException();

@@ -275,6 +275,8 @@ True if subversion is to use the username and password.
 <tr>
 <td><a href="#pysvn_client_diff">diff</a></td>
 <td><a href="#pysvn_client_export">export</a></td>
+<td><a href="#pysvn_client_get_auth_cache">get_auth_cache</a></td>
+<td><a href="#pysvn_client_get_auto_props">get_auto_props</a></td>
 <td><a href="#pysvn_client_import_">import_</a></td>
 <td><a href="#pysvn_client_info">info</a></td>
 <td><a href="#pysvn_client_is_url">is_url</a></td>
@@ -302,7 +304,7 @@ True if subversion is to use the username and password.
 <tr>
 <td><a href="#pysvn_client_revpropdel">revpropdel</a></td>
 <td><a href="#pysvn_client_set_auth_cache">set_auth_cache</a></td>
-<td><a href="#pysvn_client_set_auto_prop">set_auto_prop</a></td>
+<td><a href="#pysvn_client_set_auto_props">set_auto_props</a></td>
 <td><a href="#pysvn_client_status">status</a></td>
 <td><a href="#pysvn_client_switch">switch</a></td>
 <td><a href="#pysvn_client_update">update</a></td>
@@ -312,14 +314,17 @@ True if subversion is to use the username and password.
 <h4><a name="pysvn_client_add"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.add</a></h4>
 <pre>
 add( path,
-     recurse=True )
+     recurse=True,
+     force=False )
 add( [path,path],
-     recurse=True )
+     recurse=True,
+     force=False )
 </pre>
 <p>
      Schedules all the files or directories specfied in the paths for addition to the repository.
      Set recurse to True to recursively add a directory's children.
      Files are added at the next checkin.
+<p>Note: The force parameter is only available for svn 1.1.0 or later</p>
 </p>
 <h4><a name="pysvn_client_annotate"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.annotate</a></h4>
 <pre>
@@ -429,7 +434,8 @@ revision = \
 export( src_url_or_path,
         dest_path,
         force=False,
-        revision=pysvn.Revision() )
+        revision=pysvn.Revision(),
+	native_eol=None )
 </pre>
 <p>Create an unversioned copy of the src_path at revision in dest_path.</p>
 <ol>
@@ -441,7 +447,26 @@ export( src_url_or_path,
    src_path into dest_path.  All local changes will be preserved, but files
    not under revision control will not be copied.
 </ol>
-<p>checkin returns a pysvn.Revision containing the number of the checked in revision.</p>
+<p>native_eol parameter allows the line ending of files with svn:eol-style propery set to native to be overriden.
+Use None to use the eol-style of the Operating System, use "LF" to use "\n", "CR" to use "\r" and "CRLF" to use "\r\n".
+<p>export returns a pysvn.Revision containing the number of the checked in revision.</p>
+
+<p>Note: The native_eol parameter is only available for svn 1.1.0 or later</p>
+
+<h4><a name="pysvn_client_get_auth_cache"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.get_auth_cache</a></h4>
+<pre>
+enabled = get_auth_cache()
+</pre>
+<p>return true if credential caching is enabled, otherwise return false.
+</p>
+
+<h4><a name="pysvn_client_get_auto_props"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.get_auto_props</a></h4>
+<pre>
+enabled = get_auto_props()
+</pre>
+<p>Returns true When svn will automatically set properties
+when adding files otherwise return false.</p>
+
 <h4><a name="pysvn_client_import_"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.import_</a></h4>
 <pre>
 revision = \
@@ -705,9 +730,9 @@ set_auth_cache( enable )
 <p>When enable is True subversion will remember authentication credentials
 in the configuration directory.</p>
 
-<h4><a name="pysvn_client_set_auto_prop"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.set_auto_prop</a></h4>
+<h4><a name="pysvn_client_set_auto_props"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.set_auto_props</a></h4>
 <pre>
-set_auto_prop( enable )
+set_auto_props( enable )
 </pre>
 <p>When enabled subversion will automatically set properties
 when adding files otherwise when disabled will not.</p>

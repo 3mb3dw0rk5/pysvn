@@ -187,8 +187,9 @@ class SvnCommand:
 
 	def cmd_add( self, args ):
 		recurse = args.getBooleanOption( '--non-recursive', False )
+		force = args.getBooleanOption( '--force', False )
 		
-		self.client.add( args.getPositionalArgs( 1 ), recurse=recurse )
+		self.client.add( args.getPositionalArgs( 1 ), recurse=recurse, force=force )
 
 	def cmd_annotate( self, args ):
 		start_revision, end_revision = args.getOptionalRevisionPair( '--revision', '0', 'head' )
@@ -273,14 +274,14 @@ class SvnCommand:
 		force = args.getBooleanOption( '--force', False )
 		revision_url = args.getOptionalRevision( '--revision', 'head' )
 		revision_wc = args.getOptionalRevision( '--revision', 'working' )
+		native_eol = args.getOptionalValue( '--native-eol', None )
 		positional_args = args.getPositionalArgs( 2, 2 )
-
 		if self.client.is_url( positional_args[0] ):
 			revision = revision_url
 		else:
 			revision = revision_wc
 
-		self.client.export( positional_args[0], positional_args[1], revision=revision, force=force )
+		self.client.export( positional_args[0], positional_args[1], revision=revision, force=force, native_eol=native_eol )
 
 	def cmd_info( self, args ):
 		positional_args = args.getPositionalArgs( 0, 1 )
@@ -708,6 +709,7 @@ long_opt_info = {
 	'--version': 0,		# print client version info
 	'--xml': 0,		# output in xml
 	'--file': 1,		# read data from file ARG
+	'--native-eol': 1,	# native eol ARG
 	'--non-recursive': 0,	# operate on single directory only
 	'--recursive': 0,	# descend recursively
 	'--message': 1,		# specify commit message ARG

@@ -63,7 +63,9 @@ const char *class_client_doc =
 "Client has the following methods:\n"
 
 IS_URL_DOC "\n\n"
+GET_AUTH_CACHE_DOC "\n\n"
 SET_AUTH_CACHE_DOC "\n\n"
+GET_AUTO_PROPS_DOC "\n\n"
 SET_AUTO_PROPS_DOC "\n\n"
 SVN_ADD_DOC "\n\n"
 SVN_ANNOTATE_DOC "\n\n"

@@ -18,6 +18,12 @@
 #include <list>
 #include <map>
 
+
+#if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 1) || SVN_VER_MAJOR > 1
+#define PYSVN_HAS_ADD2
+#define PYSVN_HAS_EXPORT2
+#endif
+
 //--------------------------------------------------------------------------------
 class pysvn_module : public Py::ExtensionModule<pysvn_module>
 	{
@@ -197,7 +203,9 @@ public:
 
 	// SVN commands
 	Py::Object is_url( const Py::Tuple& args, const Py::Dict &kws );
+	Py::Object get_auth_cache( const Py::Tuple& args, const Py::Dict &kws );
 	Py::Object set_auth_cache( const Py::Tuple& args, const Py::Dict &kws );
+	Py::Object get_auto_props( const Py::Tuple& args, const Py::Dict &kws );
 	Py::Object set_auto_props( const Py::Tuple& args, const Py::Dict &kws );
 
 	// check that we are not in use on another thread

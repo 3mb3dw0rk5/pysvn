@@ -10,7 +10,7 @@
 #include "pysvn_svnenv.hpp"
 #include "svn_config.h"
 #include "svn_pools.h"
-
+#include "CXX/Objects.hxx"
 
 static const char *toHex( unsigned int num );
 //--------------------------------------------------------------------------------
@@ -21,21 +21,55 @@ static const char *toHex( unsigned int num );
 SvnException::SvnException( svn_error_t *error )
 : m_code( error->apr_err )
 , m_message()
+, m_exception_arg()
 {
-    if( error->message != NULL )
+    if( error->child == NULL )
     {
-        m_message = error->message;
+        // Just set a string in the simple case
+        // - which is the old behaviour
+        if( error->message != NULL )
+        {
+            m_message = error->message;
+        }
+        else
+        {
+            m_message = "Code: ";
+            m_message += toHex( error->apr_err );
+        }
+	m_exception_arg = Py::String( m_message );
     }
     else
     {
-        m_message = "Code: ";
-        m_message += toHex( error->apr_err );
+        // set the error to be a list of (code, message) tuples
+        Py::List arg_list;
+        while( error != NULL )
+        {
+            Py::Tuple t( 2 );
+
+            t[0] = Py::Int( error->apr_err );
+            if( error->message != NULL )
+            {
+                t[1] = Py::String( error->message );
+            }
+            else
+            {
+                std::string message = "Code: ";
+                message += toHex( error->apr_err );
+                t[1] = Py::String( message );
+            }
+            arg_list.append( t );
+
+            error = error->child;
+        }
+
+        m_exception_arg = arg_list;
     }
 }
 
 SvnException::SvnException( const SvnException &other )
 : m_code( other.m_code )
 , m_message( other.m_message )
+, m_exception_arg( other.m_exception_arg )
 { }
 
 SvnException::~SvnException()
@@ -49,6 +83,11 @@ const std::string &SvnException::message() const
 apr_status_t SvnException::code() const
 {
     return m_code;
+}
+
+Py::Object SvnException::pythonExceptionArg()
+{
+    return m_exception_arg;
 }
 
 //--------------------------------------------------------------------------------

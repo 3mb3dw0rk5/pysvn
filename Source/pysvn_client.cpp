@@ -47,6 +47,7 @@ static const char name_diff_deleted[] = "diff_deleted";
 static const char name_discover_changed_paths[] = "discover_changed_paths";
 static const char name_dry_run[] = "dry_run";
 static const char name_enable[] = "enable";
+static const char name_native_eol[] = "native_eol";
 static const char name_force[] = "force";
 static const char name_from_url[] = "from_url";
 static const char name_get_all[] = "get_all";
@@ -180,6 +181,9 @@ Py::Object pysvn_client::cmd_add( const Py::Tuple &a_args, const Py::Dict &a_kws
 		{
 		{ true,  name_path },
 		{ false, name_recurse },
+#ifdef PYSVN_HAS_ADD2
+		{ false, name_force },
+#endif
 		{ false, NULL }
 		};
 	FunctionArguments args( "add", args_desc, a_args, a_kws );
@@ -188,6 +192,9 @@ Py::Object pysvn_client::cmd_add( const Py::Tuple &a_args, const Py::Dict &a_kws
 	Py::List path_list( toListOfStrings( args.getArg( name_path ) ) );
 
 	bool recurse = args.getBoolean( name_recurse, true );
+#ifdef PYSVN_HAS_ADD2
+	bool force = args.getBoolean( name_force, true );
+#endif
 
 	SvnPool pool( m_context );
 	try
@@ -203,6 +210,16 @@ Py::Object pysvn_client::cmd_add( const Py::Tuple &a_args, const Py::Dict &a_kws
 
 			SvnPool pool( m_context );
 
+#ifdef PYSVN_HAS_ADD2
+			svn_error_t * error = svn_client_add2
+				(
+				norm_path.c_str(),
+				recurse,
+				force,
+				m_context,
+				pool
+				);
+#else
 			svn_error_t * error = svn_client_add
 				(
 				norm_path.c_str(),
@@ -210,13 +227,14 @@ Py::Object pysvn_client::cmd_add( const Py::Tuple &a_args, const Py::Dict &a_kws
 				m_context,
 				pool
 				);
+#endif
 			if( error != NULL )
 				throw SvnException( error );
 			}
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	return Py::Nothing();
@@ -324,7 +342,7 @@ Py::Object pysvn_client::cmd_annotate( const Py::Tuple &a_args, const Py::Dict &
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	// convert the entries into python objects
@@ -388,7 +406,7 @@ Py::Object pysvn_client::cmd_cat( const Py::Tuple &a_args, const Py::Dict &a_kws
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	// return the bytes as is to the application
@@ -441,7 +459,7 @@ Py::Object pysvn_client::cmd_checkout( const Py::Tuple &a_args, const Py::Dict &
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, revnum ) );
@@ -475,7 +493,7 @@ Py::Object pysvn_client::cmd_cleanup( const Py::Tuple &a_args, const Py::Dict &a
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	return Py::Nothing();
@@ -530,7 +548,7 @@ Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a
 			}
 		catch( SvnException &e )
 			{
-			throw Py::Exception( m_module.client_error, e.message() );
+			throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 			}
 		}
 	catch( Py::TypeError & )
@@ -598,7 +616,7 @@ Py::Object pysvn_client::cmd_copy( const Py::Tuple &a_args, const Py::Dict &a_kw
 			// use callback error over ClientException
 			m_context.checkForError( m_module.client_error );
 
-			throw Py::Exception( m_module.client_error, e.message() );
+			throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 			}
 		}
 	catch( Py::TypeError & )
@@ -745,7 +763,7 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	return Py::String( stringbuf->data, stringbuf->len, name_utf8 );
@@ -759,6 +777,9 @@ Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_
 		{ true,  name_dest_path },
 		{ false, name_force },
 		{ false, name_revision },
+#ifdef PYSVN_HAS_EXPORT2
+		{ false, name_native_eol },
+#endif
 		{ false, NULL }
 		};
 	FunctionArguments args( "export", args_desc, a_args, a_kws );
@@ -775,6 +796,28 @@ Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_
 	else
 		 revision = args.getRevision( name_revision, svn_opt_revision_working );
 
+
+#ifdef PYSVN_HAS_EXPORT2
+	char *native_eol = NULL;
+	if( args.hasArg( name_native_eol ) )
+	{
+		Py::Object native_eol_obj = args.getArg( name_native_eol );
+		if( native_eol_obj != Py::None() )
+		{
+			Py::String eol_py_str( native_eol_obj );
+			std::string eol_str = eol_py_str.as_std_string();
+			if( eol_str == "CR" )
+				native_eol = "CR";
+			else if( eol_str == "CRLF" )
+				native_eol = "CRLF";
+			else if( eol_str == "LF" )
+				native_eol = "LF";
+			else
+				throw Py::ValueError( "native_eol must be one of None, \"LF\", \"CRLF\" or \"CR\"" );
+		}
+	}
+#endif
+
 	svn_revnum_t revnum = 0;
 
 	SvnPool pool( m_context );
@@ -787,6 +830,19 @@ Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_
 
 		PythonAllowThreads permission( m_context );
 
+#ifdef PYSVN_HAS_EXPORT2
+		svn_error_t * error = svn_client_export2
+			(
+			&revnum,
+			norm_src_path.c_str(),
+			dest_path.c_str(),
+			&revision,
+			force,
+			native_eol,
+			m_context,
+			pool
+			);
+#else
 		svn_error_t * error = svn_client_export
 			(
 			&revnum,
@@ -797,12 +853,13 @@ Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_
 			m_context,
 			pool
 			);
+#endif
 		if( error != NULL )
 			throw SvnException( error );
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, revnum ) );
@@ -847,7 +904,7 @@ Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kw
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 	}
 
@@ -899,7 +956,7 @@ Py::Object pysvn_client::cmd_import( const Py::Tuple &a_args, const Py::Dict &a_
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	return toObject( commit_info );
@@ -1062,7 +1119,7 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 
@@ -1157,7 +1214,7 @@ Py::Object pysvn_client::cmd_ls( const Py::Tuple &a_args, const Py::Dict &a_kws 
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 
@@ -1254,7 +1311,7 @@ Py::Object pysvn_client::cmd_merge( const Py::Tuple &a_args, const Py::Dict &a_k
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	return Py::Nothing();
@@ -1315,7 +1372,7 @@ Py::Object pysvn_client::cmd_mkdir( const Py::Tuple &a_args, const Py::Dict &a_k
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	return toObject( commit_info );
@@ -1377,7 +1434,7 @@ Py::Object pysvn_client::cmd_move( const Py::Tuple &a_args, const Py::Dict &a_kw
 			}
 		catch( SvnException &e )
 			{
-			throw Py::Exception( m_module.client_error, e.message() );
+			throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 			}
 		}
 	catch( Py::TypeError & )
@@ -1433,7 +1490,7 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	return Py::Nothing();
@@ -1485,7 +1542,7 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	return propsToObject( props, pool );
@@ -1571,7 +1628,7 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 			}
 		catch( SvnException &e )
 			{
-			throw Py::Exception( m_module.client_error, e.message() );
+			throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 			}
 
 		proplistToObject( list_of_proplists, props, pool );
@@ -1631,7 +1688,7 @@ Py::Object pysvn_client::cmd_propset( const Py::Tuple &a_args, const Py::Dict &a
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	return Py::Nothing();
@@ -1679,7 +1736,7 @@ Py::Object pysvn_client::cmd_relocate( const Py::Tuple &a_args, const Py::Dict &
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	return Py::Nothing();
@@ -1721,7 +1778,7 @@ Py::Object pysvn_client::cmd_remove( const Py::Tuple &a_args, const Py::Dict &a_
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	return toObject( commit_info );
@@ -1763,7 +1820,7 @@ Py::Object pysvn_client::cmd_resolved( const Py::Tuple &a_args, const Py::Dict &
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	return Py::Nothing();
@@ -1807,7 +1864,7 @@ Py::Object pysvn_client::cmd_revert( const Py::Tuple &a_args, const Py::Dict &a_
 			}
 		catch( SvnException &e )
 			{
-			throw Py::Exception( m_module.client_error, e.message() );
+			throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 			}
 		}
 	catch( Py::TypeError & )
@@ -1865,7 +1922,7 @@ Py::Object pysvn_client::cmd_revpropdel( const Py::Tuple &a_args, const Py::Dict
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, revnum ) );
@@ -1915,7 +1972,7 @@ Py::Object pysvn_client::cmd_revpropget( const Py::Tuple &a_args, const Py::Dict
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	Py::Tuple result(2);
@@ -1974,7 +2031,7 @@ Py::Object pysvn_client::cmd_revproplist( const Py::Tuple &a_args, const Py::Dic
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 
@@ -2034,7 +2091,7 @@ Py::Object pysvn_client::cmd_revpropset( const Py::Tuple &a_args, const Py::Dict
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, revnum ) );
@@ -2122,7 +2179,7 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	apr_array_header_t *statusarray = svn_sort__hash( status_hash, svn_sort_compare_items_as_paths, pool);
@@ -2183,7 +2240,7 @@ Py::Object pysvn_client::cmd_switch( const Py::Tuple &a_args, const Py::Dict &a_
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, revnum ) );
@@ -2230,10 +2287,40 @@ Py::Object pysvn_client::cmd_update( const Py::Tuple &a_args, const Py::Dict &a_
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, revnum ) );
+	}
+
+Py::Object pysvn_client::get_auth_cache( const Py::Tuple &a_args, const Py::Dict &a_kws )
+	{
+	static argument_description args_desc[] =
+		{
+		{ false, NULL }
+		};
+	FunctionArguments args( "get_auth_cache", args_desc, a_args, a_kws );
+	args.check();
+
+	char *param = NULL;
+	try
+		{
+		param = (char *)svn_auth_get_parameter
+			(
+			m_context.ctx()->auth_baton,
+			SVN_AUTH_PARAM_NO_AUTH_CACHE
+			);
+		}
+	catch( SvnException &e )
+		{
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
+		}
+
+	bool no_auth_cache = (param != NULL && param[0] == '1');
+	if( no_auth_cache )
+		return Py::Int( 0 );
+	else
+		return Py::Int( 1 );
 	}
 
 Py::Object pysvn_client::set_auth_cache( const Py::Tuple &a_args, const Py::Dict &a_kws )
@@ -2250,7 +2337,7 @@ Py::Object pysvn_client::set_auth_cache( const Py::Tuple &a_args, const Py::Dict
 	try
 		{
 		void *param = 0;
-		if( enable )
+		if( !enable )
 			param = (void *)"1";
 
 		svn_auth_set_parameter
@@ -2262,10 +2349,47 @@ Py::Object pysvn_client::set_auth_cache( const Py::Tuple &a_args, const Py::Dict
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	return Py::Nothing();
+	}
+
+Py::Object pysvn_client::get_auto_props( const Py::Tuple &a_args, const Py::Dict &a_kws )
+	{
+	static argument_description args_desc[] =
+		{
+		{ false, NULL }
+		};
+	FunctionArguments args( "get_auto_props", args_desc, a_args, a_kws );
+	args.check();
+
+	svn_boolean_t enable = false;
+	try
+		{
+                svn_config_t *cfg = (svn_config_t *)apr_hash_get
+			(
+			m_context.ctx()->config,
+			SVN_CONFIG_CATEGORY_CONFIG,
+			APR_HASH_KEY_STRING
+			);
+		svn_error_t *error = svn_config_get_bool
+			(
+			cfg,
+			&enable,
+			SVN_CONFIG_SECTION_MISCELLANY,
+			SVN_CONFIG_OPTION_ENABLE_AUTO_PROPS,
+			enable
+			);
+		if( error != NULL )
+			throw SvnException( error );
+		}
+	catch( SvnException &e )
+		{
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
+		}
+
+	return Py::Int( enable );
 	}
 
 Py::Object pysvn_client::set_auto_props( const Py::Tuple &a_args, const Py::Dict &a_kws )
@@ -2297,7 +2421,7 @@ Py::Object pysvn_client::set_auto_props( const Py::Tuple &a_args, const Py::Dict
 		}
 	catch( SvnException &e )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.pythonExceptionArg() );
 		}
 
 	return Py::Nothing();
@@ -2366,7 +2490,9 @@ void pysvn_client::init_type()
 	add_keyword_method("revpropget", &pysvn_client::cmd_revpropget, SVN_REVPROPGET_DOC );
 	add_keyword_method("revproplist", &pysvn_client::cmd_revproplist, SVN_REVPROPLIST_DOC );
 	add_keyword_method("revpropset", &pysvn_client::cmd_revpropset, SVN_REVPROPSET_DOC );
+	add_keyword_method("get_auth_cache", &pysvn_client::get_auth_cache, GET_AUTH_CACHE_DOC );
 	add_keyword_method("set_auth_cache", &pysvn_client::set_auth_cache, SET_AUTH_CACHE_DOC );
+	add_keyword_method("get_auto_props", &pysvn_client::get_auto_props, GET_AUTO_PROPS_DOC );
 	add_keyword_method("set_auto_props", &pysvn_client::set_auto_props, SET_AUTO_PROPS_DOC );
 	add_keyword_method("status", &pysvn_client::cmd_status, SVN_STATUS_DOC );
 	add_keyword_method("switch", &pysvn_client::cmd_switch, SVN_SWITCH_DOC );

@@ -24,8 +24,8 @@ B:\ >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cm
 B:\ >rem ls 
 
 B:\ >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir ls file:///b:/repos -v -R 
-      2 barry           0 29-Jan-2005 16:49:26 file:///b:/repos/trunk
-      2 barry           0 29-Jan-2005 16:49:26 file:///b:/repos/trunk/test
+      2 barry           0 19-Feb-2005 18:58:02 file:///b:/repos/trunk
+      2 barry           0 19-Feb-2005 18:58:02 file:///b:/repos/trunk/test
 
 B:\ >rem checkout 
 
@@ -89,7 +89,7 @@ A file3.txt
 B:\wc1\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir add file4.txt 
 A file4.txt
 
-B:\wc1\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir add file5.txt 
+B:\wc1\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir add --force file5.txt 
 A file5.txt
 
 B:\wc1\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir checkin -m "commit added files" 
@@ -142,8 +142,8 @@ B:\wc1\test >rem annotate
 B:\wc1\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir annotate b:\wc2\test\file1.txt 
 A /trunk/test/file1.txt
 A /trunk/test/file1.txt
-0| r3 | barry | 2005-01-29T16:49:34.193515Z | test add file 1 
-1| r4 | barry | 2005-01-29T16:49:38.910439Z | line 2 
+0| r3 | barry | 2005-02-19T18:58:10.076244Z | test add file 1 
+1| r4 | barry | 2005-02-19T18:58:15.514172Z | line 2 
 
 B:\wc1\test >rem cat 
 
@@ -163,13 +163,16 @@ Log message
 --- -------
 
 B:\wc1\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir ls -v file:///b:/repos/tags 
-      6 barry           0 29-Jan-2005 16:49:48 file:///b:/repos/tags/version1
+      6 barry           0 19-Feb-2005 18:58:24 file:///b:/repos/tags/version1
 
 B:\wc1\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir copy b:\wc2\test\file1.txt b:\wc2\test\file1b.txt 
 A b:/wc2/test/file1b.txt
 
+B:\wc1\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir propset svn:eol-style native b:\wc2\test\file1b.txt 
+
 B:\wc1\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir checkin b:\wc2 -m "copy test" 
 A wc2/test/file1b.txt
+? B:/wc2/test/file1b.txt
 Revision 7
 
 B:\wc1\test >rem diff 
@@ -181,23 +184,77 @@ B:\wc1\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Clien
 
 B:\wc1\test >rem export 
 
-B:\wc1\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir export file:///b:/repos/trunk/test b:\export1 
-A b:\export1
-A b:\export1/file2.txt
-A b:\export1/file1b.txt
-A b:\export1/file3.txt
-A b:\export1/file4.txt
-A b:\export1/file5.txt
-A b:\export1/file1.txt
-? b:\export1
+B:\wc1\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir export file:///b:/repos/trunk/test b:\export1.native 
+A b:\export1.native
+A b:\export1.native/file2.txt
+A b:\export1.native/file1b.txt
+A b:\export1.native/file3.txt
+A b:\export1.native/file4.txt
+A b:\export1.native/file5.txt
+A b:\export1.native/file1.txt
+? b:\export1.native
 
-B:\wc1\test >dir /s /b b:\export1 
-b:\export1\file1.txt
-b:\export1\file1b.txt
-b:\export1\file2.txt
-b:\export1\file3.txt
-b:\export1\file4.txt
-b:\export1\file5.txt
+B:\wc1\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir export --native-eol CR file:///b:/repos/trunk/test b:\export1.cr 
+A b:\export1.cr
+A b:\export1.cr/file2.txt
+A b:\export1.cr/file1b.txt
+A b:\export1.cr/file3.txt
+A b:\export1.cr/file4.txt
+A b:\export1.cr/file5.txt
+A b:\export1.cr/file1.txt
+? b:\export1.cr
+
+B:\wc1\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir export --native-eol LF file:///b:/repos/trunk/test b:\export1.lf 
+A b:\export1.lf
+A b:\export1.lf/file2.txt
+A b:\export1.lf/file1b.txt
+A b:\export1.lf/file3.txt
+A b:\export1.lf/file4.txt
+A b:\export1.lf/file5.txt
+A b:\export1.lf/file1.txt
+? b:\export1.lf
+
+B:\wc1\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir export --native-eol CRLF file:///b:/repos/trunk/test b:\export1.crlf 
+A b:\export1.crlf
+A b:\export1.crlf/file2.txt
+A b:\export1.crlf/file1b.txt
+A b:\export1.crlf/file3.txt
+A b:\export1.crlf/file4.txt
+A b:\export1.crlf/file5.txt
+A b:\export1.crlf/file1.txt
+? b:\export1.crlf
+
+B:\wc1\test >dir /s /b b:\export1.native 
+b:\export1.native\file1.txt
+b:\export1.native\file1b.txt
+b:\export1.native\file2.txt
+b:\export1.native\file3.txt
+b:\export1.native\file4.txt
+b:\export1.native\file5.txt
+
+B:\wc1\test >dir /s /b b:\export1.cr 
+b:\export1.cr\file1.txt
+b:\export1.cr\file1b.txt
+b:\export1.cr\file2.txt
+b:\export1.cr\file3.txt
+b:\export1.cr\file4.txt
+b:\export1.cr\file5.txt
+
+B:\wc1\test >dir /s /b b:\export1.lf 
+b:\export1.lf\file1.txt
+b:\export1.lf\file1b.txt
+b:\export1.lf\file2.txt
+b:\export1.lf\file3.txt
+b:\export1.lf\file4.txt
+b:\export1.lf\file5.txt
+
+B:\wc1\test >dir /s /b b:\export1.crlf 
+b:\export1.crlf\file1.txt
+b:\export1.crlf\file1b.txt
+b:\export1.crlf\file2.txt
+b:\export1.crlf\file3.txt
+b:\export1.crlf\file4.txt
+b:\export1.crlf\file5.txt
 
 B:\wc1\test >rem import 
 
@@ -207,44 +264,44 @@ B:\wc1\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Clien
 Path: b:\wc2\test
 Name: .
 Url: file:///b:/repos/trunk/test
-Repository UUID: 5641ec2a-80bc-8645-87b3-c079ac09906f
+Repository UUID: 384d6671-edd7-db4c-8885-93af9de2cb83
 Revision: 4
 Node kind: directory
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 29-Jan-2005 16:49:38
+Last Changed Date: 19-Feb-2005 18:58:15
 
 B:\wc1\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir info b:\wc2\test\file1.txt 
 Path: b:\wc2\test\file1.txt
 Name: file1.txt
 Url: file:///b:/repos/trunk/test/file1.txt
-Repository UUID: 5641ec2a-80bc-8645-87b3-c079ac09906f
+Repository UUID: 384d6671-edd7-db4c-8885-93af9de2cb83
 Revision: 4
 Node kind: file
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 29-Jan-2005 16:49:38
-Text Last Updated: 29-Jan-2005 16:49:41
-Properties Last Updated: 29-Jan-2005 16:49:41
+Last Changed Date: 19-Feb-2005 18:58:15
+Text Last Updated: 19-Feb-2005 18:58:17
+Properties Last Updated: 19-Feb-2005 18:58:17
 Checksum: 373fc04732c677b8e9e401e5a3673a22
 
 B:\wc1\test >rem log 
 
 B:\wc1\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir log b:\wc2 
 ------------------------------------------------------------
-rev 7: barry | 29-Jan-2005 16:49:52 | 1 lines
+rev 7: barry | 19-Feb-2005 18:58:28 | 1 lines
 copy test
 ------------------------------------------------------------
-rev 4: barry | 29-Jan-2005 16:49:38 | 1 lines
+rev 4: barry | 19-Feb-2005 18:58:15 | 1 lines
 commit modified file
 ------------------------------------------------------------
-rev 3: barry | 29-Jan-2005 16:49:34 | 1 lines
+rev 3: barry | 19-Feb-2005 18:58:10 | 1 lines
 commit added files
 ------------------------------------------------------------
-rev 2: barry | 29-Jan-2005 16:49:26 | 1 lines
+rev 2: barry | 19-Feb-2005 18:58:02 | 1 lines
 test-01 add test
 ------------------------------------------------------------
-rev 1: barry | 29-Jan-2005 16:49:25 | 1 lines
+rev 1: barry | 19-Feb-2005 18:58:00 | 1 lines
 test-01 add trunk
 ------------------------------------------------------------
 
@@ -259,12 +316,12 @@ file:///b:/repos/trunk/test/file4.txt
 file:///b:/repos/trunk/test/file5.txt
 
 B:\wc1\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir ls -v file:///b:/repos/trunk/test 
-      4 barry          27 29-Jan-2005 16:49:38 file:///b:/repos/trunk/test/file1.txt
-      7 barry          27 29-Jan-2005 16:49:52 file:///b:/repos/trunk/test/file1b.txt
-      3 barry          18 29-Jan-2005 16:49:34 file:///b:/repos/trunk/test/file2.txt
-      3 barry          18 29-Jan-2005 16:49:34 file:///b:/repos/trunk/test/file3.txt
-      3 barry          18 29-Jan-2005 16:49:34 file:///b:/repos/trunk/test/file4.txt
-      3 barry          18 29-Jan-2005 16:49:34 file:///b:/repos/trunk/test/file5.txt
+      4 barry          27 19-Feb-2005 18:58:15 file:///b:/repos/trunk/test/file1.txt
+      7 barry          25 19-Feb-2005 18:58:28 file:///b:/repos/trunk/test/file1b.txt
+      3 barry          18 19-Feb-2005 18:58:10 file:///b:/repos/trunk/test/file2.txt
+      3 barry          18 19-Feb-2005 18:58:10 file:///b:/repos/trunk/test/file3.txt
+      3 barry          18 19-Feb-2005 18:58:10 file:///b:/repos/trunk/test/file4.txt
+      3 barry          18 19-Feb-2005 18:58:10 file:///b:/repos/trunk/test/file5.txt
 
 B:\wc1\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir ls b:\wc2\test 
 b:/wc2/test/file1.txt
@@ -275,12 +332,12 @@ b:/wc2/test/file4.txt
 b:/wc2/test/file5.txt
 
 B:\wc1\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir ls -v b:\wc2\test 
-      4 barry          27 29-Jan-2005 16:49:38 b:/wc2/test/file1.txt
-      7 barry          27 29-Jan-2005 16:49:52 b:/wc2/test/file1b.txt
-      3 barry          18 29-Jan-2005 16:49:34 b:/wc2/test/file2.txt
-      3 barry          18 29-Jan-2005 16:49:34 b:/wc2/test/file3.txt
-      3 barry          18 29-Jan-2005 16:49:34 b:/wc2/test/file4.txt
-      3 barry          18 29-Jan-2005 16:49:34 b:/wc2/test/file5.txt
+      4 barry          27 19-Feb-2005 18:58:15 b:/wc2/test/file1.txt
+      7 barry          25 19-Feb-2005 18:58:28 b:/wc2/test/file1b.txt
+      3 barry          18 19-Feb-2005 18:58:10 b:/wc2/test/file2.txt
+      3 barry          18 19-Feb-2005 18:58:10 b:/wc2/test/file3.txt
+      3 barry          18 19-Feb-2005 18:58:10 b:/wc2/test/file4.txt
+      3 barry          18 19-Feb-2005 18:58:10 b:/wc2/test/file5.txt
 
 B:\wc1\test >rem merge 
 
@@ -466,7 +523,7 @@ B:\wc2\test >rem revproplist
 B:\wc2\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir revproplist file:///b:/repos/trunk 
 Revision: 12
 svn:author: barry
-svn:date: 2005-01-29T16:50:25.169491Z
+svn:date: 2005-02-19T18:59:04.155084Z
 svn:log: resolve a confict part 2
 
 B:\wc2\test >rem revpropget 
@@ -503,12 +560,12 @@ B:\wc2\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Clien
 Path: b:\wc1
 Name: .
 Url: file:///b:/repos/trunk
-Repository UUID: 5641ec2a-80bc-8645-87b3-c079ac09906f
+Repository UUID: 384d6671-edd7-db4c-8885-93af9de2cb83
 Revision: 2
 Node kind: directory
 Last Changed Author: barry
 Last Changed Rev: 2
-Last Changed Date: 29-Jan-2005 16:49:26
+Last Changed Date: 19-Feb-2005 18:58:02
 
 B:\wc2\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir relocate file:///b:/repos/trunk file:///b:/root/repos/trunk b:\wc1 
 
@@ -516,23 +573,23 @@ B:\wc2\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Clien
 Path: b:\wc1
 Name: .
 Url: file:///b:/root/repos/trunk
-Repository UUID: 5641ec2a-80bc-8645-87b3-c079ac09906f
+Repository UUID: 384d6671-edd7-db4c-8885-93af9de2cb83
 Revision: 2
 Node kind: directory
 Last Changed Author: barry
 Last Changed Rev: 2
-Last Changed Date: 29-Jan-2005 16:49:26
+Last Changed Date: 19-Feb-2005 18:58:02
 
 B:\wc2\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir info b:\wc2 
 Path: b:\wc2
 Name: .
 Url: file:///b:/repos/trunk
-Repository UUID: 5641ec2a-80bc-8645-87b3-c079ac09906f
+Repository UUID: 384d6671-edd7-db4c-8885-93af9de2cb83
 Revision: 4
 Node kind: directory
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 29-Jan-2005 16:49:38
+Last Changed Date: 19-Feb-2005 18:58:15
 
 B:\wc2\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir relocate file:///b:/repos/trunk file:///b:/root/repos/trunk b:\wc2 
 
@@ -540,12 +597,12 @@ B:\wc2\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Clien
 Path: b:\wc2
 Name: .
 Url: file:///b:/root/repos/trunk
-Repository UUID: 5641ec2a-80bc-8645-87b3-c079ac09906f
+Repository UUID: 384d6671-edd7-db4c-8885-93af9de2cb83
 Revision: 4
 Node kind: directory
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 29-Jan-2005 16:49:38
+Last Changed Date: 19-Feb-2005 18:58:15
 
 B:\wc2\test >rem switch 
 
@@ -553,12 +610,12 @@ B:\wc2\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Clien
 Path: b:\wc2
 Name: .
 Url: file:///b:/root/repos/trunk
-Repository UUID: 5641ec2a-80bc-8645-87b3-c079ac09906f
+Repository UUID: 384d6671-edd7-db4c-8885-93af9de2cb83
 Revision: 4
 Node kind: directory
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 29-Jan-2005 16:49:38
+Last Changed Date: 19-Feb-2005 18:58:15
 
 B:\wc2\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir switch b:\wc2 file:///b:/root/repos/tags/version1 
 U b:/wc2/test/file4.txt
@@ -575,12 +632,12 @@ B:\wc2\test >c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Clien
 Path: b:\wc2
 Name: .
 Url: file:///b:/root/repos/tags/version1
-Repository UUID: 5641ec2a-80bc-8645-87b3-c079ac09906f
+Repository UUID: 384d6671-edd7-db4c-8885-93af9de2cb83
 Revision: 12
 Node kind: directory
 Last Changed Author: barry
 Last Changed Rev: 6
-Last Changed Date: 29-Jan-2005 16:49:48
+Last Changed Date: 19-Feb-2005 18:58:24
 
 B:\wc2\test >rem update - see above 
 

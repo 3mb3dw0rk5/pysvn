@@ -33,7 +33,7 @@ echo test add file 5 >file5.txt
 %PYSVN% add file2.txt
 %PYSVN% add file3.txt
 %PYSVN% add file4.txt
-%PYSVN% add file5.txt
+%PYSVN% add --force file5.txt
 %PYSVN% checkin -m "commit added files"
 
 rem update - get a new wc that will update
@@ -61,6 +61,7 @@ rem copy
 echo tag the trunk | %PYSVN% copy file:///b:/repos/trunk file:///b:/repos/tags/version1
 %PYSVN% ls -v file:///b:/repos/tags
 %PYSVN% copy b:\wc2\test\file1.txt b:\wc2\test\file1b.txt
+%PYSVN% propset svn:eol-style native b:\wc2\test\file1b.txt
 %PYSVN% checkin b:\wc2 -m "copy test"
 
 rem diff
@@ -68,8 +69,14 @@ echo new line >>b:\wc2\test\file1b.txt
 %PYSVN% diff b:\wc2
 
 rem export
-%PYSVN% export file:///b:/repos/trunk/test b:\export1
-dir /s /b b:\export1
+%PYSVN% export file:///b:/repos/trunk/test b:\export1.native
+%PYSVN% export --native-eol CR file:///b:/repos/trunk/test b:\export1.cr
+%PYSVN% export --native-eol LF file:///b:/repos/trunk/test b:\export1.lf
+%PYSVN% export --native-eol CRLF file:///b:/repos/trunk/test b:\export1.crlf
+dir /s /b b:\export1.native
+dir /s /b b:\export1.cr
+dir /s /b b:\export1.lf
+dir /s /b b:\export1.crlf
 
 rem import
 
