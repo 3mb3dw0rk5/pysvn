@@ -140,6 +140,6 @@ static int elapse_time()
     timeval now;
     gettimeofday( &now, NULL );
 
-    return (now.tv_sec - start_time.tv_sec)*1000 + (now.tv_usec/1000);
+    return (now.tv_sec - start_time.tv_sec)*1000 + ( (now.tv_usec - start_time.tv_usec)/1000);
 }
 #endif

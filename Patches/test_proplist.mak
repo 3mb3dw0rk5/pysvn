@@ -1,8 +1,8 @@
 CCCFLAGS=-fPIC -fexceptions -frtti -I$(SVN_INC) -I$(APR_INC)
-LDLIBS=-L$(SVN_LIB) -lsvn_client-1
+LDLIBS=-L$(SVN_LIB) -lsvn_client-1 -lapr-0
 
 test_proplist: test_proplist.o
-	g++ -c -g -o test_proplist test_proplist.o $(LDLIBS)
+	g++ -g -o test_proplist test_proplist.o $(LDLIBS)
 
 test_proplist.o: test_proplist.cpp
-	g++ -g $(CCCFLAGS) -o $@ $<
+	g++ -c -g $(CCCFLAGS) -o $@ $<
