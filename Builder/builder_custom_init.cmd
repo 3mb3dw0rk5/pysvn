@@ -5,7 +5,7 @@ rem figure out where we are
 for %%I in ( %0\..\.. ) do set WORKDIR=%%~fI
 
 set SVNVER=0.37.0
-set PYCXX=%WORKDIR%\Import\pycxx_5_2_0
+set PYCXX=%WORKDIR%\Import\pycxx_5_2_1
 set OPENSSL=L:\subversion\win32-%SVNVER%\openssl-0.9.7c
 set SUBVERSION=L:\subversion\win32-%SVNVER%\subversion-%SVNVER%
 set RAPIDSVN=L:\subversion\win32-%SVNVER%\rapidsvn

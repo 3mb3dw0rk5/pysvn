@@ -2,7 +2,7 @@
 export WORKDIR=$(cd ..;pwd)
 
 export SVNVER=0.37.0
-export PYCXX=${WORKDIR}/Import/pycxx_5_2_0
+export PYCXX=${WORKDIR}/Import/pycxx_5_2_1
 export PYTHON=/usr/bin/python2.3
 export PYDIR=python2.3
 export PYLIB=python23
