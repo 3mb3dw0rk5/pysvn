@@ -289,7 +289,7 @@ bool pysvn_callbacks::contextSslClientCertPrompt( std::string & certFile )
 // @param password
 //
 bool pysvn_callbacks::contextSslClientCertPwPrompt( std::string &password, 
-		const char *realm, bool may_save )
+		const std::string &realm, bool may_save )
 	{
 	PythonDisallowThreads callback_permission( permission );
 

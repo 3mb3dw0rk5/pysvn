@@ -138,7 +138,7 @@ private:// methods
 	// @param password
 	//
 	bool contextSslClientCertPwPrompt( std::string & password,
-			const char *realm, bool may_save );
+		const std::string &realm, bool may_save );
 
 private:// vaiables
 
