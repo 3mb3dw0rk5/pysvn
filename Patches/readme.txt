@@ -5,3 +5,6 @@ svncpp.patch
 	- patch against r7073 (also 0.6.0)
 	- fix crash with pysvn.Client().log('.')
 
+svncpp2.patch
+	- patch against r7073 (also 0.6.0)
+	- fix cat to allow binary return data
