@@ -351,8 +351,8 @@ Return the contents of path for the specified revision as a string, file_text.
 <h4><a name="pysvn_client_checkout"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.checkout</a></h4>
 <pre>
 revision = \
-checkout( path,
-          url,
+checkout( url,
+          path,
           recurse=True,
           revision=pysvn.Revision( opt_revision_kind.head ) )
 </pre>
@@ -700,7 +700,7 @@ in the configuration directory.</p>
 <pre>
 set_auto_prop( enable )
 </pre>
-<p>When enabled svn will automatically set properties\n\
+<p>When enabled svn will automatically set properties
 when adding files otherwise when disabled will not.</p>
 
 <h4><a name="pysvn_client_status"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.status</a></h4>
