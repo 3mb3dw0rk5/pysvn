@@ -7,7 +7,8 @@
 CXX_OBJECTS=cxxsupport.o cxx_extensions.o cxxextensions.o IndirectPythonInterface.o
 PYSVN_OBJECTS=pysvn.o pysvn_callbacks.o pysvn_client.o pysvn_entry.o pysvn_enum_string.o \
 	pysvn_revision.o pysvn_status.o pysvn_docs.o pysvn_path.o \
-	pysvn_arg_processing.o pysvn_converters.o pysvn_svnenv.o
+	pysvn_arg_processing.o pysvn_converters.o pysvn_svnenv.o \
+	pysvn_profile.o
 
 all: pysvn/_pysvn.so 
 
@@ -51,6 +52,9 @@ pysvn_converters.o: pysvn_converters.cpp
 	$(CCC) $(CCCFLAGS) -o $@ $<
 
 pysvn_svnenv.o: pysvn_svnenv.cpp
+	$(CCC) $(CCCFLAGS) -o $@ $<
+
+pysvn_profile.o: pysvn_profile.cpp
 	$(CCC) $(CCCFLAGS) -o $@ $<
 
 cxxsupport.o: $(PYCXX)/Src/cxxsupport.cxx

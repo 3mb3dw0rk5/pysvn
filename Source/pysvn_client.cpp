@@ -1485,8 +1485,6 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
 	return propsToObject( props, pool );
 	}
 
-extern int elapse_time();
-
 Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &a_kws )
 	{
 	static argument_description args_desc[] =
@@ -1496,7 +1494,6 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 		{ false, name_recurse },
 		{ false, NULL }
 		};
-	int t0 = elapse_time();
 	FunctionArguments args( "proplist", args_desc, a_args, a_kws );
 	args.check();
 
@@ -1504,8 +1501,6 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 
 	bool recurse = args.getBoolean( name_recurse, false );
 	svn_opt_revision_t revision;
-
-//	int t1 = elapse_time();
 
 	bool is_revision_setup = false;
 	bool is_url = false;
@@ -1544,7 +1539,7 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 			checkThreadPermission();
 
 			PythonAllowThreads permission( m_context );
-			int t8 = elapse_time();
+			//int t8 = elapse_time();
 			svn_error_t *error = svn_client_proplist
 				(
 				&props,
@@ -1554,10 +1549,8 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 				m_context,
 				pool
 				);
-			int t9 = elapse_time();
 			if( error != NULL )
 				std::cout << "Error in proplist" << std::endl;
-			std::cout << "proplist prop list loop " << (t9-t8) << "ms" << std::endl;
 			}
 		catch( SvnException &e )
 			{
