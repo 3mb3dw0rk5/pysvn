@@ -1539,7 +1539,6 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 			checkThreadPermission();
 
 			PythonAllowThreads permission( m_context );
-			//int t8 = elapse_time();
 			svn_error_t *error = svn_client_proplist
 				(
 				&props,
@@ -1550,7 +1549,7 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 				pool
 				);
 			if( error != NULL )
-				std::cout << "Error in proplist" << std::endl;
+				throw SvnException( error );
 			}
 		catch( SvnException &e )
 			{
@@ -1558,8 +1557,6 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 			}
 
 		proplistToObject( list_of_proplists, props, pool );
-		if( error != NULL )
-			throw SvnException( error );
 		}
 	
 	return list_of_proplists;
