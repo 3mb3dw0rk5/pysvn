@@ -1,4 +1,11 @@
 #!/bin/echo Usage: . $0
+
+# TARGET is set by the ReleaseEngineering scripts
+if [ -z "$TARGET" ]
+then
+	# set the ReleaseEngineering symbols in development mode
+	. ../../ReleaseEngineering/unix/software-version.inc
+fi
 export WORKDIR=$(cd ..;pwd)
 
 # default to 2.3 if no value in $1 and $2
