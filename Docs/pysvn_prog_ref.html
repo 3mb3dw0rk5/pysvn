@@ -324,11 +324,11 @@ add( [path,path],
 <h4><a name="pysvn_client_annotate"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.annotate</a></h4>
 <pre>
 file_annotation = \
-annotate( path,
+annotate( url_or_path,
           revision_start=pysvn.Revision( opt_revision_kind.number, 0 ),
           revision_end=pysvn.Revision( opt_revision_kind.head ) )
 </pre>
-<p>Return the annotation for each line in the path from revision_start to revision_end.
+<p>Return the annotation for each line in the url_or_path from revision_start to revision_end.
 The file_annotation is a list of dictionaries, one per line. The dictionaries contains:</p>
 <ul>
 <li>author - string - the name of the author who last wrote the line
@@ -341,11 +341,11 @@ The file_annotation is a list of dictionaries, one per line. The dictionaries co
 <h4><a name="pysvn_client_cat"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.cat</a></h4>
 <pre>
 file_text = \
-cat( path,
+cat( url_or_path,
      revision=pysvn.Revision( opt_revision_kind.head ) )
 </pre>
 <p>
-Return the contents of path for the specified revision as a string, file_text.
+Return the contents of url_or_path for the specified revision as a string, file_text.
 </p>
 
 <h4><a name="pysvn_client_checkout"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.checkout</a></h4>
@@ -383,8 +383,8 @@ Set recurse to True to recursively checkin a directory's children with the same 
 <p>checkin returns a pysvn.Revision containing the number of the checked in revision.</p>
 <h4><a name="pysvn_client_copy"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.copy</a></h4>
 <pre>
-copy( src_path,
-      dest_path,
+copy( src_url_or_path,
+      dest_url_or_path,
       src_revision=src_revision)
 </pre>
 <p>
@@ -392,7 +392,7 @@ Duplicate something in working copy or repos, remembering history.
 The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
 if the src_path is a URL otherwise to pysvn.Revision( opt_revision_kind.working ).
 </p>
-<p>src_path and dest_path can each be either a working copy (WC) path or URL:
+<p>src_url_or_path and dest_url_or_path can each be either a working copy (WC) path or URL:
 <ul>
 <li>WC  -> WC:   copy and schedule for addition (with history)
 <li>WC  -> URL:  immediately commit a copy of WC to URL
@@ -407,7 +407,7 @@ callback must be implemented to return a log message.
 
 diff_text = \
 diff( tmp_path,
-      path,
+      url_or_path,
       revision1=pysvn.Revision( opt_revision_kind.base ),
       revision2=pysvn.Revision( opt_revision_kind.working ),
       recurse=True,
@@ -422,7 +422,7 @@ Set recurse to True to recursively diff a directory's children. diff_text is a s
 <h4><a name="pysvn_client_export"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.export</a></h4>
 <pre>
 revision = \
-export( src_path,
+export( src_url_or_path,
         dest_path,
         force=False,
         revision=pysvn.Revision() )
@@ -430,7 +430,7 @@ export( src_path,
 <p>Create an unversioned copy of the src_path at revision in dest_path.</p>
 <ol>
 <li>Exports a clean directory tree from the repository specified by
-   URL src_path, at revision if it is given, otherwise at HEAD, into
+   URL src_url_or_path, at revision if it is given, otherwise at HEAD, into
    dest_path.
 
 <li>Exports a clean directory tree from the working copy specified by
@@ -466,14 +466,14 @@ entry = info( path )
 <h4><a name="pysvn_client_log"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.log</a></h4>
 <pre>
 log_messages = \
-log( path,
+log( url_or_path,
      revision_start=pysvn.Revision( opt_revision_kind.head ),
      revision_end=pysvn.Revision( opt_revision_kind.number, 0 ),
      discover_changed_paths=False,
      strict_node_history=True )
 </pre>
 <p>
-return the log messages for the specifed path between revisions start and end.
+return the log messages for the specifed url_or_path between revisions start and end.
 </p>
 <p>log returns a list of log messges each log messages is a dictionary. The dictionary contains:</p>
 <ul>
@@ -492,7 +492,7 @@ return the log messages for the specifed path between revisions start and end.
 <h4><a name="pysvn_client_ls"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.ls</a></h4>
 <pre>
 entries_list = \
-ls( path,
+ls( url_or_path,
     revision=pysvn.Revision( opt_revision_kind.head ),
     recurse=True )
 </pre>
@@ -510,9 +510,9 @@ The dictionary contains:
 </ul>
 <h4><a name="pysvn_client_merge"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.merge</a></h4>
 <pre>
-merge( path1,
+merge( url_or_path1,
        revision1,
-       path2,
+       url_or_path2,
        revision2,
        local_path,
        force=False,
@@ -522,33 +522,33 @@ merge( path1,
 </p>
 <h4><a name="pysvn_client_mkdir"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.mkdir</a></h4>
 <pre>
-mkdir( path,
+mkdir( url_or_path,
        log_message )
-mkdir( path_list,
+mkdir( url_or_path_list,
        log_message )
 </pre>
 <p>Create a new directory under revision control.</p>
 
 <p>Create version controlled directories.</p>
 
-<p>If run on a working copy PATHs, each directory is scheduled for
+<p>If url_or_path is a path, each directory is scheduled for
 addition upon the next commit.</p>
 
-<p>If run on URLs, the directories are created in the repository via an
+<p>If url_or_path is a URL, the directories are created in the repository via an
 immediate commit.</p>
 
 <p>In both cases, all the intermediate directories must already exist.</p>
 
 <h4><a name="pysvn_client_move"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.move</a></h4>
 <pre>
-move( src_path,
-      dest_path,
+move( src_url_or_path,
+      dest_url_or_path,
       src_revision=pysvn.Revision(),
       force=False )
 </pre>
 <p>Move/rename something in working copy or repository.</p>
 <p>The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
-if the src_path is a URL otherwise to pysvn.Revision( opt_revision_kind.working ).</p>
+if the src_url_or_path is a URL otherwise to pysvn.Revision( opt_revision_kind.working ).</p>
 
 
 <p>NOTE:  this command is equivalent to a 'copy' and 'delete'.</p>
@@ -559,59 +559,59 @@ if the src_path is a URL otherwise to pysvn.Revision( opt_revision_kind.working 
 <li>URL -> URL:  complete server-side rename.
 </ul>
 
-<p>If run on a working copy PATHs, each item is scheduled for deletion
+<p>If src_url_or_path is a path, each item is scheduled for deletion
 upon the next commit.  Files, and directories that have not been
 committed, are immediately removed from the working copy.  The
 command will not remove PATHs that are, or contain, unversioned
 or modified items; set force=True to override this
 behaviour.</p>
 
-<p>If run on URLs, the items are deleted from the repository via an
+<p>If src_url_or_path is a URL, the items are deleted from the repository via an
 immediate commit.</p>
 
 <h4><a name="pysvn_client_propdel"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.propdel</a></h4>
 <pre>
 rev = propdel( propname,
-         path,
+         url_or_path,
          revision=pysvn.Revision(),
          recurse=False )
 </pre>
-<p>delete the property propname from path</p>
+<p>delete the property propname from url_or_path</p>
 <p>The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
 if the src_path is a URL otherwise to pysvn.Revision( opt_revision_kind.working ).</p>
 
 <h4><a name="pysvn_client_propget"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.propget</a></h4>
 <pre>
 prop_list = propget( prop_name,
-                     path,
+                     url_or_path,
                      src_revision=pysvn.Revision(),
                      recurse=False )
 </pre>
-<p>Returns a list of tuples (path, prop_dict). The prop_dict contains the prop_name and its value if set on the path.</p>
+<p>Returns a list of tuples (url_or_path, prop_dict). The prop_dict contains the prop_name and its value if set on the url_or_path.</p>
 <p>The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
-if the src_path is a URL otherwise to pysvn.Revision( opt_revision_kind.working ).</p>
+if the url_or_path is a URL otherwise to pysvn.Revision( opt_revision_kind.working ).</p>
 
 <h4><a name="pysvn_client_proplist"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.proplist</a></h4>
 <pre>
-prop_list = proplist( path,
+prop_list = proplist( url_or_path,
                       src_revision=pysvn.Revision(),
                       recurse=False )
 </pre>
 <p>Returns a list of tuples (path, prop_dict). The prop_dict contains the prop_names and their values if set on the path.</p>
 <p>The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
-if the src_path is a URL otherwise to pysvn.Revision( opt_revision_kind.working ).</p>
+if the url_or_path is a URL otherwise to pysvn.Revision( opt_revision_kind.working ).</p>
 
 <h4><a name="pysvn_client_propset"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.propset</a></h4>
 <pre>
 rev = propset( propname,
                propval,
-               path,
+               url_or_path,
                revision=pysvn.Revision(),
                recurse=False )
 </pre>
 <p>set the property propname to propval in path</p>
 <p>The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
-if the src_path is a URL otherwise to pysvn.Revision( opt_revision_kind.working ).</p>
+if the url_or_path is a URL otherwise to pysvn.Revision( opt_revision_kind.working ).</p>
 
 <h4><a name="pysvn_client_relocate"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.relocate</a></h4>
 <pre>
@@ -624,17 +624,17 @@ relocate( from_url,
 
 <h4><a name="pysvn_client_remove"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.remove</a></h4>
 <pre>
-remove( path_list,
+remove( url_or_path_list,
         force=False )
 </pre>
-<p>If run on a working copy PATHs, each item is scheduled for deletion
+<p>If url_or_path is a path, each item is scheduled for deletion
 upon the next commit.  Files, and directories that have not been
 committed, are immediately removed from the working copy.  The
-command will not remove PATHs that are, or contain, unversioned
+command will not remove paths that are, or contain, unversioned
 or modified items; set force=True to override this
 behaviour.</p>
 
-<p>If run on URLs, the items are deleted from the repository via an
+<p>If url_or_path is a URL, the items are deleted from the repository via an
 immediate commit.</p>
 
 <h4><a name="pysvn_client_resolved"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.resolved</a></h4>
@@ -655,16 +655,16 @@ Set recurse to True to recursively revert a directory's children.</p
 <h4><a name="pysvn_client_revpropdel"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.revpropdel</a></h4>
 <pre>
 rev = revpropdel( propname,
-         path,
+         url,
          revision=pysvn.Revision( opt_revision_kind.head ),
          recurse=False )
 </pre>
-<p>Delete the revision property propname from path</p>
+<p>Delete the revision property propname from url</p>
 
 <h4><a name="pysvn_client_revpropget"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.revpropget</a></h4>
 <pre>
 prop_list = revpropget( prop_name,
-                      path,
+                      url,
                       src_revision=pysvn.Revision( opt_revision_kind.head ),
                       recurse=False )
 </pre>
@@ -672,7 +672,7 @@ prop_list = revpropget( prop_name,
 
 <h4><a name="pysvn_client_revproplist"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.revproplist</a></h4>
 <pre>
-prop_list = revproplist( path,
+prop_list = revproplist( url,
                       src_revision=pysvn.Revision( opt_revision_kind.head ),
                       recurse=False )
 </pre>
@@ -683,7 +683,7 @@ prop_list = revproplist( path,
 <pre>
 rev = revpropset( propname,
          propval,
-         path,
+         url,
          revision=pysvn.Revision( opt_revision_kind.head ),
          recurse=False )
 </pre>
@@ -700,7 +700,7 @@ in the configuration directory.</p>
 <pre>
 set_auto_prop( enable )
 </pre>
-<p>When enabled svn will automatically set properties
+<p>When enabled subversion will automatically set properties
 when adding files otherwise when disabled will not.</p>
 
 <h4><a name="pysvn_client_status"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.status</a></h4>
