@@ -16,8 +16,7 @@ rem in development the version info can be found
 rem otherwise the builder will have run it already
 if exist ..\..\ReleaseEngineering\win32\software-versions.cmd call ..\..\ReleaseEngineering\win32\software-versions.cmd
 
-rem set PYCXX=%WORKDIR%\Import\pycxx_%PYCXX_VER%
-set PYCXX=L:\wc\PyCXX\CXX
+set PYCXX=%WORKDIR%\Import\pycxx_%PYCXX_VER%
 set OPENSSL=%BUILDROOT_DIR%\win32-%SVN_VER%\openssl-%OPENSSL_VER%
 set SUBVERSION=%BUILDROOT_DIR%\win32-%SVN_VER%\subversion-%SVN_VER%
 set APR=%BUILDROOT_DIR%\win32-%SVN_VER%\httpd-%HTTPD_VER%\srclib
