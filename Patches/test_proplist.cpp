@@ -25,57 +25,10 @@ int main( int argc, char **argv )
     svn_config_ensure( "", m_pool );
 
     svn_client_ctx_t    m_context;
-#if 0
-    apr_array_header_t *providers = apr_array_make( m_pool, 8, sizeof( svn_auth_provider_object_t * ) );
-
-    // simple providers
-    svn_auth_provider_object_t *provider = NULL;
-    svn_client_get_simple_provider( &provider, m_pool );
-    *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
-
-    svn_client_get_username_provider( &provider, m_pool );
-    *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
-
-    svn_client_get_simple_prompt_provider( &provider, handlerSimplePrompt, this, 1000000, m_pool );
-    *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
-
-    // ssl providers
-
-    // order is important - file first then prompt providers
-    svn_client_get_ssl_server_trust_file_provider( &provider, m_pool );
-    *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
-
-    svn_client_get_ssl_client_cert_file_provider( &provider, m_pool );
-    *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
-
-    svn_client_get_ssl_client_cert_pw_file_provider( &provider, m_pool );
-    *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
-
-    svn_client_get_ssl_server_trust_prompt_provider( &provider, handlerSslServerTrustPrompt, this, m_pool );
-    *(svn_auth_provider_object_t **)apr_array_push (providers) = provider;
-
-    svn_client_get_ssl_client_cert_pw_prompt_provider( &provider, handlerSslClientCertPwPrompt, this, 3, m_pool );
-    *(svn_auth_provider_object_t **)apr_array_push (providers) = provider;
-
-    svn_auth_baton_t *auth_baton = NULL;
-    svn_auth_open( &auth_baton, providers, m_pool );
-#endif
+    memset( &m_context, 0, sizeof( m_context ) );
 
     // get the config based on the config dir passed in
     svn_config_get_config( &m_context.config, "", m_pool );
-
-#if 0
-    // tell the auth functions where the config dir is
-    svn_auth_set_parameter( auth_baton, SVN_AUTH_PARAM_CONFIG_DIR, config_dir );
-
-    m_context.auth_baton = auth_baton;
-    m_context.log_msg_func = handlerLogMsg;
-    m_context.log_msg_baton = this;
-    m_context.notify_func = handlerNotify;
-    m_context.notify_baton = this;
-    m_context.cancel_func = handlerCancel;
-    m_context.cancel_baton = this;
-#endif
 
     apr_pool_t *pool = svn_pool_create( NULL );
 
