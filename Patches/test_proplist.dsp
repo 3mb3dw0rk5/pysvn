@@ -40,8 +40,8 @@ RSC=rc.exe
 # PROP Output_Dir "Release"
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /W3 /GX /O2 /I "$(APR)/apr/include" /I "$(APR)/apr-util/include" /I "$(APR)/apr-util/xml/expat/lib" /I "$(SUBVERSION)/subversion/include" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
+# ADD BASE CPP /nologo /W3 /GX /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /O2/D "WIN32" /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /I "$(APR)/apr/include" /I "$(APR)/apr-util/include" /I "$(APR)/apr-util/xml/expat/lib" /I "$(SUBVERSION)/subversion/include" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
 # ADD BASE RSC /l 0x809 /d "NDEBUG"
 # ADD RSC /l 0x809 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -50,6 +50,7 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib Rpcrt4.lib Mswsock.lib $(SUBVERSION)\Release\subversion\libsvn_client\libsvn_client-1.lib $(SUBVERSION)\Release\subversion\libsvn_delta\libsvn_delta-1.lib $(SUBVERSION)\Release\subversion\libsvn_diff\libsvn_diff-1.lib $(SUBVERSION)\Release\subversion\libsvn_fs\libsvn_fs-1.lib $(SUBVERSION)\Release\subversion\libsvn_fs_base\libsvn_fs_base-1.lib $(SUBVERSION)\Release\subversion\libsvn_fs_fs\libsvn_fs_fs-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra\libsvn_ra-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra_dav\libsvn_ra_dav-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra_local\libsvn_ra_local-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra_svn\libsvn_ra_svn-1.lib $(SUBVERSION)\Release\subversion\libsvn_repos\libsvn_repos-1.lib $(SUBVERSION)\Release\subversion\libsvn_subr\libsvn_subr-1.lib $(SUBVERSION)\Release\subversion\libsvn_wc\libsvn_wc-1.lib $(APR)\apr-iconv\RELEASE\libapriconv.lib $(APR)\apr-util\RELEASE\libaprutil.lib $(APR)\apr-util\xml\expat\lib\LibR\xml.lib $(APR)\apr\RELEASE\libapr.lib $(SUBVERSION)\db4-win32\lib\libdb42.lib $(SUBVERSION)\neon\libneon.lib ws2_32.lib /nologo /subsystem:console /pdb:"sept" /machine:I386 /out:"test_proplist.exe"
+# SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "test_proplist - Win32 Debug"
 
@@ -64,7 +65,7 @@ LINK32=link.exe
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /W3 /Gm /GX /ZI /Od /I "$(APR)/apr/include" /I "$(APR)/apr-util/include" /I "$(APR)/apr-util/xml/expat/lib" /I "$(SUBVERSION)/subversion/include" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "$(APR)/apr/include" /I "$(APR)/apr-util/include" /I "$(APR)/apr-util/xml/expat/lib" /I "$(SUBVERSION)/subversion/include" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /c
 # ADD BASE RSC /l 0x809 /d "_DEBUG"
 # ADD RSC /l 0x809 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -73,6 +74,7 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib Rpcrt4.lib Mswsock.lib $(SUBVERSION)\Release\subversion\libsvn_client\libsvn_client-1.lib $(SUBVERSION)\Release\subversion\libsvn_delta\libsvn_delta-1.lib $(SUBVERSION)\Release\subversion\libsvn_diff\libsvn_diff-1.lib $(SUBVERSION)\Release\subversion\libsvn_fs\libsvn_fs-1.lib $(SUBVERSION)\Release\subversion\libsvn_fs_base\libsvn_fs_base-1.lib $(SUBVERSION)\Release\subversion\libsvn_fs_fs\libsvn_fs_fs-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra\libsvn_ra-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra_dav\libsvn_ra_dav-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra_local\libsvn_ra_local-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra_svn\libsvn_ra_svn-1.lib $(SUBVERSION)\Release\subversion\libsvn_repos\libsvn_repos-1.lib $(SUBVERSION)\Release\subversion\libsvn_subr\libsvn_subr-1.lib $(SUBVERSION)\Release\subversion\libsvn_wc\libsvn_wc-1.lib $(APR)\apr-iconv\RELEASE\libapriconv.lib $(APR)\apr-util\RELEASE\libaprutil.lib $(APR)\apr-util\xml\expat\lib\LibR\xml.lib $(APR)\apr\RELEASE\libapr.lib $(SUBVERSION)\db4-win32\lib\libdb42.lib $(SUBVERSION)\neon\libneon.lib ws2_32.lib /nologo /subsystem:console /pdb:"sept" /machine:I386 /out:"test_proplist.exe"
+# SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
 

@@ -10,9 +10,11 @@ static int elapse_time();
 
 int main( int argc, char **argv )
 {
-    if( argc < 3 )
+    if( argc < 4 )
     {
-        std::cout << "Usage: " << argv[0] << " <path-to-wc-file> <num-calls>" << std::endl;
+        std::cout << "Usage: " << argv[0] << " <path-to-wc-file> <num-calls> <recurse>" << std::endl;
+        std::cout << "       " << argv[0] << " readme.txt 50 0" << std::endl;
+        std::cout << "       " << argv[0] << " ../Sources 1 1" << std::endl;
         return 1;
     }
     apr_initialize();
@@ -38,7 +40,7 @@ int main( int argc, char **argv )
 
     char *path = argv[1];
 
-    svn_boolean_t recurse = FALSE;
+    svn_boolean_t recurse = atoi( argv[3] );
 
     int t0 = elapse_time();
 
@@ -63,8 +65,8 @@ int main( int argc, char **argv )
 
     int total = t1 - t0;
 
-    std::cout << "Time for " << max_calls << " calls " << total << "ms" << std::endl;
-    std::cout << "Time for " << 1 << " call " << total/max_calls << "ms" << std::endl;
+    std::cout << "Time for " << max_calls << " calls " << total << "ms recurse=" << recurse << std::endl;
+    std::cout << "Time for " << 1 << " call " << total/max_calls << "ms recurse=" << recurse << std::endl;
 
     return 0;
 }
