@@ -107,6 +107,9 @@ EnumString< svn_wc_notify_action_t >::EnumString()
 
 	// Transmitting post-fix text-delta data for a file.
 	add( svn_wc_notify_commit_postfix_txdelta, "commit_postfix_txdelta" );
+
+	// Processed a single revision's blame.
+	add( svn_wc_notify_blame_revision, "annotate_revision" );
 	}
 
 EnumString< svn_wc_status_kind >::EnumString()

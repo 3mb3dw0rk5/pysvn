@@ -12,5 +12,5 @@
 //
 const int version_major( 0 );
 const int version_minor( 7 );
-const int version_patch( 1 );
+const int version_patch( 2 );
 const int version_build( 0 );

@@ -518,9 +518,9 @@ typedef signed long long signed_int64;
 //	...Do some blocking I/O operation that may throw
 //	} // allow d'tor grabs the lock
 //
-//	In C++ use PythonDisallowTheads in callback code:
+//	In C++ use PythonDisallowThreads in callback code:
 //	{
-//	PythonDisallowTheads permission( main_permission );
+//	PythonDisallowThreads permission( main_permission );
 //	... Python operations that may throw
 //	} // allow d'tor to release the lock
 //

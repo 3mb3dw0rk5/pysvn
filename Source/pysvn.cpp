@@ -231,6 +231,7 @@ void PythonAllowThreads::allowOtherThreads()
 	assert( _save == NULL );
 
 	_save = PyEval_SaveThread();
+	assert( _save != NULL );
 #endif
 	}
 
@@ -239,7 +240,7 @@ void PythonAllowThreads::allowThisThread()
 #if defined( WITH_THREAD )
 	assert( _save != NULL );
 
-	PyEval_RestoreThread(_save);
+	PyEval_RestoreThread( _save );
 	_save = NULL;
 #endif
 	}
