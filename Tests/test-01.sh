@@ -3,7 +3,7 @@ echo WorkDir: ${WORKDIR}
 echo PYTHON: ${PYTHON}
 echo Username: $(id -u -n)
 
-function cmd () {
+cmd () {
 	echo Info: Command: $*
 	"$@"
 }

@@ -29,6 +29,18 @@ Darwin)
 	export APR_INC=/sw/include/apr-0
 	export APR_LIB=/sw/lib
 	;;
+FreeBSD)
+	export PYTHON=/usr/local/bin/python${PY_MAJ}.${PY_MIN}
+	export SVN_INC=/usr/local/include/subversion-1
+	export SVN_LIB=/usr/local//lib
+	if [ -e /usr/local/include/apr-0 ]
+	then
+		export APR_INC=/usr/local/include/apr-0
+	else
+		export APR_INC=/usr/local/include/apache2
+	fi
+	export APR_LIB=/usr/local/lib
+	;;
 
 *)
 	export PYTHON=/usr/bin/python${PY_MAJ}.${PY_MIN}

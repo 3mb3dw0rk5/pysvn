@@ -30,31 +30,32 @@ SvnException::SvnException( svn_error_t *error )
     {
         Py::Tuple t( 2 );
 
-        if( !m_message.empty() )
+        if( !whole_message.empty() )
         {
-            m_message += "\n";
+            whole_message += "\n";
         }
 
 
         if( error->message != NULL )
         {
             t[0] = Py::String( error->message );
-            m_message += error->message;
+            whole_message += error->message;
         }
         else
         {
             std::string message = "Code: ";
             message += toHex( error->apr_err );
             t[0] = Py::String( message );
-            m_message += message;
+            whole_message += message;
         }
         t[1] = Py::Int( error->apr_err );
         error_list.append( t );
 
         error = error->child;
     }
+    m_message = Py::String( whole_message );
     Py::Tuple arg_list(2);
-    arg_list[0] = Py::String( m_message );
+    arg_list[0] = m_message;
     arg_list[1] = error_list;
 
     m_exception_arg = arg_list;
@@ -69,12 +70,12 @@ SvnException::SvnException( const SvnException &other )
 SvnException::~SvnException()
 { }
 
-const std::string &SvnException::message() const
+Py::String &SvnException::message()
 {
     return m_message;
 }
 
-apr_status_t SvnException::code() const
+apr_status_t SvnException::code()
 {
     return m_code;
 }
@@ -87,7 +88,7 @@ Py::Object &SvnException::pythonExceptionArg( int style )
     }
     else
     {
-        return Py::String( m_message );
+        return m_message;
     }
 }
 

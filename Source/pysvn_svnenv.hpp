@@ -18,13 +18,13 @@ public:
     virtual ~SvnException();
 
     // access methods
-    const std::string &message() const;
+    Py::String &message();
     Py::Object &pythonExceptionArg( int style );
-    apr_status_t code() const;
+    apr_status_t code();
 
 private:
-    apr_status_t	m_code;
-    std::string         m_message;
+    int                 m_code;
+    Py::String          m_message;
     Py::Object          m_exception_arg;
 
 private:
