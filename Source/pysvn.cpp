@@ -89,9 +89,17 @@ pysvn_module::~pysvn_module()
 
 Py::Object pysvn_module::new_client(const Py::Tuple &args)
 	{
-	args.verify_length(0);
+	check_arguments( 0, 1, args );
 
-	return Py::asObject( new pysvn_client( *this ) );
+	std::string config_dir;
+
+	if( args.size() == 1 )
+		{
+		Py::String py_config_dir( args[0] );
+		config_dir = py_config_dir.as_std_string();
+		}
+
+	return Py::asObject( new pysvn_client( *this, config_dir ) );
 	}
 
 Py::Object pysvn_module::new_revision(const Py::Tuple &args)

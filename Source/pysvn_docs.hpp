@@ -207,10 +207,11 @@ delete the property propname from path\n\
 "
 
 #define SVN_RELOCATE_DOC \
-"relocate( from_url,\n\
-          to_url,\n\
-          path,\n\
-          recurse=True)\n\
+"relocate( path,\n\
+           from_url,\n\
+           to_url,\n\
+           path,\n\
+           recurse=True)\n\
 \n\
 relocate the working copy from from_url to to_url of path\n\
 "

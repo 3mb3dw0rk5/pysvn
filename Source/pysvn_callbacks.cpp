@@ -233,7 +233,7 @@ svn::ContextListener::SslServerTrustAnswer pysvn_callbacks::contextSslServerTrus
 	trust_data[Py::String("finger_print")] = Py::String( data.fingerprint );
 	trust_data[Py::String("valid_from")] = Py::String( data.validFrom );
 	trust_data[Py::String("valid_until")] = Py::String( data.validUntil );
-	trust_data[Py::String("issuer_domain_name")] = Py::String( data.issuerDName );
+	trust_data[Py::String("issuer_dname")] = Py::String( data.issuerDName );
 	trust_data[Py::String("realm")] = Py::String( data.realm );
 
 	Py::Tuple args( 1 );

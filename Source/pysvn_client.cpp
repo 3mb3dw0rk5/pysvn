@@ -103,9 +103,9 @@ static void get_revision( svn_opt_revision_t &revision,
 	}
 
 //--------------------------------------------------------------------------------
-pysvn_client::pysvn_client( pysvn_module &_module )
+pysvn_client::pysvn_client( pysvn_module &_module, const std::string &config_dir )
 	: apr_context()
-	, svn_context()
+	, svn_context( config_dir )
 	, client_callbacks()
 	, svn_client()
 	, module( _module )
@@ -1125,20 +1125,21 @@ Py::Object pysvn_client::cmd_relocate(const Py::Tuple& args, const Py::Dict &kws
 	{
 	check_arguments( 3, 3, args, recurse_only_keywords, kws );
 
-	Py::String from_url( args[0] );
-	Py::String to_url( args[1] );
-	Py::String path( args[2] );
+	Py::String path( args[0] );
+	Py::String from_url( args[1] );
+	Py::String to_url( args[2] );
 
 	bool recurse = get_optional_boolean( "recurse", true, kws );
 
 	try
 		{
-		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
+		std::string norm_path_str( svnNormalisedIfPath( path.as_std_string() ) );
+		svn::Path norm_path( norm_path_str );
 
 		PythonAllowThreads permission( client_callbacks );
-		svn_client.relocate( from_url.as_std_string().c_str(),
+		svn_client.relocate( norm_path,
+				from_url.as_std_string().c_str(),
 				to_url.as_std_string().c_str(),
-				norm_path.c_str(),
 				recurse );
 		}
 	catch( svn::ClientException &e )
@@ -1389,39 +1390,40 @@ void pysvn_client::init_type()
 	behaviors().supportGetattr();
 	behaviors().supportSetattr();
 
-	add_varargs_method("set_auth_cache", &pysvn_client::set_auth_cache, SET_AUTH_CACHE_DOC );
-	add_varargs_method("is_url", &pysvn_client::is_url, IS_URL_DOC );
-
 	add_keyword_method("add", &pysvn_client::cmd_add, SVN_ADD_DOC );
 	add_keyword_method("annotate", &pysvn_client::cmd_annotate, SVN_ANNOTATE_DOC );
 	add_keyword_method("cat", &pysvn_client::cmd_cat, SVN_CAT_DOC );
-	add_keyword_method("checkout", &pysvn_client::cmd_checkout, SVN_CHECKOUT_DOC );
-	add_varargs_method("cleanup", &pysvn_client::cmd_cleanup, SVN_CLEANUP_DOC );
 	add_keyword_method("checkin", &pysvn_client::cmd_checkin, SVN_CHECKIN_DOC );
+	add_keyword_method("checkout", &pysvn_client::cmd_checkout, SVN_CHECKOUT_DOC );
 	add_keyword_method("copy", &pysvn_client::cmd_copy, SVN_COPY_DOC );
 	add_keyword_method("diff", &pysvn_client::cmd_diff, SVN_DIFF_DOC );
 	add_keyword_method("export", &pysvn_client::cmd_export, SVN_EXPORT_DOC );
-	add_keyword_method("info", &pysvn_client::cmd_info, SVN_INFO_DOC );
 	add_keyword_method("import_", &pysvn_client::cmd_import, SVN_IMPORT_DOC );
+	add_keyword_method("info", &pysvn_client::cmd_info, SVN_INFO_DOC );
 	add_keyword_method("log", &pysvn_client::cmd_log, SVN_LOG_DOC );
 	add_keyword_method("ls", &pysvn_client::cmd_ls, SVN_LS_DOC );
 	add_keyword_method("merge", &pysvn_client::cmd_merge, SVN_MERGE_DOC );
-	add_varargs_method("mkdir", &pysvn_client::cmd_mkdir, SVN_MKDIR_DOC );
 	add_keyword_method("move", &pysvn_client::cmd_move, SVN_MOVE_DOC );
-	add_keyword_method("proplist", &pysvn_client::cmd_proplist, SVN_PROPLIST_DOC );
-	add_keyword_method("propget", &pysvn_client::cmd_propget, SVN_PROPGET_DOC );
-	add_keyword_method("propset", &pysvn_client::cmd_propset, SVN_PROPSET_DOC );
 	add_keyword_method("propdel", &pysvn_client::cmd_propdel, SVN_PROPDEL_DOC );
-	add_keyword_method("revproplist", &pysvn_client::cmd_revproplist, SVN_REVPROPLIST_DOC );
-	add_keyword_method("revpropget", &pysvn_client::cmd_revpropget, SVN_REVPROPGET_DOC );
-	add_keyword_method("revpropset", &pysvn_client::cmd_revpropset, SVN_REVPROPSET_DOC );
-	add_keyword_method("revpropdel", &pysvn_client::cmd_revpropdel, SVN_REVPROPDEL_DOC );
+	add_keyword_method("propget", &pysvn_client::cmd_propget, SVN_PROPGET_DOC );
+	add_keyword_method("proplist", &pysvn_client::cmd_proplist, SVN_PROPLIST_DOC );
+	add_keyword_method("propset", &pysvn_client::cmd_propset, SVN_PROPSET_DOC );
+	add_keyword_method("relocate", &pysvn_client::cmd_relocate, SVN_RELOCATE_DOC );
 	add_keyword_method("remove", &pysvn_client::cmd_remove, SVN_REMOVE_DOC );
 	add_keyword_method("resolved", &pysvn_client::cmd_resolved, SVN_RESOLVED_DOC );
 	add_keyword_method("revert", &pysvn_client::cmd_revert, SVN_REVERT_DOC );
+	add_keyword_method("revpropdel", &pysvn_client::cmd_revpropdel, SVN_REVPROPDEL_DOC );
+	add_keyword_method("revpropget", &pysvn_client::cmd_revpropget, SVN_REVPROPGET_DOC );
+	add_keyword_method("revproplist", &pysvn_client::cmd_revproplist, SVN_REVPROPLIST_DOC );
+	add_keyword_method("revpropset", &pysvn_client::cmd_revpropset, SVN_REVPROPSET_DOC );
 	add_keyword_method("status", &pysvn_client::cmd_status, SVN_STATUS_DOC );
 	add_keyword_method("switch", &pysvn_client::cmd_switch, SVN_SWITCH_DOC );
 	add_keyword_method("update", &pysvn_client::cmd_update, SVN_UPDATE_DOC );
+	add_varargs_method("cleanup", &pysvn_client::cmd_cleanup, SVN_CLEANUP_DOC );
+	add_varargs_method("mkdir", &pysvn_client::cmd_mkdir, SVN_MKDIR_DOC );
+	add_varargs_method("set_auth_cache", &pysvn_client::set_auth_cache, SET_AUTH_CACHE_DOC );
+	add_varargs_method("is_url", &pysvn_client::is_url, IS_URL_DOC );
+
 	}
 
 //--------------------------------------------------------------------------------

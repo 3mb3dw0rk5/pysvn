@@ -77,8 +77,10 @@ pysvn.wc_notify_action.update_update: 'U',
 class SvnCommand:
 	def __init__( self, progname ):
 		self.progname = progname
+		self.client = None
 
-		self.client = c = pysvn.Client()
+	def initClient( self, config_dir ):
+		self.client = c = pysvn.Client( config_dir )
 		self.client.callback_get_login = self.callback_getLogin
 		self.client.callback_get_log_message = self.callback_getLogMessage
 		self.client.callback_notify = self.callback_notify
@@ -96,7 +98,7 @@ class SvnCommand:
 		print 'callback_ssl_client_cert_prompt'
 
 	def callback_ssl_server_prompt( self ):
-		print 'callback_ssl_server_prompt',args
+		print 'callback_ssl_server_prompt'
 
 	def callback_ssl_server_trust_prompt( self, trust_data ):
 		for key,value in trust_data.items():
@@ -156,6 +158,7 @@ class SvnCommand:
 			args = SvnArguments( argv )
 			cmd_name = 'cmd_%s' % args.getCommandName( 'help' )
 
+			self.initClient( args.getOptionalValue( '--config-dir', '' ) )
 			self.client.set_auth_cache( args.getBooleanOption( '--no-auth-cache', False ) )
 
 			getattr( self, cmd_name, self.cmd_help )( args )
@@ -597,6 +600,14 @@ class SvnCommand:
 			positional_args.append( '.' )
 		self.client.switch( positional_args[0], positional_args[1],
 				recurse=recurse, revision=revision )
+
+	def cmd_relocate( self, args ):
+		recurse = args.getBooleanOption( '--non-recursive', False )
+		positional_args = args.getPositionalArgs( 2, 3 )
+		if len(positional_args) == 2:
+			positional_args.append( '.' )
+		self.client.relocate( positional_args[2], positional_args[0],
+				positional_args[1], recurse=recurse )
 
 	def cmd_update( self, args ):
 		recurse = args.getBooleanOption( '--non-recursive', False )

@@ -148,7 +148,7 @@ private:// vaiables
 class pysvn_client : public Py::PythonExtension<pysvn_client>
 	{
 public:
-	pysvn_client( pysvn_module &module );
+	pysvn_client( pysvn_module &module, const std::string &config_dir );
 	virtual ~pysvn_client();
 
 	// override functions from PythonExtension
@@ -192,6 +192,7 @@ public:
 	// SVN commands
 	Py::Object is_url( const Py::Tuple& args );
 	Py::Object set_auth_cache( const Py::Tuple& args );
+
 private:
 	pysvn_module &module;
 	pysvn_callbacks client_callbacks;
