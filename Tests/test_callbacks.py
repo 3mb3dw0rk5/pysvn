@@ -28,10 +28,7 @@ class Test:
 
 	def test_1( self ):
 
-		self.info( 'pysvn %r svn %r' % (pysvn.version, pysvn.svn_version) )
-		self.info( 'pysvn module %r' % pysvn )
-
-		self.client = pysvn.Client( 'b:\\configdir' )
+		self.client = pysvn.Client( 'configdir' )
 		self.info( 'Client created' )
 
 		self.test_1_sub1( 'callback_get_login required' )

@@ -4,8 +4,10 @@ build: all test kit
 
 all:
 	cd ../Source && $(MAKE) -f pysvn_linux_py$(PY_MAJ)$(PY_MIN).mak
+
 clean:
 	cd ../Source && $(MAKE) -f pysvn_linux_py$(PY_MAJ)$(PY_MIN).mak clean
+	cd ../Tests && $(MAKE) -f unix.mak clean
 	rm -rf ../Kit/Linux/tmp
 
 kit:
@@ -16,4 +18,4 @@ install:
 	sudo rpm -i ../Kit/Linux/tmp/RPMS/i386/py${PY_MAJ}${PY_MIN}_pysvn-*-1.i386.rpm
 
 test:
-	echo tests are TBD
+	cd ../Tests && $(MAKE) -f unix.mak all

@@ -58,6 +58,8 @@ class ReplaceDirtInString:
 	# Date/Timestamps:
 	#   2001-03-27-15-36-10
 	#   19-Mar-01 14:52:12
+	#   Jan 20 14:35
+	#   Jan 20  2004
 	# UUID:
 	#   467a5469-d6df-e448-9de8-282096145563
 	# Directory path:
@@ -68,12 +70,16 @@ class ReplaceDirtInString:
 
 	dateAlphaNumeric_re = re.compile(r'\d+-[JFMASOND][a-z][a-z]-\d+ [ 0-9]\d:\d\d:\d\d')
 	dateNumeric_re = re.compile(r'\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d(.\d+)?Z?')
+	dateUnixLs1_re = re.compile(r'[JFMASOND][a-z][a-z] \d+ \d\d:\d\d')
+	dateUnixLs2_re = re.compile(r'[JFMASOND][a-z][a-z]  \d\d\d\d')
 	uuid_re = re.compile(r'[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}')
 
 	self.replacement_list = \
 		    [(dateAlphaNumeric_re,	'<alpha-date-and-time>'),
 		     (dateNumeric_re,		'<numeric-date-and-time>'),
 		     (uuid_re,			'<UUID>'),
+		     (dateUnixLs1_re,		'<ls-date-and-time>'),
+		     (dateUnixLs2_re,		'<ls-date-and-time>'),
 		    ]
 
 

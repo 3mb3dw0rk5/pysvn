@@ -1,14 +1,14 @@
 #!/bin/sh
 set -x
 echo WorkDir: ${WORKDIR}
-if -e testroot-01
+if [ -e testroot-01 ]
 then
     rm -rf testroot-01
 fi
 mkdir testroot-01
 cd testroot-01
 TESTROOT=$(pwd)
-export PYTHONPATH=${WORKDIR}/Source;${WORKDIR}/Examples/Client
+export PYTHONPATH=${WORKDIR}/Source:${WORKDIR}/Examples/Client
 export PYSVN="${PYTHON} ${WORKDIR}/Examples/Client/svn_cmd.py --config-dir ${TESTROOT}/configdir"
 
 echo ${PATH}
@@ -23,7 +23,7 @@ ${PYSVN} ls file:///${TESTROOT}/repos -v -R
 
 echo Info: checkout
 ${PYSVN} checkout file:///${TESTROOT}/repos/trunk ${TESTROOT}/wc1
-ls -lR ${TESTROOT}/wc1
+ls -laR ${TESTROOT}/wc1
 cd ${TESTROOT}/wc1/test
 
 echo Info: add
@@ -72,7 +72,7 @@ ${PYSVN} diff ${TESTROOT}/wc2
 
 echo Info: export
 ${PYSVN} export file:///${TESTROOT}/repos/trunk/test ${TESTROOT}/export1
-dir /s /b ${TESTROOT}/export1
+ls -laR ${TESTROOT}/export1
 
 echo Info: import
 

@@ -263,8 +263,9 @@ class SvnCommand:
 		elif os.environ.has_key('TMPDIR'):
 			tmpdir = os.environ['TMPDIR']
 		else:
-			tmpdir = '/usr/tmp/svn_tmp'
+			tmpdir = '/usr/tmp'
 
+		tmpdir = os.path.join( tmpdir, 'svn_tmp' )
 		diff_text = self.client.diff( tmpdir, positional_args[0], recurse=recurse )
 		print diff_text
 
