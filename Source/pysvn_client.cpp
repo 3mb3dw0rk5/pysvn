@@ -985,6 +985,13 @@ static svn_error_t *logReceiver
 	{
 	std::list<LogEntryInfo> *entries = (std::list<LogEntryInfo> *)baton;
 
+	if( author == NULL )
+		author = "";
+	if( date == NULL )
+		date = "";
+	if( msg == NULL )
+		msg = "";
+
 	entries->push_back( LogEntryInfo( rev, author, date, msg ) );
 
 	if( changedPaths != NULL )
