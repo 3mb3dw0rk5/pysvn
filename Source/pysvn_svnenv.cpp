@@ -159,6 +159,11 @@ SvnContext::SvnContext( const std::string &config_dir_str )
 
 SvnContext::~SvnContext()
 {
+// Why isn't the pool release - object life time problems?
+//    if( m_pool )
+//    {
+//        apr_pool_destroy( m_pool );
+//    }
 }
 
 SvnContext::operator svn_client_ctx_t *()
@@ -354,6 +359,62 @@ svn_error_t *SvnContext::handlerSslClientCertPwPrompt
     return SVN_NO_ERROR;
 }
 
+//--------------------------------------------------------------------------------
+//
+//        SvnTransaction
+//
+//--------------------------------------------------------------------------------
+SvnTransaction::SvnTransaction()
+: m_pool( NULL )
+, m_repos( NULL )
+, m_fs( NULL )
+, m_txn( NULL )
+, m_txn_name( NULL )
+{
+    apr_pool_create( &m_pool, NULL );
+}
+
+svn_error_t *SvnTransaction::init( const std::string &repos_path, const std::string &transaction_name )
+{
+    svn_error_t *error;
+    error = svn_repos_open( &m_repos, repos_path.c_str(), m_pool );
+    if( error != NULL )
+        return error;
+
+    m_fs = svn_repos_fs( m_repos );
+    // what is a warning function?
+    // svn_fs_set_warning_func (m_fs, warning_func, NULL);
+
+    m_txn_name = apr_pstrdup( m_pool, transaction_name.c_str() );
+    error = svn_fs_open_txn( &m_txn, m_fs, m_txn_name, m_pool );
+
+    return error;
+}
+
+SvnTransaction::~SvnTransaction()
+{
+}
+
+SvnTransaction::operator svn_fs_txn_t *()
+{
+    return m_txn;
+}
+
+SvnTransaction::operator svn_fs_t *()
+{
+    return m_fs;
+}
+
+SvnTransaction::operator svn_repos_t *()
+{
+    return m_repos;
+}
+
+
+svn_fs_txn_t *SvnTransaction::transaction()
+{
+    return m_txn;
+}
 
 //--------------------------------------------------------------------------------
 //
@@ -361,6 +422,12 @@ svn_error_t *SvnContext::handlerSslClientCertPwPrompt
 //
 //--------------------------------------------------------------------------------
 SvnPool::SvnPool( SvnContext &ctx )
+: m_pool( NULL )
+{
+    m_pool = svn_pool_create( NULL );
+}
+
+SvnPool::SvnPool( SvnTransaction &txn )
 : m_pool( NULL )
 {
     m_pool = svn_pool_create( NULL );
@@ -378,7 +445,6 @@ SvnPool::operator apr_pool_t *() const
 {
     return m_pool;
 }
-
 
 static const char *toHex( unsigned int num )
 {

@@ -1,0 +1,149 @@
+WorkDir: l:\wc\pysvn\trunk\pysvn\Extension
+PYTHON: c:\python23\python
+
+L:\wc\pysvn\trunk\pysvn\Extension\Tests > setlocal
+
+L:\wc\pysvn\trunk\pysvn\Extension\Tests > set PYTHONPATH=l:\wc\pysvn\trunk\pysvn\Extension\Source;l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client 
+
+L:\wc\pysvn\trunk\pysvn\Extension\Tests > set PYSVN=c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir 
+
+L:\wc\pysvn\trunk\pysvn\Extension\Tests > mkdir testroot-04 
+
+L:\wc\pysvn\trunk\pysvn\Extension\Tests > subst b: L:\wc\pysvn\trunk\pysvn\Extension\Tests\testroot-04 
+
+L:\wc\pysvn\trunk\pysvn\Extension\Tests > cd /d b:\ 
+
+B:\ > svnadmin create b:\repos 
+
+B:\ > rem mkdir 
+
+B:\ > c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir mkdir file:///b:/repos/trunk -m "test-01 add trunk" 
+
+B:\ > c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir mkdir file:///b:/repos/trunk/test -m "test-01 add test" 
+
+B:\ > rem Install hooks 
+
+B:\ > rem echo echo svnlook info %1 -t %2 ^>b:\test_1.output >b:\repos\hooks\pre-commit.cmd 
+
+B:\ > rem echo svnlook info %1 -t %2 ^>^>b:\test_1.output >>b:\repos\hooks\pre-commit.cmd 
+
+B:\ > rem echo echo svnlook changed %1 -t %2 ^>^>b:\test_1.output >>b:\repos\hooks\pre-commit.cmd 
+
+B:\ > rem echo svnlook changed %1 -t %2 ^>^>b:\test_1.output >>b:\repos\hooks\pre-commit.cmd 
+
+B:\ > echo echo c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Tests\test_04_pre_commit_test_1.py %* >>b:\test_1.output  1>>b:\repos\hooks\pre-commit.cmd 
+
+B:\ > echo c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Tests\test_04_pre_commit_test_1.py %* >>b:\test_1.output  1>>b:\repos\hooks\pre-commit.cmd 
+
+B:\ > rem Add one dir 
+
+B:\ > c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir mkdir file:///b:/repos/trunk/test/a -m "pre-commit test 1" 
+
+B:\ > type b:\test_1.output 
+c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Tests\test_04_pre_commit_test_1.py b:/repos 3  
+Info: pre commit test 1 (1, 2, 0, 0)
+Info: Transaction( b:/repos, 3) ...
+Info: proplist() ...
+svn:log: pre-commit test 1
+svn:author: barry
+svn:date: 2005-03-01T23:36:18.166961Z
+Info: changed() ...
+trunk/test/a: action='A', kind=<node_kind.dir>, text_mod=0, prop_mod=0
+
+B:\ > rem Add two files 
+
+B:\ > c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir co file:///b:/repos/trunk/test b:\wc 
+A b:/wc/a
+U b:/wc
+? b:/wc
+
+B:\ > echo file1 ROOT  1>b:\wc\file1.txt 
+
+B:\ > echo file1 A  1>b:\wc\a\file1.txt 
+
+B:\ > c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir add b:\wc\file1.txt 
+A b:/wc/file1.txt
+
+B:\ > c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir add b:\wc\a\file1.txt 
+A b:/wc/a/file1.txt
+
+B:\ > c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir ci -m "Add two files" b:\wc 
+A wc/a/file1.txt
+A wc/file1.txt
+? B:/wc/a/file1.txt
+? B:/wc/file1.txt
+Revision 4
+
+B:\ > type b:\test_1.output 
+c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Tests\test_04_pre_commit_test_1.py b:/repos 3  
+Info: pre commit test 1 (1, 2, 0, 0)
+Info: Transaction( b:/repos, 3) ...
+Info: proplist() ...
+svn:log: pre-commit test 1
+svn:author: barry
+svn:date: 2005-03-01T23:36:18.166961Z
+Info: changed() ...
+trunk/test/a: action='A', kind=<node_kind.dir>, text_mod=0, prop_mod=0
+c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Tests\test_04_pre_commit_test_1.py b:/repos 4  
+Info: pre commit test 1 (1, 2, 0, 0)
+Info: Transaction( b:/repos, 4) ...
+Info: proplist() ...
+svn:log: Add two files
+svn:author: barry
+svn:date: 2005-03-01T23:36:24.186337Z
+Info: changed() ...
+trunk/test/a/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0
+     contents: 'file1 A \r\n'
+trunk/test/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0
+     contents: 'file1 ROOT \r\n'
+
+B:\ > rem Mod one file Mod one prop 
+
+B:\ > echo file1 ROOT ln 2  1>b:\wc\file1.txt 
+
+B:\ > c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir propset svn:eol-style native b:\wc\a\file1.txt 
+
+B:\ > c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir ci -m "Mod one file Mod one prop" b:\wc 
+M wc/a/file1.txt
+M wc/file1.txt
+? B:/wc/a/file1.txt
+? B:/wc/file1.txt
+Revision 5
+
+B:\ > type b:\test_1.output 
+c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Tests\test_04_pre_commit_test_1.py b:/repos 3  
+Info: pre commit test 1 (1, 2, 0, 0)
+Info: Transaction( b:/repos, 3) ...
+Info: proplist() ...
+svn:log: pre-commit test 1
+svn:author: barry
+svn:date: 2005-03-01T23:36:18.166961Z
+Info: changed() ...
+trunk/test/a: action='A', kind=<node_kind.dir>, text_mod=0, prop_mod=0
+c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Tests\test_04_pre_commit_test_1.py b:/repos 4  
+Info: pre commit test 1 (1, 2, 0, 0)
+Info: Transaction( b:/repos, 4) ...
+Info: proplist() ...
+svn:log: Add two files
+svn:author: barry
+svn:date: 2005-03-01T23:36:24.186337Z
+Info: changed() ...
+trunk/test/a/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0
+     contents: 'file1 A \r\n'
+trunk/test/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0
+     contents: 'file1 ROOT \r\n'
+c:\python23\python l:\wc\pysvn\trunk\pysvn\Extension\Tests\test_04_pre_commit_test_1.py b:/repos 5  
+Info: pre commit test 1 (1, 2, 0, 0)
+Info: Transaction( b:/repos, 5) ...
+Info: proplist() ...
+svn:log: Mod one file Mod one prop
+svn:author: barry
+svn:date: 2005-03-01T23:36:28.903685Z
+Info: changed() ...
+trunk/test/a/file1.txt: action='R', kind=<node_kind.file>, text_mod=1, prop_mod=1
+     svn:eol-style: native
+     contents: 'file1 A \n'
+trunk/test/file1.txt: action='R', kind=<node_kind.file>, text_mod=1, prop_mod=0
+     contents: 'file1 ROOT ln 2 \r\n'
+
+B:\ > endlocal

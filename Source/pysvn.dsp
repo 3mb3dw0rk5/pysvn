@@ -194,6 +194,10 @@ SOURCE=pysvn_client.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=pysvn_transaction.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=pysvn_converters.cpp
 # End Source File
 # Begin Source File

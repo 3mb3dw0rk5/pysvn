@@ -1,6 +1,6 @@
 //
 // ====================================================================
-// Copyright (c) 2003-2004 Barry A Scott.  All rights reserved.
+// Copyright (c) 2003-2005 Barry A Scott.  All rights reserved.
 //
 // This software is licensed as described in the file LICENSE.txt,
 // which you should have received as part of this distribution.
@@ -8,7 +8,7 @@
 // ====================================================================
 //
 //
-//	pysvn_entry.cpp
+//  pysvn_entry.cpp
 //
 
 #ifdef _MSC_VER
@@ -22,172 +22,173 @@
 //--------------------------------------------------------------------------------
 
 pysvn_entry::pysvn_entry( const svn_wc_entry_t *svn_entry, SvnContext &context)
-	: m_pool( context )
-	, m_svn_entry( svn_wc_entry_dup( svn_entry, m_pool ) )
-	{ }
+: m_pool( context )
+, m_svn_entry( svn_wc_entry_dup( svn_entry, m_pool ) )
+{
+}
 
 pysvn_entry::~pysvn_entry()
-	{ }
-
+{
+}
 Py::Object pysvn_entry::getattr( const char *_name )
-	{
-	std::string name( _name );
+{
+    std::string name( _name );
 
-	if( name == "__name__" )
-		{
-		return Py::String( "entry" );
-		}
-	else if( name == "__members__" )
-		{
-		Py::List members;
+    if( name == "__name__" )
+    {
+        return Py::String( "entry" );
+    }
+    else if( name == "__members__" )
+    {
+        Py::List members;
 
-		members.append( Py::String( "checksum" ) );
-		members.append( Py::String( "commit_author" ) );
-		members.append( Py::String( "commit_revision" ) );
-		members.append( Py::String( "commit_time" ) );
-		members.append( Py::String( "conflict_new" ) );
-		members.append( Py::String( "conflict_old" ) );
-		members.append( Py::String( "conflict_work" ) );
-		members.append( Py::String( "copy_from_revision" ) );
-		members.append( Py::String( "copy_from_url" ) );
-		members.append( Py::String( "is_absent" ) );
-		members.append( Py::String( "is_copied" ) );
-		members.append( Py::String( "is_deleted" ) );
-		members.append( Py::String( "is_valid" ) );
-		members.append( Py::String( "kind" ) );
-		members.append( Py::String( "name" ) );
-		members.append( Py::String( "properties_time" ) );
-		members.append( Py::String( "property_reject_file" ) );
-		members.append( Py::String( "repos" ) );
-		members.append( Py::String( "revision" ) );
-		members.append( Py::String( "schedule" ) );
-		members.append( Py::String( "text_time" ) );
-		members.append( Py::String( "url" ) );
-		members.append( Py::String( "uuid" ) );
+        members.append( Py::String( "checksum" ) );
+        members.append( Py::String( "commit_author" ) );
+        members.append( Py::String( "commit_revision" ) );
+        members.append( Py::String( "commit_time" ) );
+        members.append( Py::String( "conflict_new" ) );
+        members.append( Py::String( "conflict_old" ) );
+        members.append( Py::String( "conflict_work" ) );
+        members.append( Py::String( "copy_from_revision" ) );
+        members.append( Py::String( "copy_from_url" ) );
+        members.append( Py::String( "is_absent" ) );
+        members.append( Py::String( "is_copied" ) );
+        members.append( Py::String( "is_deleted" ) );
+        members.append( Py::String( "is_valid" ) );
+        members.append( Py::String( "kind" ) );
+        members.append( Py::String( "name" ) );
+        members.append( Py::String( "properties_time" ) );
+        members.append( Py::String( "property_reject_file" ) );
+        members.append( Py::String( "repos" ) );
+        members.append( Py::String( "revision" ) );
+        members.append( Py::String( "schedule" ) );
+        members.append( Py::String( "text_time" ) );
+        members.append( Py::String( "url" ) );
+        members.append( Py::String( "uuid" ) );
 
-		return members;
-		}
+        return members;
+    }
 
-	else if( name == "checksum" )
-		{
-		if( m_svn_entry != NULL )
-			return utf8_string_or_none( m_svn_entry->checksum );
-		}
-	else if( name == "commit_author" )
-		{
-		if( m_svn_entry != NULL )
-			return utf8_string_or_none( m_svn_entry->cmt_author );
-		}
-	else if( name == "commit_revision" )
-		{
-		if( m_svn_entry != NULL )
-			return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, m_svn_entry->cmt_rev ) );
-		}
-	else if( name == "commit_time" )
-		{
-		if( m_svn_entry != NULL )
-			return toObject( m_svn_entry->cmt_date );
-		}
-	else if( name == "conflict_new" )
-		{
-		if( m_svn_entry != NULL )
-			return path_string_or_none( m_svn_entry->conflict_new, m_pool );
-		}
-	else if( name == "conflict_old" )
-		{
-		if( m_svn_entry != NULL )
-			return path_string_or_none( m_svn_entry->conflict_old, m_pool );
-		}
-	else if( name == "conflict_work" )
-		{
-		if( m_svn_entry != NULL )
-			return path_string_or_none( m_svn_entry->conflict_wrk, m_pool );
-		}
-	else if( name == "copy_from_revision" )
-		{
-		if( m_svn_entry != NULL )
-			return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, m_svn_entry->copyfrom_rev ) );
-		}
-	else if( name == "copy_from_url" )
-		{
-		if( m_svn_entry != NULL )
-			return utf8_string_or_none( m_svn_entry->copyfrom_url );
-		}
-	else if( name == "is_absent" )
-		{
-		if( m_svn_entry != NULL )
-			return Py::Int( m_svn_entry->absent );
-		}
-	else if( name == "is_copied" )
-		{
-		if( m_svn_entry != NULL )
-			return Py::Int( m_svn_entry->copied );
-		}
-	else if( name == "is_deleted" )
-		{
-		if( m_svn_entry != NULL )
-			return Py::Int( m_svn_entry->deleted );
-		}
-	else if( name == "is_valid" )
-		{
-		return Py::Int( m_svn_entry != NULL );
-		}
-	else if( name == "kind" )
-		{
-		if( m_svn_entry != NULL )
-			return toEnumValue( m_svn_entry->kind );
-		}
-	else if( name == "name" )
-		{
-		if( m_svn_entry != NULL )
-			return path_string_or_none( m_svn_entry->name, m_pool );
-		}
-	else if( name == "properties_time" )
-		{
-		if( m_svn_entry != NULL )
-			return toObject( m_svn_entry->prop_time );
-		}
-	else if( name == "property_reject_file" )
-		{
-		if( m_svn_entry != NULL )
-			return path_string_or_none( m_svn_entry->prejfile, m_pool );
-		}
-	else if( name == "repos" )
-		{
-		if( m_svn_entry != NULL )
-			return utf8_string_or_none( m_svn_entry->repos );
-		}
-	else if( name == "revision" )
-		{
-		if( m_svn_entry != NULL )
-			return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, m_svn_entry->revision ) );
-		}
-	else if( name == "schedule" )
-		{
-		if( m_svn_entry != NULL )
-			return toEnumValue( m_svn_entry->schedule );
-		}
-	else if( name == "text_time" )
-		{
-		if( m_svn_entry != NULL )
-			return toObject( m_svn_entry->text_time );
-		}
-	else if( name == "url" )
-		{
-		if( m_svn_entry != NULL )
-			return utf8_string_or_none( m_svn_entry->url );
-		}
-	else if( name == "uuid" )
-		{
-		if( m_svn_entry != NULL )
-			return utf8_string_or_none( m_svn_entry->uuid );
-		}
-	else
-		return getattr_methods( _name );
+    else if( name == "checksum" )
+    {
+        if( m_svn_entry != NULL )
+            return utf8_string_or_none( m_svn_entry->checksum );
+    }
+    else if( name == "commit_author" )
+    {
+        if( m_svn_entry != NULL )
+            return utf8_string_or_none( m_svn_entry->cmt_author );
+    }
+    else if( name == "commit_revision" )
+    {
+        if( m_svn_entry != NULL )
+            return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, m_svn_entry->cmt_rev ) );
+    }
+    else if( name == "commit_time" )
+    {
+        if( m_svn_entry != NULL )
+            return toObject( m_svn_entry->cmt_date );
+    }
+    else if( name == "conflict_new" )
+    {
+        if( m_svn_entry != NULL )
+            return path_string_or_none( m_svn_entry->conflict_new, m_pool );
+    }
+    else if( name == "conflict_old" )
+    {
+        if( m_svn_entry != NULL )
+            return path_string_or_none( m_svn_entry->conflict_old, m_pool );
+    }
+    else if( name == "conflict_work" )
+    {
+        if( m_svn_entry != NULL )
+            return path_string_or_none( m_svn_entry->conflict_wrk, m_pool );
+    }
+    else if( name == "copy_from_revision" )
+    {
+        if( m_svn_entry != NULL )
+            return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, m_svn_entry->copyfrom_rev ) );
+    }
+    else if( name == "copy_from_url" )
+    {
+        if( m_svn_entry != NULL )
+            return utf8_string_or_none( m_svn_entry->copyfrom_url );
+    }
+    else if( name == "is_absent" )
+    {
+        if( m_svn_entry != NULL )
+            return Py::Int( m_svn_entry->absent );
+    }
+    else if( name == "is_copied" )
+    {
+        if( m_svn_entry != NULL )
+            return Py::Int( m_svn_entry->copied );
+    }
+    else if( name == "is_deleted" )
+    {
+        if( m_svn_entry != NULL )
+            return Py::Int( m_svn_entry->deleted );
+    }
+    else if( name == "is_valid" )
+    {
+        return Py::Int( m_svn_entry != NULL );
+    }
+    else if( name == "kind" )
+    {
+        if( m_svn_entry != NULL )
+            return toEnumValue( m_svn_entry->kind );
+    }
+    else if( name == "name" )
+    {
+        if( m_svn_entry != NULL )
+            return path_string_or_none( m_svn_entry->name, m_pool );
+    }
+    else if( name == "properties_time" )
+    {
+        if( m_svn_entry != NULL )
+            return toObject( m_svn_entry->prop_time );
+    }
+    else if( name == "property_reject_file" )
+    {
+        if( m_svn_entry != NULL )
+            return path_string_or_none( m_svn_entry->prejfile, m_pool );
+    }
+    else if( name == "repos" )
+    {
+        if( m_svn_entry != NULL )
+            return utf8_string_or_none( m_svn_entry->repos );
+    }
+    else if( name == "revision" )
+    {
+        if( m_svn_entry != NULL )
+            return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, m_svn_entry->revision ) );
+    }
+    else if( name == "schedule" )
+    {
+        if( m_svn_entry != NULL )
+            return toEnumValue( m_svn_entry->schedule );
+    }
+    else if( name == "text_time" )
+    {
+        if( m_svn_entry != NULL )
+            return toObject( m_svn_entry->text_time );
+    }
+    else if( name == "url" )
+    {
+        if( m_svn_entry != NULL )
+            return utf8_string_or_none( m_svn_entry->url );
+    }
+    else if( name == "uuid" )
+    {
+        if( m_svn_entry != NULL )
+            return utf8_string_or_none( m_svn_entry->uuid );
+    }
+    else
+        return getattr_methods( _name );
 
-	// the name is valid bit the object is not valid
-	return Py::Nothing();
-	}
+    // the name is valid bit the object is not valid
+    return Py::Nothing();
+}
 
 
 static const char class_doc[] =
@@ -222,8 +223,8 @@ static const char class_doc[] =
 
 
 void pysvn_entry::init_type()
-	{
-	behaviors().name("entry");
-	behaviors().doc( class_doc );
-	behaviors().supportGetattr();
-	}
+{
+    behaviors().name("entry");
+    behaviors().doc( class_doc );
+    behaviors().supportGetattr();
+}

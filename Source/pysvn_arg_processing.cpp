@@ -163,10 +163,10 @@ Py::Object FunctionArguments::getArg( const char *arg_name )
 {
     if( !hasArg( arg_name ) )
     {
-	std::string msg = m_function_name;
-	msg += "() internal error - getArg called twice of with bad arg_name: ";
-	msg += arg_name;
-	throw Py::AttributeError( msg );
+        std::string msg = m_function_name;
+        msg += "() internal error - getArg called twice of with bad arg_name: ";
+        msg += arg_name;
+        throw Py::AttributeError( msg );
     }
     Py::Object arg = m_checked_args[ arg_name ];
     // Make sure that each arg is only fetched once

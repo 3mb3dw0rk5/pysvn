@@ -8,20 +8,17 @@
 // ====================================================================
 //
 //
-//	pysvn_docs.cpp
+//  pysvn_docs.cpp
 //
 #include "pysvn_docs.hpp"
 
 const char *copyright =
-" Copyright (c) 2003-2004 Barry A Scott.  All rights reserved.\n"
+" Copyright (c) 2003-2005 Barry A Scott.  All rights reserved.\n"
 "\n"
 " This software is licensed as described in the file LICENSE.txt,\n"
 " which you should have received as part of this distribution.\n"
 "\n"
 " =============================================================\n"
-"\n"
-" This product includes software developed by the\n"
-" RapidSvn Group (http://rapidsvn.tigris.org/).\n"
 "\n"
 " This product includes software developed by\n"
 " CollabNet (http://www.Collab.Net/).\n";
@@ -119,4 +116,24 @@ const char *class_revision_doc =
 "    revhead = pysvn.revision( pysvn.opt_revision_kind.head )\n"
 "    revdate = pysvn.revision( pysvn.opt_revision_kind.date, time.time() )\n"
 "    revnum = pysvn.revision( pysvn.opt_revision_kind.number, 4721 )\n"
+;
+
+const char *class_transaction_doc =
+"Transaction - Subversion transaction interface\n"
+"\n"
+"Interface summary:\n"
+"\n"
+"transaction = pysvn.Transaction()\n"
+"\n"
+"Transaction has the following methods:\n"
+"\n"
+TXN_CHANGED_DOC "\n\n"
+TXN_PROPDEL_DOC "\n\n"
+TXN_PROPGET_DOC "\n\n"
+TXN_PROPLIST_DOC "\n\n"
+TXN_PROPSET_DOC "\n\n"
+TXN_REVPROPDEL_DOC "\n\n"
+TXN_REVPROPGET_DOC "\n\n"
+TXN_REVPROPLIST_DOC "\n\n"
+TXN_REVPROPSET_DOC
 ;

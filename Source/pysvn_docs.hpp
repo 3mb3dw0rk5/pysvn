@@ -8,20 +8,19 @@
 // ====================================================================
 //
 //
-//	pysvn_docs.hpp
+//   pysvn_docs.hpp
 //
 
 //--------------------------------------------------------------------------------
 //
-//	Doc strings
+//   Doc strings
 //
 //--------------------------------------------------------------------------------
 extern const char *copyright;
 extern const char *module_doc;
 extern const char *class_client_doc;
 extern const char *class_revision_doc;
-extern const char *class_client_doc;
-extern const char *class_revision_doc;
+extern const char *class_transaction_doc;
 
 #define GET_AUTH_CACHE_DOC \
 "enable = get_auth_cache()\n\
@@ -194,15 +193,23 @@ src_path and dest_path can both be working copy (WC) paths or URLs:\n\
   WC  -> WC:   move and schedule for addition (with history)\n\
   URL -> URL:  complete server-side rename."
 
-#define SVN_PROPLIST_DOC \
-"prop_list = proplist( path,\n\
-                      src_revision=pysvn.Revision( opt_revision_kind.head ),\n\
-                      recurse=False )\n\
-Returns a list of tuples (path, prop_dict)\n\
+#define SVN_PROPDEL_DOC \
+"rev = propdel( propname,\n\
+         path,\n\
+         revision=pysvn.Revision( opt_revision_kind.head ),\n\
+         recurse=False )\n\
+\n\
+delete the property propname from path\n\
 "
 #define SVN_PROPGET_DOC \
 "prop_list = propget( prop_name,\n\
                       path,\n\
+                      src_revision=pysvn.Revision( opt_revision_kind.head ),\n\
+                      recurse=False )\n\
+Returns a list of tuples (path, prop_dict)\n\
+"
+#define SVN_PROPLIST_DOC \
+"prop_list = proplist( path,\n\
                       src_revision=pysvn.Revision( opt_revision_kind.head ),\n\
                       recurse=False )\n\
 Returns a list of tuples (path, prop_dict)\n\
@@ -216,15 +223,6 @@ Returns a list of tuples (path, prop_dict)\n\
 \n\
 set the property propname to propval in path\n\
 "
-#define SVN_PROPDEL_DOC \
-"rev = propdel( propname,\n\
-         path,\n\
-         revision=pysvn.Revision( opt_revision_kind.head ),\n\
-         recurse=False )\n\
-\n\
-delete the property propname from path\n\
-"
-
 #define SVN_RELOCATE_DOC \
 "relocate( path,\n\
            from_url,\n\
@@ -291,10 +289,10 @@ set the property propname to propval in path\n\
 returns status for a single file in path_status"
 #define SVN_STATUS_DOC \
 "path_status_list = status( path,\n\
-	        recurse=True,\n\
-	        get_all=False,\n\
-	        update=False,\n\
-	        no_ignore=False )\n\
+           recurse=True,\n\
+           get_all=False,\n\
+           update=False,\n\
+           no_ignore=False )\n\
 returns status for all files in the directory path in path_status_list"
 #define SVN_SWITCH_DOC \
 "switch( path,\n\
@@ -320,3 +318,70 @@ This command is typically used to get the latest changes from the repository.  N
 current revision.  To make the current version identical to an older revision, use a merge followed by a check in.\n\
 update returns a pysvn.Revision containing the number of the revision the working copy was updated to."
 
+
+
+
+//
+// Transaction docs
+//
+#define TXN_CAT_DOC \
+"x = cat( path )\n\
+\n\
+TBD\n\
+"
+
+#define TXN_CHANGED_DOC \
+"x = changed()\n\
+\n\
+TBD\n\
+"
+
+#define TXN_DIFF_DOC \
+"x = diff( path )\n\
+\n\
+TBD\n\
+"
+
+#define TXN_PROPDEL_DOC \
+"propdel( propname )\n\
+\n\
+delete the property propname from the transaction\n\
+"
+#define TXN_PROPGET_DOC \
+"prop_val = propget( prop_name )\n\
+\n\
+Returns the prop_val string for prop_name in the transaction\n\
+"
+#define TXN_PROPLIST_DOC \
+"prop_dict = proplist()\n\
+\n\
+Returns a dict with all the properties in the transaction\n\
+"
+#define TXN_PROPSET_DOC \
+"propset( prop_name,\n\
+          prop_val )\n\
+\n\
+set the property prop_name to prop_val in the transaction\n\
+"
+
+#define TXN_REVPROPDEL_DOC \
+"revpropdel( revpropname )\n\
+\n\
+delete the revproperty revpropname from the transaction\n\
+"
+#define TXN_REVPROPGET_DOC \
+"revprop_val = revpropget( revprop_name )\n\
+\n\
+Returns the revprop_val string for revprop_name in the transaction\n\
+"
+#define TXN_REVPROPLIST_DOC \
+"revprop_dict = revproplist()\n\
+\n\
+Returns a dict with all the revproperties in the transaction\n\
+"
+#define TXN_REVPROPSET_DOC \
+"revpropset( revprop_name,\n\
+          revprop_val )\n\
+\n\
+set the revproperty revprop_name to revprop_val in the transaction\n\
+"

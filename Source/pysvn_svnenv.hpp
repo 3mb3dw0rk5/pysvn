@@ -2,12 +2,15 @@
 #define __PYSVN_SVNENV__
 
 #include <svn_client.h>
+#include <svn_fs.h>
+#include <svn_repos.h>
 #include <string>
 
 #include "CXX/Objects.hxx"
 
 class SvnPool;
 class SvnContext;
+class SvnTransaction;
 
 class SvnException
 {
@@ -37,6 +40,7 @@ class SvnPool
 {
 public:
     SvnPool( SvnContext &ctx );
+    SvnPool( SvnTransaction &txn );
     ~SvnPool();
 
     operator apr_pool_t *() const;
@@ -116,7 +120,7 @@ public:
     virtual bool contextSslServerTrustPrompt
         (
         const svn_auth_ssl_server_cert_info_t &info, 
-	const std::string &relam,
+        const std::string &relam,
         apr_uint32_t & acceptedFailures,
         bool &accept_permanent
         ) = 0;
@@ -211,6 +215,27 @@ private:
 private:
     apr_pool_t          *m_pool;
     svn_client_ctx_t    m_context;
+};
+
+class SvnTransaction
+{
+public:
+    SvnTransaction();
+    ~SvnTransaction();
+
+    svn_error_t *init( const std::string &repos_path, const std::string &transaction );
+
+    operator svn_fs_txn_t *();
+    svn_fs_txn_t *transaction();
+    operator svn_fs_t *();
+    operator svn_repos_t *();
+
+private:
+    apr_pool_t          *m_pool;
+    svn_repos_t         *m_repos;
+    svn_fs_t            *m_fs;
+    svn_fs_txn_t        *m_txn;
+    char                *m_txn_name;
 };
 
 #endif // __PYSVN_SVNENV__

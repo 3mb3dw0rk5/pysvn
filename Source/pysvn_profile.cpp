@@ -8,16 +8,16 @@
 // ====================================================================
 //
 //
-//	pysvn_profile.cpp
+//  pysvn_profile.cpp
 //
-//	Functions to help profile performance of the pysvn code
+//  Functions to help profile performance of the pysvn code
 //
 #ifdef WIN32
 #include <windows.h>
 
 int elapse_time()
-	{
-	return GetTickCount();
-	}
+{
+    return GetTickCount();
+}
 
 #endif
