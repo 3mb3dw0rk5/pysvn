@@ -11,7 +11,10 @@ if not "%2" == "" set PY_MIN=%2
 
 rem Save CWD
 pushd .
-call ..\ReleaseEngineering\win32\software-versions.cmd
+
+rem in development the version info can be found
+rem otherwise the builder will have run its aleady
+if exist ..\..\ReleaseEngineering\win32\software-versions.cmd call ..\..\ReleaseEngineering\win32\software-versions.cmd
 
 set PYCXX=%WORKDIR%\Import\pycxx_%PYCXX_VER%
 set OPENSSL=%BUILDROOT_DIR%\win32-%SVN_VER%\openssl-%OPENSSL_VER%

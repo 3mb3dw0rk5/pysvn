@@ -13,10 +13,10 @@ export SVN_INC=/usr/include/subversion-1
 export SVN_LIB=/usr/lib
 export APR_INC=/usr/include/apr-0
 export APR_LIB=/usr/lib
-#export SVNCPP_INC=${HOME}/subversion/Linux_rh90/rapidsvn/include
-#export SVNCPP_LIB=${HOME}/subversion/Linux_rh90/rapidsvn/src/svncpp/.libs
-export SVNCPP_INC=${HOME}/subversion/Linux_rh90/rapidsvn-0.5.0/include
-export SVNCPP_LIB=${HOME}/subversion/Linux_rh90/rapidsvn-0.5.0/src/svncpp/.libs
+
+# always build rapidsvn into an unversioned dir
+export SVNCPP_INC=${HOME}/subversion/Linux_rh90/rapidsvn/include
+export SVNCPP_LIB=${HOME}/subversion/Linux_rh90/rapidsvn/src/svncpp/.libs
 export LD_LIBRARY_PATH=${SVNCPP_LIB}
 
 # prove the python version selected is as expected
