@@ -61,6 +61,9 @@ client = pysvn.Client( config_dir )
 
 <p>The default subversion configuration directory is used if the config_dir is ommitted or set to ''.</p>
 <p>The configuration directory is automatically created if it is missing.</p>
+<p>A Client object can only be used on one thread at a time. If two threads attempt to call methods of
+Client at the same time one of the threads will get a pysvn.ClientError exception with the value
+ 'client in use on another thread'.</p>
 
 <table border=1 cellspacing=0 cellpadding=2 bgcolor="#eoeoeo">
 <tr>
