@@ -26,7 +26,7 @@ def main( argv ):
         return 1
 
     try:
-        if argv[1:2] == ['make']:
+        if argv[1:2] == ['configure']:
             return create_makefile( argv )
         elif argv[1:2] == ['help']:
             return help( argv )
@@ -41,7 +41,7 @@ def help( argv ):
     print '''
 
     Create a makefile for this python and platform
-        python %s make <options>
+        python %s configure <options>
 
     Help
         python %s help
