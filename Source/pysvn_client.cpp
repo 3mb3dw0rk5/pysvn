@@ -913,7 +913,7 @@ public:
 	LogChangePathInfo( const char *path, svn_log_changed_path_t *info )
 		: m_path( path )
 		, m_action( info->action )
-		, m_copy_from_path( info->copyfrom_path )
+		, m_copy_from_path( info->copyfrom_path != NULL ? info->copyfrom_path : "" )
 		, m_copy_from_revision( info->copyfrom_rev )
 		{
 		}
@@ -1447,7 +1447,7 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
 	args.check();
 
 	std::string propname( args.getUtf8String( name_prop_name ) );
-	std::string path( name_prop_name );
+	std::string path( args.getUtf8String( name_url_or_path ) );
 
 	bool recurse = args.getBoolean( name_recurse, false );
 	svn_opt_revision_t revision;
@@ -1558,6 +1558,8 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 			}
 
 		proplistToObject( list_of_proplists, props, pool );
+		if( error != NULL )
+			throw SvnException( error );
 		}
 	
 	return list_of_proplists;
