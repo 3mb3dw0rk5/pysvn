@@ -674,7 +674,7 @@ Py::Object pysvn_client::cmd_log(const Py::Tuple& args, const Py::Dict &kws )
 
 		Py::Dict entry_dict;
 		entry_dict["author"] = Py::String( entry.author );
-		entry_dict["date"] = Py::String( entry.date );
+		entry_dict["date"] = toObject( entry.date );
 		entry_dict["message"] = Py::String( entry.message );
 		entry_dict["revision"] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, entry.revision ) );
 
