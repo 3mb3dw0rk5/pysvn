@@ -12,10 +12,16 @@
 <ul>
 <li><a href="http://sourceforge.net/project/showfiles.php?group_id=3180">PyCXX V5.2</a>
 <li><a href="http://rapidsvn.tigris.org">rapidsvn</a> current for the svncpp library
-<li><a href="http://rapidsvn.tigris.org">rapidsvn</a> subversion 0.34.0</a>
+<li><a href="http://subversion.tigris.org">subversion</a> 0.34.0</a>
 </ul>
 
-<p>Building on win32</p>
+<h3>Building on win32</h3>
+<p>These instructions assume you have Microsoft Visual C++ 6.0 to compile the code
+and <a href="http://www.jrsoftware.org/">INNO</a> 4.0.10 to create the installation kit.</p>
+<p>Note: you must build with MSVC6 as python 2.3 was built with that version.</p>
+<p>MSVC 2003.NET is not expected to work until there is a version of python
+built with VC++ 2003.NET released (issues of C runtime compatibility).</p>
+
 <ol>
 <li>build subversion 0.34
 <li>checkout the latest rapidsvn sources
@@ -23,14 +29,12 @@
 <li>fetch/expand the pysvn source code into <i>extdir</i>
 <li>Expand pycxx_5_2_0.tar.gz into <i>extdir</i>\Import
 <li>edit Builder\builder_custom_init.cmd to match the locations of the sources.
-<br>Note: you must build with MSVC6 as python 2.3 was built with that version.
-<br>MSVC 2003.NET is not expected to work until there is a version of python built VC++ .NET released (issues of C runtime compatibility).
 <li>cd Builder
 <li>run builder_custom_init.cmd
 <li>run nmake build
 </ol>
 
-<p>Building on linux systems. I have built and tested on Redhat 9 with Python 2.3.</p>
+<h3>Building on linux systems.</h3>
 
 <ol>
 <li>build subversion 0.34
