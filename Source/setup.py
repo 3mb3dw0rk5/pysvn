@@ -143,7 +143,7 @@ def find_apr_inc( argv ):
                     '/usr/include/apache2',                 # alternate Linux
                     '/usr/local/include/apr0',              # typical *BSD
                     '/usr/local/include/apache2',           # alternate *BSD
-                    '/sw/include/apr-1'],                   # Darwin
+                    '/sw/include/apr-0'],                   # Darwin
                 'apr.h' )
 
 def find_apr_lib( argv ):
