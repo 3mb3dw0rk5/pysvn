@@ -53,6 +53,7 @@ class ReplaceDirtInString:
 	self.lines_list = lines_list
 	self.workdir = self.find( 'WorkDir' )
 	self.python = self.find( 'PYTHON' )
+	self.username = self.find( 'Username' )
 
 	# ------------------------------------------------------------------------
 	# Version strings:
@@ -93,6 +94,11 @@ class ReplaceDirtInString:
 		python_re = LiteralCaseBlindSearch( self.python )
 		self.replacement_list.append(
 		     (python_re,	'<PYTHON>') )
+
+	if self.username:
+		username_re = LiteralSearch( self.username )
+		self.replacement_list.append(
+			(username_re,	'<username>') )
 
     def find( self, keyword ):
 	for line in self.lines_list:

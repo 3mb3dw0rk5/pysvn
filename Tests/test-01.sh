@@ -1,7 +1,8 @@
 #!/bin/sh
-set -x
 echo WorkDir: ${WORKDIR}
 echo PYTHON: ${PYTHON}
+echo Username: $(id -u -n)
+set -x
 
 mkdir -p testroot-01
 rm -rf testroot-01
@@ -26,7 +27,7 @@ ${PYSVN} ls file:///${TESTROOT}/repos -v -R
 
 echo Info: checkout
 ${PYSVN} checkout file:///${TESTROOT}/repos/trunk ${TESTROOT}/wc1
-find ${TESTROOT}/wc1 -ls
+find ${TESTROOT}/wc1 -print
 cd ${TESTROOT}/wc1/test
 
 echo Info: add
@@ -77,7 +78,7 @@ ${PYSVN} diff ${TESTROOT}/wc2
 
 echo Info: export
 ${PYSVN} export file:///${TESTROOT}/repos/trunk/test ${TESTROOT}/export1
-find ${TESTROOT}/export1 -ls
+find ${TESTROOT}/export1 -print
 
 echo Info: import
 
