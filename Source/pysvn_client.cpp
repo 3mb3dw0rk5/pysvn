@@ -686,11 +686,9 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
 		{
 		{ true,  name_tmp_path },
 		{ true,  name_url_or_path },
-		{ false, name_recurse },
-		{ false, name_revision },
-		{ false, name_recurse },
 		{ false, name_revision1 },
 		{ false, name_revision2 },
+		{ false, name_recurse },
 		{ false, name_ignore_ancestry },
 		{ false, name_diff_deleted },
 		{ false, NULL }

@@ -416,7 +416,7 @@ diff( tmp_path,
       revision2=pysvn.Revision( opt_revision_kind.working ),
       recurse=True,
       ignore_ancestry=False,
-      no_diff_deleted=False )
+      diff_deleted=True )
 </pre>
 <p>
 return the differences between two revisions of the path. diff uses tmp_path to create any temporary files needed.
