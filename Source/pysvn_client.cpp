@@ -502,6 +502,9 @@ Py::Object pysvn_client::cmd_copy(const Py::Tuple& args, const Py::Dict &kws )
 		}
 	catch( svn::ClientException &e )
 		{
+		// use callback error over ClientException
+		m_client_callbacks.checkForError( m_module.client_error );
+
 		throw Py::Exception( m_module.client_error, e.message() );
 		}
 

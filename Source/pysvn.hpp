@@ -56,6 +56,9 @@ public:
 	void setPermission( PythonAllowThreads &_permission );
 	// revoke permission
 	void clearPermission();
+
+	void checkForError( Py::ExtensionExceptionType &exception_for_error );
+
 public:	// data
 
 	//
@@ -145,7 +148,8 @@ private:// methods
 
 private:// vaiables
 
-	PythonAllowThreads *m_permission;
+	PythonAllowThreads	*m_permission;
+	std::string		m_error_message;
 	};
 
 class pysvn_client : public Py::PythonExtension<pysvn_client>
@@ -540,8 +544,8 @@ public:
 	void allowOtherThreads();
 	void allowThisThread();
 private:
-	pysvn_callbacks &m_callbacks;
-	PyThreadState *m_save;
+	pysvn_callbacks			&m_callbacks;
+	PyThreadState			*m_save;
 	};
 
 class PythonDisallowThreads

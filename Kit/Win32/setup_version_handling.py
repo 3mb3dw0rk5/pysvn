@@ -41,6 +41,6 @@ f.close()
 
 print 'Info: Create setup_copy.cmd'
 f = file( 'tmp\\setup_copy.cmd', 'w' )
-f.write( 'copy tmp\\Output\\setup.exe tmp\\Output\\pysvn-%s-py%d%d-svn%s.exe\n' %
-	(pysvn_version_string, sys.version_info[0], sys.version_info[1], svn_version_string) )
+f.write( 'copy tmp\\Output\\setup.exe tmp\\Output\\py%d%d-pysvn-svn%s-%s.exe\n' %
+	(sys.version_info[0], sys.version_info[1], svn_version_string, pysvn_version_string) )
 f.close()

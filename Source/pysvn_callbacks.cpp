@@ -29,6 +29,7 @@ pysvn_callbacks::pysvn_callbacks()
 	, m_pyfn_SslClientCertPrompt()
 	, m_pyfn_SslClientCertPwPrompt()
 	, m_permission( NULL )
+	, m_error_message()
 	{ }
 
 
@@ -44,11 +45,21 @@ void pysvn_callbacks::setPermission( PythonAllowThreads &_permission )
 	{
 	assert( m_permission == NULL );
 	m_permission = &_permission;
+	m_error_message = "";
 	}
 
 void pysvn_callbacks::clearPermission()
 	{
 	m_permission = NULL;
+	}
+
+void pysvn_callbacks::checkForError( Py::ExtensionExceptionType &exception_for_error )
+	{
+	// see if any errors occurred in the callbacks
+	if( !m_error_message.empty() )
+		{
+		throw Py::Exception( exception_for_error, m_error_message );
+		}
 	}
 
 //
@@ -69,7 +80,10 @@ bool pysvn_callbacks::contextGetLogin( const std::string & _realm,
 
 	// make sure we can call the users object
 	if( !m_pyfn_GetLogin.isCallable() )
+		{
+		m_error_message = "callback_get_login required";
 		return false;
+		}
 
 	Py::Callable callback( m_pyfn_GetLogin );
 
@@ -108,6 +122,8 @@ bool pysvn_callbacks::contextGetLogin( const std::string & _realm,
 		{
 		PyErr_Print();
 		e.clear();
+
+		m_error_message = "unhandled exception in callback_get_login";
 
 		return false;
 		}
@@ -163,6 +179,8 @@ void pysvn_callbacks::contextNotify (const char *path,
 		{
 		PyErr_Print();
 		e.clear();
+
+		m_error_message = "unhandled exception in callback_notify";
 		}
 	}
 
@@ -198,6 +216,8 @@ bool pysvn_callbacks::contextCancel()
 		PyErr_Print();
 		e.clear();
 
+		m_error_message = "unhandled exception in callback_cancel";
+
 		return false;
 		}
 	}
@@ -212,9 +232,27 @@ bool pysvn_callbacks::contextCancel()
 bool pysvn_callbacks::contextGetLogMessage( std::string & _msg )
 	{
 	PythonDisallowThreads callback_permission( m_permission );
+	
+	if( !m_pyfn_GetLogMessage.isCallable() )
+		{
+		m_error_message = "callback_get_log_message required";
+		return false;
+		}
 
 	Py::Tuple args( 0 );
-	return get_string( m_pyfn_GetLogMessage, args, _msg );
+	try
+		{
+		return get_string( m_pyfn_GetLogMessage, args, _msg );
+		}
+	catch( Py::Exception &e )
+		{
+		PyErr_Print();
+		e.clear();
+
+		m_error_message = "unhandled exception in callback_get_log_message";
+		}
+
+	return false;
 	}
 
 //
@@ -234,7 +272,11 @@ svn::ContextListener::SslServerTrustAnswer pysvn_callbacks::contextSslServerTrus
 
 	// make sure we can call the users object
 	if( !m_pyfn_SslServerTrustPrompt.isCallable() )
+		{
+		m_error_message = "callback_ssl_server_trust_prompt required";
+
 		return DONT_ACCEPT;
+		}
 
 	Py::Callable callback( m_pyfn_SslServerTrustPrompt );
 
@@ -275,6 +317,8 @@ svn::ContextListener::SslServerTrustAnswer pysvn_callbacks::contextSslServerTrus
 		{
 		PyErr_Print();
 		e.clear();
+
+		m_error_message = "unhandled exception in callback_ssl_server_trust_prompt";
 		}
 
 	return DONT_ACCEPT;
@@ -289,8 +333,27 @@ bool pysvn_callbacks::contextSslClientCertPrompt( std::string & certFile )
 	{
 	PythonDisallowThreads callback_permission( m_permission );
 
+	if( !m_pyfn_SslClientCertPrompt.isCallable() )
+		{
+		m_error_message = "callback_ssl_client_cert_prompt required";
+
+		return false;
+		}
+
 	Py::Tuple args( 0 );
-	return get_string( m_pyfn_SslClientCertPrompt, args, certFile );
+	try
+		{
+		return get_string( m_pyfn_SslClientCertPrompt, args, certFile );
+		}
+	catch( Py::Exception &e )
+		{
+		PyErr_Print();
+		e.clear();
+
+		m_error_message = "unhandled exception in callback_ssl_client_cert_prompt";
+		}
+
+	return false;
 	}
 
 //
@@ -306,7 +369,11 @@ bool pysvn_callbacks::contextSslClientCertPwPrompt( std::string &_password,
 
 	// make sure we can call the users object
 	if( !m_pyfn_SslClientCertPwPrompt.isCallable() )
+		{
+		m_error_message = "callback_ssl_client_cert_password_prompt required";
+
 		return false;
+		}
 
 	Py::Callable callback( m_pyfn_SslClientCertPwPrompt );
 
@@ -343,6 +410,8 @@ bool pysvn_callbacks::contextSslClientCertPwPrompt( std::string &_password,
 		PyErr_Print();
 		e.clear();
 
+		m_error_message = "unhandled exception in callback_ssl_client_cert_password_prompt";
+
 		return false;
 		}
 
@@ -362,25 +431,17 @@ static bool get_string( Py::Object &fn, Py::Tuple &args, std::string & msg )
 	Py::Int retcode;
 	Py::String message;
 
-	try
-		{
-		results = callback.apply( args );
-		retcode = results[0];
-		message = results[1];
+	results = callback.apply( args );
+	retcode = results[0];
+	message = results[1];
 
-		// true returned
-		if( long( retcode ) != 0 )
-			{
-			// copy out the answers
-			msg = message.as_std_string();
-
-			return true;
-			}
-		}
-	catch( Py::Exception &e )
+	// true returned
+	if( long( retcode ) != 0 )
 		{
-		PyErr_Print();
-		e.clear();
+		// copy out the answers
+		msg = message.as_std_string();
+
+		return true;
 		}
 
 	return false;
