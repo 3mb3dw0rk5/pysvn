@@ -1372,36 +1372,20 @@ Py::Object pysvn_client::cmd_status(const Py::Tuple& args, const Py::Dict &kws )
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		if( is_path_dir( norm_path ) )
+		checkThreadPermission();
+
+		PythonAllowThreads permission( m_client_callbacks );
+		all_status = m_svn_client.status( norm_path.c_str(),
+						recurse, get_all, update, no_ignore );
+
+		permission.allowThisThread(); // get access to python env
+
+		// convert the entries into python objects
+		svn::StatusEntries::const_iterator entry_it = all_status.begin();
+		while( entry_it != all_status.end() )
 			{
-			checkThreadPermission();
-
-			PythonAllowThreads permission( m_client_callbacks );
-			all_status = m_svn_client.status( norm_path.c_str(),
-							recurse, get_all, update, no_ignore );
-
-			permission.allowThisThread(); // get access to python env
-
-			// convert the entries into python objects
-			svn::StatusEntries::const_iterator entry_it = all_status.begin();
-			while( entry_it != all_status.end() )
-				{
-				const svn::Status &file_status = *entry_it;
-				++entry_it;
-
-				entries_list.append( Py::asObject( new pysvn_status( file_status ) ) );
-				}
-			}
-		else
-			{
-			checkThreadPermission();
-
-			PythonAllowThreads permission( m_client_callbacks );
-			svn::Status file_status;
-
-			file_status = m_svn_client.singleStatus( norm_path.c_str() );
-
-			permission.allowThisThread(); // get access to python env
+			const svn::Status &file_status = *entry_it;
+			++entry_it;
 
 			entries_list.append( Py::asObject( new pysvn_status( file_status ) ) );
 			}
