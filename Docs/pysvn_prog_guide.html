@@ -67,11 +67,11 @@ directory without adding its contents.</P>
 <PRE CLASS="code">import pysvn
 client = pysvn.Client()
 #check out the current version of the pysvn project
-client.checkout('~/examples/pysvn', 
-   'svn://localhost/example/trunk')
+client.checkout('svn://localhost/example/trunk',
+    '~/examples/pysvn')
 #check out revision 11 of the pysvn project
-client.checkout('~/examples/pysvn-11', 
-   'svn://localhost/example/trunk', 
+client.checkout('svn://localhost/example/trunk', 
+   '~/examples/pysvn-11',
    pysvn.Revision(pysvn.opt_revision_kind.number, 11))
 </PRE><P STYLE="margin-bottom: 0cm">
 This example creates a working copy of the example project in the
