@@ -248,37 +248,34 @@ Mark the conflicted file at path as resolved."
         recurse=False )\n\
 Discard any changes in the working copy at path. Set recurse to True to recursively revert a directory's children.\n"
 
-#define SVN_REVPROPLIST_DOC \
-"prop_list = revproplist( path,\n\
-                      src_revision=pysvn.Revision( opt_revision_kind.head ),\n\
-                      recurse=False )\n\
-Returns a list of tuples (path, prop_dict)\n\
-"
-#define SVN_REVPROPGET_DOC \
-"prop_list = revpropget( prop_name,\n\
-                      path,\n\
-                      src_revision=pysvn.Revision( opt_revision_kind.head ),\n\
-                      recurse=False )\n\
-Returns a list of tuples (path, prop_dict)\n\
-"
-#define SVN_REVPROPSET_DOC \
-"rev = revpropset( propname,\n\
-         propval,\n\
-         path,\n\
-         revision=pysvn.Revision( opt_revision_kind.head ),\n\
-         recurse=False )\n\
-\n\
-set the property propname to propval in path\n\
-"
 #define SVN_REVPROPDEL_DOC \
 "rev = revpropdel( propname,\n\
-         path,\n\
-         revision=pysvn.Revision( opt_revision_kind.head ),\n\
-         recurse=False )\n\
+                  path,\n\
+                  revision=pysvn.Revision( opt_revision_kind.head ),\n\
+                  force=False )\n\
 \n\
 delete the property propname from path\n\
 "
-
+#define SVN_REVPROPGET_DOC \
+"prop_list = revpropget( prop_name,\n\
+                        path,\n\
+                        src_revision=pysvn.Revision( opt_revision_kind.head ) )\n\
+Returns a list of tuples (path, prop_dict)\n\
+"
+#define SVN_REVPROPLIST_DOC \
+"prop_list = revproplist( path,\n\
+                         src_revision=pysvn.Revision( opt_revision_kind.head ) )\n\
+Returns a list of tuples (path, prop_dict)\n\
+"
+#define SVN_REVPROPSET_DOC \
+"rev = revpropset( prop_name,\n\
+         prop_value,\n\
+         path,\n\
+         revision=pysvn.Revision( opt_revision_kind.head ),\n\
+         force=False )\n\
+\n\
+set the property propname to propval in path\n\
+"
 #define SVN_SINGLE_STATUS_DOC \
 "path_status = single_status( path )\n\
 returns status for a single file in path_status"

@@ -666,26 +666,24 @@ Set recurse to True to recursively revert a directory's children.</p
 <h4><a name="pysvn_client_revpropdel"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.revpropdel</a></h4>
 <pre>
 rev = revpropdel( prop_name,
-         url,
-         revision=pysvn.Revision( opt_revision_kind.head ),
-         recurse=False )
+                  url,
+                  revision=pysvn.Revision( opt_revision_kind.head ),
+                  force=False )
 </pre>
 <p>Delete the revision property prop_name from url</p>
 
 <h4><a name="pysvn_client_revpropget"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.revpropget</a></h4>
 <pre>
 prop_list = revpropget( prop_name,
-                      url,
-                      revision=pysvn.Revision( opt_revision_kind.head ),
-                      recurse=False )
+                        url,
+                        revision=pysvn.Revision( opt_revision_kind.head ) )
 </pre>
 <p>Returns a list of tuples (path, prop_dict) where the prop_dict contains the revision property prop_name and its value</p>
 
 <h4><a name="pysvn_client_revproplist"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.revproplist</a></h4>
 <pre>
 prop_list = revproplist( url,
-                      revision=pysvn.Revision( opt_revision_kind.head ),
-                      recurse=False )
+                         revision=pysvn.Revision( opt_revision_kind.head ) )
 </pre>
 <p>Returns a list of tuples (path, prop_dict) where the prop_dict contains the revision properies and their values</p>
 
@@ -693,10 +691,10 @@ prop_list = revproplist( url,
 <h4><a name="pysvn_client_revpropset"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.revpropset</a></h4>
 <pre>
 rev = revpropset( prop_name,
-         prop_value,
-         url,
-         revision=pysvn.Revision( opt_revision_kind.head ),
-         recurse=False )
+                  prop_value,
+                  url,
+                  revision=pysvn.Revision( opt_revision_kind.head ),
+                  force=False )
 </pre>
 <p>set the revision property prop_name to prop_value in path. The revision updated is returned.</p>
 
