@@ -2,16 +2,19 @@ BUILD_TYPE=Release
 
 build: all test kit
 
-all:
-	cd ../Source && $(MAKE) -f pysvn_freebsd_py$(PY_MAJ)$(PY_MIN).mak
+all:	../Source/Makefile
+	cd ../Source && $(MAKE)
 
-clean:
-	cd ../Source && $(MAKE) -f pysvn_freebsd_py$(PY_MAJ)$(PY_MIN).mak clean
+clean:	../Source/Makefile
+	cd ../Source && $(MAKE) clean && rm Makefile
 	cd ../Tests && $(MAKE) -f unix.mak clean
-	rm -rf ../Kit/Linux/tmp
+
+../Source/Makefile: ../Source/setup.py
+	cd ../Source && $(PYTHON) setup.py configure
+	
 
 kit:
-	pwd && cd ../Kit/FreeBSD && $(PYTHON) make_pkg.py
+	cd ../Kit/FreeBSD && $(PYTHON) make_pkg.py
 
 test:
 	cd ../Tests && $(MAKE) -f unix.mak all

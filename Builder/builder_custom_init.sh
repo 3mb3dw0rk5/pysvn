@@ -19,40 +19,16 @@ export WORKDIR=$(cd ..;pwd)
 export PY_MAJ=${1:-2}
 export PY_MIN=${2:-3}
 export PYCXX=${WORKDIR}/Import/pycxx_${PYCXXVER}
-export PYDIR=python${PY_MAJ}.${PY_MIN}
-export PYLIB=python${PY_MAJ}${PY_MIN}
 case $(uname -s) in
 Darwin)
 	export PYTHON=/usr/bin/python${PY_MAJ}.${PY_MIN}
-	export SVN_INC=/sw/include/subversion-1
-	export SVN_LIB=/sw/lib
-	export APR_INC=/sw/include/apr-0
-	export APR_LIB=/sw/lib
 	;;
 FreeBSD)
 	export PYTHON=/usr/local/bin/python${PY_MAJ}.${PY_MIN}
-	export SVN_INC=/usr/local/include/subversion-1
-	export SVN_LIB=/usr/local/lib
-	if [ -e /usr/local/include/apr-0 ]
-	then
-		export APR_INC=/usr/local/include/apr-0
-	else
-		export APR_INC=/usr/local/include/apache2
-	fi
-	export APR_LIB=/usr/local/lib
 	;;
 
 *)
 	export PYTHON=/usr/bin/python${PY_MAJ}.${PY_MIN}
-	export SVN_INC=/usr/include/subversion-1
-	export SVN_LIB=/usr/lib
-	if [ -e /usr/include/apr-0 ]
-	then
-		export APR_INC=/usr/include/apr-0
-	else
-		export APR_INC=/usr/include/apache2
-	fi
-	export APR_LIB=/usr/lib
 	;;
 esac
 
