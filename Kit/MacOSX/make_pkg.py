@@ -12,10 +12,11 @@ import time
 pymaj, pymin, pypat, _, _ = sys.version_info
 python_version_string = '%d.%d.%d' % (pymaj, pymin, pypat)
 pysvnmaj, pysvnmin, pysvnpat, _ = pysvn.version
-pysvn_version_string = '%d.%d.%d' % (pysvn.version[0], pysvn.version[1], pysvn.version[2])
+pysvn_version_string = '%d.%d.%d-%d' % (pysvn.version[0], pysvn.version[1], pysvn.version[2], pysvn.version[3])
+svn_version_package_string = '%d%d%d' % (pysvn.svn_version[0], pysvn.svn_version[1], pysvn.svn_version[2])
 svn_version_string = '%d.%d.%d' % (pysvn.svn_version[0], pysvn.svn_version[1], pysvn.svn_version[2])
 
-pkg_filename = 'py%s%s_pysvn_svn%s-%s' % (pymaj, pymin, svn_version_string, pysvn_version_string)
+pkg_filename = 'py%s%s_pysvn_svn%s-%s' % (pymaj, pymin, svn_version_package_string, pysvn_version_string)
 print 'Info: Packageing %s' % pkg_filename
 build_time  = time.time()
 build_time_str = time.strftime( '%d-%b-%Y %H:%M', time.localtime( build_time ) )

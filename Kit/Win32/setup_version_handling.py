@@ -5,7 +5,8 @@ import pysvn
 import time
 
 python_version_string = '%d.%d.%d' % (sys.version_info[0], sys.version_info[1], sys.version_info[2])
-pysvn_version_string = '%d.%d.%d' % (pysvn.version[0], pysvn.version[1], pysvn.version[2])
+pysvn_version_string = '%d.%d.%d-%d' % (pysvn.version[0], pysvn.version[1], pysvn.version[2], pysvn.version[3])
+svn_version_package_string = '%d%d%d' % (pysvn.svn_version[0], pysvn.svn_version[1], pysvn.svn_version[2])
 svn_version_string = '%d.%d.%d' % (pysvn.svn_version[0], pysvn.svn_version[1], pysvn.svn_version[2])
 
 build_time  = time.time()
@@ -21,7 +22,7 @@ f.write(
 
     %s
 
-''' % (pysvn_version_string, python_version_string, svn_version_string, build_time_str) )
+''' % (pysvn_version_string, python_version_string, svn_version_package_string, build_time_str) )
 f.close()
 
 print 'Info: Creating pysvn-branded.iss from pysvn.iss'

@@ -13,6 +13,8 @@ pymaj, pymin, pypat, _, _ = sys.version_info
 python_version_string = '%d.%d.%d' % (pymaj, pymin, pypat)
 pysvnmaj, pysvnmin, pysvnpat, _ = pysvn.version
 pysvn_version_string = '%d.%d.%d' % (pysvn.version[0], pysvn.version[1], pysvn.version[2])
+pysvn_version_package_release_string = '%d' % pysvn.version[3]
+pysvn_version_package_string = '%d.%d.%d-%d' % (pysvn.version[0], pysvn.version[1], pysvn.version[2])
 svn_version_string = '%d.%d.%d' % (pysvn.svn_version[0], pysvn.svn_version[1], pysvn.svn_version[2])
 svn_compact_version_string = '%d%d%d' % (pysvn.svn_version[0], pysvn.svn_version[1], pysvn.svn_version[2])
 
@@ -70,14 +72,14 @@ print 'Info: Create tmp/SPECS/pysvn.spec'
 f = file('tmp/SPECS/pysvn.spec','w')
 f.write('''BuildRoot:	%(tmpdir)s/ROOT
 Name:		py%(pymaj)d%(pymin)d_pysvn_svn%(svn_compact_version_string)s
-Version:	%(pysvnmaj)d.%(pysvnmin)d.%(pysvnpat)d
+Version:	%(pysvn_version_package_string)s
 Group:		Development/Libraries
-Release:	1
-Summary:	pysvn %(pysvn_version_string)s Python extension for Subversion %(svn_version_string)s
+Release:	%(pysvn_version_package_release_string)s
+Summary:	pysvn %(pysvn_version_package_string)s Python extension for Subversion %(svn_version_string)s
 Copyright:	Barry A. Scott (c) 2003-2004
 Packager:	Barry A. Scott <barry@barrys-emacs.org>
 %%description
-PySVN %(pysvn_version_string)s for Python %(python_version_string)s and Subversion %(svn_version_string)s
+PySVN %(pysvn_version_package_string)s for Python %(python_version_string)s and Subversion %(svn_version_string)s
 
 Copyright Barry A. Scott (c) 2003-2004
 
