@@ -1,4 +1,6 @@
 import sys
+import os
+import re
 
 version_details = sys.argv[1]
 input_filename = sys.argv[2]
@@ -16,6 +18,23 @@ for line in file( version_details ):
 
 	key, value = [s.strip() for s in line.split('=',1)]
 	branding_info[ key ] = value
+
+if 'PYSVN_BRAND_BUILD' in os.environ:
+	branding_info['BUILD'] = os.environ['PYSVN_BRAND_BUILD']
+else:
+	build_revision = os.popen( 'svnversion -c .. 2>&1', 'r' ).read().strip()
+	# build_revision is either a range nnn:mmm or mmm
+	# we only want the mmm
+	build_revision = build_revision.split(':')[-1]
+	print 'Info: revision %s' % build_revision
+
+	revision, modifiers = re.compile( '(\d+)(.*)' ).search( build_revision ).groups()
+	
+	if modifiers:
+		branding_info['BUILD'] = '0'
+	else:
+		branding_info['BUILD'] = revision
+
 
 # read all the input text
 text = file( input_filename, 'r' ).read()

@@ -115,6 +115,14 @@ SOURCE=.\pysvn.rc.template
 
 !IF  "$(CFG)" == "pysvn - Win32 Debug"
 
+USERDEP__PYSVN="..\Builder\brand_version.py"	"..\Builder\version.info"	
+# Begin Custom Build
+InputPath=.\pysvn.rc.template
+
+".\pysvn.rc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	PATH=C:\Program Files\Subversion\bin;%PATH%
+	c:\python23\python ..\Builder\brand_version.py ..\Builder\version.info $(InputPath)
+
 !ELSEIF  "$(CFG)" == "pysvn - Win32 Release"
 
 USERDEP__PYSVN="..\Builder\brand_version.py"	"..\Builder\version.info"	
@@ -122,6 +130,7 @@ USERDEP__PYSVN="..\Builder\brand_version.py"	"..\Builder\version.info"
 InputPath=.\pysvn.rc.template
 
 ".\pysvn.rc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	PATH=C:\Program Files\Subversion\bin;%PATH%
 	c:\python23\python ..\Builder\brand_version.py ..\Builder\version.info $(InputPath)
 
 # End Custom Build
@@ -167,6 +176,14 @@ SOURCE=.\pysvn_version.hpp.template
 
 !IF  "$(CFG)" == "pysvn - Win32 Debug"
 
+USERDEP__PYSVN_="..\Builder\brand_version.py"	"..\Builder\version.info"	
+# Begin Custom Build
+InputPath=.\pysvn_version.hpp.template
+
+".\pysvn_version.hpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	PATH=C:\Program Files\Subversion\bin;%PATH%
+	c:\python23\python ..\Builder\brand_version.py ..\Builder\version.info $(InputPath)
+
 !ELSEIF  "$(CFG)" == "pysvn - Win32 Release"
 
 USERDEP__PYSVN_="..\Builder\brand_version.py"	"..\Builder\version.info"	
@@ -174,6 +191,7 @@ USERDEP__PYSVN_="..\Builder\brand_version.py"	"..\Builder\version.info"
 InputPath=.\pysvn_version.hpp.template
 
 ".\pysvn_version.hpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	PATH=C:\Program Files\Subversion\bin;%PATH%
 	c:\python23\python ..\Builder\brand_version.py ..\Builder\version.info $(InputPath)
 
 # End Custom Build
