@@ -1,5 +1,6 @@
-WorkDir: /home/barry/WorkingCopy/pysvn/Extension
-/home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-03
+WorkDir: /u/barry/wc/pysvn/Extension
+PYTHON: /usr/bin/python2.3
+/u/barry/wc/pysvn/Extension/Tests/testroot-03
 Info: Client created
 Info: Expecting error callback_get_login required
 Info: passed

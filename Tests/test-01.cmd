@@ -1,5 +1,7 @@
 @prompt $P$S$G
 @echo WorkDir: %WORKDIR%
+@echo PYTHON: %PY%\python
+
 setlocal
 set PYTHONPATH=%WORKDIR%\Source;%WORKDIR%\Examples\Client
 set PYSVN=%PY%\python %WORKDIR%\Examples\Client\svn_cmd.py --config-dir b:\configdir

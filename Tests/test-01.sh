@@ -1,17 +1,17 @@
 #!/bin/sh
 set -x
 echo WorkDir: ${WORKDIR}
-if [ -e testroot-01 ]
-then
-    rm -rf testroot-01
-fi
+echo PYTHON: ${PYTHON}
+
+mkdir -p testroot-01
+rm -rf testroot-01
 mkdir testroot-01
 cd testroot-01
+
 TESTROOT=$(pwd)
 export PYTHONPATH=${WORKDIR}/Source:${WORKDIR}/Examples/Client
 export PYSVN="${PYTHON} ${WORKDIR}/Examples/Client/svn_cmd.py --config-dir ${TESTROOT}/configdir"
 
-echo ${PATH}
 svnadmin create ${TESTROOT}/repos
 
 echo Info: mkdir
@@ -61,7 +61,9 @@ echo Info: cleanup
 
 echo Info: copy
 ${PYSVN} mkdir file:///${TESTROOT}/repos/tags -m "test-01 add tags"
-echo tag the trunk | ${PYSVN} copy file:///${TESTROOT}/repos/trunk file:///${TESTROOT}/repos/tags/version1
+echo tag the trunk >msg.tmp
+${PYSVN} copy file:///${TESTROOT}/repos/trunk file:///${TESTROOT}/repos/tags/version1 <msg.tmp
+rm msg.tmp
 ${PYSVN} ls -v file:///${TESTROOT}/repos/tags
 ${PYSVN} copy ${TESTROOT}/wc2/test/file1.txt ${TESTROOT}/wc2/test/file1b.txt
 ${PYSVN} checkin ${TESTROOT}/wc2 -m "copy test"
@@ -94,7 +96,9 @@ echo Info: merge
 echo Info: mkdir - done above
 
 echo Info: move
-echo move url test |${PYSVN} move file:///${TESTROOT}/repos/trunk/test/file2.txt file:///${TESTROOT}/repos/trunk/test/file2b.txt 
+echo move url test >msg.tmp
+${PYSVN} move file:///${TESTROOT}/repos/trunk/test/file2.txt file:///${TESTROOT}/repos/trunk/test/file2b.txt <msg.tmp
+rm msg.tmp
 ${PYSVN} move ${TESTROOT}/wc2/test/file3.txt ${TESTROOT}/wc2/test/file3b.txt
 ${PYSVN} checkin ${TESTROOT}/wc2 -m "move wc test"
 
@@ -113,7 +117,7 @@ ${PYSVN} status --show-updates --verbose ${TESTROOT}/wc2
 ${PYSVN} checkin ${TESTROOT}/wc2 -m "prop change"
 
 echo Info: propdel
-cd /d ${TESTROOT}/wc2/test
+cd ${TESTROOT}/wc2/test
 ${PYSVN} propset test:prop1 del_me file4.txt
 ${PYSVN} proplist -v file4.txt
 ${PYSVN} propdel test:prop1 file4.txt
@@ -125,13 +129,13 @@ ${PYSVN} propget svn:eol-style file4.txt
 echo Info: proplist - see above
 
 echo Info: propset
-cd /d ${TESTROOT}/wc2/test
+cd ${TESTROOT}/wc2/test
 ${PYSVN} proplist -v file4.txt
 ${PYSVN} propset svn:eol-style native file4.txt
 ${PYSVN} proplist -v file4.txt
 
 echo Info: remove
-cd /d ${TESTROOT}/wc2/test
+cd ${TESTROOT}/wc2/test
 ${PYSVN} remove file5.txt
 ${PYSVN} status
 
@@ -141,7 +145,7 @@ echo conflict in file4 no >>${TESTROOT}/wc2/test/file4.txt
 ${PYSVN} checkin ${TESTROOT}/wc1/test -m "make a conflict part 1"
 ${PYSVN} update ${TESTROOT}/wc2/test
 ${PYSVN} status
-copy ${TESTROOT}/wc2/test/file4.txt.mine ${TESTROOT}/wc2/test/file4.txt
+cp ${TESTROOT}/wc2/test/file4.txt.mine ${TESTROOT}/wc2/test/file4.txt
 ${PYSVN} resolved ${TESTROOT}/wc2/test/file4.txt
 ${PYSVN} checkin ${TESTROOT}/wc2/test/file4.txt -m "resolve a confict part 2"
 
@@ -166,7 +170,7 @@ echo Info: status - see above
 
 echo Info: relocate
 mkdir ${TESTROOT}/root
-move ${TESTROOT}/repos ${TESTROOT}/root
+mv ${TESTROOT}/repos ${TESTROOT}/root
 ${PYSVN} info ${TESTROOT}/wc1
 ${PYSVN} relocate file:///${TESTROOT}/repos/trunk file:///${TESTROOT}/root/repos/trunk ${TESTROOT}/wc1
 ${PYSVN} info ${TESTROOT}/wc1

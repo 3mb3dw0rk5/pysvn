@@ -51,7 +51,8 @@ class LiteralCaseBlindSearch:
 class ReplaceDirtInString:
     def __init__(self, lines_list):
 	self.lines_list = lines_list
-	self.workingdir = self.find( 'WorkingDir' )
+	self.workdir = self.find( 'WorkDir' )
+	self.python = self.find( 'PYTHON' )
 
 	# ------------------------------------------------------------------------
 	# Version strings:
@@ -83,17 +84,15 @@ class ReplaceDirtInString:
 		    ]
 
 
-	if self.workingdir:
-		workingdir_re = LiteralCaseBlindSearch( self.workingdir )
+	if self.workdir:
+		workdir_re = LiteralCaseBlindSearch( self.workdir )
 		self.replacement_list.append(
-		     (workingdir_re,	'<WorkingDir>') )
+		     (workdir_re,	'<workdir>') )
 
-		if self.homedir:
-			self.workingdir_suffix = self.workingdir[len(self.homedir):]
-			workingdir_suffix_re = LiteralSearch( self.workingdir_suffix )
-			self.replacement_list.append(
-			     (workingdir_suffix_re,	'<WorkingDirSuffix>') )
-
+	if self.python:
+		python_re = LiteralCaseBlindSearch( self.python )
+		self.replacement_list.append(
+		     (python_re,	'<PYTHON>') )
 
     def find( self, keyword ):
 	for line in self.lines_list:
