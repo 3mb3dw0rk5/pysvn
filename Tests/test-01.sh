@@ -4,7 +4,7 @@ echo PYTHON: ${PYTHON}
 echo Username: $(id -u -n)
 
 function cmd () {
-	echo Info: $*
+	echo Info: Command: $*
 	"$@"
 }
 
