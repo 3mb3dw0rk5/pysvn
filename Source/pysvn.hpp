@@ -1,6 +1,6 @@
 //
 // ====================================================================
-// Copyright (c) 2003-2004 Barry A Scott.  All rights reserved.
+// Copyright (c) 2003-2005 Barry A Scott.  All rights reserved.
 //
 // This software is licensed as described in the file LICENSE.txt,
 // which you should have received as part of this distribution.
@@ -304,7 +304,8 @@ private:
 extern Py::Object toObject( apr_time_t time );
 
 //------------------------------------------------------------
-template<class T> class EnumString
+template<TEMPLATE_TYPENAME T>
+class EnumString
 	{
 public:
 	EnumString();
@@ -359,28 +360,32 @@ private:
 	std::map<T,std::string> m_enum_to_string;
 	};
 
-template<class T> const std::string &toTypeName( T value )
+template<TEMPLATE_TYPENAME T>
+const std::string &toTypeName( T value )
 	{
 	static EnumString< T > enum_map;
 
 	return enum_map.toTypeName( value );
 	}
 
-template<class T> const std::string &toString( T value )
+template<TEMPLATE_TYPENAME T>
+const std::string &toString( T value )
 	{
 	static EnumString< T > enum_map;
 
 	return enum_map.toString( value );
 	}
 
-template<class T> bool toEnum( const std::string &string, T &value )
+template<TEMPLATE_TYPENAME T>
+bool toEnum( const std::string &string, T &value )
 	{
 	static EnumString< T > enum_map;
 
 	return enum_map.toEnum( string, value );
 	}
 
-template<class T> Py::List memberList( T value )
+template<TEMPLATE_TYPENAME T>
+Py::List memberList( T value )
 	{
 	static EnumString< T > enum_map;
 
@@ -398,7 +403,7 @@ template<class T> Py::List memberList( T value )
 
 //------------------------------------------------------------
 template<TEMPLATE_TYPENAME T>
-class pysvn_enum_value : public Py::PythonExtension<EXPLICIT_CLASS pysvn_enum_value>
+class pysvn_enum_value : public Py::PythonExtension< EXPLICIT_CLASS pysvn_enum_value<T> >
 	{
 public:
 	pysvn_enum_value( T _value)
@@ -463,8 +468,8 @@ public:
 	};
 
 //------------------------------------------------------------
-template<class T>
-class pysvn_enum : public Py::PythonExtension<EXPLICIT_CLASS pysvn_enum>
+template<TEMPLATE_TYPENAME T>
+class pysvn_enum : public Py::PythonExtension< EXPLICIT_CLASS pysvn_enum<T> >
 	{
 public:
 	pysvn_enum()
@@ -494,13 +499,13 @@ public:
 			return Py::asObject( new pysvn_enum_value<T>( value ) );
 			}
 
-		return getattr_methods( _name );	
+		return this->getattr_methods( _name );	
 		}
 
 	static void init_type(void);
 	};
 
-template<class T> Py::Object toEnumValue( const T &value )
+template<TEMPLATE_TYPENAME T> Py::Object toEnumValue( const T &value )
 	{
 	return Py::asObject( new pysvn_enum_value<T>( value ) );
 	}

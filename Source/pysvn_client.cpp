@@ -192,7 +192,7 @@ Py::Object pysvn_client::cmd_add( const Py::Tuple &a_args, const Py::Dict &a_kws
 	SvnPool pool( m_context );
 	try
 		{
-		for( int i=0; i<path_list.length(); i++ )
+		for( Py::List::size_type i=0; i<path_list.length(); i++ )
 			{
 			Py::String path_str( asUtf8String( path_list[i] ) );
 			std::string norm_path( svnNormalisedIfPath( path_str.as_std_string(), pool ) );
@@ -1516,7 +1516,7 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 
 	Py::List list_of_proplists;
 
-	for( int i=0; i<path_list.length(); i++ )
+	for( Py::List::size_type i=0; i<path_list.length(); i++ )
 		{
 		Py::String path_str( asUtf8String( path_list[i] ) );
 		std::string path( path_str.as_std_string() );
@@ -2407,7 +2407,7 @@ void pysvn_enum< svn_node_kind_t >::init_type(void)
 	}
 
 //--------------------------------------------------------------------------------
-void pysvn_enum_value< svn_opt_revision_kind >::init_type(void)
+template <> void pysvn_enum_value< svn_opt_revision_kind >::init_type(void)
 	{
 	behaviors().name("opt_revision_kind");
 	behaviors().doc("opt_revision_kind value");
@@ -2417,7 +2417,7 @@ void pysvn_enum_value< svn_opt_revision_kind >::init_type(void)
 	behaviors().supportHash();
 	}
 
-void pysvn_enum_value< svn_wc_notify_action_t >::init_type(void)
+template <> void pysvn_enum_value< svn_wc_notify_action_t >::init_type(void)
 	{
 	behaviors().name("wc_notify_action");
 	behaviors().doc("wc_notify_action value");
@@ -2427,7 +2427,7 @@ void pysvn_enum_value< svn_wc_notify_action_t >::init_type(void)
 	behaviors().supportHash();
 	}
 
-void pysvn_enum_value< svn_wc_status_kind >::init_type(void)
+template <> void pysvn_enum_value< svn_wc_status_kind >::init_type(void)
 	{
 	behaviors().name("wc_status_kind");
 	behaviors().doc("wc_status_kind value");
@@ -2437,7 +2437,7 @@ void pysvn_enum_value< svn_wc_status_kind >::init_type(void)
 	behaviors().supportHash();
 	}
 
-void pysvn_enum_value< svn_wc_merge_outcome_t >::init_type(void)
+template <> void pysvn_enum_value< svn_wc_merge_outcome_t >::init_type(void)
 	{
 	behaviors().name("wc_merge_outcome");
 	behaviors().doc("wc_merge_outcome value");
@@ -2447,7 +2447,7 @@ void pysvn_enum_value< svn_wc_merge_outcome_t >::init_type(void)
 	behaviors().supportHash();
 	}
 
-void pysvn_enum_value< svn_wc_notify_state_t >::init_type(void)
+template <> void pysvn_enum_value< svn_wc_notify_state_t >::init_type(void)
 	{
 	behaviors().name("wc_notify_state");
 	behaviors().doc("wc_notify_state value");
@@ -2457,7 +2457,7 @@ void pysvn_enum_value< svn_wc_notify_state_t >::init_type(void)
 	behaviors().supportHash();
 	}
 
-void pysvn_enum_value< svn_node_kind_t >::init_type(void)
+template <> void pysvn_enum_value< svn_node_kind_t >::init_type(void)
 	{
 	behaviors().name("node_kind");
 	behaviors().doc("node_kind value");

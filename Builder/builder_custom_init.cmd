@@ -14,7 +14,10 @@ pushd .
 
 rem in development the version info can be found
 rem otherwise the builder will have run it already
-if exist ..\..\ReleaseEngineering\win32-msvc60\software-versions.cmd call ..\..\ReleaseEngineering\win32-msvc60\software-versions.cmd
+set COMPILER=msvc60
+if "%PY_MIN%" == "4" set COMPILER=msvc71
+
+if exist ..\..\ReleaseEngineering\win32-%COMPILER%\software-versions.cmd call ..\..\ReleaseEngineering\win32-%COMPILER%\software-versions.cmd
 
 set PYCXX=%WORKDIR%\Import\pycxx_%PYCXX_VER%
 set OPENSSL=%TARGET%\openssl-%OPENSSL_VER%

@@ -18,7 +18,7 @@
 
 #include "pysvn.hpp"
 
-EnumString< svn_opt_revision_kind >::EnumString()
+template <> EnumString< svn_opt_revision_kind >::EnumString()
 	: m_type_name( "opt_revision_kind" )
 	{
 	// No revision information given.
@@ -46,7 +46,7 @@ EnumString< svn_opt_revision_kind >::EnumString()
 	add(svn_opt_revision_head, "head");
 	}
 
-EnumString< svn_wc_notify_action_t >::EnumString()
+template <> EnumString< svn_wc_notify_action_t >::EnumString()
 	: m_type_name( "wc_notify_action" )
 	{
 	// Adding a path to revision control.
@@ -112,7 +112,7 @@ EnumString< svn_wc_notify_action_t >::EnumString()
 	add( svn_wc_notify_blame_revision, "annotate_revision" );
 	}
 
-EnumString< svn_wc_status_kind >::EnumString()
+template <> EnumString< svn_wc_status_kind >::EnumString()
 	: m_type_name( "wc_status_kind" )
 	{ 
 	// does not exist
@@ -158,7 +158,7 @@ EnumString< svn_wc_status_kind >::EnumString()
 	add( svn_wc_status_incomplete, "incomplete" );
 	}
 
-EnumString< svn_wc_merge_outcome_t >::EnumString()
+template <> EnumString< svn_wc_merge_outcome_t >::EnumString()
 	: m_type_name( "wc_merge_outcome" )
 	{ 
 	// The working copy is (or would be) unchanged.
@@ -177,7 +177,7 @@ EnumString< svn_wc_merge_outcome_t >::EnumString()
 	add( svn_wc_merge_no_merge, "no_merge" );
 	}
 
-EnumString< svn_wc_notify_state_t >::EnumString()
+template <> EnumString< svn_wc_notify_state_t >::EnumString()
 	: m_type_name( "wc_notify_state" )
 	{
 	add( svn_wc_notify_state_inapplicable, "inapplicable" );
@@ -204,7 +204,7 @@ EnumString< svn_wc_notify_state_t >::EnumString()
 	add( svn_wc_notify_state_conflicted, "conflicted" );
 	}
 
-EnumString< svn_wc_schedule_t >::EnumString()
+template <> EnumString< svn_wc_schedule_t >::EnumString()
 	: m_type_name( "wc_schedule" )
 	{
 	// Nothing special here
@@ -220,7 +220,7 @@ EnumString< svn_wc_schedule_t >::EnumString()
 	add( svn_wc_schedule_replace, "replace" );
 	}
 
-EnumString< svn_node_kind_t >::EnumString()
+template <> EnumString< svn_node_kind_t >::EnumString()
 	: m_type_name( "node_kind" )
 	{
 	// absent

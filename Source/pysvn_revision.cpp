@@ -88,7 +88,7 @@ int pysvn_revision::setattr( const char *_name, const Py::Object &value )
 	else if( name == "date" )
 		{
 		Py::Float py_date( value );
-		apr_time_t date( double( py_date ) * 1000000 );
+		apr_time_t date = (apr_time_t)( double( py_date ) * 1000000 );
 		m_svn_revision.value.date = date;
 		}
 	else if( name == "number" )
