@@ -1,12 +1,16 @@
-BUILD_TYPE=Debug
+BUILD_TYPE=Release
 
-build: all test
+build: all test kit
 
 all:
-	cd ..\Extension && msdev pysvn.dsw /make "pysvn - Win32 $(BUILD_TYPE)"
+	cd ..\Source && msdev pysvn.dsw /make "pysvn - Win32 $(BUILD_TYPE)"
 
 clean:
-	cd ..\Extension && msdev pysvn.dsw /make /clean "pysvn - Win32 $(BUILD_TYPE)"
+	cd ..\Source && msdev pysvn.dsw /make "pysvn - Win32 $(BUILD_TYPE)" /clean
+	cd ..\kit && $(MAKE) clean
+
+kit:
+	cd ..\kit && $(MAKE) all
 
 test:
-	cd  ..\Regression && test-01.cmd
+	cd  ..\Tests && test-01.cmd

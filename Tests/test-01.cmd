@@ -1,7 +1,6 @@
 setlocal
-set PYTHONPATH=%CD%\..\Extension\pyds;%CD%\..\Examples
-set PYSVN=c:\python23\python %CD%\..\Examples\svn_cmd.py
-set PATH=c:\svn;%PATH%
+set PYTHONPATH=%WORKDIR%\Source\pyds;%WORKDIR%\Examples\Client
+set PYSVN=c:\python23\python %WORKDIR%\Examples\Client\svn_cmd.py
 if exist testroot rmdir /s /q testroot
 mkdir testroot
 subst b: /d

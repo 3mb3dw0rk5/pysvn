@@ -1,0 +1,45 @@
+<html>
+<head>
+<title>Building pysvn Extension</title>
+</head>
+<body>
+
+<h1>Building pysvn Extension</h1>
+
+<h2>Prerequisites</h2>
+
+<p>To build pysvn you will require:</p>
+<ul>
+<li><a href="http://sourceforge.net/project/showfiles.php?group_id=3180">PyCXX V5.2</a>
+<li><a href="http://rapidsvn.tigris.org">rapidsvn</a> current for the svncpp library
+<li><a href="http://rapidsvn.tigris.org">rapidsvn</a> subversion 0.34.0</a>
+</ul>
+
+<p>Building on win32</p>
+<ol>
+<li>build subversion 0.34
+<li>checkout the latest rapidsvn sources
+<li>build rapidsvn
+<li>fetch/expand the pysvn source code into <i>extdir</i>
+<li>Expand pycxx_5_2_0.tar.gz into <i>extdir</i>\Import
+<li>edit Builder\builder_custom_init.cmd to match the locations of the sources.
+<br>Note: you must build with MSVC6 as python 2.3 was built with that version.
+<br>MSVC 2003.NET is not expected to work until there is a version of python built VC++ .NET released (issues of C runtime compatibility).
+<li>cd Builder
+<li>run builder_custom_init.cmd
+<li>run nmake build
+</ol>
+
+<p>Building on linux systems. I have built and tested on Redhat 9 with Python 2.3.</p>
+
+<ol>
+<li>build subversion 0.34
+<li>checkout the latest rapidsvn sources
+<li>build rapidsvn
+<li>tar xzf pycxx_5_2_0.tar.gz to extract the PyCXX source code for pycxx
+<li>get the pysvn source code
+<li>edit pysvn_linux_py23.mak match the locations of the sources and libraries.
+<li>make -f pysvn_linux_py23.mak all
+</ol>
+</body>
+</html>
