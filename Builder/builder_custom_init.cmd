@@ -4,10 +4,11 @@
 rem figure out where we are
 for %%I in ( %0\..\.. ) do set WORKDIR=%%~fI
 
+set SVNVER=0.36.0
 set PYCXX=%WORKDIR%\Import\pycxx_5_2_0
-set OPENSSL=L:\subversion\win32-0.35.1\openssl-0.9.7c
-set SUBVERSION=L:\subversion\win32-0.35.1\subversion-0.35.1
-set SVNCPP=L:\subversion\win32-0.35.1\rapidsvn\src\svncpp
+set OPENSSL=L:\subversion\win32-%SVNVER%\openssl-0.9.7c
+set SUBVERSION=L:\subversion\win32-%SVNVER%\subversion-%SVNVER%
+set RAPIDSVN=L:\subversion\win32-%SVNVER%\rapidsvn
 set PY=c:\python23
 set PYLIB=python23
 

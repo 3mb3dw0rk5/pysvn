@@ -12,5 +12,8 @@ clean:
 kit:
 	cd ..\kit && $(MAKE) all
 
+install:
+	..\kit\tmp\output\setup.exe
+
 test:
 	cd  ..\Tests && test-01.cmd

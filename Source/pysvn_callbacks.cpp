@@ -25,7 +25,7 @@ pysvn_callbacks::pysvn_callbacks()
 	, pyfn_Notify()
 	, pyfn_GetLogMessage()
 	, pyfn_SslServerPrompt()
-	, pyfn_SslServerTrustAnswer()
+	, pyfn_SslServerTrustPrompt()
 	, pyfn_SslClientCertPrompt()
 	, pyfn_SslClientCertPwPrompt()
 	, permission( NULL )
@@ -56,7 +56,8 @@ void pysvn_callbacks::clearPermission()
 //
 bool pysvn_callbacks::contextGetLogin( const std::string & _realm,
 		std::string & _username, 
-		std::string & _password )
+		std::string & _password,
+		bool may_save )
 	{
 	PythonDisallowThreads callback_permission( permission );
 
@@ -66,9 +67,10 @@ bool pysvn_callbacks::contextGetLogin( const std::string & _realm,
 
 	Py::Callable callback( pyfn_GetLogin );
 
-	Py::Tuple args( 2 );
+	Py::Tuple args( 3 );
 	args[0] = Py::String( _realm );
 	args[1] = Py::String( _username );
+	args[2] = Py::Int( (long)may_save );
 
 	// bool, username, password
 	Py::Tuple results;
@@ -205,19 +207,6 @@ bool pysvn_callbacks::contextGetLogMessage( std::string & _msg )
 // this method is called if there is ssl server
 // information, that has to be confirmed by the user
 //
-// @retval false prompt was cancelled
-//
-bool pysvn_callbacks::contextSslServerTrustPrompt (SslServerTrustData & data)
-	{
-	PythonDisallowThreads callback_permission( permission );
-
-	return false;
-	}
-
-//
-// this method is called if there is ssl server
-// information, that has to be confirmed by the user
-//
 // @param data 
 // @return @a SslServerTrustAnswer
 //
@@ -229,9 +218,54 @@ svn::ContextListener::SslServerTrustAnswer pysvn_callbacks::contextSslServerTrus
 	{
 	PythonDisallowThreads callback_permission( permission );
 
+	// make sure we can call the users object
+	if( !pyfn_SslServerTrustPrompt.isCallable() )
+		return DONT_ACCEPT;
+
+	Py::Callable callback( pyfn_SslServerTrustPrompt );
+
+	Py::Dict trust_data;
+	trust_data[Py::String("failures")] = Py::Int( long(data.failures) );
+	trust_data[Py::String("hostname")] = Py::String( data.hostname );
+	trust_data[Py::String("finger_print")] = Py::String( data.fingerprint );
+	trust_data[Py::String("valid_from")] = Py::String( data.validFrom );
+	trust_data[Py::String("valid_until")] = Py::String( data.validUntil );
+	trust_data[Py::String("issuer_domain_name")] = Py::String( data.issuerDName );
+	trust_data[Py::String("realm")] = Py::String( data.realm );
+
+	Py::Tuple args( 1 );
+	args[0] = trust_data;
+
+	Py::Tuple result_tuple;
+	Py::Int retcode;
+	Py::Int accepted_failures;
+
+	try
+		{
+		result_tuple = callback.apply( args );
+		retcode = result_tuple[0];
+		accepted_failures = result_tuple[1];
+
+		acceptedFailures = long(accepted_failures);
+		switch( long( retcode ) )
+			{
+		case 1:
+			return ACCEPT_TEMPORARILY;
+		case 2:
+			return ACCEPT_PERMANENTLY;
+		case 0:
+		default:
+			return DONT_ACCEPT;
+			}
+		}
+	catch( Py::Exception &e )
+		{
+		PyErr_Print();
+		e.clear();
+		}
+
 	return DONT_ACCEPT;
 	}
-
 
 
 //
@@ -251,7 +285,8 @@ bool pysvn_callbacks::contextSslClientCertPrompt( std::string & certFile )
 //
 // @param password
 //
-bool pysvn_callbacks::contextSslClientCertPwPrompt( std::string &password )
+bool pysvn_callbacks::contextSslClientCertPwPrompt( std::string &password, 
+		const char *realm, bool may_save )
 	{
 	PythonDisallowThreads callback_permission( permission );
 

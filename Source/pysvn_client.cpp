@@ -19,8 +19,8 @@
 
 #include "pysvn.hpp"
 #include "pysvn_docs.hpp"
-#include "targets.hpp"
-#include "status.hpp"
+#include "svncpp/targets.hpp"
+#include "svncpp/status.hpp"
 #include "svn_path.h"
 
 Py::Object toObject( apr_time_t t )
@@ -133,6 +133,7 @@ Py::Object pysvn_client::getattr( const char *_name )
 		members.append( Py::String( "callback_cancel" ) );
 		members.append( Py::String( "callback_get_log_message" ) );
 		members.append( Py::String( "callback_ssl_server_prompt" ) );
+		members.append( Py::String( "callback_ssl_server_trust_prompt" ) );
 		members.append( Py::String( "callback_ssl_client_cert_prompt" ) );
 		members.append( Py::String( "callback_ssl_client_cert_password_prompt" ) );
 
@@ -149,6 +150,8 @@ Py::Object pysvn_client::getattr( const char *_name )
 		return client_callbacks.pyfn_GetLogMessage;
 	if( name == "callback_ssl_server_prompt" )
 		return client_callbacks.pyfn_SslServerPrompt;
+	if( name == "callback_ssl_server_trust_prompt" )
+		return client_callbacks.pyfn_SslServerTrustPrompt;
 	if( name == "callback_ssl_client_cert_prompt" )
 		return client_callbacks.pyfn_SslClientCertPrompt;
 	if( name == "callback_ssl_client_cert_password_prompt" )
@@ -178,6 +181,8 @@ int pysvn_client::setattr( const char *_name, const Py::Object &value )
 		set_callable( client_callbacks.pyfn_GetLogMessage, value );
 	else if( name == "callback_ssl_server_prompt" )
 		set_callable( client_callbacks.pyfn_SslServerPrompt, value );
+	else if( name == "callback_ssl_server_trust_prompt" )
+		set_callable( client_callbacks.pyfn_SslServerTrustPrompt, value );
 	else if( name == "callback_ssl_client_cert_prompt" )
 		set_callable( client_callbacks.pyfn_SslClientCertPrompt, value );
 	else if( name == "callback_ssl_client_cert_password_prompt" )

@@ -13,15 +13,15 @@
 #include <iostream>
 
 // svncpp includes
-#include "apr.hpp"
-#include "client.hpp"
-#include "dirent.hpp"
-#include "exception.hpp"
-#include "revision.hpp"
-#include "status.hpp"
-#include "context.hpp"
-#include "context_listener.hpp"
-#include "property.hpp"
+#include "svncpp/apr.hpp"
+#include "svncpp/client.hpp"
+#include "svncpp/dirent.hpp"
+#include "svncpp/exception.hpp"
+#include "svncpp/revision.hpp"
+#include "svncpp/status.hpp"
+#include "svncpp/context.hpp"
+#include "svncpp/context_listener.hpp"
+#include "svncpp/property.hpp"
 
 #include <string>
 #include <list>
@@ -63,7 +63,7 @@ public:	// data
 	Py::Object pyfn_Cancel;
 	Py::Object pyfn_GetLogMessage;
 	Py::Object pyfn_SslServerPrompt;
-	Py::Object pyfn_SslServerTrustAnswer;
+	Py::Object pyfn_SslServerTrustPrompt;
 	Py::Object pyfn_SslClientCertPrompt;
 	Py::Object pyfn_SslClientCertPwPrompt;
 
@@ -80,7 +80,8 @@ private:// methods
 	//
 	bool contextGetLogin (const std::string & realm,
                      std::string & username, 
-                     std::string & password);
+                     std::string & password,
+		     bool may_save);
 
 	// 
 	// this method will be called to notify about
@@ -116,14 +117,6 @@ private:// methods
 	// this method is called if there is ssl server
 	// information, that has to be confirmed by the user
 	//
-	// @retval false prompt was cancelled
-	//
-	bool contextSslServerTrustPrompt( SslServerTrustData & data );
-
-	//
-	// this method is called if there is ssl server
-	// information, that has to be confirmed by the user
-	//
 	// @param data 
 	// @return @a SslServerTrustAnswer
 	//
@@ -144,7 +137,8 @@ private:// methods
 	//
 	// @param password
 	//
-	bool contextSslClientCertPwPrompt( std::string & password );
+	bool contextSslClientCertPwPrompt( std::string & password,
+			const char *realm, bool may_save );
 
 private:// vaiables
 

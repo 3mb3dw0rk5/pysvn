@@ -83,6 +83,35 @@ class SvnCommand:
 		self.client.callback_get_log_message = self.callback_getLogMessage
 		self.client.callback_notify = self.callback_notify
 		self.client.callback_cancel = self.callback_cancel
+		self.client.callback_ssl_client_cert_password_prompt = self.callback_ssl_client_cert_password_prompt
+		self.client.callback_ssl_client_cert_prompt = self.callback_ssl_client_cert_prompt
+		self.client.callback_ssl_server_prompt = self.callback_ssl_server_prompt
+		self.client.callback_ssl_server_trust_prompt = self.callback_ssl_server_trust_prompt
+
+
+	def callback_ssl_client_cert_password_prompt( self ):
+		print 'callback_ssl_client_cert_password_prompt'
+
+	def callback_ssl_client_cert_prompt( self ):
+		print 'callback_ssl_client_cert_prompt'
+
+	def callback_ssl_server_prompt( self ):
+		print 'callback_ssl_server_prompt',args
+
+	def callback_ssl_server_trust_prompt( self, trust_data ):
+		for key,value in trust_data.items():
+			print '%s: %s' % (key, value)
+		print
+		answer = ''
+		while answer.lower() not in ['p','t','r']:
+			sys.stdout.write( '(P)ermanent accept, (T)emporary accept or (R)eject: ' )
+			answer = sys.stdin.readline().strip()
+		if answer.lower() == 'p':
+			return 2, trust_data['failures']
+		if answer.lower() == 't':
+			return 1, trust_data['failures']
+		return 0, 0
+
 
 	def callback_cancel( self ):
 		return False
