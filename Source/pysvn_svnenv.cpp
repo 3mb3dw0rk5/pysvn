@@ -1,3 +1,12 @@
+//
+// ====================================================================
+// Copyright (c) 2003-2005 Barry A Scott.  All rights reserved.
+//
+// This software is licensed as described in the file LICENSE.txt,
+// which you should have received as part of this distribution.
+//
+// ====================================================================
+//
 #include "pysvn_svnenv.hpp"
 #include "svn_config.h"
 #include "svn_pools.h"
