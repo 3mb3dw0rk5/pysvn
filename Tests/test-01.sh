@@ -2,189 +2,193 @@
 echo WorkDir: ${WORKDIR}
 echo PYTHON: ${PYTHON}
 echo Username: $(id -u -n)
-set -x
 
-mkdir testroot-01
-cd testroot-01
+function cmd () {
+	echo Info: $*
+	"$@"
+}
+
+cmd mkdir testroot-01
+cmd cd testroot-01
 
 TESTROOT=${WORKDIR}/Tests/testroot-01
 
-mkdir tmp
+cmd mkdir tmp
 export TMPDIR=${TESTROOT}/tmp
 
 export PYTHONPATH=${WORKDIR}/Source:${WORKDIR}/Examples/Client
 export PYSVN="${PYTHON} ${WORKDIR}/Examples/Client/svn_cmd.py --config-dir ${TESTROOT}/configdir"
 
-svnadmin create ${TESTROOT}/repos
+cmd svnadmin create ${TESTROOT}/repos
 
-echo Info: mkdir
-${PYSVN} mkdir file://${TESTROOT}/repos/trunk -m "test-01 add trunk"
-${PYSVN} mkdir file://${TESTROOT}/repos/trunk/test -m "test-01 add test"
+echo Info: Testing - mkdir
+cmd ${PYSVN} mkdir file://${TESTROOT}/repos/trunk -m "test-01 add trunk"
+cmd ${PYSVN} mkdir file://${TESTROOT}/repos/trunk/test -m "test-01 add test"
 
-echo Info: ls
-${PYSVN} ls file://${TESTROOT}/repos -v -R
+echo Info: Testing - ls
+cmd ${PYSVN} ls file://${TESTROOT}/repos -v -R
 
-echo Info: checkout
-${PYSVN} checkout file://${TESTROOT}/repos/trunk ${TESTROOT}/wc1
-python ${WORKDIR}/Tests/find.py ${TESTROOT}/wc1
-cd ${TESTROOT}/wc1/test
+echo Info: Testing - checkout
+cmd ${PYSVN} checkout file://${TESTROOT}/repos/trunk ${TESTROOT}/wc1
+cmd python ${WORKDIR}/Tests/find.py ${TESTROOT}/wc1
+cmd cd ${TESTROOT}/wc1/test
 
-echo Info: add
+echo Info: Testing - add
 echo test add file 1 >file1.txt
 echo test add file 2 >file2.txt
 echo test add file 3 >file3.txt
 echo test add file 4 >file4.txt
 echo test add file 5 >file5.txt
-${PYSVN} add file1.txt
-${PYSVN} add file2.txt
-${PYSVN} add file3.txt
-${PYSVN} add file4.txt
-${PYSVN} add file5.txt
-${PYSVN} checkin -m "commit added files"
+cmd ${PYSVN} add file1.txt
+cmd ${PYSVN} add file2.txt
+cmd ${PYSVN} add file3.txt
+cmd ${PYSVN} add file4.txt
+cmd ${PYSVN} add file5.txt
+cmd ${PYSVN} checkin -m "commit added files"
 
-echo Info: update - get a new wc that will update
-${PYSVN} checkout file://${TESTROOT}/repos/trunk ${TESTROOT}/wc2
+echo Info: Testing - update - get a new wc that will update
+cmd ${PYSVN} checkout file://${TESTROOT}/repos/trunk ${TESTROOT}/wc2
 
-echo Info: - checkin a mod from wc1
+echo Info: Testing - - checkin a mod from wc1
 echo line 2 >>${TESTROOT}/wc1/test/file1.txt
-${PYSVN} checkin -m "commit modified file"
+cmd ${PYSVN} checkin -m "commit modified file"
 
-echo Info: update
-${PYSVN} update ${TESTROOT}/wc2
+echo Info: Testing - update
+cmd ${PYSVN} update ${TESTROOT}/wc2
 
-echo Info: the rest in lexical order
+echo Info: Testing - the rest in lexical order
 
-echo Info: annotate
-${PYSVN} annotate ${TESTROOT}/wc2/test/file1.txt
+echo Info: Testing - annotate
+cmd ${PYSVN} annotate ${TESTROOT}/wc2/test/file1.txt
 
-echo Info: cat
-${PYSVN} cat -r head file://${TESTROOT}/repos/trunk/test/file1.txt
+echo Info: Testing - cat
+cmd ${PYSVN} cat -r head file://${TESTROOT}/repos/trunk/test/file1.txt
 
-echo Info: cleanup
+echo Info: Testing - cleanup
 
-echo Info: copy
-${PYSVN} mkdir file://${TESTROOT}/repos/tags -m "test-01 add tags"
+echo Info: Testing - copy
+cmd ${PYSVN} mkdir file://${TESTROOT}/repos/tags -m "test-01 add tags"
 echo tag the trunk >msg.tmp
-${PYSVN} copy file://${TESTROOT}/repos/trunk file://${TESTROOT}/repos/tags/version1 <msg.tmp
+cmd ${PYSVN} copy file://${TESTROOT}/repos/trunk file://${TESTROOT}/repos/tags/version1 <msg.tmp
 rm msg.tmp
-${PYSVN} ls -v file://${TESTROOT}/repos/tags
-${PYSVN} copy ${TESTROOT}/wc2/test/file1.txt ${TESTROOT}/wc2/test/file1b.txt
-${PYSVN} checkin ${TESTROOT}/wc2 -m "copy test"
+cmd ${PYSVN} ls -v file://${TESTROOT}/repos/tags
+cmd ${PYSVN} copy ${TESTROOT}/wc2/test/file1.txt ${TESTROOT}/wc2/test/file1b.txt
+cmd ${PYSVN} checkin ${TESTROOT}/wc2 -m "copy test"
 
-echo Info: diff
+echo Info: Testing - diff
 echo new line >>${TESTROOT}/wc2/test/file1b.txt
-${PYSVN} diff ${TESTROOT}/wc2
+cmd ${PYSVN} diff ${TESTROOT}/wc2
 
-echo Info: export
-${PYSVN} export file://${TESTROOT}/repos/trunk/test ${TESTROOT}/export1
+echo Info: Testing - export
+cmd ${PYSVN} export file://${TESTROOT}/repos/trunk/test ${TESTROOT}/export1
 python ${WORKDIR}/Tests/find.py ${TESTROOT}/export1
 
-echo Info: import
+echo Info: Testing - import
 
-echo Info: info
-${PYSVN} info ${TESTROOT}/wc2/test
-${PYSVN} info ${TESTROOT}/wc2/test/file1.txt
+echo Info: Testing - info
+cmd ${PYSVN} info ${TESTROOT}/wc2/test
+cmd ${PYSVN} info ${TESTROOT}/wc2/test/file1.txt
 
-echo Info: log
-${PYSVN} log ${TESTROOT}/wc2
+echo Info: Testing - log
+cmd ${PYSVN} log ${TESTROOT}/wc2
 
-echo Info: ls
-${PYSVN} ls file://${TESTROOT}/repos/trunk/test
-${PYSVN} ls -v file://${TESTROOT}/repos/trunk/test
-${PYSVN} ls ${TESTROOT}/wc2/test
-${PYSVN} ls -v ${TESTROOT}/wc2/test
+echo Info: Testing - ls
+cmd ${PYSVN} ls file://${TESTROOT}/repos/trunk/test
+cmd ${PYSVN} ls -v file://${TESTROOT}/repos/trunk/test
+cmd ${PYSVN} ls ${TESTROOT}/wc2/test
+cmd ${PYSVN} ls -v ${TESTROOT}/wc2/test
 
-echo Info: merge
+echo Info: Testing - merge
 
-echo Info: mkdir - done above
+echo Info: Testing - mkdir - done above
 
-echo Info: move
+echo Info: Testing - move
 echo move url test >msg.tmp
-${PYSVN} move file://${TESTROOT}/repos/trunk/test/file2.txt file://${TESTROOT}/repos/trunk/test/file2b.txt <msg.tmp
+cmd ${PYSVN} move file://${TESTROOT}/repos/trunk/test/file2.txt file://${TESTROOT}/repos/trunk/test/file2b.txt <msg.tmp
 rm msg.tmp
-${PYSVN} move ${TESTROOT}/wc2/test/file3.txt ${TESTROOT}/wc2/test/file3b.txt
-${PYSVN} checkin ${TESTROOT}/wc2 -m "move wc test"
+cmd ${PYSVN} move ${TESTROOT}/wc2/test/file3.txt ${TESTROOT}/wc2/test/file3b.txt
+cmd ${PYSVN} checkin ${TESTROOT}/wc2 -m "move wc test"
 
-echo Info: status
+echo Info: Testing - status
 echo file 4 is changing >>${TESTROOT}/wc1/test/file4.txt
-${PYSVN} checkin ${TESTROOT}/wc1 -m "change wc1 for status -u to detect"
+cmd ${PYSVN} checkin ${TESTROOT}/wc1 -m "change wc1 for status -u to detect"
 
-${PYSVN} status ${TESTROOT}/wc2
-${PYSVN} status --verbose ${TESTROOT}/wc2
-${PYSVN} status --show-updates ${TESTROOT}/wc2
-${PYSVN} status --show-updates --verbose ${TESTROOT}/wc2
-${PYSVN} update
-${PYSVN} status --show-updates ${TESTROOT}/wc2
-${PYSVN} status --show-updates --verbose ${TESTROOT}/wc2
-${PYSVN} checkin ${TESTROOT}/wc2 -m "prop change"
+cmd ${PYSVN} status ${TESTROOT}/wc2
+cmd ${PYSVN} status --verbose ${TESTROOT}/wc2
+cmd ${PYSVN} status --show-updates ${TESTROOT}/wc2
+cmd ${PYSVN} status --show-updates --verbose ${TESTROOT}/wc2
+cmd ${PYSVN} update
+cmd ${PYSVN} status --show-updates ${TESTROOT}/wc2
+cmd ${PYSVN} status --show-updates --verbose ${TESTROOT}/wc2
+cmd ${PYSVN} checkin ${TESTROOT}/wc2 -m "prop change"
 
-echo Info: propdel
+echo Info: Testing - propdel
 cd ${TESTROOT}/wc2/test
-${PYSVN} propset test:prop1 del_me file4.txt
-${PYSVN} proplist -v file4.txt
-${PYSVN} propdel test:prop1 file4.txt
-${PYSVN} proplist -v file4.txt
+cmd ${PYSVN} propset test:prop1 del_me file4.txt
+cmd ${PYSVN} proplist -v file4.txt
+cmd ${PYSVN} propdel test:prop1 file4.txt
+cmd ${PYSVN} proplist -v file4.txt
 
-echo Info: propget
-${PYSVN} propset svn:eol-style native file4.txt
-${PYSVN} propget svn:eol-style file4.txt
-${PYSVN} propget unknown file4.txt
+echo Info: Testing - propget
+cmd ${PYSVN} propset svn:eol-style native file4.txt
+cmd ${PYSVN} propget svn:eol-style file4.txt
+cmd ${PYSVN} propget unknown file4.txt
 
-echo Info: proplist - see above
+echo Info: Testing - proplist - see above
 
-echo Info: propset
+echo Info: Testing - propset
 cd ${TESTROOT}/wc2/test
-${PYSVN} proplist -v file4.txt
-${PYSVN} propset svn:eol-style native file4.txt
-${PYSVN} proplist -v file4.txt
+cmd ${PYSVN} proplist -v file4.txt
+cmd ${PYSVN} propset svn:eol-style native file4.txt
+cmd ${PYSVN} proplist -v file4.txt
 
-echo Info: remove
+echo Info: Testing - remove
 cd ${TESTROOT}/wc2/test
-${PYSVN} remove file5.txt
-${PYSVN} status
+cmd ${PYSVN} remove file5.txt
+cmd ${PYSVN} status
 
-echo Info: resolved
+echo Info: Testing - resolved
 echo conflict in file4 yes >>${TESTROOT}/wc1/test/file4.txt
 echo conflict in file4 no >>${TESTROOT}/wc2/test/file4.txt
-${PYSVN} checkin ${TESTROOT}/wc1/test -m "make a conflict part 1"
-${PYSVN} update ${TESTROOT}/wc2/test
-${PYSVN} status
-cp ${TESTROOT}/wc2/test/file4.txt.mine ${TESTROOT}/wc2/test/file4.txt
-${PYSVN} resolved ${TESTROOT}/wc2/test/file4.txt
-${PYSVN} checkin ${TESTROOT}/wc2/test/file4.txt -m "resolve a confict part 2"
+cmd ${PYSVN} checkin ${TESTROOT}/wc1/test -m "make a conflict part 1"
+cmd ${PYSVN} update ${TESTROOT}/wc2/test
+cmd ${PYSVN} status
+cmd cp ${TESTROOT}/wc2/test/file4.txt.mine ${TESTROOT}/wc2/test/file4.txt
+cmd ${PYSVN} resolved ${TESTROOT}/wc2/test/file4.txt
+cmd ${PYSVN} checkin ${TESTROOT}/wc2/test/file4.txt -m "resolve a confict part 2"
 
-echo Info: revert
-${PYSVN} revert file5.txt
-${PYSVN} status
+echo Info: Testing - revert
+cmd ${PYSVN} revert file5.txt
+cmd ${PYSVN} status
 
-echo Info: revproplist
-${PYSVN} revproplist file://${TESTROOT}/repos/trunk
+echo Info: Testing - revproplist
+cmd ${PYSVN} revproplist file://${TESTROOT}/repos/trunk
 
-echo Info: revpropget
-${PYSVN} revpropget svn:log file://${TESTROOT}/repos/trunk
-${PYSVN} revpropget no_such_prop file://${TESTROOT}/repos/trunk
+echo Info: Testing - revpropget
+cmd ${PYSVN} revpropget svn:log file://${TESTROOT}/repos/trunk
+cmd ${PYSVN} revpropget no_such_prop file://${TESTROOT}/repos/trunk
 
-echo Info: revpropset
-${PYSVN} revpropset svn:log "Hello world" file://${TESTROOT}/repos/trunk
+echo Info: Testing - revpropset
+cmd ${PYSVN} revpropset svn:log "Hello world" file://${TESTROOT}/repos/trunk
 
-echo Info: revpropdel
-${PYSVN} revpropdel svn:log file://${TESTROOT}/repos/trunk
+echo Info: Testing - revpropdel
+cmd ${PYSVN} revpropdel svn:log file://${TESTROOT}/repos/trunk
 
-echo Info: status - see above
+echo Info: Testing - status - see above
 
-echo Info: relocate
-mkdir ${TESTROOT}/root
-mv ${TESTROOT}/repos ${TESTROOT}/root
-${PYSVN} info ${TESTROOT}/wc1
-${PYSVN} relocate file://${TESTROOT}/repos/trunk file://${TESTROOT}/root/repos/trunk ${TESTROOT}/wc1
-${PYSVN} info ${TESTROOT}/wc1
-${PYSVN} info ${TESTROOT}/wc2
-${PYSVN} relocate file://${TESTROOT}/repos/trunk file://${TESTROOT}/root/repos/trunk ${TESTROOT}/wc2
-${PYSVN} info ${TESTROOT}/wc2
+echo Info: Testing - relocate
+cmd mkdir ${TESTROOT}/root
+cmd mv ${TESTROOT}/repos ${TESTROOT}/root
+cmd ${PYSVN} info ${TESTROOT}/wc1
+cmd ${PYSVN} relocate file://${TESTROOT}/repos/trunk file://${TESTROOT}/root/repos/trunk ${TESTROOT}/wc1
+cmd ${PYSVN} info ${TESTROOT}/wc1
+cmd ${PYSVN} info ${TESTROOT}/wc2
+cmd ${PYSVN} relocate file://${TESTROOT}/repos/trunk file://${TESTROOT}/root/repos/trunk ${TESTROOT}/wc2
+cmd ${PYSVN} info ${TESTROOT}/wc2
 
-echo Info: switch
-${PYSVN} info ${TESTROOT}/wc2
-${PYSVN} switch ${TESTROOT}/wc2 file://${TESTROOT}/root/repos/tags/version1
-${PYSVN} info ${TESTROOT}/wc2
+echo Info: Testing - switch
+cmd ${PYSVN} info ${TESTROOT}/wc2
+cmd ${PYSVN} switch ${TESTROOT}/wc2 file://${TESTROOT}/root/repos/tags/version1
+cmd ${PYSVN} info ${TESTROOT}/wc2
 
-echo Info: update - see above
+echo Info: Testing - update - see above
