@@ -15,7 +15,7 @@ pysvnmaj, pysvnmin, pysvnpat, _ = pysvn.version
 pysvn_version_string = '%d.%d.%d' % (pysvn.version[0], pysvn.version[1], pysvn.version[2])
 svn_version_string = '%d.%d.%d' % (pysvn.svn_version[0], pysvn.svn_version[1], pysvn.svn_version[2])
 
-pkg_filename = 'pysvn-%s-py%s%s-svn-%s' % (pysvn_version_string, pymaj, pymin, svn_version_string)
+pkg_filename = 'py%s%s_pysvn_svn%s-%s' % (pymaj, pymin, svn_version_string, pysvn_version_string)
 print 'Info: Packageing %s' % pkg_filename
 build_time  = time.time()
 build_time_str = time.strftime( '%d-%b-%Y %H:%M', time.localtime( build_time ) )
@@ -137,6 +137,6 @@ cmd = [	'/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/Packa
 os.system( ' '.join( cmd ) )
 
 print 'Info: Make Disk Image'
-os.system( 'hdiutil create -srcfolder tmp/%s tmp/pysvn.big.dmg' % pkg_filename )
-os.system( 'hdiutil convert tmp/pysvn.big.dmg -format UDZO -imagekey zlib-level=9 ' 
+os.system( 'hdiutil create -srcfolder tmp/%s tmp/tmp.dmg' % pkg_filename )
+os.system( 'hdiutil convert tmp/tmp.dmg -format UDZO -imagekey zlib-level=9 ' 
 		'-o tmp/%s.dmg' % pkg_filename )
