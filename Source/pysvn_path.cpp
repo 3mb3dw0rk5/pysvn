@@ -29,14 +29,19 @@ bool is_svn_url( const std::string &path_or_url )
     return svn_path_is_url( path_or_url.c_str() ) != 0;
 }
 
-// convert a path to what SVN likes
+// convert a path or URL to what SVN likes
 std::string svnNormalisedIfPath( const std::string &unnormalised, SvnPool &pool )
 {
     if( is_svn_url( unnormalised ) )
-        return unnormalised;
-
-    const char *normalised_path = svn_path_internal_style( unnormalised.c_str(), pool );
-    return std::string( normalised_path );
+    {
+        const char *normalised_path = svn_path_canonicalize( unnormalised.c_str(), pool );
+        return std::string( normalised_path );
+    }
+    else
+    {
+        const char *normalised_path = svn_path_internal_style( unnormalised.c_str(), pool );
+        return std::string( normalised_path );
+    }
 }
 
 // convert a path to what the native OS likes
