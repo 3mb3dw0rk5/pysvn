@@ -35,6 +35,11 @@ pysvn_callbacks::pysvn_callbacks()
 pysvn_callbacks::~pysvn_callbacks()
 	{ }
 
+bool pysvn_callbacks::hasPermission()
+	{
+	return m_permission != NULL;
+	}
+
 void pysvn_callbacks::setPermission( PythonAllowThreads &_permission )
 	{
 	assert( m_permission == NULL );

@@ -50,7 +50,11 @@ public:
 	pysvn_callbacks();
 	virtual ~pysvn_callbacks();
 
+	// return true if the callbacks are being used on some thread
+	bool hasPermission();
+	// give the callbacks permission to run
 	void setPermission( PythonAllowThreads &_permission );
+	// revoke permission
 	void clearPermission();
 public:	// data
 
@@ -534,8 +538,8 @@ public:
 	void allowOtherThreads();
 	void allowThisThread();
 private:
-	pysvn_callbacks &callbacks;
-	PyThreadState *_save;
+	pysvn_callbacks &m_callbacks;
+	PyThreadState *m_save;
 	};
 
 class PythonDisallowThreads

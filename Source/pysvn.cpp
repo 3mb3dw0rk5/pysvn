@@ -210,38 +210,38 @@ void check_arguments( int min_args, int max_args, const Py::Tuple &args,
 //
 //--------------------------------------------------------------------------------
 PythonAllowThreads::PythonAllowThreads( pysvn_callbacks &_callbacks )
-	: callbacks( _callbacks )
-	, _save( NULL )
+	: m_callbacks( _callbacks )
+	, m_save( NULL )
 	{
-	callbacks.setPermission( *this );
+	m_callbacks.setPermission( *this );
 	allowOtherThreads();
 	}
 
 PythonAllowThreads::~PythonAllowThreads()
 	{
-	if( _save != NULL )
+	if( m_save != NULL )
 		allowThisThread();
 
-	callbacks.clearPermission();
+	m_callbacks.clearPermission();
 	}
 
 void PythonAllowThreads::allowOtherThreads()
 	{
 #if defined( WITH_THREAD )
-	assert( _save == NULL );
+	assert( m_save == NULL );
 
-	_save = PyEval_SaveThread();
-	assert( _save != NULL );
+	m_save = PyEval_SaveThread();
+	assert( m_save != NULL );
 #endif
 	}
 
 void PythonAllowThreads::allowThisThread()
 	{
 #if defined( WITH_THREAD )
-	assert( _save != NULL );
+	assert( m_save != NULL );
 
-	PyEval_RestoreThread( _save );
-	_save = NULL;
+	PyEval_RestoreThread( m_save );
+	m_save = NULL;
 #endif
 	}
 
