@@ -197,6 +197,10 @@ svn_error_t *SvnContext::handlerSimplePrompt
 
     bool may_save = a_may_save != 0;
 
+    if( a_realm == NULL )
+        a_realm = "";
+    if( a_username == NULL )
+        a_username = "";
     std::string realm( a_realm );
     std::string username( a_username );
     std::string password;
@@ -219,7 +223,7 @@ svn_error_t *SvnContext::handlerSslServerTrustPrompt
     (
     svn_auth_cred_ssl_server_trust_t **cred, 
     void *baton,
-    const char *realm,
+    const char *a_realm,
     apr_uint32_t failures,
     const svn_auth_ssl_server_cert_info_t *info,
     svn_boolean_t may_save,
@@ -231,6 +235,9 @@ svn_error_t *SvnContext::handlerSslServerTrustPrompt
     apr_uint32_t accepted_failures = failures;
     bool accept_permanently = true;
 
+    if( a_realm == NULL )
+        a_realm = "";
+    std::string realm( a_realm );
     if( !context->contextSslServerTrustPrompt( *info, realm, accepted_failures, accept_permanently ) )
     {
         *cred = NULL;
@@ -279,12 +286,16 @@ svn_error_t *SvnContext::handlerSslClientCertPwPrompt
     (
     svn_auth_cred_ssl_client_cert_pw_t **cred, 
     void *baton, 
-    const char *realm,
+    const char *a_realm,
     svn_boolean_t maySave,
     apr_pool_t *pool
     )
 {
     SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+
+    if( a_realm == NULL )
+        a_realm = "";
+    std::string realm( a_realm );
 
     std::string password;
     bool may_save = maySave != 0;
