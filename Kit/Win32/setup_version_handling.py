@@ -26,15 +26,17 @@ f.close()
 
 print 'Info: Creating pysvn-branded.iss from pysvn.iss'
 f = file( 'pysvn.iss', 'r' )
-all_lines = f.readlines()
+pysvn_iss_text = f.read()
 f.close()
+
 f = file( 'tmp\\pysvn-branded.iss', 'w' )
-for line in all_lines:
-	if line.find( 'AppVerName=' ) == 0:
-		f.write( 'AppVerName=Python %d.%d PySVN %s\n' %
-			(sys.version_info[0], sys.version_info[1], pysvn_version_string) )
-	else:
-		f.write( line )
+branding = {
+	'py_maj': sys.version_info[0],
+	'py_min': sys.version_info[1],
+	'pysvn_version_string': pysvn_version_string,
+	}
+print repr(branding)
+f.write( pysvn_iss_text % branding )
 f.close()
 
 print 'Info: Create setup_copy.cmd'

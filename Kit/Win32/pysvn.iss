@@ -9,11 +9,11 @@ var
 	rcb : Boolean;
 begin
 	rcb := RegQueryStringValue( HKLM,
-		'SOFTWARE\Python\PythonCore\2.3\InstallPath',
+		'SOFTWARE\Python\PythonCore\%(py_maj)d.%(py_min)d\InstallPath',
 		'', install_path );
 	if not rcb then
 	begin
-		MsgBox( 'pysvn requires Python 2.3 to be installed.' #13 #13
+		MsgBox( 'pysvn requires Python %(py_maj)d.%(py_min)d to be installed.' #13 #13
 				'Quitting installation',
 			 mbError, MB_OK );
 	end;
@@ -26,7 +26,7 @@ var
 	rcb : Boolean;
 begin
 	rcb := RegQueryStringValue( HKLM,
-		'SOFTWARE\Python\PythonCore\2.3\InstallPath',
+		'SOFTWARE\Python\PythonCore\%(py_maj)d.%(py_min)d\InstallPath',
 		'', install_path );
 	if rcb then
 	begin
@@ -40,11 +40,11 @@ end;
 
 
 [Setup]
-AppName=PySVN
-AppVerName=PySVN UNCONTROLLED
+AppName=Python %(py_maj)d.%(py_min)d PySVN
+AppVerName=Python %(py_maj)d.%(py_min)d PySVN %(pysvn_version_string)s 
 AppCopyright=Copyright (C) 2003-2004 Barry A. Scott
-DefaultDirName={code:pythondir|c:\python23}\lib\site-packages\pysvn
-DefaultGroupName=PySVN for Python 2.3
+DefaultDirName={code:pythondir|c:\python%(py_maj)d.%(py_min)d}\lib\site-packages\pysvn
+DefaultGroupName=PySVN for Python %(py_maj)d.%(py_min)d
 DisableStartupPrompt=yes
 InfoBeforeFile=info_before.txt
 Compression=bzip/9

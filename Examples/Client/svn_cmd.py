@@ -627,10 +627,12 @@ class SvnCommand:
 		valid_cmd_names = [name for name in SvnCommand.__dict__.keys() if name.find('cmd_') == 0]
 		valid_cmd_names.sort()
 		print 'Available subcommands:'
-		for index, name in enumerate(valid_cmd_names):
+		index = 0
+		for name in valid_cmd_names:
 			print '   %-12s' % name[4:],
 			if index % 4 == 3:
 				print
+			index += 1
 
 # key is long option name, value is need for arg
 long_opt_info = {

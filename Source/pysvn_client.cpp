@@ -713,7 +713,7 @@ Py::Object pysvn_client::cmd_ls(const Py::Tuple& args, const Py::Dict &kws )
 
 		Py::Dict entry_dict;
 		entry_dict["name"] = Py::String( osNormalisedPath( entry.name() ) );
-		entry_dict["kind"] = toObject( entry.kind() );
+		entry_dict["kind"] = toEnumValue( entry.kind() );
 		entry_dict["size"] = Py::Long( Py::Float( double( static_cast<signed_int64>( entry.size() ) ) ) );
 		entry_dict["created_rev"] = Py::Int( entry.createdRev() );
 		entry_dict["time"] = toObject( entry.time() );
