@@ -391,7 +391,9 @@ Py::Object pysvn_client::cmd_cat( const Py::Tuple &a_args, const Py::Dict &a_kws
 		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
-	return Py::String( stringbuf->data, stringbuf->len, name_utf8 );
+	// return the bytes as is to the application
+	// we can assume nothing about them
+	return Py::String( stringbuf->data, (int)stringbuf->len );
 	}
 
 Py::Object pysvn_client::cmd_checkout( const Py::Tuple &a_args, const Py::Dict &a_kws )
