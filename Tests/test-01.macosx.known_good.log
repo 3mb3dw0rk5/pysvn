@@ -1,8 +1,6 @@
 WorkDir: /Users/barry/wc/svn/pysvn/Extension
 PYTHON: /usr/bin/python2.3
 Username: barry
-+ mkdir -p testroot-01
-+ rm -rf testroot-01
 + mkdir testroot-01
 + cd testroot-01
 + TESTROOT=/Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01
