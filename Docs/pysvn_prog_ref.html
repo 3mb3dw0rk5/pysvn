@@ -732,20 +732,20 @@ revpropdel( prop_name,
 
 <h4><a name="pysvn_client_revpropget"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.revpropget</a></h4>
 <pre>
-prop_list = \
+rev_prop = \
 revpropget( prop_name,
             url,
             revision=pysvn.Revision( opt_revision_kind.head ) )
 </pre>
-<p>Returns a list of tuples (path, prop_dict) where the prop_dict contains the revision property prop_name and its value</p>
+<p>Returns a tuple (rev, prop_val) where the prop_val contains the revision property value</p>
 
 <h4><a name="pysvn_client_revproplist"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.revproplist</a></h4>
 <pre>
-prop_list = \
+rev_prop_dict = \
 revproplist( url,
              revision=pysvn.Revision( opt_revision_kind.head ) )
 </pre>
-<p>Returns a list of tuples (path, prop_dict) where the prop_dict contains the revision properies and their values</p>
+<p>Returns a tuple (revision, prop_dict) where the prop_dict contains the revision properies and their values</p>
 
 
 <h4><a name="pysvn_client_revpropset"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.revpropset</a></h4>
