@@ -133,7 +133,7 @@ def stripDirty(filename):
     contents = f.read()
     f.close()
 
-    lines = string.split( contents.replace( '\r', '\n' ), '\n' )
+    lines = string.split( contents.replace( '\r\n', '\n' ).replace( '\r', '\n' ), '\n' )
     replace = ReplaceDirtInString( lines )
     stripped_lines = replace.execute()
 
