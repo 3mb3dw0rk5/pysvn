@@ -9,9 +9,7 @@ rm -rf testroot-01
 mkdir testroot-01
 cd testroot-01
 
-set +x
-TESTROOT=$(pwd)
-set -x
+TESTROOT=${WORKDIR}/Tests/testroot-01
 
 mkdir tmp
 export TMPDIR=${TESTROOT}/tmp
