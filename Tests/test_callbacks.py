@@ -73,12 +73,14 @@ class Test:
 
 
 def get_login_bad( realm, username, may_save ):
+	# bad because of undefined retcode
 	return retcode, username, password, save
 
 def get_login_good( realm, username, may_save ):
 	return True, username, 'fred', may_save
 
 def get_log_message_bad():
+	# bad because of undefined bad_var
 	return bad_var
 
 def get_log_message_good():

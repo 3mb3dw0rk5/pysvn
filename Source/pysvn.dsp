@@ -71,7 +71,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GR /GX /Zi /Od /Ob2 /I "$(PY)\include" /I "." /I "$(PYCXX)" /I "$(APR)/apr/include" /I "$(APR)/apr-util/include" /I "$(APR)/apr-util/xml/expat/lib" /I "$(SUBVERSION)/subversion/include" /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /D "noPY_WIN32_DELAYLOAD_PYTHON_DLL" /FR /YX /FD /Zm200 /c /Tp
+# ADD CPP /nologo /MD /W3 /GR /GX /Zi /O2 /Ob2 /I "$(PY)\include" /I "." /I "$(PYCXX)" /I "$(APR)/apr/include" /I "$(APR)/apr-util/include" /I "$(APR)/apr-util/xml/expat/lib" /I "$(SUBVERSION)/subversion/include" /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /D "noPY_WIN32_DELAYLOAD_PYTHON_DLL" /FR /YX /FD /Zm200 /c /Tp
 # ADD BASE MTL /nologo /mktyplib203 /o "NUL" /win32
 # ADD MTL /nologo /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x409

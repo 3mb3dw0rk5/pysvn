@@ -10,10 +10,11 @@ clean:
 	cd ..\kit\Win32 && $(MAKE) clean
 
 kit:
-	cd ..\kit\Win32 && $(MAKE) all
+	cd ..\kit\Win32 && $(MAKE) all_msvc60
 
 install:
 	..\kit\Win32\tmp\output\setup.exe
 
 test:
-	cd  ..\Tests && test-01.cmd
+	cd  ..\Tests && test-pysvn.cmd >test-pysvn.log 2>&1
+	cd  ..\Tests && type test-pysvn.log

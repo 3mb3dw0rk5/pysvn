@@ -27,9 +27,15 @@ class CommandError( Exception ):
 
 def main( args ):
 	progname = os.path.basename( args[0] )
-
+	pause = False
+	if args[1:2] == ['--pause']:
+		del args[1]
+		pause = True
 	svn_cmd = SvnCommand( progname )
-	return svn_cmd.dispatch( args[1:] )
+	rc = svn_cmd.dispatch( args[1:] )
+	if pause:
+		sys.stdin.readline()
+	return rc
 
 def fmtDateTime( t ):
 	return time.strftime( '%d-%b-%Y %X', time.localtime( t ) )
@@ -231,7 +237,9 @@ class SvnCommand:
 			msg = self.getLogMessage()
 			
 		rev = self.client.checkin( positional_args, msg, recurse=recurse )
-		if rev.number > 0:
+		if rev is None:
+			print 'Nothing to commit'
+		elif rev.number > 0:
 			print 'Revision',rev.number
 		else:
 			print 'Commit failed'
@@ -261,9 +269,17 @@ class SvnCommand:
 		print diff_text
 
 	def cmd_export( self, args ):
-		revision = args.getOptionalRevision( '--revision', 'base' )
+		force = args.getBooleanOption( '--force', False )
+		revision_url = args.getOptionalRevision( '--revision', 'head' )
+		revision_wc = args.getOptionalRevision( '--revision', 'working' )
 		positional_args = args.getPositionalArgs( 2, 2 )
-		self.client.export( positional_args[0], positional_args[1], revision=revision )
+
+		if self.client.is_url( positional_args[0] ):
+			revision = revision_url
+		else:
+			revision = revision_wc
+
+		self.client.export( positional_args[0], positional_args[1], revision=revision, force=force )
 
 	def cmd_info( self, args ):
 		positional_args = args.getPositionalArgs( 0, 1 )
@@ -457,14 +473,11 @@ class SvnCommand:
 		if self.client.is_url( positional_args[0] ):
 			revision = args.getOptionalRevision( '--revision', 'head' )
 
-		all_props = self.client.propget( positional_args[0], positional_args[1], revision=revision, recurse=recurse )
-		all_props.sort( self.props_by_path )
-
-		for path, props in all_props:
-			prop_names = props.keys()
-			prop_names.sort()
-			for name in prop_names:
-				print '%s - %s' % (path, props[name])
+		props = self.client.propget( positional_args[0], positional_args[1], revision=revision, recurse=recurse )
+		prop_names = props.keys()
+		prop_names.sort()
+		for name in prop_names:
+			print '%s: %s' % (path, props[name])
 
 	cmd_pg = cmd_propget
 
@@ -495,50 +508,49 @@ class SvnCommand:
 	cmd_pd = cmd_propdel
 
 	def cmd_revproplist( self, args ):
-		revision = args.getOptionalRevision( '--revision', 'working' )
+		revision = args.getOptionalRevision( '--revision', 'head' )
 		verbose = args.getBooleanOption( '--verbose', False )
 		positional_args = args.getPositionalArgs( 0, 1 )
 		if len(positional_args) == 0:
 			positional_args.append( '.' )
-		if self.client.is_url( positional_args[0] ):
-			revision = args.getOptionalRevision( '--revision', 'head' )
 
 		rev, prop_dict = self.client.revproplist( positional_args[0], revision=revision )
-		print rev,repr(prop_dict)
+		print 'Revision:',rev.number
+		prop_keys = prop_dict.keys()
+		prop_keys.sort()
+		for key in prop_keys:
+			print '%s: %s' % (key, prop_dict[ key ])
+
 	cmd_rpl = cmd_revproplist
 
 	def cmd_revpropget( self, args ):
-		revision = args.getOptionalRevision( '--revision', 'working' )
+		revision = args.getOptionalRevision( '--revision', 'head' )
 		positional_args = args.getPositionalArgs( 1, 2 )
 		if len(positional_args) == 1:
 			positional_args.append( '.' )
-		if self.client.is_url( positional_args[0] ):
-			revision = args.getOptionalRevision( '--revision', 'head' )
 
 		rev, value = self.client.revpropget( positional_args[0], positional_args[1], revision=revision )
-		print rev,value
+		print 'Revision:',rev.number
+		print '%s: %s' % (positional_args[0], value)
+
 	cmd_rpg = cmd_revpropget
 
 	def cmd_revpropset( self, args ):
 		force = args.getBooleanOption( '--force', False )
-		revision = args.getOptionalRevision( '--revision', 'working' )
+		revision = args.getOptionalRevision( '--revision', 'head' )
 		positional_args = args.getPositionalArgs( 2, 3 )
 		if len(positional_args) == 2:
 			positional_args.append( '.' )
-		if self.client.is_url( positional_args[0] ):
-			revision = args.getOptionalRevision( '--revision', 'head' )
 
 		rev = self.client.revpropset( positional_args[0], positional_args[1], positional_args[2], revision=revision, force=force )
 	cmd_rps = cmd_revpropset
 
 	def cmd_revpropdel( self, args ):
 		force = args.getBooleanOption( '--force', False )
-		revision = args.getOptionalRevision( '--revision', 'working' )
+		revision = args.getOptionalRevision( '--revision', 'head' )
 		positional_args = args.getPositionalArgs( 1, 2 )
 		if len(positional_args) == 1:
 			positional_args.append( '.' )
-		if self.client.is_url( positional_args[0] ):
-			revision = args.getOptionalRevision( '--revision', 'head' )
 
 		self.client.revpropdel( positional_args[0], positional_args[1], revision=revision, force=force )
 	cmd_rpd = cmd_revpropdel
@@ -577,38 +589,48 @@ class SvnCommand:
 				all_files = self.client.status( arg, recurse=recurse, get_all=verbose, ignore=ignore, update=update )
 				self._cmd_status_print( all_files, verbose, update, ignore )
 
-	def _cmd_status_print( self, all_files, detailed, show_committed, ignore ):
+	def _cmd_status_print( self, all_files, detailed, update, ignore ):
 		all_files.sort( self.by_path )
 		for file in all_files:
-			if file.text_status != pysvn.wc_status_kind.ignored or not ignore:
-				state = '%s%s%s%s%s' % (wc_status_kind_map[ file.text_status ],
-						wc_status_kind_map[ file.prop_status ],
-						' L'[ file.is_locked ],
-						' +'[ file.is_copied ],
-						' S'[ file.is_switched ])
+			if file.text_status == pysvn.wc_status_kind.ignored and ignore:
+				continue
 
-				if( file.repos_text_status != pysvn.wc_status_kind.none
-				or  file.repos_prop_status != pysvn.wc_status_kind.none ):
-					odd_status = '%s%s' % (wc_status_kind_map[ file.repos_text_status ],
-						wc_status_kind_map[ file.repos_prop_status ])
-				else:
-					odd_status = '  '
+			state = '%s%s%s%s%s' % (wc_status_kind_map[ file.text_status ],
+					wc_status_kind_map[ file.prop_status ],
+					' L'[ file.is_locked ],
+					' +'[ file.is_copied ],
+					' S'[ file.is_switched ])
 
-				if detailed:
-					print '%s %s %6d %6d %-14s %s' % (state,
-						odd_status,
-						file.entry.revision.number,
-						file.entry.commit_revision.number,
-						file.entry.commit_author,
-						file.path)
-				elif show_committed:
-					print '%s %s %6d %s' % (state,
-						odd_status,
-						file.entry.revision.number,
-						file.path)
-				else:
-					if file.text_status != pysvn.wc_status_kind.normal:
-						print '%s %s' % (state, file.path)
+			if( file.repos_text_status != pysvn.wc_status_kind.none
+			or  file.repos_prop_status != pysvn.wc_status_kind.none ):
+				odd_status = '%s%s' % (wc_status_kind_map[ file.repos_text_status ],
+					wc_status_kind_map[ file.repos_prop_status ])
+			else:
+				odd_status = '  '
+
+			if file.entry is not None and detailed:
+				print '%s %s %6d %6d %-14s %s' % (state,
+					odd_status,
+					file.entry.revision.number,
+					file.entry.commit_revision.number,
+					file.entry.commit_author,
+					file.path)
+			elif detailed:
+				print '%s %s %6s %6s %-14s %s' % (state,
+					odd_status,
+					'',
+					'',
+					'',
+					file.path)
+			elif update:
+				print '%s %s %s' % (state,
+					odd_status,
+					file.path)
+
+			else:
+				if( file.text_status != pysvn.wc_status_kind.normal
+				or file.prop_status != pysvn.wc_status_kind.normal ):
+					print '%s %s' % (state, file.path)
 
 	cmd_st = cmd_status
 	cmd_stat = cmd_status
@@ -627,8 +649,8 @@ class SvnCommand:
 		positional_args = args.getPositionalArgs( 2, 3 )
 		if len(positional_args) == 2:
 			positional_args.append( '.' )
-		self.client.relocate( positional_args[2], positional_args[0],
-				positional_args[1], recurse=recurse )
+		self.client.relocate( positional_args[0], positional_args[1],
+				positional_args[2], recurse=recurse )
 
 	def cmd_update( self, args ):
 		recurse = args.getBooleanOption( '--non-recursive', False )
@@ -654,8 +676,10 @@ class SvnCommand:
 				print
 			index += 1
 
-# key is long option name, value is need for arg
+# key is long option name, value is 1 if need next arg as value
 long_opt_info = {
+	'--pause': 0,
+
 	'--auto-props': 0,	# enable automatic properties
 	'--config-dir': 1,	# read user configuration files from directory ARG
 	'--diff-cmd': 1,	# use ARG as diff command

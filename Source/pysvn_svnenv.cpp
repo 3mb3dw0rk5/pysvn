@@ -2,6 +2,8 @@
 #include "svn_config.h"
 #include "svn_pools.h"
 
+
+static const char *toHex( unsigned int num );
 //--------------------------------------------------------------------------------
 //
 //	SvnException
@@ -9,8 +11,18 @@
 //--------------------------------------------------------------------------------
 SvnException::SvnException( svn_error_t *error )
 : m_code( error->apr_err )
-, m_message( error->message )
-{ }
+, m_message()
+{
+    if( error->message != NULL )
+    {
+        m_message = error->message;
+    }
+    else
+    {
+        m_message = "Code: ";
+        m_message += toHex( error->apr_err );
+    }
+}
 
 SvnException::SvnException( const SvnException &other )
 : m_code( other.m_code )
@@ -307,3 +319,13 @@ SvnPool::operator apr_pool_t *() const
 }
 
 
+static const char *toHex( unsigned int num )
+{
+    static char buffer[9];
+    for( int i=0; i<8; i++ )
+    {
+        buffer[i] = "0123456789abcdef"[ (num >> (32-(i+1)*4)) & 0x0f ];
+    }
+    buffer[8] = '\0';
+    return buffer;
+}
