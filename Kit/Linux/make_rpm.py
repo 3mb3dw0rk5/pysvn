@@ -14,6 +14,7 @@ python_version_string = '%d.%d.%d' % (pymaj, pymin, pypat)
 pysvnmaj, pysvnmin, pysvnpat, _ = pysvn.version
 pysvn_version_string = '%d.%d.%d' % (pysvn.version[0], pysvn.version[1], pysvn.version[2])
 svn_version_string = '%d.%d.%d' % (pysvn.svn_version[0], pysvn.svn_version[1], pysvn.svn_version[2])
+svn_compact_version_string = '%d%d%d' % (pysvn.svn_version[0], pysvn.svn_version[1], pysvn.svn_version[2])
 
 build_time  = time.time()
 build_time_str = time.strftime( '%d-%b-%Y %H:%M', time.localtime( build_time ) )
@@ -68,7 +69,7 @@ for cp_src, cp_dst_dir_fmt in [
 print 'Info: Create tmp/SPECS/pysvn.spec'
 f = file('tmp/SPECS/pysvn.spec','w')
 f.write('''BuildRoot:	%(tmpdir)s/ROOT
-Name:		py%(pymaj)d%(pymin)d_pysvn
+Name:		py%(pymaj)d%(pymin)d_pysvn_svn%(svn_compact_version_string)s
 Version:	%(pysvnmaj)d.%(pysvnmin)d.%(pysvnpat)d
 Group:		Development/Libraries
 Release:	1
