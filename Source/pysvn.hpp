@@ -60,6 +60,7 @@ public:	// data
 	//
 	Py::Object pyfn_GetLogin;
 	Py::Object pyfn_Notify;
+	Py::Object pyfn_Cancel;
 	Py::Object pyfn_GetLogMessage;
 	Py::Object pyfn_SslServerPrompt;
 	Py::Object pyfn_SslServerTrustAnswer;
@@ -92,6 +93,15 @@ private:// methods
 		       svn_wc_notify_state_t content_state,
 		       svn_wc_notify_state_t prop_state,
 		       svn_revnum_t revision);
+
+	//
+	// this method will be called periodically to allow
+	// the app to cancel long running operations
+	//
+	// @return cancel action?
+	// @retval true cancel
+	//
+	bool contextCancel();
 
 	//
 	// this method will be called to retrieve

@@ -82,6 +82,10 @@ class SvnCommand:
 		self.client.callback_get_login = self.callback_getLogin
 		self.client.callback_get_log_message = self.callback_getLogMessage
 		self.client.callback_notify = self.callback_notify
+		self.client.callback_cancel = self.callback_cancel
+
+	def callback_cancel( self ):
+		return False
 
 	def callback_notify( self, arg_dict ):
 		if arg_dict['path'] != '':

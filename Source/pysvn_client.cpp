@@ -130,6 +130,7 @@ Py::Object pysvn_client::getattr( const char *_name )
 
 		members.append( Py::String( "callback_get_login" ) );
 		members.append( Py::String( "callback_notify" ) );
+		members.append( Py::String( "callback_cancel" ) );
 		members.append( Py::String( "callback_get_log_message" ) );
 		members.append( Py::String( "callback_ssl_server_prompt" ) );
 		members.append( Py::String( "callback_ssl_client_cert_prompt" ) );
@@ -142,6 +143,8 @@ Py::Object pysvn_client::getattr( const char *_name )
 		return client_callbacks.pyfn_GetLogin;
 	if( name == "callback_notify" )
 		return client_callbacks.pyfn_Notify;
+	if( name == "callback_cancel" )
+		return client_callbacks.pyfn_Cancel;
 	if( name == "callback_get_log_message" )
 		return client_callbacks.pyfn_GetLogMessage;
 	if( name == "callback_ssl_server_prompt" )
@@ -169,6 +172,8 @@ int pysvn_client::setattr( const char *_name, const Py::Object &value )
 		set_callable( client_callbacks.pyfn_GetLogin, value );
 	else if( name == "callback_notify" )
 		set_callable( client_callbacks.pyfn_Notify, value );
+	else if( name == "callback_cancel" )
+		set_callable( client_callbacks.pyfn_Cancel, value );
 	else if( name == "callback_get_log_message" )
 		set_callable( client_callbacks.pyfn_GetLogMessage, value );
 	else if( name == "callback_ssl_server_prompt" )

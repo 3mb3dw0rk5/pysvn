@@ -152,6 +152,42 @@ void pysvn_callbacks::contextNotify (const char *path,
 	}
 
 //
+//	Return true to cancel a long running operation
+//
+bool pysvn_callbacks::contextCancel()
+	{
+	PythonDisallowThreads callback_permission( permission );
+
+	// make sure we can call the users object
+	if( !pyfn_Cancel.isCallable() )
+		return false;
+
+	Py::Callable callback( pyfn_Cancel );
+
+	Py::Tuple args( 0 );
+
+	// bool
+	Py::Object result;
+
+	Py::Int retcode;
+
+	try
+		{
+		result = callback.apply( args );
+		retcode = result;
+
+		return long( retcode ) != 0;
+		}
+	catch( Py::Exception &e )
+		{
+		PyErr_Print();
+		e.clear();
+
+		return false;
+		}
+	}
+
+//
 // this method will be called to retrieve
 // a log message
 //
