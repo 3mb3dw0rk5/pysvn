@@ -26,6 +26,9 @@ pysvn_callbacks.o: pysvn_callbacks.cpp
 pysvn_client.o: pysvn_client.cpp
 	$(CCC) $(CCCFLAGS) -o $@ $<
 
+pysvn_transaction.o: pysvn_transaction.cpp
+	$(CCC) $(CCCFLAGS) -o $@ $<
+
 pysvn_entry.o: pysvn_entry.cpp
 	$(CCC) $(CCCFLAGS) -o $@ $<
 

@@ -275,7 +275,7 @@ Py::Object pysvn_transaction::cmd_propdel( const Py::Tuple &a_args, const Py::Di
 
         if( kind == svn_node_none )
         {
-            error = svn_error_createf( SVN_ERR_FS_NOT_FOUND, NULL, "Path '%s' does not exist", path );
+            error = svn_error_createf( SVN_ERR_FS_NOT_FOUND, NULL, "Path '%s' does not exist", path.c_str() );
             throw SvnException( error );
         }
 
@@ -331,7 +331,7 @@ Py::Object pysvn_transaction::cmd_propget( const Py::Tuple &a_args, const Py::Di
 
         if( kind == svn_node_none )
         {
-            error = svn_error_createf( SVN_ERR_FS_NOT_FOUND, NULL, "Path '%s' does not exist", path );
+            error = svn_error_createf( SVN_ERR_FS_NOT_FOUND, NULL, "Path '%s' does not exist", path.c_str() );
             throw SvnException( error );
         }
 
@@ -385,7 +385,7 @@ Py::Object pysvn_transaction::cmd_proplist( const Py::Tuple &a_args, const Py::D
 
         if( kind == svn_node_none )
         {
-            error = svn_error_createf( SVN_ERR_FS_NOT_FOUND, NULL, "Path '%s' does not exist", path );
+            error = svn_error_createf( SVN_ERR_FS_NOT_FOUND, NULL, "Path '%s' does not exist", path.c_str() );
             throw SvnException( error );
         }
 
@@ -438,7 +438,7 @@ Py::Object pysvn_transaction::cmd_propset( const Py::Tuple &a_args, const Py::Di
 
         if( kind == svn_node_none )
         {
-            error = svn_error_createf( SVN_ERR_FS_NOT_FOUND, NULL, "Path '%s' does not exist", path );
+            error = svn_error_createf( SVN_ERR_FS_NOT_FOUND, NULL, "Path '%s' does not exist", path.c_str() );
             throw SvnException( error );
         }
 
