@@ -32,7 +32,7 @@ Darwin)
 FreeBSD)
 	export PYTHON=/usr/local/bin/python${PY_MAJ}.${PY_MIN}
 	export SVN_INC=/usr/local/include/subversion-1
-	export SVN_LIB=/usr/local//lib
+	export SVN_LIB=/usr/local/lib
 	if [ -e /usr/local/include/apr-0 ]
 	then
 		export APR_INC=/usr/local/include/apr-0
