@@ -3,6 +3,6 @@
 ;
 
 ; begin VC system files
-Source: "vc71redist\msvcp71.dll";	DestDir: "{sys}"; Flags: restartreplace uninsneveruninstall
-Source: "vc71redist\msvcr71.dll";	DestDir: "{sys}"; Flags: restartreplace uninsneveruninstall
+Source: "..\..\vc71redist\msvcp71.dll";	DestDir: "{sys}"; Flags: restartreplace uninsneveruninstall
+Source: "..\..\vc71redist\msvcr71.dll";	DestDir: "{sys}"; Flags: restartreplace uninsneveruninstall
 ; end VC system files

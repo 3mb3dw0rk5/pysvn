@@ -7,13 +7,13 @@ all:
 
 clean:
 	cd ..\Source && msdev pysvn.dsw /make "pysvn - Win32 $(BUILD_TYPE)" /clean
-	cd ..\kit && $(MAKE) clean
+	cd ..\kit\Win32 && $(MAKE) clean
 
 kit:
-	cd ..\kit && $(MAKE) all
+	cd ..\kit\Win32 && $(MAKE) all
 
 install:
-	..\kit\tmp\output\setup.exe
+	..\kit\Win32\tmp\output\setup.exe
 
 test:
 	cd  ..\Tests && test-01.cmd

@@ -258,13 +258,13 @@ PythonDisallowThreads::~PythonDisallowThreads()
 //--------------------------------------------------------------------------------
 
 
-extern "C" void initpysvn()
+extern "C" void init_pysvn()
 	{
 	static pysvn_module* pysvn = new pysvn_module;
 	}
 
 // symbol required for the debug version
-extern "C" void initpysvn_d()
+extern "C" void init_pysvn_d()
 	{
-	initpysvn();
+	init_pysvn();
 	}

@@ -43,7 +43,7 @@ end;
 AppName=PySVN
 AppVerName=PySVN UNCONTROLLED
 AppCopyright=Copyright (C) 2003-2004 Barry A. Scott
-DefaultDirName={code:pythondir|c:\python23}\lib\site-packages
+DefaultDirName={code:pythondir|c:\python23}\lib\site-packages\pysvn
 DefaultGroupName=PySVN for Python 2.3
 DisableStartupPrompt=yes
 InfoBeforeFile=info_before.txt
@@ -53,9 +53,13 @@ Compression=bzip/9
 
 #include "..\msvc60_system_files.iss"
 
-Source: "..\..\Source\pyds\pysvn.pyd"; DestDir: "{app}";
-Source: "..\..\Docs\pysvn.html"; DestDir: "{app}";
+Source: "..\..\..\Source\pysvn\__init__.py"; DestDir: "{app}";
+Source: "..\..\..\Source\pysvn\_pysvn.pyd"; DestDir: "{app}";
+Source: "..\..\..\Docs\pysvn.html"; DestDir: "{app}";
 Source: "pysvn_LICENSE.txt"; DestDir: "{app}";
+
+Source: "..\..\..\Examples\Client\svn_cmd.py"; DestDir: "{app}\Examples\Client";
+Source: "..\..\..\Examples\Client\parse_datetime.py"; DestDir: "{app}\Examples\Client";
 
 Source: "libdb42.dll"; DestDir: "{app}"
 

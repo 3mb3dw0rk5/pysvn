@@ -230,9 +230,9 @@ class SvnCommand:
 		if msg == '':
 			msg = self.getLogMessage()
 			
-		revnum = self.client.checkin( positional_args, msg, recurse=recurse )
-		if revnum > 0:
-			print 'Revision',revnum
+		rev = self.client.checkin( positional_args, msg, recurse=recurse )
+		if rev.number > 0:
+			print 'Revision',rev.number
 		else:
 			print 'Commit failed'
 
@@ -614,16 +614,22 @@ class SvnCommand:
 		positional_args = args.getPositionalArgs( 0 )
 		if len(positional_args) == 0:
 			positional_args.append( '.' )
-		self.client.update( positional_args[0], recurse=recurse )
-
+		rev = self.client.update( positional_args[0], recurse=recurse )
+		if rev.number > 0:
+			print 'Updated to revision',rev.number
+		else:
+			print 'Update failed'
+	cmd_up = cmd_update
 
 	def cmd_help( self, args ):
 		print 'Version: pysvn %d.%d.%d-%d' % pysvn.version,'svn %d.%d.%d-%s' % pysvn.svn_version
 		valid_cmd_names = [name for name in SvnCommand.__dict__.keys() if name.find('cmd_') == 0]
 		valid_cmd_names.sort()
 		print 'Available subcommands:'
-		for name in valid_cmd_names:
-			print '   %s' % name[4:]
+		for index, name in enumerate(valid_cmd_names):
+			print '   %-12s' % name[4:],
+			if index % 4 == 3:
+				print
 
 # key is long option name, value is need for arg
 long_opt_info = {

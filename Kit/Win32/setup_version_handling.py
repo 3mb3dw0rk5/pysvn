@@ -1,6 +1,6 @@
 print 'Info: setup_version_handling.py'
 import sys
-sys.path.insert( 0, '..\\Source\\pyds')
+sys.path.insert( 0, '..\\..\\Source')
 import pysvn
 import time
 

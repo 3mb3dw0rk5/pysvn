@@ -1,7 +1,7 @@
 all: kit
 
 kit: pysvn-branded.iss info_before.txt copy_setup.cmd
-	copy ..\LICENSE.txt tmp\pysvn_LICENSE.txt
+	copy ..\..\LICENSE.txt tmp\pysvn_LICENSE.txt
 	copy $(SUBVERSION)\db4-win32\bin\libdb42.dll tmp
 	copy $(OPENSSL)\out32dll\libeay32.dll tmp
 	copy $(OPENSSL)\out32dll\ssleay32.dll tmp
