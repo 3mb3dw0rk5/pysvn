@@ -10,14 +10,14 @@ output_filename = input_filename[:-len('.template')]
 branding_info = {}
 
 for line in file( version_details ):
-	line = line.strip()
-	if len(line) == 0:
-		continue
-	if line[0:1] == ['#']:
-		continue
+    line = line.strip()
+    if len(line) == 0:
+        continue
+    if line[0:1] == ['#']:
+        continue
 
-	key, value = [s.strip() for s in line.split('=',1)]
-	branding_info[ key ] = value
+    key, value = [s.strip() for s in line.split('=',1)]
+    branding_info[ key ] = value
 
 build_revision = os.popen( 'svnversion -c "%s" 2>&1' % os.environ.get( 'PYSVN_EXPORTED_FROM', '..' ), 'r' ).read().strip()
 # build_revision is either a range nnn:mmm or mmm
@@ -25,12 +25,15 @@ build_revision = os.popen( 'svnversion -c "%s" 2>&1' % os.environ.get( 'PYSVN_EX
 build_revision = build_revision.split(':')[-1]
 print 'Info: revision %s' % build_revision
 
-revision, modifiers = re.compile( '(\d+)(.*)' ).search( build_revision ).groups()
-
-if modifiers:
-	branding_info['BUILD'] = '0'
+if 'exported' in build_revision:
+    branding_info['BUILD'] = '0'
 else:
-	branding_info['BUILD'] = revision
+    revision, modifiers = re.compile( '(\d+)(.*)' ).search( build_revision ).groups()
+
+    if modifiers:
+        branding_info['BUILD'] = '0'
+    else:
+        branding_info['BUILD'] = revision
 
 
 # read all the input text
