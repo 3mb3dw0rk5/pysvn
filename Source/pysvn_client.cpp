@@ -1338,7 +1338,7 @@ Py::Object pysvn_client::cmd_move( const Py::Tuple &a_args, const Py::Dict &a_kw
 		Py::String src_path( args.getUtf8String( name_src_url_or_path ) );
 
 		type_error_message = "expecting string for dest_url_or_path (arg 2)";
-		Py::String dest_path( args.getUtf8String( name_dest_path ) );
+		Py::String dest_path( args.getUtf8String( name_dest_url_or_path ) );
 
 		type_error_message = "expecting revision for keyword src_revision";
 		svn_opt_revision_t revision = args.getRevision( name_src_revision, svn_opt_revision_head );
@@ -1355,12 +1355,13 @@ Py::Object pysvn_client::cmd_move( const Py::Tuple &a_args, const Py::Dict &a_kw
 
 			PythonAllowThreads permission( m_context );
 
-			svn_error_t *error = svn_client_copy
+			svn_error_t *error = svn_client_move
 				(
 				&commit_info,
 				norm_src_path.c_str(),
 				&revision,
 				norm_dest_path.c_str(),
+				force,
 				m_context,
 				pool
 				);
@@ -1535,15 +1536,11 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 				throw Py::AttributeError( "cannot mix URL and PATH in name_path" );
 				}
 
-	const char *norm_path_c_str = norm_path.c_str();
-	std::cout << "proplist of " << norm_path_c_str << std::endl;
-
-//	int t2 = elapse_time();
-	for( i=0; i<path_list.length(); i++ )
-		{
 		apr_array_header_t *props = NULL;
 		try
 			{
+			
+			const char *norm_path_c_str = norm_path.c_str();
 			checkThreadPermission();
 
 			PythonAllowThreads permission( m_context );
@@ -1562,19 +1559,14 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 				std::cout << "Error in proplist" << std::endl;
 			std::cout << "proplist prop list loop " << (t9-t8) << "ms" << std::endl;
 			}
-	catch( SvnException &e )
+		catch( SvnException &e )
 			{
 			throw Py::Exception( m_module.client_error, e.message() );
 			}
 
 		proplistToObject( list_of_proplists, props, pool );
 		}
-//	int t3 = elapse_time();
-
-//	std::cout << "proplist arg processing " << (t1-t0) << "ms" << std::endl;
-//	std::cout << "proplist pool create    " << (t2-t1) << "ms" << std::endl;
-//	std::cout << "proplist prop list loop " << (t3-t2) << "ms" << std::endl;
-
+	
 	return list_of_proplists;
 	}
 
