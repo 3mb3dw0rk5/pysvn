@@ -8,7 +8,10 @@ rm -rf testroot-01
 mkdir testroot-01
 cd testroot-01
 
+set +x
 TESTROOT=$(pwd)
+set -x
+
 export PYTHONPATH=${WORKDIR}/Source:${WORKDIR}/Examples/Client
 export PYSVN="${PYTHON} ${WORKDIR}/Examples/Client/svn_cmd.py --config-dir ${TESTROOT}/configdir"
 
@@ -23,7 +26,7 @@ ${PYSVN} ls file:///${TESTROOT}/repos -v -R
 
 echo Info: checkout
 ${PYSVN} checkout file:///${TESTROOT}/repos/trunk ${TESTROOT}/wc1
-ls -laR ${TESTROOT}/wc1
+find ${TESTROOT}/wc1 -ls
 cd ${TESTROOT}/wc1/test
 
 echo Info: add
@@ -74,7 +77,7 @@ ${PYSVN} diff ${TESTROOT}/wc2
 
 echo Info: export
 ${PYSVN} export file:///${TESTROOT}/repos/trunk/test ${TESTROOT}/export1
-ls -laR ${TESTROOT}/export1
+find ${TESTROOT}/export1 -ls
 
 echo Info: import
 
@@ -101,7 +104,6 @@ ${PYSVN} move file:///${TESTROOT}/repos/trunk/test/file2.txt file:///${TESTROOT}
 rm msg.tmp
 ${PYSVN} move ${TESTROOT}/wc2/test/file3.txt ${TESTROOT}/wc2/test/file3b.txt
 ${PYSVN} checkin ${TESTROOT}/wc2 -m "move wc test"
-
 
 echo Info: status
 echo file 4 is changing >>${TESTROOT}/wc1/test/file4.txt
