@@ -26,4 +26,3 @@ test-04.win32.new.log: test-04.cmd test-04.win32.known_good.log
 	if exist testroot-04 rmdir /s /q testroot-04
 	test-04.cmd >test-04.win32.new.log 2>&1
 	python benchmark_diff.py test-04.win32.known_good.log test-04.win32.new.log
-
