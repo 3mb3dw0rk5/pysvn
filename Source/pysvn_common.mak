@@ -8,9 +8,9 @@ CXX_OBJECTS=cxxsupport.o cxx_extensions.o cxxextensions.o IndirectPythonInterfac
 PYSVN_OBJECTS=pysvn.o pysvn_callbacks.o pysvn_client.o pysvn_entry.o pysvn_enum_string.o \
 	pysvn_revision.o pysvn_status.o pysvn_docs.o pysvn_path.o
 
-all: pysvn.so
+all: pysvn/_pysvn.so
 
-pysvn.so: $(PYSVN_OBJECTS) $(CXX_OBJECTS)
+pysvn/_pysvn.so: $(PYSVN_OBJECTS) $(CXX_OBJECTS)
 	$(LDSHARED) -o $@ $(PYSVN_OBJECTS) $(CXX_OBJECTS) $(LDLIBS)
 
 pysvn.o: pysvn.cpp
@@ -40,21 +40,21 @@ pysvn_revision.o: pysvn_revision.cpp
 pysvn_status.o: pysvn_status.cpp
 	$(CCC) $(CCCFLAGS) -o $@ $<
 
-cxxsupport.o: $(PYCXXDIR)/Src/cxxsupport.cxx
+cxxsupport.o: $(PYCXX)/Src/cxxsupport.cxx
 	$(CCC) $(CCCFLAGS) -o $@ $<
 
-cxx_extensions.o: $(PYCXXDIR)/Src/cxx_extensions.cxx
+cxx_extensions.o: $(PYCXX)/Src/cxx_extensions.cxx
 	$(CCC) $(CCCFLAGS) -o $@ $<
 
-cxxextensions.o: $(PYCXXDIR)/Src/cxxextensions.c
+cxxextensions.o: $(PYCXX)/Src/cxxextensions.c
 	$(CC) -c $(CCCFLAGS) -o $@ $<
 
-IndirectPythonInterface.o: $(PYCXXDIR)/Src/IndirectPythonInterface.cxx
+IndirectPythonInterface.o: $(PYCXX)/Src/IndirectPythonInterface.cxx
 	$(CCC) $(CCCFLAGS) -o $@ $< 
 
 clean:
 	rm -f *.o
-	rm -f pysvn.so
+	rm -f pysvn/_pysvn.so
 
-test: pysvn.so
-	$(PYTHON) -c "import pysvn;print pysvn.Client()"
+test: pysvn/_pysvn.so
+	LD_LIBRARY_PATH=$(SVNCPP_LIB) $(PYTHON) -c "import pysvn;print pysvn.Client()"
