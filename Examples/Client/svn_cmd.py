@@ -12,6 +12,7 @@ import time
 import sys
 import os
 import parse_datetime
+import glob
 
 class CommandError( Exception ):
 	def __init__( self, reason ):
@@ -153,10 +154,11 @@ class SvnCommand:
 		return True, self.getLogMessage()
 
 	def dispatch( self, argv ):
-
+		print 'qqq:',argv
 		try:
 			args = SvnArguments( argv )
 			cmd_name = 'cmd_%s' % args.getCommandName( 'help' )
+			print 'qqq:',cmd_name
 
 			self.initClient( args.getOptionalValue( '--config-dir', '' ) )
 			self.client.set_auth_cache( args.getBooleanOption( '--no-auth-cache', False ) )
@@ -422,25 +424,27 @@ class SvnCommand:
 		recurse = args.getBooleanOption( '--recursive', True )
 		revision = args.getOptionalRevision( '--revision', 'working' )
 		verbose = args.getBooleanOption( '--verbose', True )
-		positional_args = args.getPositionalArgs( 0, 1 )
+		positional_args = args.getPositionalArgs( 0, 0 )
 		if len(positional_args) == 0:
 			positional_args.append( '.' )
 
-		if self.client.is_url( positional_args[0] ):
-			revision = args.getOptionalRevision( '--revision', 'head' )
+		for arg in positional_args:
 
-		all_props = self.client.proplist( positional_args[0], revision=revision, recurse=recurse )
-		all_props.sort( self.props_by_path )
+			if self.client.is_url( arg ):
+				revision = args.getOptionalRevision( '--revision', 'head' )
 
-		for path, props in all_props:
-			print "Properties on '%s':" % path
-			prop_names = props.keys()
-			prop_names.sort()
-			for name in prop_names:
-				if verbose:
-					print '  %s: %s' % (name, props[name])
-				else:
-					print '  %s' % name
+			all_props = self.client.proplist( arg, revision=revision, recurse=recurse )
+			all_props.sort( self.props_by_path )
+
+			for path, props in all_props:
+				print "Properties on '%s':" % path
+				prop_names = props.keys()
+				prop_names.sort()
+				for name in prop_names:
+					if verbose:
+						print '  %s: %s' % (name, props[name])
+					else:
+						print '  %s' % name
 			
 	cmd_pl = cmd_proplist
 
@@ -732,7 +736,11 @@ class SvnArguments:
 					self.named_options[ name ] = None
 
 			else:
-				self.positional_args.append( arg )
+				expanded_arg = glob.glob( arg )
+				if len(expanded_arg) > 0:
+					self.positional_args.extend( expanded_arg )
+				else:
+					self.positional_args.append( arg )
 		if need_next_arg:
 			raise CommandError, 'Missing arg to option %s' % name
 

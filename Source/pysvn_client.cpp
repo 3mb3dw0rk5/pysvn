@@ -1484,6 +1484,8 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
 	return propsToObject( props, pool );
 	}
 
+extern int elapse_time();
+
 Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &a_kws )
 	{
 	static argument_description args_desc[] =
@@ -1493,43 +1495,87 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 		{ false, name_recurse },
 		{ false, NULL }
 		};
+	int t0 = elapse_time();
 	FunctionArguments args( "proplist", args_desc, a_args, a_kws );
 	args.check();
 
-	Py::String path( args.getUtf8String( name_url_or_path ) );
+	Py::List path_list( toListOfStrings( args.getArg( name_url_or_path ) ) );
+
 	bool recurse = args.getBoolean( name_recurse, false );
 	svn_opt_revision_t revision;
-	if( is_svn_url( path ) )
-		revision = args.getRevision( name_revision, svn_opt_revision_head );
-	else
-		revision = args.getRevision( name_revision, svn_opt_revision_working );
+
+//	int t1 = elapse_time();
+
+	bool is_revision_setup = false;
+	bool is_url = false;
 
 	SvnPool pool( m_context );
-	apr_array_header_t *props = NULL;
 
-	try
+	Py::List list_of_proplists;
+
+	for( int i=0; i<path_list.length(); i++ )
 		{
+		Py::String path_str( asUtf8String( path_list[i] ) );
+		std::string path( path_str.as_std_string() );
 		std::string norm_path( svnNormalisedIfPath( path, pool ) );
 
-		checkThreadPermission();
+		if( !is_revision_setup )
+			if( is_svn_url( path ) )
+				{
+				revision = args.getRevision( name_revision, svn_opt_revision_head );
+				is_url = true;
+				}
+			else
+				{
+				revision = args.getRevision( name_revision, svn_opt_revision_working );
+				}
+		else
+			if( is_svn_url( path ) && !is_url )
+				{
+				throw Py::AttributeError( "cannot mix URL and PATH in name_path" );
+				}
 
-		PythonAllowThreads permission( m_context );
-		svn_error_t *error = svn_client_proplist
-			(
-			&props,
-			norm_path.c_str(),
-			&revision,
-			recurse,
-			m_context,
-			pool
-			);
-		}
-	catch( SvnException &e )
+	const char *norm_path_c_str = norm_path.c_str();
+	std::cout << "proplist of " << norm_path_c_str << std::endl;
+
+//	int t2 = elapse_time();
+	for( i=0; i<path_list.length(); i++ )
 		{
-		throw Py::Exception( m_module.client_error, e.message() );
-		}
+		apr_array_header_t *props = NULL;
+		try
+			{
+			checkThreadPermission();
 
-	return proplistToObject( props, pool );
+			PythonAllowThreads permission( m_context );
+			int t8 = elapse_time();
+			svn_error_t *error = svn_client_proplist
+				(
+				&props,
+				norm_path_c_str,
+				&revision,
+				recurse,
+				m_context,
+				pool
+				);
+			int t9 = elapse_time();
+			if( error != NULL )
+				std::cout << "Error in proplist" << std::endl;
+			std::cout << "proplist prop list loop " << (t9-t8) << "ms" << std::endl;
+			}
+	catch( SvnException &e )
+			{
+			throw Py::Exception( m_module.client_error, e.message() );
+			}
+
+		proplistToObject( list_of_proplists, props, pool );
+		}
+//	int t3 = elapse_time();
+
+//	std::cout << "proplist arg processing " << (t1-t0) << "ms" << std::endl;
+//	std::cout << "proplist pool create    " << (t2-t1) << "ms" << std::endl;
+//	std::cout << "proplist prop list loop " << (t3-t2) << "ms" << std::endl;
+
+	return list_of_proplists;
 	}
 
 Py::Object pysvn_client::cmd_propset( const Py::Tuple &a_args, const Py::Dict &a_kws )

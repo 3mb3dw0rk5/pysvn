@@ -19,6 +19,7 @@ CFG=pysvn - Win32 Release
 !MESSAGE 
 !MESSAGE "pysvn - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "pysvn - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "pysvn - Win32 Profile" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE 
 
 # Begin Project
@@ -83,12 +84,41 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib Rpcrt4.lib Mswsock.lib $(SUBVERSION)\Release\subversion\libsvn_client\libsvn_client-1.lib $(SUBVERSION)\Release\subversion\libsvn_delta\libsvn_delta-1.lib $(SUBVERSION)\Release\subversion\libsvn_diff\libsvn_diff-1.lib $(SUBVERSION)\Release\subversion\libsvn_fs\libsvn_fs-1.lib $(SUBVERSION)\Release\subversion\libsvn_fs_base\libsvn_fs_base-1.lib $(SUBVERSION)\Release\subversion\libsvn_fs_fs\libsvn_fs_fs-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra\libsvn_ra-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra_dav\libsvn_ra_dav-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra_local\libsvn_ra_local-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra_svn\libsvn_ra_svn-1.lib $(SUBVERSION)\Release\subversion\libsvn_repos\libsvn_repos-1.lib $(SUBVERSION)\Release\subversion\libsvn_subr\libsvn_subr-1.lib $(SUBVERSION)\Release\subversion\libsvn_wc\libsvn_wc-1.lib $(APR)\apr-iconv\RELEASE\libapriconv.lib $(APR)\apr-util\RELEASE\libaprutil.lib $(APR)\apr-util\xml\expat\lib\LibR\xml.lib $(APR)\apr\RELEASE\libapr.lib $(SUBVERSION)\db4-win32\lib\libdb42.lib $(SUBVERSION)\neon\libneon.lib ws2_32.lib $(PYLIB).lib /nologo /subsystem:windows /dll /pdb:"sept" /debug /machine:I386 /out:"pysvn\_pysvn.pyd" /libpath:"$(PY)\libs" /export:init_pysvn
 # SUBTRACT LINK32 /pdb:none
 
+!ELSEIF  "$(CFG)" == "pysvn - Win32 Profile"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "pysvn___Win32_Profile"
+# PROP BASE Intermediate_Dir "pysvn___Win32_Profile"
+# PROP BASE Ignore_Export_Lib 0
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "pysvn"
+# PROP Intermediate_Dir "Profile"
+# PROP Ignore_Export_Lib 0
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /Zi /Od /Ob2 /I "$(PY)\include" /I "." /I "$(PYCXX)" /I "$(APR)/apr/include" /I "$(APR)/apr-util/include" /I "$(APR)/apr-util/xml/expat/lib" /I "$(SUBVERSION)/subversion/include" /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /D "noPY_WIN32_DELAYLOAD_PYTHON_DLL" /FR /YX /FD /Zm200 /c /Tp
+# ADD CPP /nologo /MD /W3 /GR /GX /Zi /Od /Ob2 /I "$(PY)\include" /I "." /I "$(PYCXX)" /I "$(APR)/apr/include" /I "$(APR)/apr-util/include" /I "$(APR)/apr-util/xml/expat/lib" /I "$(SUBVERSION)/subversion/include" /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /D "noPY_WIN32_DELAYLOAD_PYTHON_DLL" /FR /YX /FD /Zm200 /c /Tp
+# ADD BASE MTL /nologo /mktyplib203 /o "NUL" /win32
+# ADD MTL /nologo /mktyplib203 /o "NUL" /win32
+# ADD BASE RSC /l 0x409
+# ADD RSC /l 0x409
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib Rpcrt4.lib Mswsock.lib $(SUBVERSION)\Release\subversion\libsvn_client\libsvn_client-1.lib $(SUBVERSION)\Release\subversion\libsvn_delta\libsvn_delta-1.lib $(SUBVERSION)\Release\subversion\libsvn_diff\libsvn_diff-1.lib $(SUBVERSION)\Release\subversion\libsvn_fs\libsvn_fs-1.lib $(SUBVERSION)\Release\subversion\libsvn_fs_base\libsvn_fs_base-1.lib $(SUBVERSION)\Release\subversion\libsvn_fs_fs\libsvn_fs_fs-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra\libsvn_ra-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra_dav\libsvn_ra_dav-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra_local\libsvn_ra_local-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra_svn\libsvn_ra_svn-1.lib $(SUBVERSION)\Release\subversion\libsvn_repos\libsvn_repos-1.lib $(SUBVERSION)\Release\subversion\libsvn_subr\libsvn_subr-1.lib $(SUBVERSION)\Release\subversion\libsvn_wc\libsvn_wc-1.lib $(APR)\apr-iconv\RELEASE\libapriconv.lib $(APR)\apr-util\RELEASE\libaprutil.lib $(APR)\apr-util\xml\expat\lib\LibR\xml.lib $(APR)\apr\RELEASE\libapr.lib $(SUBVERSION)\db4-win32\lib\libdb42.lib $(SUBVERSION)\neon\libneon.lib ws2_32.lib $(PYLIB).lib /nologo /subsystem:windows /dll /pdb:"sept" /debug /machine:I386 /out:"pysvn\_pysvn.pyd" /libpath:"$(PY)\libs" /export:init_pysvn
+# SUBTRACT BASE LINK32 /pdb:none
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib Rpcrt4.lib Mswsock.lib $(SUBVERSION)\Release\subversion\libsvn_client\libsvn_client-1.lib $(SUBVERSION)\Release\subversion\libsvn_delta\libsvn_delta-1.lib $(SUBVERSION)\Release\subversion\libsvn_diff\libsvn_diff-1.lib $(SUBVERSION)\Release\subversion\libsvn_fs\libsvn_fs-1.lib $(SUBVERSION)\Release\subversion\libsvn_fs_base\libsvn_fs_base-1.lib $(SUBVERSION)\Release\subversion\libsvn_fs_fs\libsvn_fs_fs-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra\libsvn_ra-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra_dav\libsvn_ra_dav-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra_local\libsvn_ra_local-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra_svn\libsvn_ra_svn-1.lib $(SUBVERSION)\Release\subversion\libsvn_repos\libsvn_repos-1.lib $(SUBVERSION)\Release\subversion\libsvn_subr\libsvn_subr-1.lib $(SUBVERSION)\Release\subversion\libsvn_wc\libsvn_wc-1.lib $(APR)\apr-iconv\RELEASE\libapriconv.lib $(APR)\apr-util\RELEASE\libaprutil.lib $(APR)\apr-util\xml\expat\lib\LibR\xml.lib $(APR)\apr\RELEASE\libapr.lib $(SUBVERSION)\db4-win32\lib\libdb42.lib $(SUBVERSION)\neon\libneon.lib ws2_32.lib $(PYLIB).lib /nologo /subsystem:windows /dll /profile /debug /machine:I386 /out:"pysvn\_pysvn.pyd" /libpath:"$(PY)\libs" /export:init_pysvn
+
 !ENDIF 
 
 # Begin Target
 
 # Name "pysvn - Win32 Debug"
 # Name "pysvn - Win32 Release"
+# Name "pysvn - Win32 Profile"
 # Begin Source File
 
 SOURCE="$(PYCXX)\Src\cxx_extensions.cxx"
@@ -108,14 +138,6 @@ SOURCE="$(PYCXX)\Src\IndirectPythonInterface.cxx"
 # Begin Source File
 
 SOURCE=pysvn.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=pysvn_arg_processing.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=pysvn_converters.cpp
 # End Source File
 # Begin Source File
 
@@ -144,8 +166,23 @@ InputPath=.\pysvn.rc.template
 	
 # End Custom Build
 
+!ELSEIF  "$(CFG)" == "pysvn - Win32 Profile"
+
+# Begin Custom Build
+InputPath=.\pysvn.rc.template
+
+".\pysvn.rc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	PATH=C:\Program Files\Subversion\bin;%PATH% 
+	c:\python23\python ..\Builder\brand_version.py ..\Builder\version.info $(InputPath) 
+	
+# End Custom Build
+
 !ENDIF 
 
+# End Source File
+# Begin Source File
+
+SOURCE=pysvn_arg_processing.cpp
 # End Source File
 # Begin Source File
 
@@ -157,7 +194,7 @@ SOURCE=pysvn_client.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=pysvn_svnenv.cpp
+SOURCE=pysvn_converters.cpp
 # End Source File
 # Begin Source File
 
@@ -177,11 +214,19 @@ SOURCE=pysvn_path.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\pysvn_profile.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=pysvn_revision.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=pysvn_status.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=pysvn_svnenv.cpp
 # End Source File
 # Begin Source File
 
@@ -200,6 +245,17 @@ InputPath=.\pysvn_version.hpp.template
 # End Custom Build
 
 !ELSEIF  "$(CFG)" == "pysvn - Win32 Release"
+
+# Begin Custom Build
+InputPath=.\pysvn_version.hpp.template
+
+".\pysvn_version.hpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	PATH=C:\Program Files\Subversion\bin;%PATH% 
+	c:\python23\python ..\Builder\brand_version.py ..\Builder\version.info $(InputPath) 
+	
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "pysvn - Win32 Profile"
 
 # Begin Custom Build
 InputPath=.\pysvn_version.hpp.template

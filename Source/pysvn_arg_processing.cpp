@@ -144,6 +144,10 @@ bool FunctionArguments::hasArg( const char *arg_name )
 
 Py::Object FunctionArguments::getArg( const char *arg_name )
 {
+    if( !hasArg( arg_name ) )
+    {
+	throw Py::AttributeError( "internal error - getArg called with bad arg_name" );
+    }
     return m_checked_args[ arg_name ];
 }
 

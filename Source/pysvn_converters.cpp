@@ -97,13 +97,10 @@ Py::Object propsToObject( apr_hash_t *props, SvnPool &pool )
 	return py_prop_dict;
 	}
 
-Py::Object proplistToObject( apr_array_header_t *props, SvnPool &pool )
+void proplistToObject( Py::List &py_path_propmap_list, apr_array_header_t *props, SvnPool &pool )
 	{
-	Py::List py_path_propmap_list;
-
 	for (int j = 0; j < props->nelts; ++j)
 		{
-
 		svn_client_proplist_item_t *item = ((svn_client_proplist_item_t **)props->elts)[j];
 
 		Py::Object py_prop_dict( propsToObject( item->prop_hash, pool ) );
@@ -116,8 +113,6 @@ Py::Object proplistToObject( apr_array_header_t *props, SvnPool &pool )
 
 		py_path_propmap_list.append( py_path_proplist );
 		}
-
-	return py_path_propmap_list;
 	}
 
 Py::String asUtf8String( Py::Object obj )

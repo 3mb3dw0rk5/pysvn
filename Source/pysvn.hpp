@@ -581,7 +581,7 @@ extern apr_time_t convertStringToTime( const std::string &text, apr_time_t now, 
 extern Py::Object toObject( apr_time_t t );
 extern Py::Object toObject( svn_client_commit_info_t *commit_info );
 extern Py::Object propsToObject( apr_hash_t *props, SvnPool &pool );
-extern Py::Object proplistToObject( apr_array_header_t *props, SvnPool &pool );
+extern void proplistToObject( Py::List &py_path_propmap_list, apr_array_header_t *props, SvnPool &pool );
 extern Py::String asUtf8String( Py::Object obj );
 extern apr_array_header_t *targetsFromStringOrList( Py::Object arg, SvnPool &pool );
 extern Py::List toListOfStrings( Py::Object obj );
