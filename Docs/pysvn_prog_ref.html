@@ -302,6 +302,7 @@ True if subversion is to use the username and password.
 <tr>
 <td><a href="#pysvn_client_revpropdel">revpropdel</a></td>
 <td><a href="#pysvn_client_set_auth_cache">set_auth_cache</a></td>
+<td><a href="#pysvn_client_set_auto_prop">set_auto_prop</a></td>
 <td><a href="#pysvn_client_status">status</a></td>
 <td><a href="#pysvn_client_switch">switch</a></td>
 <td><a href="#pysvn_client_update">update</a></td>
@@ -694,6 +695,13 @@ set_auth_cache( enable )
 </pre>
 <p>When enable is True subversion will remember authentication credentials
 in the configuration directory.</p>
+
+<h4><a name="pysvn_client_set_auto_prop"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.set_auto_prop</a></h4>
+<pre>
+set_auto_prop( enable )
+</pre>
+<p>When enabled svn will automatically set properties\n\
+when adding files otherwise when disabled will not.</p>
 
 <h4><a name="pysvn_client_status"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.status</a></h4>
 <pre>

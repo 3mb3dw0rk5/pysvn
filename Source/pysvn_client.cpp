@@ -22,6 +22,7 @@
 #include "svncpp/targets.hpp"
 #include "svncpp/status.hpp"
 #include "svn_path.h"
+#include "svn_config.h"
 
 Py::Object toObject( apr_time_t t )
 	{
@@ -1499,6 +1500,33 @@ Py::Object pysvn_client::set_auth_cache( const Py::Tuple& args )
 	return Py::Nothing();
 	}
 
+Py::Object pysvn_client::set_auto_props( const Py::Tuple& args )
+	{
+	check_arguments( 1, 1, args );
+
+	Py::Int enable( args[0] );
+	try
+		{
+		m_svn_context.setAuthCache( long( enable ) != 0 );
+                svn_config_t *cfg = (svn_config_t *)apr_hash_get
+			(
+			m_svn_context.ctx()->config,
+			SVN_CONFIG_CATEGORY_CONFIG,
+			APR_HASH_KEY_STRING
+			);
+		svn_config_set_bool( cfg,
+			SVN_CONFIG_SECTION_MISCELLANY,
+			SVN_CONFIG_OPTION_ENABLE_AUTO_PROPS,
+			long( enable ) != 0 );
+		}
+	catch( svn::ClientException &e )
+		{
+		throw Py::Exception( m_module.client_error, e.message() );
+		}
+
+	return Py::Nothing();
+	}
+
 	// check that we are not in use on another thread
 void pysvn_client::checkThreadPermission()
 	{
@@ -1548,6 +1576,7 @@ void pysvn_client::init_type()
 	add_varargs_method("cleanup", &pysvn_client::cmd_cleanup, SVN_CLEANUP_DOC );
 	add_varargs_method("mkdir", &pysvn_client::cmd_mkdir, SVN_MKDIR_DOC );
 	add_varargs_method("set_auth_cache", &pysvn_client::set_auth_cache, SET_AUTH_CACHE_DOC );
+	add_varargs_method("set_auto_props", &pysvn_client::set_auto_props, SET_AUTO_PROPS_DOC );
 	add_varargs_method("is_url", &pysvn_client::is_url, IS_URL_DOC );
 
 	}

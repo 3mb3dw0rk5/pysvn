@@ -28,6 +28,11 @@ extern const char *class_revision_doc;
 Allow authorisation credential caching if enable is true\n\
 otherwise disable caching\n"
 
+#define SET_AUTO_PROPS_DOC \
+"set_auto_props( enable )\n\
+When enabled svn will automatically set properties\n\
+when adding files otherwise when disabled will not\n"
+
 #define IS_URL_DOC \
 "is_url( path_or_url )\n\
 return true if path_or_url is a SVN URL\n"
@@ -305,6 +310,6 @@ update( path,\n\
 \n\
 Update the file in the working copy at path to the specified revision.  Set recurse to True to recursively update a directory's children.\n\
 This command is typically used to get the latest changes from the repository.  Note that updating to an older revision does not change the \n\
-current revision.  To make the current version identical to an older revision, use a merge followed by a check in.
+current revision.  To make the current version identical to an older revision, use a merge followed by a check in.\n\
 update returns a pysvn.Revision containing the number of the revision the working copy was updated to."
 

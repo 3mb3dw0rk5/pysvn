@@ -199,6 +199,7 @@ public:
 	// SVN commands
 	Py::Object is_url( const Py::Tuple& args );
 	Py::Object set_auth_cache( const Py::Tuple& args );
+	Py::Object set_auto_props( const Py::Tuple& args );
 
 	// check that we are not in use on another thread
 	void checkThreadPermission();
