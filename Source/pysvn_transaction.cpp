@@ -228,6 +228,7 @@ Py::Object pysvn_transaction::cmd_changed( const Py::Tuple &a_args, const Py::Di
     return dict;
 }
 
+#if 0
 Py::Object pysvn_transaction::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
     static argument_description args_desc[] =
@@ -235,11 +236,12 @@ Py::Object pysvn_transaction::cmd_diff( const Py::Tuple &a_args, const Py::Dict 
     { true,  name_path },
     { false, NULL }
     };
-    FunctionArguments args( "cat", args_desc, a_args, a_kws );
+    FunctionArguments args( "diff", args_desc, a_args, a_kws );
     args.check();
 
     return Py::None();
 }
+#endif
 
 Py::Object pysvn_transaction::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
@@ -610,8 +612,9 @@ void pysvn_transaction::init_type()
 
     add_keyword_method("cat", &pysvn_transaction::cmd_cat, TXN_CAT_DOC );
     add_keyword_method("changed", &pysvn_transaction::cmd_changed, TXN_CHANGED_DOC );
+#if 0
     add_keyword_method("diff", &pysvn_transaction::cmd_diff, TXN_DIFF_DOC );
-
+#endif
     add_keyword_method("propdel", &pysvn_transaction::cmd_propdel, TXN_PROPDEL_DOC );
     add_keyword_method("propget", &pysvn_transaction::cmd_propget, TXN_PROPGET_DOC );
     add_keyword_method("proplist", &pysvn_transaction::cmd_proplist, TXN_PROPLIST_DOC );

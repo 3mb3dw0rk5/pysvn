@@ -237,7 +237,9 @@ public:
     Py::Object cmd_cat( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_changed( const Py::Tuple& args, const Py::Dict &kws );
 
+#if 0
     Py::Object cmd_diff( const Py::Tuple& args, const Py::Dict &kws );
+#endif
 
     Py::Object cmd_propdel( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_propget( const Py::Tuple& args, const Py::Dict &kws );
