@@ -8,6 +8,12 @@
 // ====================================================================
 //
 
+#ifdef _MSC_VER
+// disable warning C4786: symbol greater than 255 character,
+// nessesary to ignore as <map> causes lots of warning
+#pragma warning(disable: 4786)
+#endif
+
 #include "pysvn.hpp"
 #include "svn_config.h"
 #include "svn_time.h"

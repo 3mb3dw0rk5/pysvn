@@ -27,6 +27,11 @@ pysvn_module::pysvn_module()
 	: Py::ExtensionModule<pysvn_module>( "pysvn" )
 	, client_error()
 	{
+	// init APR once globally - rather then on demand
+	// to avoid life time issues with pools
+	apr_initialize();
+	apr_pool_initialize();
+
 	client_error.init( *this, "ClientError" );
 
 	pysvn_client::init_type();

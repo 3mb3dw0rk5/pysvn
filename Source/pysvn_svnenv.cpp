@@ -38,9 +38,6 @@ apr_status_t SvnException::code() const
 SvnContext::SvnContext( const std::string &config_dir_str )
 : m_pool( NULL )
 {
-    apr_initialize();
-    apr_pool_initialize();
-
     apr_pool_create( &m_pool, NULL );
 
     const char *config_dir = NULL;
@@ -100,8 +97,6 @@ SvnContext::SvnContext( const std::string &config_dir_str )
 
 SvnContext::~SvnContext()
 {
-    apr_pool_terminate();
-    apr_terminate();
 }
 
 SvnContext::operator svn_client_ctx_t *()
@@ -295,9 +290,6 @@ svn_error_t *SvnContext::handlerSslClientCertPwPrompt
 SvnPool::SvnPool( SvnContext &ctx )
 : m_pool( NULL )
 {
-    apr_initialize();
-    apr_pool_initialize();
-
     m_pool = svn_pool_create( NULL );
 }
 
@@ -307,8 +299,6 @@ SvnPool::~SvnPool()
     {
 	svn_pool_destroy( m_pool );
     }
-    apr_pool_terminate();
-    apr_terminate();
 }
 
 SvnPool::operator apr_pool_t *() const 
