@@ -1,5 +1,5 @@
 import sys
-sys.path.insert( 0, '../Source' )
+sys.path.insert( 0, '../../Source' )
 import pysvn
 
 class Test:
