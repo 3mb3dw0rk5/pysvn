@@ -16,6 +16,8 @@ $(SVN_LIB)/libsvn_ra_svn-1.a \
 $(SVN_LIB)/libsvn_delta-1.a \
 $(SVN_LIB)/libsvn_repos-1.a \
 $(SVN_LIB)/libsvn_fs-1.a \
+$(SVN_LIB)/libsvn_fs_fs-1.a \
+$(SVN_LIB)/libsvn_fs_base-1.a \
 $(SVN_LIB)/libsvn_diff-1.a \
 $(SVN_LIB)/libaprutil-0.a \
 $(SVN_LIB)/libapr-0.a \
@@ -25,7 +27,8 @@ $(SVN_LIB)/libcrypto.a \
 $(SVN_LIB)/libexpat.a \
 $(SVN_LIB)/libxml2.a \
 $(SVN_LIB)/libdb-4.2.a \
+$(SVN_LIB)/libintl.a \
 \
--liconv -lz
+ -liconv -lz
 
 include pysvn_common.mak
