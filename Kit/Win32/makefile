@@ -7,6 +7,8 @@ kit_msvc60: pysvn-branded.iss info_before.txt copy_setup.cmd
 	copy $(SUBVERSION)\db4-win32\bin\libdb42.dll tmp
 	copy $(OPENSSL)\out32dll\libeay32.dll tmp
 	copy $(OPENSSL)\out32dll\ssleay32.dll tmp
+	copy $(APR)\apr\release\libapr.dll tmp
+	copy $(APR)\apr-util\release\libaprutil.dll tmp
 	"c:\Program Files\Inno Setup 4\ISCC.exe" tmp\pysvn-branded.iss
 	tmp\setup_copy.cmd
 
@@ -15,6 +17,8 @@ kit_msvc71: pysvn-branded.iss info_before.txt copy_setup.cmd
 	copy $(SUBVERSION)\db4-win32\bin\libdb42.dll tmp
 	copy $(OPENSSL)\out32dll\libeay32.dll tmp
 	copy $(OPENSSL)\out32dll\ssleay32.dll tmp
+	copy $(APR)\apr\release\libapr.dll tmp
+	copy $(APR)\apr-util\release\libaprutil.dll tmp
 	"c:\Program Files\Inno Setup 4\ISCC.exe" tmp\pysvn-branded.iss
 	tmp\setup_copy.cmd
 
