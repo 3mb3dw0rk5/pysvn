@@ -85,7 +85,7 @@ apr_status_t SvnException::code() const
     return m_code;
 }
 
-Py::Object SvnException::pythonExceptionArg()
+Py::Object &SvnException::pythonExceptionArg()
 {
     return m_exception_arg;
 }

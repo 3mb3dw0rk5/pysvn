@@ -73,7 +73,7 @@ cmd ${PYSVN} copy file://${TESTROOT}/repos/trunk file://${TESTROOT}/repos/tags/v
 rm msg.tmp
 cmd ${PYSVN} ls -v file://${TESTROOT}/repos/tags
 cmd ${PYSVN} copy ${TESTROOT}/wc2/test/file1.txt ${TESTROOT}/wc2/test/file1b.txt
-cmd ${PYSVN} propset svn:eol-style native b:\wc2\test\file1b.txt
+cmd ${PYSVN} propset svn:eol-style native ${TESTROOT}/wc2/test/file1b.txt
 cmd ${PYSVN} checkin ${TESTROOT}/wc2 -m "copy test"
 
 echo Info: Testing - diff
@@ -82,9 +82,9 @@ cmd ${PYSVN} diff ${TESTROOT}/wc2
 
 echo Info: Testing - export
 cmd ${PYSVN} export file://${TESTROOT}/repos/trunk/test ${TESTROOT}/export1.native
-cmd ${PYSVN} export --native-eol CR file:///b:/repos/trunk/test b:\export1.cr
-cmd ${PYSVN} export --native-eol LF file:///b:/repos/trunk/test b:\export1.lf
-cmd ${PYSVN} export --native-eol CRLF file:///b:/repos/trunk/test b:\export1.crlf
+cmd ${PYSVN} export --native-eol CR file://${TESTROOT}/repos/trunk/test ${TESTROOT}/export1.cr
+cmd ${PYSVN} export --native-eol LF file://${TESTROOT}/repos/trunk/test ${TESTROOT}/export1.lf
+cmd ${PYSVN} export --native-eol CRLF file://${TESTROOT}/repos/trunk/test ${TESTROOT}/export1.crlf
 python ${WORKDIR}/Tests/find.py ${TESTROOT}/export1.native
 python ${WORKDIR}/Tests/find.py ${TESTROOT}/export1.cr
 python ${WORKDIR}/Tests/find.py ${TESTROOT}/export1.lf

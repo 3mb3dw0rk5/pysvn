@@ -19,7 +19,7 @@ public:
 
     // access methods
     const std::string &message() const;
-    Py::Object pythonExceptionArg();
+    Py::Object &pythonExceptionArg();
     apr_status_t code() const;
 
 private:
