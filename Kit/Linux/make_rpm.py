@@ -49,8 +49,6 @@ for cp_src, cp_dst_dir_fmt in [
 		'ROOT/usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn'),
 	('../../Source/pysvn/_pysvn.so',
 		'ROOT/usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn'),
-	('%s/libsvncpp.so.0' % os.environ['SVNCPP_LIB'],
-		'ROOT/usr/lib'),
 	('../../LICENSE.txt',
 		'ROOT/usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/LICENSE.txt'),
 	('../../Docs/pysvn.html',
@@ -100,7 +98,6 @@ rm -f /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/__init__.pyo
 %%defattr (-,root,root)
 %%attr(444,root,root) /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/__init__.py
 %%attr(555,root,root) /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/_pysvn.so
-%%attr(555,root,root) /usr/lib/libsvncpp.so.0
 %%attr(444,root,root) /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/LICENSE.txt
 %%attr(444,root,root) /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/pysvn.html
 %%attr(444,root,root) /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/pysvn_prog_ref.html

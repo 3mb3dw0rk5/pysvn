@@ -1,11 +1,11 @@
 #
 #	BUild the example on Linux for version Python 2.3
 #
-CCC=g++ -c
+CCC=g++ -g -c
 CCCFLAGS=-fPIC -fexceptions -frtti -I/usr/include/$(PYDIR) -I$(PYCXX) -I$(SVNCPP_INC) -I$(SVN_INC) -I$(APR_INC) -I.
 LDSHARED=g++ -shared
-LDLIBS=$(SVNCPP_LIB)/libsvncpp.a \
--L$(SVN_LIB) \
--lsvn_client-1 
+LDLIBS=-L$(SVN_LIB) \
+$(SVNCPP_LIB)/libsvncpp.a \
+-lsvn_client-1
 
 include pysvn_common.mak
