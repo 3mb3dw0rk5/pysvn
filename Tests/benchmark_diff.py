@@ -147,18 +147,18 @@ def main(argv):
  
     try:
 
-	ResultsFile = argv[1]
-	BenchmarkFile = argv[2]
+	BenchmarkFile = argv[1]
+	ResultsFile = argv[2]
 
-	print 'Info: Comparing', ResultsFile
+	print 'Info: Comparing', BenchmarkFile
+	benchmark = stripDirty(BenchmarkFile)
 
+	print 'Info: Against  ', ResultsFile
 	results = stripDirty(ResultsFile)
 	if _debug:
 	    print 'Debug: results after we called stripDirty'
 	    pprint.pprint(results)
 
-	print 'Info: Against', BenchmarkFile
-	benchmark = stripDirty(BenchmarkFile)
 
 	f = open(ResultsFile + '.clean','w')
 	for line in results:
@@ -183,14 +183,14 @@ def main(argv):
 	    for tag, i1, i2, j1, j2 in opcodes:
 		if tag in ['delete','insert','replace']:
 		    print 'Error: --------------------------------------------------------------------------------'
-		if tag in ['insert','replace']:
-		    for line_index in range(j1,j2):
-			prefix = 'Result(%d) %7s' % (line_index+1, tag)
-			print 'Error: %26s %s' % (prefix, results[line_index])
 		if tag in ['delete','replace']:
 		    for line_index in range(i1,i2):
 			prefix = 'Benchmark(%d) %7s' % (line_index+1, tag)
 			print 'Error: %26s %s' % (prefix, benchmark[line_index])
+		if tag in ['insert','replace']:
+		    for line_index in range(j1,j2):
+			prefix = 'Result(%d) %7s' % (line_index+1, tag)
+			print 'Error: %26s %s' % (prefix, results[line_index])
 
 	    print 'Error: --------------------------------------------------------------------------------'
 	    return 1

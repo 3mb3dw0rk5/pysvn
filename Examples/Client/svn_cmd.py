@@ -478,7 +478,7 @@ class SvnCommand:
 		prop_names = props.keys()
 		prop_names.sort()
 		for name in prop_names:
-			print '%s: %s' % (path, props[name])
+			print '%s: %s' % (name, props[name])
 
 	cmd_pg = cmd_propget
 

@@ -128,7 +128,9 @@ ${PYSVN} propdel test:prop1 file4.txt
 ${PYSVN} proplist -v file4.txt
 
 echo Info: propget
+${PYSVN} propset svn:eol-style native file4.txt
 ${PYSVN} propget svn:eol-style file4.txt
+${PYSVN} propget unknown file4.txt
 
 echo Info: proplist - see above
 

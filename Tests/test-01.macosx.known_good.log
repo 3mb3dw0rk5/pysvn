@@ -21,8 +21,8 @@ Info: mkdir
 + echo Info: ls
 Info: ls
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir ls file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos -v -R
-      2 barry           0 23-Jan-2005 20:47:38 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk
-      2 barry           0 23-Jan-2005 20:47:38 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test
+      2 barry           0 23-Jan-2005 21:24:07 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk
+      2 barry           0 23-Jan-2005 21:24:07 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test
 + echo Info: checkout
 Info: checkout
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir checkout file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc1
@@ -101,8 +101,8 @@ Info: annotate
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir annotate /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file1.txt
 A /trunk/test/file1.txt
 A /trunk/test/file1.txt
-0| r3 | barry | 2005-01-23T20:47:42.133677Z | test add file 1
-1| r4 | barry | 2005-01-23T20:47:44.544217Z | line 2
+0| r3 | barry | 2005-01-23T21:24:11.193474Z | test add file 1
+1| r4 | barry | 2005-01-23T21:24:13.556532Z | line 2
 + echo Info: cat
 Info: cat
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir cat -r head file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file1.txt
@@ -120,7 +120,7 @@ Log message
 --- -------
 + rm msg.tmp
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir ls -v file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/tags
-      6 barry           0 23-Jan-2005 20:47:47 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/tags/version1
+      6 barry           0 23-Jan-2005 21:24:16 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/tags/version1
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir copy /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file1.txt /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file1b.txt
 A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file1b.txt
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir checkin /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2 -m 'copy test'
@@ -157,42 +157,42 @@ Info: info
 Path: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test
 Name: .
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test
-Repository UUID: 137da931-5eee-0310-9f48-a71b61ef37e6
+Repository UUID: 92d51eb4-5eee-0310-bd34-c5c372fc9056
 Revision: 4
 Node kind: directory
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 23-Jan-2005 20:47:44
+Last Changed Date: 23-Jan-2005 21:24:13
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir info /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file1.txt
 Path: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file1.txt
 Name: file1.txt
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file1.txt
-Repository UUID: 137da931-5eee-0310-9f48-a71b61ef37e6
+Repository UUID: 92d51eb4-5eee-0310-bd34-c5c372fc9056
 Revision: 4
 Node kind: file
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 23-Jan-2005 20:47:44
-Text Last Updated: 23-Jan-2005 20:47:45
-Properties Last Updated: 23-Jan-2005 20:47:45
+Last Changed Date: 23-Jan-2005 21:24:13
+Text Last Updated: 23-Jan-2005 21:24:14
+Properties Last Updated: 23-Jan-2005 21:24:14
 Checksum: d17a5219a23a23ce7f363b75e09ec043
 + echo Info: log
 Info: log
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir log /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2
 ------------------------------------------------------------
-rev 7: barry | 23-Jan-2005 20:47:48 | 1 lines
+rev 7: barry | 23-Jan-2005 21:24:17 | 1 lines
 copy test
 ------------------------------------------------------------
-rev 4: barry | 23-Jan-2005 20:47:44 | 1 lines
+rev 4: barry | 23-Jan-2005 21:24:13 | 1 lines
 commit modified file
 ------------------------------------------------------------
-rev 3: barry | 23-Jan-2005 20:47:42 | 1 lines
+rev 3: barry | 23-Jan-2005 21:24:11 | 1 lines
 commit added files
 ------------------------------------------------------------
-rev 2: barry | 23-Jan-2005 20:47:38 | 1 lines
+rev 2: barry | 23-Jan-2005 21:24:07 | 1 lines
 test-01 add test
 ------------------------------------------------------------
-rev 1: barry | 23-Jan-2005 20:47:38 | 1 lines
+rev 1: barry | 23-Jan-2005 21:24:07 | 1 lines
 test-01 add trunk
 ------------------------------------------------------------
 + echo Info: ls
@@ -205,12 +205,12 @@ file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/fi
 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file4.txt
 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file5.txt
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir ls -v file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test
-      4 barry          23 23-Jan-2005 20:47:44 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file1.txt
-      7 barry          23 23-Jan-2005 20:47:48 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file1b.txt
-      3 barry          16 23-Jan-2005 20:47:42 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file2.txt
-      3 barry          16 23-Jan-2005 20:47:42 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file3.txt
-      3 barry          16 23-Jan-2005 20:47:42 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file4.txt
-      3 barry          16 23-Jan-2005 20:47:42 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file5.txt
+      4 barry          23 23-Jan-2005 21:24:13 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file1.txt
+      7 barry          23 23-Jan-2005 21:24:17 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file1b.txt
+      3 barry          16 23-Jan-2005 21:24:11 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file2.txt
+      3 barry          16 23-Jan-2005 21:24:11 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file3.txt
+      3 barry          16 23-Jan-2005 21:24:11 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file4.txt
+      3 barry          16 23-Jan-2005 21:24:11 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file5.txt
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir ls /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test
 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file1.txt
 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file1b.txt
@@ -219,12 +219,12 @@ file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/fi
 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file4.txt
 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file5.txt
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir ls -v /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test
-      4 barry          23 23-Jan-2005 20:47:44 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file1.txt
-      7 barry          23 23-Jan-2005 20:47:48 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file1b.txt
-      3 barry          16 23-Jan-2005 20:47:42 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file2.txt
-      3 barry          16 23-Jan-2005 20:47:42 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file3.txt
-      3 barry          16 23-Jan-2005 20:47:42 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file4.txt
-      3 barry          16 23-Jan-2005 20:47:42 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file5.txt
+      4 barry          23 23-Jan-2005 21:24:13 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file1.txt
+      7 barry          23 23-Jan-2005 21:24:17 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file1b.txt
+      3 barry          16 23-Jan-2005 21:24:11 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file2.txt
+      3 barry          16 23-Jan-2005 21:24:11 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file3.txt
+      3 barry          16 23-Jan-2005 21:24:11 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file4.txt
+      3 barry          16 23-Jan-2005 21:24:11 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file5.txt
 + echo Info: merge
 Info: merge
 + echo Info: mkdir - done above
@@ -316,13 +316,18 @@ Properties on 'file4.txt':
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir proplist -v file4.txt
 + echo Info: propget
 Info: propget
++ /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir propset svn:eol-style native file4.txt
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir propget svn:eol-style file4.txt
+file4.txt: native
++ /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir propget unknown file4.txt
 + echo Info: proplist - see above
 Info: proplist - see above
 + echo Info: propset
 Info: propset
 + cd /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir proplist -v file4.txt
+Properties on 'file4.txt':
+  svn:eol-style: native
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir propset svn:eol-style native file4.txt
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir proplist -v file4.txt
 Properties on 'file4.txt':
@@ -374,7 +379,7 @@ Info: revproplist
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir revproplist file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk
 Revision: 12
 svn:author: barry
-svn:date: 2005-01-23T20:48:04.231248Z
+svn:date: 2005-01-23T21:24:33.236211Z
 svn:log: resolve a confict part 2
 + echo Info: revpropget
 Info: revpropget
@@ -404,56 +409,56 @@ Info: relocate
 Path: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc1
 Name: .
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk
-Repository UUID: 137da931-5eee-0310-9f48-a71b61ef37e6
+Repository UUID: 92d51eb4-5eee-0310-bd34-c5c372fc9056
 Revision: 2
 Node kind: directory
 Last Changed Author: barry
 Last Changed Rev: 2
-Last Changed Date: 23-Jan-2005 20:47:38
+Last Changed Date: 23-Jan-2005 21:24:07
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir relocate file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/root/repos/trunk /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc1
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir info /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc1
 Path: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc1
 Name: .
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/root/repos/trunk
-Repository UUID: 137da931-5eee-0310-9f48-a71b61ef37e6
+Repository UUID: 92d51eb4-5eee-0310-bd34-c5c372fc9056
 Revision: 2
 Node kind: directory
 Last Changed Author: barry
 Last Changed Rev: 2
-Last Changed Date: 23-Jan-2005 20:47:38
+Last Changed Date: 23-Jan-2005 21:24:07
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir info /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2
 Path: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2
 Name: .
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk
-Repository UUID: 137da931-5eee-0310-9f48-a71b61ef37e6
+Repository UUID: 92d51eb4-5eee-0310-bd34-c5c372fc9056
 Revision: 4
 Node kind: directory
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 23-Jan-2005 20:47:44
+Last Changed Date: 23-Jan-2005 21:24:13
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir relocate file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/root/repos/trunk /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir info /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2
 Path: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2
 Name: .
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/root/repos/trunk
-Repository UUID: 137da931-5eee-0310-9f48-a71b61ef37e6
+Repository UUID: 92d51eb4-5eee-0310-bd34-c5c372fc9056
 Revision: 4
 Node kind: directory
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 23-Jan-2005 20:47:44
+Last Changed Date: 23-Jan-2005 21:24:13
 + echo Info: switch
 Info: switch
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir info /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2
 Path: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2
 Name: .
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/root/repos/trunk
-Repository UUID: 137da931-5eee-0310-9f48-a71b61ef37e6
+Repository UUID: 92d51eb4-5eee-0310-bd34-c5c372fc9056
 Revision: 4
 Node kind: directory
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 23-Jan-2005 20:47:44
+Last Changed Date: 23-Jan-2005 21:24:13
 + /usr/bin/python2.3 /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/configdir switch /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/root/repos/tags/version1
 U /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file4.txt
 A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file2.txt
@@ -468,11 +473,11 @@ U /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2
 Path: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2
 Name: .
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/root/repos/tags/version1
-Repository UUID: 137da931-5eee-0310-9f48-a71b61ef37e6
+Repository UUID: 92d51eb4-5eee-0310-bd34-c5c372fc9056
 Revision: 12
 Node kind: directory
 Last Changed Author: barry
 Last Changed Rev: 6
-Last Changed Date: 23-Jan-2005 20:47:47
+Last Changed Date: 23-Jan-2005 21:24:16
 + echo Info: update - see above
 Info: update - see above
