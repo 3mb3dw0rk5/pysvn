@@ -1512,6 +1512,19 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 	bool is_revision_setup = false;
 	bool is_url = false;
 
+	svn_opt_revision_t revision_url;
+	svn_opt_revision_t revision_file;
+	if( args.hasArg( name_revision ) )
+		{
+		revision_url = args.getRevision( name_revision );
+		revision_file = revision_url;
+		}
+	else
+		{
+		revision_url.kind = svn_opt_revision_head;
+		revision_file.kind = svn_opt_revision_working;
+		}
+
 	SvnPool pool( m_context );
 
 	Py::List list_of_proplists;
@@ -1525,12 +1538,12 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 		if( !is_revision_setup )
 			if( is_svn_url( path ) )
 				{
-				revision = args.getRevision( name_revision, svn_opt_revision_head );
+				revision = revision_url;
 				is_url = true;
 				}
 			else
 				{
-				revision = args.getRevision( name_revision, svn_opt_revision_working );
+				revision = revision_file;
 				}
 		else
 			if( is_svn_url( path ) && !is_url )
@@ -1541,7 +1554,6 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 		apr_array_header_t *props = NULL;
 		try
 			{
-			
 			const char *norm_path_c_str = norm_path.c_str();
 			checkThreadPermission();
 
@@ -1867,7 +1879,6 @@ Py::Object pysvn_client::cmd_revpropget( const Py::Tuple &a_args, const Py::Dict
 		{ true,  name_prop_name },
 		{ true,  name_url },
 		{ false, name_revision },
-		{ false, name_recurse },
 		{ false, NULL }
 		};
 	FunctionArguments args( "revpropget", args_desc, a_args, a_kws );
@@ -1921,7 +1932,6 @@ Py::Object pysvn_client::cmd_revproplist( const Py::Tuple &a_args, const Py::Dic
 		{
 		{ true,  name_url },
 		{ false, name_revision },
-		{ false, name_recurse },
 		{ false, NULL }
 		};
 	FunctionArguments args( "revproplist", args_desc, a_args, a_kws );
@@ -1976,13 +1986,13 @@ Py::Object pysvn_client::cmd_revpropset( const Py::Tuple &a_args, const Py::Dict
 		{ true,  name_prop_value },
 		{ true,  name_url },
 		{ false, name_revision },
-		{ false, name_recurse },
+		{ false, name_force },
 		{ false, NULL }
 		};
 	FunctionArguments args( "revpropset", args_desc, a_args, a_kws );
 	args.check();
 
-	std::string propname( args.getUtf8String( name_prop_value ) );
+	std::string propname( args.getUtf8String( name_prop_name ) );
 	std::string propval( args.getUtf8String( name_prop_value ) );
 	std::string path( args.getUtf8String( name_url ) );
 	svn_opt_revision_t revision = args.getRevision( name_revision, svn_opt_revision_head );
@@ -2357,49 +2367,49 @@ void pysvn_client::init_type()
 	}
 
 //--------------------------------------------------------------------------------
-void pysvn_enum< svn_opt_revision_kind >::init_type(void)
+template <> void pysvn_enum< svn_opt_revision_kind >::init_type(void)
 	{
 	behaviors().name("opt_revision_kind");
 	behaviors().doc("opt_revision_kind enumeration");
 	behaviors().supportGetattr();
 	}
 
-void pysvn_enum< svn_wc_notify_action_t >::init_type(void)
+template <> void pysvn_enum< svn_wc_notify_action_t >::init_type(void)
 	{
 	behaviors().name("wc_notify_action");
 	behaviors().doc("wc_notify_action enumeration");
 	behaviors().supportGetattr();
 	}
 
-void pysvn_enum< svn_wc_status_kind >::init_type(void)
+template <> void pysvn_enum< svn_wc_status_kind >::init_type(void)
 	{
 	behaviors().name("wc_status_kind");
 	behaviors().doc("wc_status_kind enumeration");
 	behaviors().supportGetattr();
 	}
 
-void pysvn_enum< svn_wc_schedule_t >::init_type(void)
+template <> void pysvn_enum< svn_wc_schedule_t >::init_type(void)
 	{
 	behaviors().name("wc_schedule");
 	behaviors().doc("wc_schedule enumeration");
 	behaviors().supportGetattr();
 	}
 
-void pysvn_enum< svn_wc_merge_outcome_t >::init_type(void)
+template <> void pysvn_enum< svn_wc_merge_outcome_t >::init_type(void)
 	{
 	behaviors().name("wc_merge_outcome");
 	behaviors().doc("wc_merge_outcome enumeration");
 	behaviors().supportGetattr();
 	}
 
-void pysvn_enum< svn_wc_notify_state_t >::init_type(void)
+template <> void pysvn_enum< svn_wc_notify_state_t >::init_type(void)
 	{
 	behaviors().name("wc_notify_state");
 	behaviors().doc("wc_notify_state enumeration");
 	behaviors().supportGetattr();
 	}
 
-void pysvn_enum< svn_node_kind_t >::init_type(void)
+template <> void pysvn_enum< svn_node_kind_t >::init_type(void)
 	{
 	behaviors().name("node_kind");
 	behaviors().doc("node_kind enumeration");

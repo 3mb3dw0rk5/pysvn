@@ -46,6 +46,10 @@ FunctionArguments::FunctionArguments
 
 FunctionArguments::~FunctionArguments()
 {
+    // would like to check for all args processed here
+    // but if an expection was raise because of an early
+    // problem with the args we would assert on a false 
+    // positive
 }
 
 static char *int_to_string_inner( int n, char *buffer )
@@ -64,8 +68,6 @@ static const char *int_to_string( int n )
     char *buffer = int_to_string_inner( n, &number_string[0] );
     return number_string;
 }
-
-
 
 void FunctionArguments::check()
 {
@@ -134,8 +136,23 @@ void FunctionArguments::check()
             throw Py::TypeError( msg );
         }
     }
-}
 
+    // check for min args
+    for( i=0; i<m_min_args; i++ )
+    {
+        const argument_description &arg_desc = m_arg_desc[i];
+
+        // check for duplicate
+        if( !m_checked_args.hasKey( arg_desc.m_arg_name ) )
+        {
+            std::string msg = m_function_name;
+            msg += "() required argument '";
+            msg += arg_desc.m_arg_name;
+            msg += "'";
+            throw Py::TypeError( msg );
+        }
+    }
+}
 
 bool FunctionArguments::hasArg( const char *arg_name )
 {
@@ -146,9 +163,16 @@ Py::Object FunctionArguments::getArg( const char *arg_name )
 {
     if( !hasArg( arg_name ) )
     {
-	throw Py::AttributeError( "internal error - getArg called with bad arg_name" );
+	std::string msg = m_function_name;
+	msg += "() internal error - getArg called twice of with bad arg_name: ";
+	msg += arg_name;
+	throw Py::AttributeError( msg );
     }
-    return m_checked_args[ arg_name ];
+    Py::Object arg = m_checked_args[ arg_name ];
+    // Make sure that each arg is only fetched once
+    // to detect coding errors
+    m_checked_args.delItem( arg_name );
+    return arg;
 }
 
 bool FunctionArguments::getBoolean( const char *name )
