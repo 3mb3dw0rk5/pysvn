@@ -20,6 +20,8 @@ import distutils.sysconfig
 class SetupError(Exception):
     pass
 
+is_darwin = sys.platform == 'darwin'
+
 def main( argv ):
     if sys.platform == 'win32':
         print 'Error: Works for Unix like systems only'
@@ -91,11 +93,13 @@ def create_makefile( argv ):
 
     print 'Info: Creating Makefile'
     makefile = file( 'Makefile', 'w' )
-    makefile.write( makefile_template % template_values )
+    if sys.platform == 'darwin':
+        makefile.write( makefile_template_macosx % template_values )
+    else:
+        makefile.write( makefile_template % template_values )
     makefile.close()
 
-makefile_template = '''
-#
+makefile_template = '''#
 #	Created by pysvn Extension/Source/setup.py
 #
 PYTHON=%(python_exe)s
@@ -110,12 +114,48 @@ LDLIBS=-L%(svn_lib_dir)s \
 include pysvn_common.mak
 '''
 
+
+makefile_template_macosx = '''#
+#	Created by pysvn Extension/Source/setup.py
+#
+PYTHON=%(python_exe)s
+CCC=g++ -c
+CCCFLAGS=-Wno-long-double -fPIC -fexceptions -frtti %(includes)s
+LDSHARED=g++ -bundle -g -u _PyMac_Error -framework System -framework Python
+LDLIBS= \
+%(svn_lib_dir)s/libsvn_client-1.a \
+%(svn_lib_dir)s/libsvn_subr-1.a \
+%(svn_lib_dir)s/libsvn_wc-1.a \
+%(svn_lib_dir)s/libsvn_ra-1.a \
+%(svn_lib_dir)s/libsvn_ra_dav-1.a \
+%(svn_lib_dir)s/libsvn_ra_local-1.a \
+%(svn_lib_dir)s/libsvn_ra_svn-1.a \
+%(svn_lib_dir)s/libsvn_delta-1.a \
+%(svn_lib_dir)s/libsvn_repos-1.a \
+%(svn_lib_dir)s/libsvn_fs-1.a \
+%(svn_lib_dir)s/libsvn_fs_fs-1.a \
+%(svn_lib_dir)s/libsvn_fs_base-1.a \
+%(svn_lib_dir)s/libsvn_diff-1.a \
+%(svn_lib_dir)s/libaprutil-0.a \
+%(svn_lib_dir)s/libapr-0.a \
+%(svn_lib_dir)s/libneon.a \
+%(svn_lib_dir)s/libssl.a \
+%(svn_lib_dir)s/libcrypto.a \
+%(svn_lib_dir)s/libexpat.a \
+%(svn_lib_dir)s/libxml2.a \
+%(svn_lib_dir)s/libdb-4.2.a \
+%(svn_lib_dir)s/libintl.a \
+\
+ -liconv -lz
+include pysvn_common.mak
+'''
+
 def find_pycxx( argv ):
     return find_dir( argv,
                 'PyCXX include',
                 '--pycxx-dir=',
                 [   '../Import/pycxx_5_3_3'],
-                'CXX\Version.hxx' )
+                'CXX/Version.hxx' )
 
 def find_svn_inc( argv ):
     return find_dir( argv,
@@ -133,7 +173,7 @@ def find_svn_lib( argv ):
                 [   '/usr/lib',                             # typical Linux
                     '/usr/local/lib',                       # typical *BSD
                     '/sw/lib'],                             # Darwin
-                'libsvn_client-1.so' )
+                is_darwin and 'libsvn_client-1.dylib' or 'libsvn_client-1.so' )
 
 def find_apr_inc( argv ):
     return find_dir( argv,
@@ -153,10 +193,10 @@ def find_apr_lib( argv ):
                 [   '/usr/lib',                             # typical Linux
                     '/usr/local/lib',                       # typical *BSD
                     '/sw/lib'],                             # Darwin
-                'libapr-0.so' )
+                is_darwin and 'libapr-0.dylib' or 'libapr-0.so' )
 
 def find_dir( argv, name, kw, base_dir_list, check_file=None ):
-    dir = __find_dir( argv, name, kw, base_dir_list, check_file=None )
+    dir = __find_dir( argv, name, kw, base_dir_list, check_file )
     print 'Info: Found',name,'in',dir
     return dir
 
@@ -169,9 +209,9 @@ def __find_dir( argv, name, kw, base_dir_list, check_file=None ):
     for dir in base_dir_list:
         print 'Info: Looking for',name,'in',dir
         if check_file is not None:
-            check_file = os.path.join( dir, check_file )
-            print 'Info: Checking for',check_file
-            if os.path.exists( check_file ):
+            full_check_file = os.path.join( dir, check_file )
+            print 'Info: Checking for',full_check_file
+            if os.path.exists( full_check_file ):
                 return os.path.abspath( dir )
         elif os.path.exists( dir ):
             return os.path.abspath( dir )
