@@ -4,7 +4,14 @@
 if [ -z "$TARGET" ]
 then
 	# set the ReleaseEngineering symbols in development mode
-	. ../../ReleaseEngineering/unix/software-version.inc
+	case $(uname -s) in
+	Darwin)
+		. ../../ReleaseEngineering/MacOSX/software-version.inc
+		;;
+	*)
+		. ../../ReleaseEngineering/unix/software-version.inc\
+		;;
+	esac
 fi
 export WORKDIR=$(cd ..;pwd)
 
@@ -12,13 +19,25 @@ export WORKDIR=$(cd ..;pwd)
 export PY_MAJ=${1:-2}
 export PY_MIN=${2:-3}
 export PYCXX=${WORKDIR}/Import/pycxx_${PYCXXVER}
-export PYTHON=/usr/bin/python${PY_MAJ}.${PY_MIN}
 export PYDIR=python${PY_MAJ}.${PY_MIN}
 export PYLIB=python${PY_MAJ}${PY_MIN}
-export SVN_INC=/usr/include/subversion-1
-export SVN_LIB=/usr/lib
-export APR_INC=/usr/include/apr-0
-export APR_LIB=/usr/lib
+case $(uname -s) in
+Darwin)
+	export PYTHON=/usr/bin/python${PY_MAJ}.${PY_MIN}
+	export SVN_INC=/sw/include/subversion-1
+	export SVN_LIB=/sw/lib
+	export APR_INC=/sw/include/apr-0
+	export APR_LIB=/sw/lib
+	;;
+
+*)
+	export PYTHON=/usr/bin/python${PY_MAJ}.${PY_MIN}
+	export SVN_INC=/usr/include/subversion-1
+	export SVN_LIB=/usr/lib
+	export APR_INC=/usr/include/apr-0
+	export APR_LIB=/usr/lib
+	;;
+esac
 
 # always build rapidsvn into an unversioned dir
 export SVNCPP_INC=${TARGET}/rapidsvn/include
