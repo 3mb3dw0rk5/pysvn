@@ -298,11 +298,13 @@ Update the working copy to a different URL.\n\
 \n\
 2. Reconnect the working copy when the repository URL has changed."
 #define SVN_UPDATE_DOC \
-"update( path,\n\
+"revision = \\\n\
+update( path,\n\
         recurse=True,\n\
         revision=pysvn.Revision( opt_revision_kind.head ) )\n\
 \n\
 Update the file in the working copy at path to the specified revision.  Set recurse to True to recursively update a directory's children.\n\
 This command is typically used to get the latest changes from the repository.  Note that updating to an older revision does not change the \n\
-current revision.  To make the current version identical to an older revision, use a merge followed by a check in."
+current revision.  To make the current version identical to an older revision, use a merge followed by a check in.
+update returns a pysvn.Revision containing the number of the revision the working copy was updated to."
 

@@ -379,7 +379,7 @@ checkin( path_list,
 checkin the files in the path_list to the repository with the specifed log_message.  
 Set recurse to True to recursively checkin a directory's children with the same log message.
 </p>
-<p>checkin returns a pysvn.Revision containing the number of the checked in revision.
+<p>checkin returns a pysvn.Revision containing the number of the checked in revision.</p>
 <h4><a name="pysvn_client_copy"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.copy</a></h4>
 <pre>
 copy( src_path,
@@ -726,13 +726,15 @@ switch( path,
 </p>
 <h4><a name="pysvn_client_update"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.update</a></h4>
 <pre>
+revision = \
 update( path,
         recurse=True,
         revision=pysvn.Revision( opt_revision_kind.head ) )
 </pre>
 <p>Update the file in the working copy at path to the specified revision.
-Set recurse to True to recursively update a directory's children.
-This command is typically used to get the latest changes from the repository.
+Set recurse to True to recursively update a directory's children.</p>
+<p>update returns a pysvn.Revision containing the number of the revision the working copy was updated to.</p>
+<p>This command is typically used to get the latest changes from the repository.
 Note that updating to an older revision does not change the 
 current revision.  To make the current version identical to an older revision, 
 use a merge followed by a commit.</p>
