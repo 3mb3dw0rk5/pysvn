@@ -20,7 +20,7 @@ rem echo echo svnlook info %%1 -t %%2 ^>b:\test_1.output >b:\repos\hooks\pre-com
 rem echo svnlook info %%1 -t %%2 ^>^>b:\test_1.output >>b:\repos\hooks\pre-commit.cmd
 rem echo echo svnlook changed %%1 -t %%2 ^>^>b:\test_1.output >>b:\repos\hooks\pre-commit.cmd
 rem echo svnlook changed %%1 -t %%2 ^>^>b:\test_1.output >>b:\repos\hooks\pre-commit.cmd
-echo echo %PYTHON% %WORKDIR%\Tests\test_04_pre_commit_test_1.py %%* ^>^>b:\test_1.output >>b:\repos\hooks\pre-commit.cmd
+echo echo %PYTHON% %WORKDIR%\Tests\test_04_pre_commit_test_1.py %%* ^>b:\test_1.output >>b:\repos\hooks\pre-commit.cmd
 echo set PYTHONPATH=%PYTHONPATH% >>b:\repos\hooks\pre-commit.cmd
 echo %PYTHON% %WORKDIR%\Tests\test_04_pre_commit_test_1.py %%* ^>^>b:\test_1.output >>b:\repos\hooks\pre-commit.cmd
 

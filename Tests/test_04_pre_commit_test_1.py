@@ -1,6 +1,6 @@
 import sys
 import pysvn
-print 'Info: pre commit test 1',pysvn.version
+print 'Info: pre commit test 1'
 
 print 'Info: Transaction( %s, %s) ...' % (sys.argv[1], sys.argv[2])
 t = pysvn.Transaction( sys.argv[1], sys.argv[2] )

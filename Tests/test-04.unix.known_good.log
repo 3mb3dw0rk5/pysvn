@@ -12,7 +12,7 @@ Info: Install hooks
 Info: Command: /usr/bin/python2.3 /u/barry/wc/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /u/barry/wc/pysvn/Extension/Tests/testroot-04/configdir mkdir file:///u/barry/wc/pysvn/Extension/Tests/testroot-04/repos/trunk/test/a -m pre-commit test 1
 Info: test_1.output start ----------------------------------------
 /usr/bin/python2.3 /u/barry/wc/pysvn/Extension/Tests/test_04_pre_commit_test_1.py /u/barry/wc/pysvn/Extension/Tests/testroot-04/repos 3
-Info: pre commit test 1 (1, 2, 0, 0)
+Info: pre commit test 1
 Info: Transaction( /u/barry/wc/pysvn/Extension/Tests/testroot-04/repos, 3) ...
 Info: proplist() ...
 svn:log: pre-commit test 1
@@ -38,7 +38,7 @@ A /u/barry/wc/pysvn/Extension/Tests/testroot-04/wc/file1.txt
 Revision 4
 Info: test_1.output start ----------------------------------------
 /usr/bin/python2.3 /u/barry/wc/pysvn/Extension/Tests/test_04_pre_commit_test_1.py /u/barry/wc/pysvn/Extension/Tests/testroot-04/repos 4
-Info: pre commit test 1 (1, 2, 0, 0)
+Info: pre commit test 1
 Info: Transaction( /u/barry/wc/pysvn/Extension/Tests/testroot-04/repos, 4) ...
 Info: proplist() ...
 svn:log: Add two files
@@ -59,7 +59,7 @@ M /u/barry/wc/pysvn/Extension/Tests/testroot-04/wc/file1.txt
 Revision 5
 Info: test_1.output start ----------------------------------------
 /usr/bin/python2.3 /u/barry/wc/pysvn/Extension/Tests/test_04_pre_commit_test_1.py /u/barry/wc/pysvn/Extension/Tests/testroot-04/repos 5
-Info: pre commit test 1 (1, 2, 0, 0)
+Info: pre commit test 1
 Info: Transaction( /u/barry/wc/pysvn/Extension/Tests/testroot-04/repos, 5) ...
 Info: proplist() ...
 svn:log: Mod one file Mod one prop
