@@ -154,11 +154,9 @@ class SvnCommand:
 		return True, self.getLogMessage()
 
 	def dispatch( self, argv ):
-		print 'qqq:',argv
 		try:
 			args = SvnArguments( argv )
 			cmd_name = 'cmd_%s' % args.getCommandName( 'help' )
-			print 'qqq:',cmd_name
 
 			self.initClient( args.getOptionalValue( '--config-dir', '' ) )
 			self.client.set_auth_cache( args.getBooleanOption( '--no-auth-cache', False ) )
@@ -276,6 +274,8 @@ class SvnCommand:
 		entry = self.client.info( path )
 
 		print 'Path:',path
+		if entry is None:
+			return
 		if entry.name and entry.name != 'svn:this_dir':
 			print 'Name:',entry.name
 		if entry.url:
@@ -565,22 +565,22 @@ class SvnCommand:
 	def cmd_status( self, args ):
 		recurse = args.getBooleanOption( '--non-recursive', False )
 		verbose = args.getBooleanOption( '--verbose', True )
-		no_ignore = args.getBooleanOption( '--no-ignore', True )
+		ignore = args.getBooleanOption( '--no-ignore', False )
 		update = args.getBooleanOption( '--show-updates', True )
 
 		positional_args = args.getPositionalArgs( 0 )
 		if len(positional_args) == 0:
-			all_files = self.client.status( '', recurse=recurse, get_all=verbose, no_ignore=True, update=update )
-			self._cmd_status_print( all_files, verbose, update, no_ignore )
+			all_files = self.client.status( '', recurse=recurse, get_all=verbose, ignore=ignore, update=update )
+			self._cmd_status_print( all_files, verbose, update, ignore )
 		else:
 			for arg in positional_args:
-				all_files = self.client.status( arg, recurse=recurse, get_all=verbose, no_ignore=True, update=update )
-				self._cmd_status_print( all_files, verbose, update, no_ignore )
+				all_files = self.client.status( arg, recurse=recurse, get_all=verbose, ignore=ignore, update=update )
+				self._cmd_status_print( all_files, verbose, update, ignore )
 
-	def _cmd_status_print( self, all_files, detailed, show_committed, no_ignore ):
+	def _cmd_status_print( self, all_files, detailed, show_committed, ignore ):
 		all_files.sort( self.by_path )
 		for file in all_files:
-			if file.text_status != pysvn.wc_status_kind.ignored or no_ignore:
+			if file.text_status != pysvn.wc_status_kind.ignored or not ignore:
 				state = '%s%s%s%s%s' % (wc_status_kind_map[ file.text_status ],
 						wc_status_kind_map[ file.prop_status ],
 						' L'[ file.is_locked ],
