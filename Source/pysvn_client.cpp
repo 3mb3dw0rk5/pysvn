@@ -216,6 +216,12 @@ const char *src_revision_only_keywords[] = {
 	NULL
 	};
 
+const char *src_revision_force_keywords[] = {
+	"src_revision",
+	"force",
+	NULL
+	};
+
 const char *recurse_only_keywords[] = {
 	"recurse",
 	NULL
@@ -824,28 +830,43 @@ Py::Object pysvn_client::cmd_mkdir(const Py::Tuple& args )
 
 Py::Object pysvn_client::cmd_move(const Py::Tuple& args, const Py::Dict &kws )
 	{
-	check_arguments( 2, 2, args, src_revision_only_keywords, kws );
+	check_arguments( 2, 2, args, src_revision_force_keywords, kws );
 
-	Py::String src_path( args[0] );
-	Py::String dest_path( args[1] );
-	svn_opt_revision_t revision;
-	get_optional_revision( revision, "src_revision", svn_opt_revision_head, kws );
-	bool force = get_optional_boolean( "force", false, kws );
-
+	std::string type_error_message;
 	try
 		{
-		std::string norm_src_path( svnNormalisedIfPath( src_path.as_std_string() ) );
-		std::string norm_dest_path( svnNormalisedIfPath( dest_path.as_std_string() ) );
+		type_error_message = "expecting string for src_path (arg 1)";
+		Py::String src_path( args[0] );
 
-		PythonAllowThreads permission( client_callbacks );
-		svn_client.move( norm_src_path.c_str(),
-				svn::Revision( &revision ),
-				norm_dest_path.c_str(),
-				force );
+		type_error_message = "expecting string for dest_path (arg 2)";
+		Py::String dest_path( args[1] );
+
+		svn_opt_revision_t revision;
+		type_error_message = "expecting revision for keyword src_revision";
+		get_optional_revision( revision, "src_revision", svn_opt_revision_head, kws );
+
+		type_error_message = "expecting boolean for keyword force";
+		bool force = get_optional_boolean( "force", false, kws );
+
+		try
+			{
+			std::string norm_src_path( svnNormalisedIfPath( src_path.as_std_string() ) );
+			std::string norm_dest_path( svnNormalisedIfPath( dest_path.as_std_string() ) );
+
+			PythonAllowThreads permission( client_callbacks );
+			svn_client.move( norm_src_path.c_str(),
+					svn::Revision( &revision ),
+					norm_dest_path.c_str(),
+					force );
+			}
+		catch( svn::ClientException &e )
+			{
+			throw Py::Exception( module.client_error, e.message() );
+			}
 		}
-	catch( svn::ClientException &e )
+	catch( Py::TypeError & )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::TypeError( type_error_message );
 		}
 
 	return Py::Nothing();

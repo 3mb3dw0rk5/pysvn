@@ -544,19 +544,19 @@ class SvnCommand:
 	def cmd_status( self, args ):
 		recurse = args.getBooleanOption( '--non-recursive', False )
 		verbose = args.getBooleanOption( '--verbose', True )
-		no_ignore = args.getBooleanOption( '--no-ignore', False )
+		no_ignore = args.getBooleanOption( '--no-ignore', True )
 		update = args.getBooleanOption( '--show-updates', True )
 
 		positional_args = args.getPositionalArgs( 0 )
 		if len(positional_args) == 0:
-			all_files = self.client.status( '', recurse=recurse, get_all=verbose, no_ignore=no_ignore, update=update )
-			self._cmd_status_print( all_files, verbose, update )
+			all_files = self.client.status( '', recurse=recurse, get_all=verbose, no_ignore=True, update=update )
+			self._cmd_status_print( all_files, verbose, update, no_ignore )
 		else:
 			for arg in positional_args:
-				all_files = self.client.status( arg, recurse=recurse, get_all=verbose, no_ignore=no_ignore, update=update )
-				self._cmd_status_print( all_files, verbose, update )
+				all_files = self.client.status( arg, recurse=recurse, get_all=verbose, no_ignore=True, update=update )
+				self._cmd_status_print( all_files, verbose, update, no_ignore )
 
-	def _cmd_status_print( self, all_files, detailed, show_committed ):
+	def _cmd_status_print( self, all_files, detailed, show_committed, no_ignore ):
 		all_files.sort( self.by_path )
 		for file in all_files:
 			state = '%s%s%s%s%s' % (wc_status_kind_map[ file.text_status ],
@@ -572,21 +572,22 @@ class SvnCommand:
 			else:
 				odd_status = ' '
 
-			if detailed:
-				print '%s %s %6d %6d %-14s %s' % (state,
-					odd_status,
-					file.entry.revision.number,
-					file.entry.commit_revision.number,
-					file.entry.commit_author,
-					file.path)
-			elif show_committed:
-				print '%s %s %6d %s' % (state,
-					odd_status,
-					file.entry.revision.number,
-					file.path)
-			else:
-				if file.text_status != pysvn.wc_status_kind.normal:
-					print '%s %s' % (state, file.path)
+			if file.text_status != pysvn.wc_status_kind.ignored or no_ignore:
+				if detailed:
+					print '%s %s %6d %6d %-14s %s' % (state,
+						odd_status,
+						file.entry.revision.number,
+						file.entry.commit_revision.number,
+						file.entry.commit_author,
+						file.path)
+				elif show_committed:
+					print '%s %s %6d %s' % (state,
+						odd_status,
+						file.entry.revision.number,
+						file.path)
+				else:
+					if file.text_status != pysvn.wc_status_kind.normal:
+						print '%s %s' % (state, file.path)
 
 	cmd_st = cmd_status
 	cmd_stat = cmd_status
