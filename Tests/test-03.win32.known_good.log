@@ -3,11 +3,7 @@ PYTHON: c:\python23\python
 
 L:\wc\pysvn\trunk\pysvn\Extension\Tests >setlocal
 
-L:\wc\pysvn\trunk\pysvn\Extension\Tests >if exist testroot-03 rmdir /s /q testroot-03 
-
 L:\wc\pysvn\trunk\pysvn\Extension\Tests >mkdir testroot-03 
-
-L:\wc\pysvn\trunk\pysvn\Extension\Tests >subst b: /d 
 
 L:\wc\pysvn\trunk\pysvn\Extension\Tests >subst b: L:\wc\pysvn\trunk\pysvn\Extension\Tests\testroot-03 
 

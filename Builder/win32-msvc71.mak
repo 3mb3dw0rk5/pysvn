@@ -16,5 +16,4 @@ install:
 	..\kit\Win32\tmp\output\setup.exe
 
 test:
-	cd  ..\Tests && test-pysvn.cmd >test-pysvn.log 2>&1
-	cd  ..\Tests && type test-pysvn.log
+	cd  ..\Tests && $(MAKE) -f win32.mak
