@@ -99,8 +99,8 @@ rm -f /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/__init__.pyo
 %%files
 %%defattr (-,root,root)
 %%attr(444,root,root) /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/__init__.py
-%%attr(444,root,root) /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/_pysvn.so
-%%attr(444,root,root) /usr/lib/libsvncpp.so.0
+%%attr(555,root,root) /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/_pysvn.so
+%%attr(555,root,root) /usr/lib/libsvncpp.so.0
 %%attr(444,root,root) /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/LICENSE.txt
 %%attr(444,root,root) /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/pysvn.html
 %%attr(444,root,root) /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/pysvn_prog_ref.html
