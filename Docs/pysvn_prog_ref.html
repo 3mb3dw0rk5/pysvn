@@ -103,13 +103,15 @@ import pysvn
 
 log_message = "reason for change"
 def get_log_message():
-	return log_message
+	return rc, log_message
 
 client = pysvn.Client()
 client.callback_get_log_message = get_log_message
 </pre>
 <p>The callback_get_log_message is called when a log message is required to complete the current command.
-Return the log message as a string. Returning an empty string will cause the command to be cancelled.</p>
+Return the True in rc and a log message as a string. Returning False in rc will cause the command
+to be cancelled. An empty log_message is not allowed and may cause the command to be cancelled.</p>
+
 <p>unicode strings cannot be handled. If you have a unicode string convert to UTF-8.</p>
 
 <h4><a name="pysvn_client_callback_get_login"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.callback_get_login</a></h4>
@@ -394,6 +396,8 @@ if the src_path is a URL otherwise to pysvn.Revision( opt_revision_kind.working 
 <li>URL -> URL:  complete server-side copy;  used to branch & tag
 </ul>
 </p>
+<p>If the destination is a URL the <a href="#pysvn_client_callback_get_log_message">client_get_log_message</a>
+callback must be implemented to return a log message.
 <h4><a name="pysvn_client_diff"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.diff</a></h4>
 <pre>
 
