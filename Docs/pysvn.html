@@ -1,0 +1,427 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<title>pysvn - Python interface to Subversion 0.4.0</title>
+<link rev="made" href="mailto:barry@barrys-emacs.org">
+<style>
+H1, H2, H3, H4 {color: #000099;	background-color: lightskyblue}
+pre {color: #0000cc; background-color: #eeeeee; position: relative; left: 40px; margin-right: 80px;
+	border-style: solid; border-color: black; border-width: thin}
+</style>
+</head>
+<body>
+<h1>pysvn - Python interface to Subversion 0.4.1</h1>
+
+<h2>pysvn module</h2>
+
+<p>This modules copyright is available in pysvn.copyright
+and the modules version is available in pysvn.version as
+a tuple, (major, minor, patch, build). The subversion
+version is available as a tuple (major, minor, micro, tag)</p>
+
+<p>The pysvn module has three classes:</p>
+
+<ul>
+<li><a href="#client">Client</a> - the subversion client interface
+<li><a href="#revision">Revision</a> - subversion revision objects
+<li>ClientError - Exception class raised by client commands on error
+</ul>
+
+<p>The following enumerations are provided:</p>
+
+<ul>
+<li>opt_revision_kind
+<li>wc_notify_action
+<li>wc_status_kind
+<li>wc_schedule
+<li>wc_merge_outcome
+<li>wc_notify_state
+<li>node_kind
+</ul>
+
+<p>Use python builtin dir() to list all available values in an enumeration:</p>
+
+<pre>
+    print dir( pysvn.wc_notify_action )
+</pre>
+
+<h2><a name="client">pysvn.Client - Subversion client interface</a></h2>
+
+<p>Interface summary:</p>
+
+<pre>
+client = pysvn.Client()
+</pre>
+
+<p>Client has the following methods:</p>
+
+<h3>set_auth_cache</h3>
+<pre>
+set_auth_cache( enable )
+</pre>
+
+<h3>add</h3>
+<pre>
+add( path,
+     recurse=True )
+</pre>
+<p>
+     Schedules the file or directory specfied in path for addition to the repository.  Set recurse to True to recursively add a directory's children.
+     Files are added at the next commit.
+</p>
+<h3>cat</h3>
+<pre>
+cat( path,
+     revision=pysvn.Revision( opt_revision_kind.head ) )
+</pre>
+<p>
+Return the contents of path for the specified revision.
+</p>
+
+<h3>checkout</h3>
+<pre>
+checkout( path,
+          url,
+          recurse=True,
+          revision=pysvn.Revision( opt_revision_kind.head ) )
+</pre>
+<p>
+Checkout the repository at url into the location specified by path.  Set recurse to True to recursively check out a directory's children.
+Specify a revision to check out a particular version of the source tree.
+</p>
+<h3>cleanup</h3>
+<pre>
+cleanup( path )
+</pre>
+<p>
+Clean up any locks in the working copy at path.  Usually such locks are the result of a failed or interrupted operation.
+</p>
+<h3>commit</h3>
+<pre>
+commit( path_list,
+        log_message,
+        recurse=True )
+</pre>
+<p>
+Commit the files in the path_list to the repository with the specifed log_message.  Set recurse to True to recursively commit a directory's children. with the same log message.
+</p>
+<h3>copy</h3>
+<pre>
+copy( src_path,
+      dest_path,
+      src_revision=pysvn.Revision( opt_revision_kind.head ) )
+</pre>
+<p>
+Duplicate something in working copy or repos, remembering history.
+</p>
+<p>src_path and dest_path can each be either a working copy (WC) path or URL:
+<ul>
+<li>WC  -> WC:   copy and schedule for addition (with history)
+<li>WC  -> URL:  immediately commit a copy of WC to URL
+<li>URL -> WC:   check out URL into WC, schedule for addition
+<li>URL -> URL:  complete server-side copy;  used to branch & tag
+</ul>
+</p>
+<h3>diff</h3>
+<pre>
+diff( tmp_path,
+      path,
+      revision1=pysvn.Revision( opt_revision_kind.base ),
+      revision2=pysvn.Revision( opt_revision_kind.working ),
+      recurse=True,
+      ignore_ancestry=False,
+      no_diff_deleted=False )
+</pre>
+<p>
+Display the differences between two paths.
+</P>
+<h3>export</h3>
+<pre>
+export( src_path,
+        dest_path,
+        force=False,
+        revision=pysvn.Revision( opt_revision_kind.head ) )
+</pre>
+<p>
+Create an unversioned copy of a tree.
+<p>
+<ol>
+<li>Exports a clean directory tree from the repository specified by
+   URL src_path, at revision if it is given, otherwise at HEAD, into
+   dest_path.
+
+<li>Exports a clean directory tree from the working copy specified by
+   src_path into dest_path.  All local changes will be preserved, but files
+   not under revision control will not be copied.
+</ol>
+<h3>import_</h3>
+<pre>
+import_( path,
+        url,
+        log_message,
+        recurse=True )
+</pre>
+<p>
+Commit an unversioned file or tree into the repository.
+</p>
+<p>Recursively commit a copy of PATH to URL.
+Parent directories are created as necessary in the repository.
+</p>
+<h3>info</h3>
+<pre>
+entry = info( path )
+</pre>
+<p>return info on path</p>
+
+<h3>log</h3>
+<pre>
+all_log_messages = log( path,
+     revision_start=pysvn.Revision( opt_revision_kind.head ),
+     revision_end=pysvn.Revision( opt_revision_kind.number, 0 ) )
+</pre>
+<p>
+View the log messages for the specifed path between revisions start and end.
+Show the log messages for a set of revisions or path.
+</p>
+<h3>ls</h3>
+<pre>
+entries_list = ls( path,
+            revision=pysvn.Revision( opt_revision_kind.head ),
+            recurse=True )
+</pre>
+<p>
+Return entries_list for the given path at the provided revision.
+</p>
+<h3>merge</h3>
+<pre>
+merge( path1,
+       revision1,
+       path2,
+       revision2,
+       local_path,
+       force=False,
+       recurse=True )
+</pre>
+<p>Apply the differences between two sources to a working copy path.
+</p>
+<h3>mkdir</h3>
+<pre>
+mkdir( path,
+       log_message )
+mkdir( path_list,
+       log_message )
+</pre>
+<p>Create a new directory under revision control.</p>
+
+<p>Create version controlled directories.</p>
+
+<p>If run on a working copy PATHs, each directory is scheduled for
+addition upon the next commit.</p>
+
+<p>If run on URLs, the directories are created in the repository via an
+immediate commit.</p>
+
+<p>In both cases, all the intermediate directories must already exist.</p>
+
+<h3>move</h3>
+<pre>
+move( src_path,
+      dest_path,
+      src_revision=pysvn.Revision( opt_revision_kind.head ),
+      force=False )
+</pre>
+<p>Move/rename something in working copy or repository.</p>
+
+<p>NOTE:  this command is equivalent to a 'copy' and 'delete'.</p>
+
+<p>src_path and dest_path can both be working copy (WC) paths or URLs:
+<ul>
+<li>WC  -> WC:   move and schedule for addition (with history)
+<li>URL -> URL:  complete server-side rename.remove( path_list, force=False )
+</ul>
+
+<p>If run on a working copy PATHs, each item is scheduled for deletion
+upon the next commit.  Files, and directories that have not been
+committed, are immediately removed from the working copy.  The
+command will not remove PATHs that are, or contain, unversioned
+or modified items; set force=True to override this
+behaviour.</p>
+
+<p>If run on URLs, the items are deleted from the repository via an
+immediate commit.</p>
+
+<h3>proplist</h3>
+<pre>
+prop_list = proplist( path,
+                      src_revision=pysvn.Revision( opt_revision_kind.head ),
+                      recurse=False )
+</pre>
+<p>Returns a list of tuples (path, prop_dict)</p>
+
+<h3>propget</h3>
+<pre>
+prop_list = propget( prop_name,
+                     path,
+                     src_revision=pysvn.Revision( opt_revision_kind.head ),
+                     recurse=False )
+</pre>
+<p>Returns a list of tuples (path, prop_dict)</p>
+<h3>propset</h3>
+<pre>
+rev = propset( propname,
+               propval,
+               path,
+               revision=pysvn.Revision( opt_revision_kind.head ),
+               recurse=False )
+</pre>
+<p>set the property propname to propval in path</p>
+<h3>propdel</h3>
+<pre>
+rev = propdel( propname,
+         path,
+         revision=pysvn.Revision( opt_revision_kind.head ),
+         recurse=False )
+</pre>
+<p>delete the property propname from path</p>
+
+<h3>relocate</h3>
+<pre>
+relocate( from_url,
+          to_url,
+          path,
+          recurse=True)
+</pre>
+<p>relocate the working copy from from_url to to_url of path</p>
+
+<h3>remove</h3>
+<pre>
+remove( path_list,
+        force=False )
+</pre>
+<p>If run on a working copy PATHs, each item is scheduled for deletion
+upon the next commit.  Files, and directories that have not been
+committed, are immediately removed from the working copy.  The
+command will not remove PATHs that are, or contain, unversioned
+or modified items; set force=True to override this
+behaviour.</p>
+
+<p>If run on URLs, the items are deleted from the repository via an
+immediate commit.</p>
+
+<h3>resolved</h3>
+<pre>
+resolved( path,
+          recurse=True )
+</pre>
+<p>Mark the conflicted file at path as resolved.</p>
+
+<h3>revert</h3>
+<pre>
+revert( path,
+        recurse=False )
+</pre>
+<p>Discard any changes in the working copy at path.
+Set recurse to True to recursively revert a directory's children.</p
+
+<h3>revproplist</h3>
+<pre>
+prop_list = revproplist( path,
+                      src_revision=pysvn.Revision( opt_revision_kind.head ),
+                      recurse=False )
+</pre>
+<p>Returns a list of tuples (path, prop_dict)</p>
+
+<h3>revpropget</h3>
+<pre>
+prop_list = revpropget( prop_name,
+                      path,
+                      src_revision=pysvn.Revision( opt_revision_kind.head ),
+                      recurse=False )
+</pre>
+<p>Returns a list of tuples (path, prop_dict)</p>
+<h3>revpropset</h3>
+<pre>
+rev = revpropset( propname,
+         propval,
+         path,
+         revision=pysvn.Revision( opt_revision_kind.head ),
+         recurse=False )
+</pre>
+<p>set the property propname to propval in path</p>
+<h3>revpropdel</h3>
+<pre>
+rev = revpropdel( propname,
+         path,
+         revision=pysvn.Revision( opt_revision_kind.head ),
+         recurse=False )
+</pre>
+<p>delete the property propname from path</p>
+
+<h3>single_status</h3>
+<pre>
+path_status = single_status( path )
+</pre>
+<p>returns status for a single file in path_status</p>
+
+<h3>status</h3>
+<pre>
+path_status_list = status( path,
+	        decend=False,
+	        get_all=False,
+	        update=False,
+	        no_ignore=False )
+</pre>
+<p>returns status for all files in the directory path in path_status_list</p>
+
+<h3>switch</h3>
+<pre>
+switch( path,
+        url,
+        recurse=True,
+        revision=pysvn.Revision( opt_revision_kind.head ) )
+</pre>
+<p>Update the working copy to a different URL.</p>
+
+<ol>
+<li>Update the working copy to mirror a new URL.  This behaviour is a
+   superset of "svn update".
+   Note:  this is the way to move a working copy to a new branch.
+
+<li>Reconnect the working copy when the repository URL has changed.
+</ol>
+</p>
+<h3>update</h3>
+<pre>
+update( path,
+        recurse=True,
+        revision=pysvn.Revision( opt_revision_kind.head ) )
+</pre>
+<p>Update the file in the working copy at path to the specified revision.
+Set recurse to True to recursively update a directory's children.
+This command is typically used to get the latest changes from the repository.
+Note that updating to an older revision does not change the 
+current revision.  To make the current version identical to an older revision, 
+use a merge followed by a commit.</p>
+
+<h2><a name="revision">Revision - subversion revision</a></h2>
+
+<p>The Revision object has three member variables:</p>
+
+<ul>
+<li>kind   - the kind of revision, its value is one of the opt_revision_kind enumerations.
+<li>date   - date and time when kind is opt_revision_kind.date
+<li>number - revision number when kind is opt_revision_kind.number
+</ul>
+
+<p>Interface summary:</p>
+
+<pre>
+import pysvn
+import time
+
+revhead = pysvn.Revision( pysvn.opt_revision_kind.head )
+revdate = pysvn.Revision( pysvn.opt_revision_kind.date, time.time() )
+revnum = pysvn.Revision( pysvn.opt_revision_kind.number, 4721 )
+</pre>
+</body>
+</html>
