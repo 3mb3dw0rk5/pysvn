@@ -1,6 +1,6 @@
 //
 // ====================================================================
-// (c) 2003 Barry A Scott.  All rights reserved.
+// (c) 2003-2004 Barry A Scott.  All rights reserved.
 //
 // This software is licensed as described in the file LICENSE.txt,
 // which you should have received as part of this distribution.
@@ -275,7 +275,6 @@ const char *annotate_keywords[] = {
 	"revision_end",
 	NULL
 	};
-
 
 Py::Object pysvn_client::cmd_annotate(const Py::Tuple& args, const Py::Dict &kws )
 	{
@@ -708,7 +707,7 @@ Py::Object pysvn_client::cmd_ls(const Py::Tuple& args, const Py::Dict &kws )
 
 		Py::Dict entry_dict;
 		entry_dict["name"] = Py::String( osNormalisedPath( entry.name() ) );
-		entry_dict["kind"] = Py::Int( entry.kind() );
+		entry_dict["kind"] = toObject( entry.kind() );
 		entry_dict["size"] = Py::Long( Py::Float( double( static_cast<signed_int64>( entry.size() ) ) ) );
 		entry_dict["created_rev"] = Py::Int( entry.createdRev() );
 		entry_dict["time"] = toObject( entry.time() );

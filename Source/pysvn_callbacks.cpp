@@ -1,6 +1,6 @@
 //
 // ====================================================================
-// Copyright (c) 2003 Barry A Scott.  All rights reserved.
+// Copyright (c) 2003-2004 Barry A Scott.  All rights reserved.
 //
 // This software is licensed as described in the file LICENSE.txt,
 // which you should have received as part of this distribution.
@@ -18,7 +18,7 @@
 
 #include "pysvn.hpp"
 
-static bool get_string( Py::Object &fn, std::string & _msg );
+static bool get_string( Py::Object &fn, Py::Tuple &args, std::string & _msg );
 
 pysvn_callbacks::pysvn_callbacks()
 	: pyfn_GetLogin()
@@ -136,6 +136,10 @@ void pysvn_callbacks::contextNotify (const char *path,
 	info["path"] = Py::String( path );
 	info["action"] = toEnumValue( action );
 	info["kind"] = toEnumValue( kind );
+	if( mime_type == NULL )
+		info["mime_type"] = Py::Nothing();
+	else
+		info["mime_type"] = Py::String( mime_type );
 	info["content_state"] = toEnumValue( content_state );
 	info["prop_state"] = toEnumValue( prop_state );
 	info["revision"] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, revnum ) );
@@ -203,7 +207,8 @@ bool pysvn_callbacks::contextGetLogMessage( std::string & _msg )
 	{
 	PythonDisallowThreads callback_permission( permission );
 
-	return get_string( pyfn_GetLogMessage, _msg );
+	Py::Tuple args( 0 );
+	return get_string( pyfn_GetLogMessage, args, _msg );
 	}
 
 //
@@ -242,24 +247,23 @@ svn::ContextListener::SslServerTrustAnswer pysvn_callbacks::contextSslServerTrus
 	Py::Tuple result_tuple;
 	Py::Int retcode;
 	Py::Int accepted_failures;
+	Py::Int may_save;
 
 	try
 		{
 		result_tuple = callback.apply( args );
 		retcode = result_tuple[0];
 		accepted_failures = result_tuple[1];
+		may_save = result_tuple[2];
 
 		acceptedFailures = long(accepted_failures);
-		switch( long( retcode ) )
-			{
-		case 1:
-			return ACCEPT_TEMPORARILY;
-		case 2:
-			return ACCEPT_PERMANENTLY;
-		case 0:
-		default:
+		if( long( retcode ) != 0 )
+			if( long( may_save ) != 0 )
+				return ACCEPT_PERMANENTLY;
+			else
+				return ACCEPT_TEMPORARILY;
+		else
 			return DONT_ACCEPT;
-			}
 		}
 	catch( Py::Exception &e )
 		{
@@ -279,7 +283,8 @@ bool pysvn_callbacks::contextSslClientCertPrompt( std::string & certFile )
 	{
 	PythonDisallowThreads callback_permission( permission );
 
-	return get_string( pyfn_SslClientCertPrompt, certFile );
+	Py::Tuple args( 0 );
+	return get_string( pyfn_SslClientCertPrompt, args, certFile );
 	}
 
 //
@@ -288,23 +293,64 @@ bool pysvn_callbacks::contextSslClientCertPrompt( std::string & certFile )
 //
 // @param password
 //
-bool pysvn_callbacks::contextSslClientCertPwPrompt( std::string &password, 
-		const std::string &realm, bool may_save )
+bool pysvn_callbacks::contextSslClientCertPwPrompt( std::string &_password, 
+		const std::string &_realm, bool &_may_save )
 	{
 	PythonDisallowThreads callback_permission( permission );
 
-	return get_string( pyfn_SslClientCertPwPrompt, password );
+	// make sure we can call the users object
+	if( !pyfn_SslClientCertPwPrompt.isCallable() )
+		return false;
+
+	Py::Callable callback( pyfn_SslClientCertPwPrompt );
+
+	Py::Tuple args( 2 );
+	args[0] = Py::String( _realm );
+	args[1] = Py::Int( (long)_may_save );
+
+	// bool, username, password
+	Py::Tuple results;
+	Py::Int retcode;
+	Py::String username;
+	Py::String password;
+	Py::Int may_save_out;
+
+	try
+		{
+		results = callback.apply( args );
+		retcode = results[0];
+		password = results[1];
+		may_save_out = results[2];
+
+		// true returned
+		if( long( retcode ) != 0 )
+			{
+			// copy out the answers
+			_password = password.as_std_string();
+			_may_save = long( may_save_out ) != 0;
+
+			return true;
+			}
+		}
+	catch( Py::Exception &e )
+		{
+		PyErr_Print();
+		e.clear();
+
+		return false;
+		}
+
+	return false;
 	}
 
 // common get a string implementation
-static bool get_string( Py::Object &fn, std::string & msg )
+static bool get_string( Py::Object &fn, Py::Tuple &args, std::string & msg )
 	{
 	// make sure we can call the users object
 	if( !fn.isCallable() )
 		return false;
 
 	Py::Callable callback( fn );
-	Py::Tuple args( 0 );
 
 	Py::Tuple results;
 	Py::Int retcode;

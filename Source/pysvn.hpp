@@ -1,6 +1,6 @@
 //
 // ====================================================================
-// Copyright (c) 2003 Barry A Scott.  All rights reserved.
+// Copyright (c) 2003-2004 Barry A Scott.  All rights reserved.
 //
 // This software is licensed as described in the file LICENSE.txt,
 // which you should have received as part of this distribution.
@@ -138,7 +138,7 @@ private:// methods
 	// @param password
 	//
 	bool contextSslClientCertPwPrompt( std::string & password,
-		const std::string &realm, bool may_save );
+		const std::string &realm, bool &may_save );
 
 private:// vaiables
 

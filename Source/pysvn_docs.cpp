@@ -1,6 +1,6 @@
 //
 // ====================================================================
-// Copyright (c) 2003 Barry A Scott.  All rights reserved.
+// Copyright (c) 2003-2004 Barry A Scott.  All rights reserved.
 //
 // This software is licensed as described in the file LICENSE.txt,
 // which you should have received as part of this distribution.
@@ -13,7 +13,7 @@
 #include "pysvn_docs.hpp"
 
 const char *copyright =
-" Copyright (c) 2003 Barry A Scott.  All rights reserved.\n"
+" Copyright (c) 2003-2004 Barry A Scott.  All rights reserved.\n"
 "\n"
 " This software is licensed as described in the file LICENSE.txt,\n"
 " which you should have received as part of this distribution.\n"
