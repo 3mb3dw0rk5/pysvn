@@ -8,9 +8,9 @@
 // ====================================================================
 //
 //
-//	pysvn_version.h
+//	pysvn_version.hpp.template
 //
-const int version_major( 1 );
-const int version_minor( 0 );
-const int version_patch( 0 );
-const int version_build( 0 );
+const int version_major( %(MAJOR)s );
+const int version_minor( %(MINOR)s );
+const int version_patch( %(PATCH)s );
+const int version_build( %(BUILD)s );

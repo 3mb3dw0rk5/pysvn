@@ -111,6 +111,26 @@ SOURCE=pysvn.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\pysvn.rc.template
+
+!IF  "$(CFG)" == "pysvn - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "pysvn - Win32 Release"
+
+USERDEP__PYSVN="..\Builder\brand_version.py"	"..\Builder\version.info"	
+# Begin Custom Build
+InputPath=.\pysvn.rc.template
+
+".\pysvn.rc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	c:\python23\python ..\Builder\brand_version.py ..\Builder\version.info $(InputPath)
+
+# End Custom Build
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
 SOURCE=pysvn_callbacks.cpp
 # End Source File
 # Begin Source File
@@ -140,6 +160,26 @@ SOURCE=pysvn_revision.cpp
 # Begin Source File
 
 SOURCE=pysvn_status.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\pysvn_version.hpp.template
+
+!IF  "$(CFG)" == "pysvn - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "pysvn - Win32 Release"
+
+USERDEP__PYSVN_="..\Builder\brand_version.py"	"..\Builder\version.info"	
+# Begin Custom Build
+InputPath=.\pysvn_version.hpp.template
+
+".\pysvn_version.hpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	c:\python23\python ..\Builder\brand_version.py ..\Builder\version.info $(InputPath)
+
+# End Custom Build
+
+!ENDIF 
+
 # End Source File
 # End Target
 # End Project

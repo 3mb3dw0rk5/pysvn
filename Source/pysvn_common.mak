@@ -13,8 +13,11 @@ all: pysvn/_pysvn.so
 pysvn/_pysvn.so: $(PYSVN_OBJECTS) $(CXX_OBJECTS)
 	$(LDSHARED) -o $@ $(PYSVN_OBJECTS) $(CXX_OBJECTS) $(LDLIBS)
 
-pysvn.o: pysvn.cpp
+pysvn.o: pysvn.cpp pysvn_version.hpp
 	$(CCC) $(CCCFLAGS) -o $@ $<
+
+pysvn_version.hpp: pysvn_version.hpp.template
+	$(PYTHON) ../Builder/brand_version.py ../Builder/version.info pysvn_version.hpp.template
 
 pysvn_callbacks.o: pysvn_callbacks.cpp
 	$(CCC) $(CCCFLAGS) -o $@ $<
@@ -53,6 +56,7 @@ IndirectPythonInterface.o: $(PYCXX)/Src/IndirectPythonInterface.cxx
 	$(CCC) $(CCCFLAGS) -o $@ $< 
 
 clean:
+	rm -f pysvn_version.hpp
 	rm -f *.o
 	rm -f pysvn/_pysvn.so
 
