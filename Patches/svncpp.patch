@@ -1,0 +1,231 @@
+Index: include/svncpp/context_listener.hpp
+===================================================================
+--- include/svncpp/context_listener.hpp	(revision 7002)
++++ include/svncpp/context_listener.hpp	(working copy)
+@@ -45,6 +45,7 @@
+      * @param username
+      * @param realm in which username/password will be used
+      * @param password
++     * @param maySave in/out set false to not save
+      * @return continue action?
+      * @retval true continue
+      */
+@@ -52,7 +53,7 @@
+     contextGetLogin (const std::string & realm,
+                      std::string & username, 
+                      std::string & password,
+-                     bool maySave) = 0;
++                     bool &maySave) = 0;
+ 
+     /** 
+      * this method will be called to notify about
+@@ -162,7 +163,7 @@
+     virtual bool
+     contextSslClientCertPwPrompt (std::string & password, 
+                                   const std::string & realm, 
+-                                  bool maySave) = 0;
++                                  bool &maySave) = 0;
+   };
+ }
+ 
+Index: include/svncpp/context.hpp
+===================================================================
+--- include/svncpp/context.hpp	(revision 7002)
++++ include/svncpp/context.hpp	(working copy)
+@@ -38,9 +38,14 @@
+   {
+   public:
+     /**
+-     * default constructor
++     * default constructor use the default config dir
+      */
+     Context ();
++    //
++    // use the supplied config_dir
++    // Empty string means use default config dir
++    //
++    Context ( const std::string &config_dir );
+ 
+     /**
+      * copy constructor
+Index: src/svncpp/context.cpp
+===================================================================
+--- src/svncpp/context.cpp	(revision 7002)
++++ src/svncpp/context.cpp	(working copy)
+@@ -38,6 +38,7 @@
+     std::string username;
+     std::string password;
+     std::string logMessage;
++    std::string config_dir;
+ 
+     /**
+      * translate native c-string to utf8 
+@@ -93,10 +94,19 @@
+       return SVN_NO_ERROR;
+     }
+ 
+-    Data ()
++    Data ( const std::string &_config_dir )
+       : listener (0), logIsSet (false), 
+-        promptCounter (0)
++        promptCounter (0), config_dir( _config_dir )
+     {
++      // need a c string pointer or NULL to call svn_config_ensure
++      const char *c_config_dir = NULL;
++      if( config_dir.length() > 0 )
++        c_config_dir = config_dir.c_str();
++
++      // make sure the config directories exist
++      svn_config_ensure( c_config_dir, pool );
++
++
+       // intialize authentication providers
+       // * simple 
+       // * username
+@@ -105,9 +115,10 @@
+       // * ssl server trust prompt
+       // * ssl client cert pw file
+       // * ssl client cert pw prompt
+-      // * ssl cliebt cert file
++      // * ssl client cert file
+       // ===================
+       // 8 providers
++
+       apr_array_header_t *providers = 
+         apr_array_make (pool, 8, 
+                         sizeof (svn_auth_provider_object_t *));
+@@ -134,19 +145,14 @@
+       *(svn_auth_provider_object_t **)apr_array_push (providers) = 
+         provider;
+ 
+-      // add ssl providers
+-      svn_client_get_ssl_server_trust_prompt_provider (
+-        &provider, onSslServerTrustPrompt, this, pool);
+-      *(svn_auth_provider_object_t **)apr_array_push (providers) = 
+-        provider;
++      // add ssl providers 
+ 
++      // file first then prompt providers
+       svn_client_get_ssl_server_trust_file_provider (&provider, pool);
+       *(svn_auth_provider_object_t **)apr_array_push (providers) = 
+         provider;
+ 
+-      // plugged in 3 as the retry limit - what is a good limit?       
+-      svn_client_get_ssl_client_cert_pw_prompt_provider (
+-        &provider, onSslClientCertPwPrompt, this, 3, pool);
++      svn_client_get_ssl_client_cert_file_provider (&provider, pool);
+       *(svn_auth_provider_object_t **)apr_array_push (providers) = 
+         provider;
+ 
+@@ -154,16 +160,26 @@
+       *(svn_auth_provider_object_t **)apr_array_push (providers) = 
+         provider;
+ 
+-      svn_client_get_ssl_client_cert_file_provider (&provider, pool);
++      svn_client_get_ssl_server_trust_prompt_provider (
++        &provider, onSslServerTrustPrompt, this, pool);
+       *(svn_auth_provider_object_t **)apr_array_push (providers) = 
+         provider;
+ 
++      // plugged in 3 as the retry limit - what is a good limit?       
++      svn_client_get_ssl_client_cert_pw_prompt_provider (
++        &provider, onSslClientCertPwPrompt, this, 3, pool);
++      *(svn_auth_provider_object_t **)apr_array_push (providers) = 
++        provider;
++
+       svn_auth_baton_t *ab;
+       svn_auth_open (&ab, providers, pool);
+ 
+       // initialize ctx structure
+       memset (&ctx, 0, sizeof (ctx));
+-      svn_config_get_config (&ctx.config, 0, pool);
++
++      // get the config based on the config_dir passed in
++      svn_config_get_config (&ctx.config, c_config_dir, pool);
++
+       ctx.auth_baton = ab;
+       ctx.log_msg_func = onLogMsg;
+       ctx.log_msg_baton = this;
+@@ -286,13 +302,14 @@
+                     void *baton,
+                     const char *realm,
+                     const char *username, 
+-                    svn_boolean_t may_save,
++                    svn_boolean_t _may_save,
+                     apr_pool_t *pool)
+     {
+       Data * data;
+       SVN_ERR (getData (baton, &data));
+ 
+-      if (!data->retrieveLogin (username, realm, may_save != 0))
++      bool may_save = _may_save != 0;
++      if (!data->retrieveLogin (username, realm, may_save ))
+         return svn_error_create (SVN_ERR_CANCELLED, NULL, "");
+ 
+       svn_auth_cred_simple_t* lcred = (svn_auth_cred_simple_t*)
+@@ -304,6 +321,8 @@
+                  &lcred->username,
+                  data->getUsername (), pool));
+ 
++      // tell svn if the credentials need to be saved
++      lcred->may_save = may_save;
+       *cred = lcred;
+ 
+       return SVN_NO_ERROR;
+@@ -395,14 +414,15 @@
+       svn_auth_cred_ssl_client_cert_pw_t **cred, 
+       void *baton, 
+       const char *realm,
+-      svn_boolean_t may_save,
++      svn_boolean_t maySave,
+       apr_pool_t *pool)
+     {
+       Data * data;
+       SVN_ERR (getData (baton, &data));
+ 
+       std::string password ("");
+-      if (!data->listener->contextSslClientCertPwPrompt (password, realm, may_save != 0))
++      bool may_save = maySave != 0;
++      if (!data->listener->contextSslClientCertPwPrompt (password, realm, may_save))
+         return svn_error_create (SVN_ERR_CANCELLED, NULL, "");
+ 
+       svn_auth_cred_ssl_client_cert_pw_t *cred_ = 
+@@ -414,6 +434,7 @@
+                  password.c_str (),
+                  pool));
+ 
++      cred_->may_save = may_save;
+       *cred = cred_;
+ 
+       return SVN_NO_ERROR;
+@@ -480,7 +501,7 @@
+     bool
+     retrieveLogin (const char * username_,
+                    const char * realm,
+-                   bool may_save)
++                   bool &may_save)
+     {
+       bool ok;
+ 
+@@ -538,12 +559,18 @@
+ 
+   Context::Context ()
+   {
+-    m = new Data ();
++    std::string config_dir;
++    m = new Data ( config_dir );
+   }
+ 
++  Context::Context ( const std::string &config_dir )
++  {
++    m = new Data ( config_dir );
++  }
++
+   Context::Context (const Context & src)
+   {
+-    m = new Data ();
++    m = new Data ( src.m->config_dir );
+     setLogin (src.getUsername (), src.getPassword ());
+   }
+ 
+

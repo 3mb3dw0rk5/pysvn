@@ -23,29 +23,45 @@ and <a href="http://www.jrsoftware.org/">INNO</a> 4.0.10 to create the installat
 built with VC++ 2003.NET released (issues of C runtime compatibility).</p>
 
 <ol>
-<li>build subversion 0.35.1
-<li>checkout the latest rapidsvn sources
-<li>Apply the <a href="http://rapidsvn.tigris.org/issues/show_bug.cgi?id=146">cancel support patch #146</a>
+<li>build subversion (tested with 0.37.0)
+<li>checkout the latest rapidsvn sources (tested with r7002)
+<li>Apply any patches from the Patches directory
 <li>build rapidsvn
-<li>fetch/expand the pysvn source code into <i>extdir</i>
-<li>Expand pycxx_5_2_0.tar.gz into <i>extdir</i>\Import
+<li>fetch and expand the pysvn source code into <i>extdir</i>
+<li>Expand pycxx_5_2_1.tar.gz into <i>extdir</i>\Import
 <li>edit Builder\builder_custom_init.cmd to match the locations of the sources.
 <li>cd Builder
-<li>run builder_custom_init.cmd
-<li>run nmake build
+<li>builder_custom_init.cmd
+<li>nmake -f win32.mak build
+</ol>
+
+<p>To install the built kit</p>
+
+<ol>
+<li>Uninstall any previous kit (control panel's Add/Remove programs)
+<li>nmake -f win32.mak install
 </ol>
 
 <h3>Building on linux systems.</h3>
 
 <ol>
-<li>build subversion 0.35.1
-<li>checkout the latest rapidsvn sources
+<li>build subversion (tested with 0.37.0)
+<li>checkout the latest rapidsvn sources (tested with r7002)
+<li>Apply any patches from the Patches directory
 <li>build rapidsvn
-<li>Apply the <a href="http://rapidsvn.tigris.org/issues/show_bug.cgi?id=146">cancel support patch #146</a>
-<li>tar xzf pycxx_5_2_0.tar.gz to extract the PyCXX source code for pycxx
 <li>get the pysvn source code
-<li>edit pysvn_linux_py23.mak match the locations of the sources and libraries.
-<li>make -f pysvn_linux_py23.mak all
+<li>tar xzf pycxx_5_2_1.tar.gz into <i>extdir</i>/Import
+<li>edit Builder/builder_custom_init.sh to match the locations of the sources.
+<li>cd Builder
+<li>. builder_custom_init.sh
+<li>make -f linux.mak build
+</ol>
+
+<p>To install the built rpm</p>
+
+<ol>
+<li>Use rpm -e to remove any previous kit
+<li>make -f linux.mak install
 </ol>
 </body>
 </html>
