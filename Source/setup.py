@@ -103,8 +103,9 @@ CCC=g++ -c
 CCCFLAGS=-fPIC -fexceptions -frtti %(includes)s
 PYCXX=%(pycxx_dir)s
 LDSHARED=g++ -shared
-LDLIBS=-L%(svn_lib_dir) \
--lsvn_client-1
+LDLIBS=-L%(svn_lib_dir)s \
+-lsvn_client-1 \
+-lsvn_repos-1
 
 include pysvn_common.mak
 '''

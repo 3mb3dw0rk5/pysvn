@@ -77,4 +77,4 @@ clean:
 	rm -f pysvn/_pysvn.so
 
 test: pysvn/_pysvn.so
-	LD_LIBRARY_PATH=$(PYTHON) -c "import pysvn;print pysvn.Client()"
+	PYTHONPATH=. $(PYTHON) -c "import pysvn;print pysvn.version,pysvn.Client()"
