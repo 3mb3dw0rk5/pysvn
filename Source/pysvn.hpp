@@ -57,14 +57,14 @@ public:	// data
 	//
 	// Python class that has implements the callback methods
 	//
-	Py::Object pyfn_GetLogin;
-	Py::Object pyfn_Notify;
-	Py::Object pyfn_Cancel;
-	Py::Object pyfn_GetLogMessage;
-	Py::Object pyfn_SslServerPrompt;
-	Py::Object pyfn_SslServerTrustPrompt;
-	Py::Object pyfn_SslClientCertPrompt;
-	Py::Object pyfn_SslClientCertPwPrompt;
+	Py::Object m_pyfn_GetLogin;
+	Py::Object m_pyfn_Notify;
+	Py::Object m_pyfn_Cancel;
+	Py::Object m_pyfn_GetLogMessage;
+	Py::Object m_pyfn_SslServerPrompt;
+	Py::Object m_pyfn_SslServerTrustPrompt;
+	Py::Object m_pyfn_SslClientCertPrompt;
+	Py::Object m_pyfn_SslClientCertPwPrompt;
 
 private:// methods
 
@@ -141,7 +141,7 @@ private:// methods
 
 private:// vaiables
 
-	PythonAllowThreads *permission;
+	PythonAllowThreads *m_permission;
 	};
 
 class pysvn_client : public Py::PythonExtension<pysvn_client>
@@ -193,10 +193,10 @@ public:
 	Py::Object set_auth_cache( const Py::Tuple& args );
 
 private:
-	pysvn_module &module;
-	pysvn_callbacks client_callbacks;
-	svn::Context svn_context;
-	svn::Client svn_client;
+	pysvn_module &m_module;
+	pysvn_callbacks m_client_callbacks;
+	svn::Context m_svn_context;
+	svn::Client m_svn_client;
 	};
 
 class pysvn_properties : public Py::PythonExtension<pysvn_properties>
@@ -218,7 +218,7 @@ public:
 	virtual int mapping_ass_subscript( const Py::Object &, const Py::Object & );
 
 private:
-	svn::Property svn_properties;
+	svn::Property m_svn_properties;
 	};
 
 class pysvn_revision : public Py::PythonExtension<pysvn_revision>
@@ -237,7 +237,7 @@ public:
 
 private:
 	pysvn_revision();	// not defined
-	svn_opt_revision_t svn_revision;
+	svn_opt_revision_t m_svn_revision;
 	};
 
 class pysvn_status : public Py::PythonExtension<pysvn_status>
@@ -251,7 +251,7 @@ public:
 
 	static void init_type(void);
 private:
-	const svn::Status svn_status;
+	const svn::Status m_svn_status;
 	};
 
 
@@ -267,7 +267,7 @@ public:
 
 	static void init_type(void);
 private:
-	const svn::Entry svn_entry;
+	const svn::Entry m_svn_entry;
 	};
 
 
@@ -288,14 +288,14 @@ public:
 
 	const std::string &toTypeName( T )
 		{
-		return type_name;
+		return m_type_name;
 		}
 
 	const std::string &toString( T value )
 		{
 		static std::string not_found( "-unknown-" );
-		EXPLICIT_TYPENAME std::map<T,std::string>::iterator it = enum_to_string.find( value );
-		if( it != enum_to_string.end() )
+		EXPLICIT_TYPENAME std::map<T,std::string>::iterator it = m_enum_to_string.find( value );
+		if( it != m_enum_to_string.end() )
 			return (*it).second;
 
 		return not_found;
@@ -303,8 +303,8 @@ public:
 
 	bool toEnum( const std::string &string, T &value )
 		{
-		EXPLICIT_TYPENAME std::map<std::string,T>::iterator it = string_to_enum.find( string );
-		if( it != string_to_enum.end() )
+		EXPLICIT_TYPENAME std::map<std::string,T>::iterator it = m_string_to_enum.find( string );
+		if( it != m_string_to_enum.end() )
 			{
 			value = (*it).second;
 			return true;
@@ -315,24 +315,24 @@ public:
 
 	EXPLICIT_TYPENAME std::map<std::string,T>::iterator begin()
 		{
-		return string_to_enum.begin();
+		return m_string_to_enum.begin();
 		}
 
 	EXPLICIT_TYPENAME std::map<std::string,T>::iterator end()
 		{
-		return string_to_enum.end();
+		return m_string_to_enum.end();
 		}
 
 private:
 	void add( T value, std::string string )
 		{
-		string_to_enum[string] = value;
-		enum_to_string[value] = string;
+		m_string_to_enum[string] = value;
+		m_enum_to_string[value] = string;
 		}
  
-	std::string type_name;
-	std::map<std::string,T> string_to_enum;
-	std::map<T,std::string> enum_to_string;
+	std::string m_type_name;
+	std::map<std::string,T> m_string_to_enum;
+	std::map<T,std::string> m_enum_to_string;
 	};
 
 template<class T> const std::string &toTypeName( T value )
@@ -379,7 +379,7 @@ class pysvn_enum_value : public Py::PythonExtension<EXPLICIT_CLASS pysvn_enum_va
 public:
 	pysvn_enum_value( T _value)
 		: Py::PythonExtension<pysvn_enum_value>()
-		, value( _value )
+		, m_value( _value )
 		{ }
 
 	virtual ~pysvn_enum_value()
@@ -390,10 +390,10 @@ public:
 		if( pysvn_enum_value::check( other ) )
 			{
 			pysvn_enum_value<T> *other_value = static_cast<pysvn_enum_value *>( other.ptr() );
-			if( value == other_value->value )
+			if( m_value == other_value->m_value )
 				return 0;
 
-			if( value > other_value->value )
+			if( m_value > other_value->m_value )
 				return 1;
 			else
 				return -1;
@@ -401,7 +401,7 @@ public:
 		else
 			{
 			std::string msg( "expecting " );
-			msg += toTypeName( value );
+			msg += toTypeName( m_value );
 			msg += " object for compare ";
 			throw Py::AttributeError( msg );
 			}
@@ -410,9 +410,9 @@ public:
 	virtual Py::Object repr()
 		{
 		std::string s("<");
-		s += toTypeName( value );
+		s += toTypeName( m_value );
 		s += ".";
-		s += toString( value );
+		s += toString( m_value );
 		s += ">";
 
 		return Py::String( s );
@@ -420,22 +420,22 @@ public:
 
 	virtual Py::Object str()
 		{
-		return Py::String( toString( value ) );
+		return Py::String( toString( m_value ) );
 		}
 
 	// need a hash so that the enums can go into a map
 	virtual long hash()
 		{
-		static Py::String type_name( toTypeName( value ) );
+		static Py::String type_name( toTypeName( m_value ) );
 
-		// use the value plus the hash of the type name
-		return long( value ) + type_name.hashValue();
+		// use the m_value plus the hash of the type name
+		return long( m_value ) + type_name.hashValue();
 		}
 
 	static void init_type(void);
 
 public:
-	T value;
+	T m_value;
 	};
 
 //------------------------------------------------------------
@@ -546,7 +546,7 @@ public:
 	// calls allowOtherThreads() if necessary
 	~PythonDisallowThreads();
 private:
-	PythonAllowThreads *permission;
+	PythonAllowThreads *m_permission;
 	};
 
 //--------------------------------------------------------------------------------

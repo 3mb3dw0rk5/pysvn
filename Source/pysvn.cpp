@@ -114,7 +114,7 @@ Py::Object pysvn_module::new_revision(const Py::Tuple &args)
 
 	Py::ExtensionObject< pysvn_enum_value<svn_opt_revision_kind> > py_kind( args[0] );
 
-	svn_opt_revision_kind kind = svn_opt_revision_kind( py_kind.extensionObject()->value );
+	svn_opt_revision_kind kind = svn_opt_revision_kind( py_kind.extensionObject()->m_value );
 
 	pysvn_revision *rev = NULL;
 	switch( kind )
@@ -246,14 +246,14 @@ void PythonAllowThreads::allowThisThread()
 	}
 
 PythonDisallowThreads::PythonDisallowThreads( PythonAllowThreads *_permission )
-	: permission( _permission )
+	: m_permission( _permission )
 	{
-	permission->allowThisThread();
+	m_permission->allowThisThread();
 	}
 
 PythonDisallowThreads::~PythonDisallowThreads()
 	{
-	permission->allowOtherThreads();
+	m_permission->allowOtherThreads();
 	}
 
 //--------------------------------------------------------------------------------

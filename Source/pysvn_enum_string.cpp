@@ -19,7 +19,7 @@
 #include "pysvn.hpp"
 
 EnumString< svn_opt_revision_kind >::EnumString()
-	: type_name( "opt_revision_kind" )
+	: m_type_name( "opt_revision_kind" )
 	{
 	// No revision information given.
 	add(svn_opt_revision_unspecified, "unspecified");
@@ -47,7 +47,7 @@ EnumString< svn_opt_revision_kind >::EnumString()
 	}
 
 EnumString< svn_wc_notify_action_t >::EnumString()
-	: type_name( "wc_notify_action" )
+	: m_type_name( "wc_notify_action" )
 	{
 	// Adding a path to revision control.
 	add( svn_wc_notify_add, "add" );
@@ -113,7 +113,7 @@ EnumString< svn_wc_notify_action_t >::EnumString()
 	}
 
 EnumString< svn_wc_status_kind >::EnumString()
-	: type_name( "wc_status_kind" )
+	: m_type_name( "wc_status_kind" )
 	{ 
 	// does not exist
 	add( svn_wc_status_none, "none" );
@@ -159,7 +159,7 @@ EnumString< svn_wc_status_kind >::EnumString()
 	}
 
 EnumString< svn_wc_merge_outcome_t >::EnumString()
-	: type_name( "wc_merge_outcome" )
+	: m_type_name( "wc_merge_outcome" )
 	{ 
 	// The working copy is (or would be) unchanged.
 	// The changes to be merged were already present in the working copy
@@ -178,7 +178,7 @@ EnumString< svn_wc_merge_outcome_t >::EnumString()
 	}
 
 EnumString< svn_wc_notify_state_t >::EnumString()
-	: type_name( "wc_notify_state" )
+	: m_type_name( "wc_notify_state" )
 	{
 	add( svn_wc_notify_state_inapplicable, "inapplicable" );
 
@@ -205,7 +205,7 @@ EnumString< svn_wc_notify_state_t >::EnumString()
 	}
 
 EnumString< svn_wc_schedule_t >::EnumString()
-	: type_name( "wc_schedule" )
+	: m_type_name( "wc_schedule" )
 	{
 	// Nothing special here
 	add( svn_wc_schedule_normal, "normal" );
@@ -221,7 +221,7 @@ EnumString< svn_wc_schedule_t >::EnumString()
 	}
 
 EnumString< svn_node_kind_t >::EnumString()
-	: type_name( "node_kind" )
+	: m_type_name( "node_kind" )
 	{
 	// absent
 	add( svn_node_none, "none" );

@@ -22,7 +22,7 @@
 //--------------------------------------------------------------------------------
 
 pysvn_status::pysvn_status( const svn::Status &_svn_status )
-	: svn_status( _svn_status )
+	: m_svn_status( _svn_status )
 	{ }
 
 pysvn_status::~pysvn_status()
@@ -56,43 +56,43 @@ Py::Object pysvn_status::getattr( const char *_name )
 
 	else if( name == "path" )
 		{
-		return Py::String( osNormalisedPath( svn_status.path() ) );
+		return Py::String( osNormalisedPath( m_svn_status.path() ) );
 		}
 	else if( name == "entry" )
 		{
-		return Py::asObject( new pysvn_entry( svn_status.entry() ) );
+		return Py::asObject( new pysvn_entry( m_svn_status.entry() ) );
 		}
 	else if( name == "is_versioned" )
 		{
-		return Py::Int( svn_status.isVersioned() );
+		return Py::Int( m_svn_status.isVersioned() );
 		}
 	else if( name == "is_locked" )
 		{
-		return Py::Int( svn_status.isLocked() );
+		return Py::Int( m_svn_status.isLocked() );
 		}
 	else if( name == "is_copied" )
 		{
-		return Py::Int( svn_status.isCopied() );
+		return Py::Int( m_svn_status.isCopied() );
 		}
 	else if( name == "is_switched" )
 		{
-		return Py::Int( svn_status.isSwitched() );
+		return Py::Int( m_svn_status.isSwitched() );
 		}
 	else if( name == "prop_status" )
 		{
-		return toEnumValue( svn_status.propStatus() );
+		return toEnumValue( m_svn_status.propStatus() );
 		}
 	else if( name == "text_status" )
 		{
-		return toEnumValue( svn_status.textStatus() );
+		return toEnumValue( m_svn_status.textStatus() );
 		}
 	else if( name == "repos_prop_status" )
 		{
-		return toEnumValue( svn_status.reposPropStatus() );
+		return toEnumValue( m_svn_status.reposPropStatus() );
 		}
 	else if( name == "repos_text_status" )
 		{
-		return toEnumValue( svn_status.reposTextStatus() );
+		return toEnumValue( m_svn_status.reposTextStatus() );
 		}
 	else
 		return getattr_methods( _name );

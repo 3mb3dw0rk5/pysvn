@@ -21,14 +21,14 @@
 static bool get_string( Py::Object &fn, Py::Tuple &args, std::string & _msg );
 
 pysvn_callbacks::pysvn_callbacks()
-	: pyfn_GetLogin()
-	, pyfn_Notify()
-	, pyfn_GetLogMessage()
-	, pyfn_SslServerPrompt()
-	, pyfn_SslServerTrustPrompt()
-	, pyfn_SslClientCertPrompt()
-	, pyfn_SslClientCertPwPrompt()
-	, permission( NULL )
+	: m_pyfn_GetLogin()
+	, m_pyfn_Notify()
+	, m_pyfn_GetLogMessage()
+	, m_pyfn_SslServerPrompt()
+	, m_pyfn_SslServerTrustPrompt()
+	, m_pyfn_SslClientCertPrompt()
+	, m_pyfn_SslClientCertPwPrompt()
+	, m_permission( NULL )
 	{ }
 
 
@@ -37,12 +37,13 @@ pysvn_callbacks::~pysvn_callbacks()
 
 void pysvn_callbacks::setPermission( PythonAllowThreads &_permission )
 	{
-	permission = &_permission;
+	assert( m_permission == NULL );
+	m_permission = &_permission;
 	}
 
 void pysvn_callbacks::clearPermission()
 	{
-	permission = NULL;
+	m_permission = NULL;
 	}
 
 //
@@ -59,13 +60,13 @@ bool pysvn_callbacks::contextGetLogin( const std::string & _realm,
 		std::string & _password,
 		bool &_may_save )
 	{
-	PythonDisallowThreads callback_permission( permission );
+	PythonDisallowThreads callback_permission( m_permission );
 
 	// make sure we can call the users object
-	if( !pyfn_GetLogin.isCallable() )
+	if( !m_pyfn_GetLogin.isCallable() )
 		return false;
 
-	Py::Callable callback( pyfn_GetLogin );
+	Py::Callable callback( m_pyfn_GetLogin );
 
 	Py::Tuple args( 3 );
 	args[0] = Py::String( _realm );
@@ -121,13 +122,13 @@ void pysvn_callbacks::contextNotify (const char *path,
 		svn_wc_notify_state_t prop_state,
 		svn_revnum_t revnum )
 	{
-	PythonDisallowThreads callback_permission( permission );
+	PythonDisallowThreads callback_permission( m_permission );
 
 	// make sure we can call the users object
-	if( !pyfn_Notify.isCallable() )
+	if( !m_pyfn_Notify.isCallable() )
 		return;
 
-	Py::Callable callback( pyfn_Notify );
+	Py::Callable callback( m_pyfn_Notify );
 
 	Py::Tuple args( 1 );
 	Py::Dict info;
@@ -165,13 +166,13 @@ void pysvn_callbacks::contextNotify (const char *path,
 //
 bool pysvn_callbacks::contextCancel()
 	{
-	PythonDisallowThreads callback_permission( permission );
+	PythonDisallowThreads callback_permission( m_permission );
 
 	// make sure we can call the users object
-	if( !pyfn_Cancel.isCallable() )
+	if( !m_pyfn_Cancel.isCallable() )
 		return false;
 
-	Py::Callable callback( pyfn_Cancel );
+	Py::Callable callback( m_pyfn_Cancel );
 
 	Py::Tuple args( 0 );
 
@@ -205,10 +206,10 @@ bool pysvn_callbacks::contextCancel()
 //
 bool pysvn_callbacks::contextGetLogMessage( std::string & _msg )
 	{
-	PythonDisallowThreads callback_permission( permission );
+	PythonDisallowThreads callback_permission( m_permission );
 
 	Py::Tuple args( 0 );
-	return get_string( pyfn_GetLogMessage, args, _msg );
+	return get_string( m_pyfn_GetLogMessage, args, _msg );
 	}
 
 //
@@ -224,13 +225,13 @@ svn::ContextListener::SslServerTrustAnswer pysvn_callbacks::contextSslServerTrus
 		apr_uint32_t & acceptedFailures
 		)
 	{
-	PythonDisallowThreads callback_permission( permission );
+	PythonDisallowThreads callback_permission( m_permission );
 
 	// make sure we can call the users object
-	if( !pyfn_SslServerTrustPrompt.isCallable() )
+	if( !m_pyfn_SslServerTrustPrompt.isCallable() )
 		return DONT_ACCEPT;
 
-	Py::Callable callback( pyfn_SslServerTrustPrompt );
+	Py::Callable callback( m_pyfn_SslServerTrustPrompt );
 
 	Py::Dict trust_data;
 	trust_data[Py::String("failures")] = Py::Int( long(data.failures) );
@@ -281,10 +282,10 @@ svn::ContextListener::SslServerTrustAnswer pysvn_callbacks::contextSslServerTrus
 //
 bool pysvn_callbacks::contextSslClientCertPrompt( std::string & certFile )
 	{
-	PythonDisallowThreads callback_permission( permission );
+	PythonDisallowThreads callback_permission( m_permission );
 
 	Py::Tuple args( 0 );
-	return get_string( pyfn_SslClientCertPrompt, args, certFile );
+	return get_string( m_pyfn_SslClientCertPrompt, args, certFile );
 	}
 
 //
@@ -296,13 +297,13 @@ bool pysvn_callbacks::contextSslClientCertPrompt( std::string & certFile )
 bool pysvn_callbacks::contextSslClientCertPwPrompt( std::string &_password, 
 		const std::string &_realm, bool &_may_save )
 	{
-	PythonDisallowThreads callback_permission( permission );
+	PythonDisallowThreads callback_permission( m_permission );
 
 	// make sure we can call the users object
-	if( !pyfn_SslClientCertPwPrompt.isCallable() )
+	if( !m_pyfn_SslClientCertPwPrompt.isCallable() )
 		return false;
 
-	Py::Callable callback( pyfn_SslClientCertPwPrompt );
+	Py::Callable callback( m_pyfn_SslClientCertPwPrompt );
 
 	Py::Tuple args( 2 );
 	args[0] = Py::String( _realm );

@@ -25,9 +25,9 @@
 pysvn_revision::pysvn_revision( svn_opt_revision_kind kind,
 		double date, int revnum )
 	{
-	svn_revision.kind = kind;
-	svn_revision.value.date = apr_time_t( date * 1000000 );
-	svn_revision.value.number = revnum;
+	m_svn_revision.kind = kind;
+	m_svn_revision.value.date = apr_time_t( date * 1000000 );
+	m_svn_revision.value.number = revnum;
 	}
 
 pysvn_revision::~pysvn_revision()
@@ -35,7 +35,7 @@ pysvn_revision::~pysvn_revision()
 
 const svn_opt_revision_t &pysvn_revision::getSvnRevision() const
 	{
-	return svn_revision;
+	return m_svn_revision;
 	}
 
 Py::Object pysvn_revision::getattr( const char *_name )
@@ -56,19 +56,19 @@ Py::Object pysvn_revision::getattr( const char *_name )
 	else if( name == "kind" )
 		{
 		return Py::asObject(
-			new pysvn_enum_value<svn_opt_revision_kind>( svn_revision.kind ) );
+			new pysvn_enum_value<svn_opt_revision_kind>( m_svn_revision.kind ) );
 		}
 	else if( name == "date" )
 		{
-		if( svn_revision.kind == svn_opt_revision_date )
-			return Py::Float( double( svn_revision.value.date )/1000000 );
+		if( m_svn_revision.kind == svn_opt_revision_date )
+			return Py::Float( double( m_svn_revision.value.date )/1000000 );
 		else
 			return Py::Nothing();
 		}
 	else if( name == "number" )
 		{
-		if( svn_revision.kind == svn_opt_revision_number )
-			return Py::Int( svn_revision.value.number );
+		if( m_svn_revision.kind == svn_opt_revision_number )
+			return Py::Int( m_svn_revision.value.number );
 		else
 			return Py::Nothing();
 		}
@@ -83,18 +83,18 @@ int pysvn_revision::setattr( const char *_name, const Py::Object &value )
 		{
 		Py::ExtensionObject< pysvn_enum_value<svn_opt_revision_kind> > kind( value );
 
-		svn_revision.kind = svn_opt_revision_kind( kind.extensionObject()->value );
+		m_svn_revision.kind = svn_opt_revision_kind( kind.extensionObject()->m_value );
 		}
 	else if( name == "date" )
 		{
 		Py::Float py_date( value );
 		apr_time_t date( double( py_date ) * 1000000 );
-		svn_revision.value.date = date;
+		m_svn_revision.value.date = date;
 		}
 	else if( name == "number" )
 		{
 		Py::Int revnum( value );
-		svn_revision.value.number = revnum;
+		m_svn_revision.value.number = revnum;
 		}
 	else
 		throw Py::AttributeError( "Unknown revision attribute" );

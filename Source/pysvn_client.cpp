@@ -104,14 +104,14 @@ static void get_revision( svn_opt_revision_t &revision,
 
 //--------------------------------------------------------------------------------
 pysvn_client::pysvn_client( pysvn_module &_module, const std::string &config_dir )
-	: svn_context( config_dir )
-	, client_callbacks()
-	, svn_client()
-	, module( _module )
+	: m_svn_context( config_dir )
+	, m_client_callbacks()
+	, m_svn_client()
+	, m_module( _module )
 	{
-	svn_context.reset();
-	svn_context.setListener( &client_callbacks );
-	svn_client.setContext( &svn_context );
+	m_svn_context.reset();
+	m_svn_context.setListener( &m_client_callbacks );
+	m_svn_client.setContext( &m_svn_context );
 	}
 
 pysvn_client::~pysvn_client()
@@ -140,21 +140,21 @@ Py::Object pysvn_client::getattr( const char *_name )
 		}
 
 	if( name == "callback_get_login" )
-		return client_callbacks.pyfn_GetLogin;
+		return m_client_callbacks.m_pyfn_GetLogin;
 	if( name == "callback_notify" )
-		return client_callbacks.pyfn_Notify;
+		return m_client_callbacks.m_pyfn_Notify;
 	if( name == "callback_cancel" )
-		return client_callbacks.pyfn_Cancel;
+		return m_client_callbacks.m_pyfn_Cancel;
 	if( name == "callback_get_log_message" )
-		return client_callbacks.pyfn_GetLogMessage;
+		return m_client_callbacks.m_pyfn_GetLogMessage;
 	if( name == "callback_ssl_server_prompt" )
-		return client_callbacks.pyfn_SslServerPrompt;
+		return m_client_callbacks.m_pyfn_SslServerPrompt;
 	if( name == "callback_ssl_server_trust_prompt" )
-		return client_callbacks.pyfn_SslServerTrustPrompt;
+		return m_client_callbacks.m_pyfn_SslServerTrustPrompt;
 	if( name == "callback_ssl_client_cert_prompt" )
-		return client_callbacks.pyfn_SslClientCertPrompt;
+		return m_client_callbacks.m_pyfn_SslClientCertPrompt;
 	if( name == "callback_ssl_client_cert_password_prompt" )
-		return client_callbacks.pyfn_SslClientCertPwPrompt;
+		return m_client_callbacks.m_pyfn_SslClientCertPwPrompt;
 
 	return getattr_default( _name );
 	}
@@ -171,21 +171,21 @@ int pysvn_client::setattr( const char *_name, const Py::Object &value )
 	{
 	std::string name( _name );
 	if( name == "callback_get_login" )
-		set_callable( client_callbacks.pyfn_GetLogin, value );
+		set_callable( m_client_callbacks.m_pyfn_GetLogin, value );
 	else if( name == "callback_notify" )
-		set_callable( client_callbacks.pyfn_Notify, value );
+		set_callable( m_client_callbacks.m_pyfn_Notify, value );
 	else if( name == "callback_cancel" )
-		set_callable( client_callbacks.pyfn_Cancel, value );
+		set_callable( m_client_callbacks.m_pyfn_Cancel, value );
 	else if( name == "callback_get_log_message" )
-		set_callable( client_callbacks.pyfn_GetLogMessage, value );
+		set_callable( m_client_callbacks.m_pyfn_GetLogMessage, value );
 	else if( name == "callback_ssl_server_prompt" )
-		set_callable( client_callbacks.pyfn_SslServerPrompt, value );
+		set_callable( m_client_callbacks.m_pyfn_SslServerPrompt, value );
 	else if( name == "callback_ssl_server_trust_prompt" )
-		set_callable( client_callbacks.pyfn_SslServerTrustPrompt, value );
+		set_callable( m_client_callbacks.m_pyfn_SslServerTrustPrompt, value );
 	else if( name == "callback_ssl_client_cert_prompt" )
-		set_callable( client_callbacks.pyfn_SslClientCertPrompt, value );
+		set_callable( m_client_callbacks.m_pyfn_SslClientCertPrompt, value );
 	else if( name == "callback_ssl_client_cert_password_prompt" )
-		set_callable( client_callbacks.pyfn_SslClientCertPwPrompt, value );
+		set_callable( m_client_callbacks.m_pyfn_SslClientCertPwPrompt, value );
 	else
 		{
 		std::string msg( "Unknown attribute: " );
@@ -263,13 +263,13 @@ Py::Object pysvn_client::cmd_add(const Py::Tuple& args, const Py::Dict &kws )
 			Py::String path_str( path_list[i] );
 			std::string norm_path( svnNormalisedIfPath( path_str.as_std_string() ) );
 
-			PythonAllowThreads permission( client_callbacks );
-			svn_client.add( norm_path.c_str(), recurse );
+			PythonAllowThreads permission( m_client_callbacks );
+			m_svn_client.add( norm_path.c_str(), recurse );
 			}
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	return Py::Nothing();
@@ -296,14 +296,14 @@ Py::Object pysvn_client::cmd_annotate(const Py::Tuple& args, const Py::Dict &kws
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		PythonAllowThreads permission( client_callbacks );
-		all_entries = svn_client.annotate( norm_path.c_str(),
+		PythonAllowThreads permission( m_client_callbacks );
+		all_entries = m_svn_client.annotate( norm_path.c_str(),
 			svn::Revision( &revision_start ),
 			svn::Revision( &revision_end ) );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	// convert the entries into python objects
@@ -341,12 +341,12 @@ Py::Object pysvn_client::cmd_cat(const Py::Tuple& args, const Py::Dict &kws )
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		PythonAllowThreads permission( client_callbacks );
-		text = svn_client.cat( norm_path.c_str(), svn::Revision( &revision ) );
+		PythonAllowThreads permission( m_client_callbacks );
+		text = m_svn_client.cat( norm_path.c_str(), svn::Revision( &revision ) );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	return Py::String( text );
@@ -367,15 +367,15 @@ Py::Object pysvn_client::cmd_checkout(const Py::Tuple& args, const Py::Dict &kws
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		PythonAllowThreads permission( client_callbacks );
-		revnum = svn_client.checkout( url.as_std_string().c_str(),
+		PythonAllowThreads permission( m_client_callbacks );
+		revnum = m_svn_client.checkout( url.as_std_string().c_str(),
 					norm_path.c_str(),
 					svn::Revision( &revision ), recurse );
 		
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, revnum ) );
@@ -391,12 +391,12 @@ Py::Object pysvn_client::cmd_cleanup(const Py::Tuple& args )
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		PythonAllowThreads permission( client_callbacks );
-		svn_client.cleanup( norm_path.c_str() );
+		PythonAllowThreads permission( m_client_callbacks );
+		m_svn_client.cleanup( norm_path.c_str() );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	return Py::Nothing();
@@ -446,14 +446,14 @@ Py::Object pysvn_client::cmd_checkin(const Py::Tuple& args, const Py::Dict &kws 
 		svn_revnum_t revnum;
 		try
 			{
-			PythonAllowThreads permission( client_callbacks );
-			revnum = svn_client.commit( targets,
+			PythonAllowThreads permission( m_client_callbacks );
+			revnum = m_svn_client.commit( targets,
 						message.as_std_string().c_str(),
 						recurse );
 			}
 		catch( svn::ClientException &e )
 			{
-			throw Py::Exception( module.client_error, e.message() );
+			throw Py::Exception( m_module.client_error, e.message() );
 			}
 
 		if( revnum < 0 )
@@ -481,14 +481,14 @@ Py::Object pysvn_client::cmd_copy(const Py::Tuple& args, const Py::Dict &kws )
 		std::string norm_src_path( svnNormalisedIfPath( src_path.as_std_string() ) );
 		std::string norm_dest_path( svnNormalisedIfPath( dest_path.as_std_string() ) );
 
-		PythonAllowThreads permission( client_callbacks );
-		svn_client.copy( norm_src_path.c_str(),
+		PythonAllowThreads permission( m_client_callbacks );
+		m_svn_client.copy( norm_src_path.c_str(),
 				svn::Revision( &revision ),
 				norm_dest_path.c_str() );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	return Py::Nothing();
@@ -523,8 +523,8 @@ Py::Object pysvn_client::cmd_diff(const Py::Tuple& args, const Py::Dict &kws )
 		std::string norm_tmp_path( svnNormalisedIfPath( tmp_path.as_std_string() ) );
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		PythonAllowThreads permission( client_callbacks );
-		text = svn_client.diff( norm_tmp_path.c_str(),
+		PythonAllowThreads permission( m_client_callbacks );
+		text = m_svn_client.diff( norm_tmp_path.c_str(),
 					norm_path.c_str(),
 					svn::Revision( &revision1 ),
 					svn::Revision( &revision2 ),
@@ -532,7 +532,7 @@ Py::Object pysvn_client::cmd_diff(const Py::Tuple& args, const Py::Dict &kws )
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	return Py::String( text );
@@ -565,14 +565,14 @@ Py::Object pysvn_client::cmd_export(const Py::Tuple& args, const Py::Dict &kws )
 		std::string norm_src_path( svnNormalisedIfPath( src_path.as_std_string() ) );
 		std::string norm_dest_path( svnNormalisedIfPath( dest_path.as_std_string() ) );
 
-		PythonAllowThreads permission( client_callbacks );
-		revnum = svn_client.doExport( norm_src_path.c_str(),
+		PythonAllowThreads permission( m_client_callbacks );
+		revnum = m_svn_client.doExport( norm_src_path.c_str(),
 				norm_dest_path.c_str(),
 				svn::Revision( &revision ), force );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, revnum ) );
@@ -588,13 +588,13 @@ Py::Object pysvn_client::cmd_info(const Py::Tuple& args, const Py::Dict &kws )
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		PythonAllowThreads permission( client_callbacks );
-		svn::Entry info = svn_client.info( norm_path.c_str() );
+		PythonAllowThreads permission( m_client_callbacks );
+		svn::Entry info = m_svn_client.info( norm_path.c_str() );
 		return Py::asObject( new pysvn_entry( info ) );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 	}
 
@@ -612,15 +612,15 @@ Py::Object pysvn_client::cmd_import(const Py::Tuple& args, const Py::Dict &kws )
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		PythonAllowThreads permission( client_callbacks );
-		svn_client.import( norm_path.c_str(),
+		PythonAllowThreads permission( m_client_callbacks );
+		m_svn_client.import( norm_path.c_str(),
 				url.as_std_string().c_str(),
 				message.as_std_string().c_str(),
 				recurse );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	return Py::Nothing();
@@ -652,8 +652,8 @@ Py::Object pysvn_client::cmd_log(const Py::Tuple& args, const Py::Dict &kws )
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		PythonAllowThreads permission( client_callbacks );
-		all_entries = svn_client.log( norm_path.c_str(),
+		PythonAllowThreads permission( m_client_callbacks );
+		all_entries = m_svn_client.log( norm_path.c_str(),
 			svn::Revision( &revision_start ),
 			svn::Revision( &revision_end ),
 			discover_changed_paths,
@@ -661,7 +661,7 @@ Py::Object pysvn_client::cmd_log(const Py::Tuple& args, const Py::Dict &kws )
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	// convert the entries into python objects
@@ -726,12 +726,12 @@ Py::Object pysvn_client::cmd_ls(const Py::Tuple& args, const Py::Dict &kws )
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		PythonAllowThreads permission( client_callbacks );
-		all_entries = svn_client.ls( norm_path.c_str(), &revision, recurse );
+		PythonAllowThreads permission( m_client_callbacks );
+		all_entries = m_svn_client.ls( norm_path.c_str(), &revision, recurse );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	// convert the entries into python objects
@@ -785,14 +785,14 @@ Py::Object pysvn_client::cmd_merge(const Py::Tuple& args, const Py::Dict &kws )
 		std::string norm_path2( svnNormalisedIfPath( path2.as_std_string() ) );
 		std::string norm_local_path( svnNormalisedIfPath( local_path.as_std_string() ) );
 
-		svn_client.merge( norm_path1.c_str(), svn::Revision( &revision1 ),
+		m_svn_client.merge( norm_path1.c_str(), svn::Revision( &revision1 ),
 				norm_path2.c_str(), svn::Revision( &revision2 ),
 				norm_local_path.c_str(),
 				force, recurse, notice_ancestry, dry_run );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	return Py::Nothing();
@@ -848,12 +848,12 @@ Py::Object pysvn_client::cmd_mkdir(const Py::Tuple& args )
 
 	try
 		{
-		PythonAllowThreads permission( client_callbacks );
-		svn_client.mkdir( targets, message.c_str() );
+		PythonAllowThreads permission( m_client_callbacks );
+		m_svn_client.mkdir( targets, message.c_str() );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	return Py::Nothing();
@@ -884,15 +884,15 @@ Py::Object pysvn_client::cmd_move(const Py::Tuple& args, const Py::Dict &kws )
 			std::string norm_src_path( svnNormalisedIfPath( src_path.as_std_string() ) );
 			std::string norm_dest_path( svnNormalisedIfPath( dest_path.as_std_string() ) );
 
-			PythonAllowThreads permission( client_callbacks );
-			svn_client.move( norm_src_path.c_str(),
+			PythonAllowThreads permission( m_client_callbacks );
+			m_svn_client.move( norm_src_path.c_str(),
 					svn::Revision( &revision ),
 					norm_dest_path.c_str(),
 					force );
 			}
 		catch( svn::ClientException &e )
 			{
-			throw Py::Exception( module.client_error, e.message() );
+			throw Py::Exception( m_module.client_error, e.message() );
 			}
 		}
 	catch( Py::TypeError & )
@@ -920,12 +920,12 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple& args, const Py::Dict &kw
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		PythonAllowThreads permission( client_callbacks );
-		all_entries = svn_client.proplist( norm_path.c_str(), &revision, recurse );
+		PythonAllowThreads permission( m_client_callbacks );
+		all_entries = m_svn_client.proplist( norm_path.c_str(), &revision, recurse );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	return toObject( all_entries );
@@ -950,13 +950,13 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple& args, const Py::Dict &kws
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		PythonAllowThreads permission( client_callbacks );
-		all_entries = svn_client.propget( propname.as_std_string().c_str(), 
+		PythonAllowThreads permission( m_client_callbacks );
+		all_entries = m_svn_client.propget( propname.as_std_string().c_str(), 
 					norm_path.c_str(), &revision, recurse );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	return toObject( all_entries );
@@ -982,14 +982,14 @@ Py::Object pysvn_client::cmd_propset( const Py::Tuple& args, const Py::Dict &kws
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		PythonAllowThreads permission( client_callbacks );
-		svn_client.propset( propname.as_std_string().c_str(), propval.as_std_string().c_str(),
+		PythonAllowThreads permission( m_client_callbacks );
+		m_svn_client.propset( propname.as_std_string().c_str(), propval.as_std_string().c_str(),
 					norm_path.c_str(), &revision,
 					recurse );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	return Py::Nothing();
@@ -1014,14 +1014,14 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple& args, const Py::Dict &kws
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		PythonAllowThreads permission( client_callbacks );
-		svn_client.propdel( propname.as_std_string().c_str(),
+		PythonAllowThreads permission( m_client_callbacks );
+		m_svn_client.propdel( propname.as_std_string().c_str(),
 				norm_path.c_str(), &revision,
 				recurse );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	return Py::Nothing();
@@ -1044,12 +1044,12 @@ Py::Object pysvn_client::cmd_revproplist( const Py::Tuple& args, const Py::Dict 
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		PythonAllowThreads permission( client_callbacks );
-		revnum_map_pair = svn_client.revproplist( norm_path.c_str(), &revision );
+		PythonAllowThreads permission( m_client_callbacks );
+		revnum_map_pair = m_svn_client.revproplist( norm_path.c_str(), &revision );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	Py::Dict py_prop_dict;
@@ -1087,13 +1087,13 @@ Py::Object pysvn_client::cmd_revpropget( const Py::Tuple& args, const Py::Dict &
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		PythonAllowThreads permission( client_callbacks );
-		revnum_value_pair = svn_client.revpropget( propname.as_std_string().c_str(),
+		PythonAllowThreads permission( m_client_callbacks );
+		revnum_value_pair = m_svn_client.revpropget( propname.as_std_string().c_str(),
 				norm_path.c_str(), &revision );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	Py::Tuple result(2);
@@ -1124,15 +1124,15 @@ Py::Object pysvn_client::cmd_revpropset( const Py::Tuple& args, const Py::Dict &
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		PythonAllowThreads permission( client_callbacks );
-		revnum = svn_client.revpropset( propname.as_std_string().c_str(),
+		PythonAllowThreads permission( m_client_callbacks );
+		revnum = m_svn_client.revpropset( propname.as_std_string().c_str(),
 				propval.as_std_string().c_str(),
 				norm_path.c_str(), &revision,
 				force );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, revnum ) );
@@ -1158,14 +1158,14 @@ Py::Object pysvn_client::cmd_revpropdel( const Py::Tuple& args, const Py::Dict &
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		PythonAllowThreads permission( client_callbacks );
-		revnum = svn_client.revpropdel( propname.as_std_string().c_str(),
+		PythonAllowThreads permission( m_client_callbacks );
+		revnum = m_svn_client.revpropdel( propname.as_std_string().c_str(),
 				norm_path.c_str(), &revision,
 				force );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, revnum ) );
@@ -1187,15 +1187,15 @@ Py::Object pysvn_client::cmd_relocate(const Py::Tuple& args, const Py::Dict &kws
 		std::string norm_path_str( svnNormalisedIfPath( path.as_std_string() ) );
 		svn::Path norm_path( norm_path_str );
 
-		PythonAllowThreads permission( client_callbacks );
-		svn_client.relocate( norm_path,
+		PythonAllowThreads permission( m_client_callbacks );
+		m_svn_client.relocate( norm_path,
 				from_url.as_std_string().c_str(),
 				to_url.as_std_string().c_str(),
 				recurse );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	return Py::Nothing();
@@ -1233,12 +1233,12 @@ Py::Object pysvn_client::cmd_remove(const Py::Tuple& args, const Py::Dict &kws )
 
 	try
 		{
-		PythonAllowThreads permission( client_callbacks );
-		svn_client.remove( targets, force );
+		PythonAllowThreads permission( m_client_callbacks );
+		m_svn_client.remove( targets, force );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	return Py::Nothing();
@@ -1256,12 +1256,12 @@ Py::Object pysvn_client::cmd_resolved(const Py::Tuple& args, const Py::Dict &kws
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		PythonAllowThreads permission( client_callbacks );
-		svn_client.resolved( norm_path.c_str(), recurse );
+		PythonAllowThreads permission( m_client_callbacks );
+		m_svn_client.resolved( norm_path.c_str(), recurse );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	return Py::Nothing();
@@ -1278,12 +1278,12 @@ Py::Object pysvn_client::cmd_revert(const Py::Tuple& args, const Py::Dict &kws )
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		PythonAllowThreads permission( client_callbacks );
-		svn_client.revert( norm_path.c_str(), recurse );
+		PythonAllowThreads permission( m_client_callbacks );
+		m_svn_client.revert( norm_path.c_str(), recurse );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	return Py::Nothing();
@@ -1316,8 +1316,8 @@ Py::Object pysvn_client::cmd_status(const Py::Tuple& args, const Py::Dict &kws )
 
 		if( is_path_dir( norm_path ) )
 			{
-			PythonAllowThreads permission( client_callbacks );
-			all_status = svn_client.status( norm_path.c_str(),
+			PythonAllowThreads permission( m_client_callbacks );
+			all_status = m_svn_client.status( norm_path.c_str(),
 							recurse, get_all, update, no_ignore );
 
 			permission.allowThisThread(); // get access to python env
@@ -1334,10 +1334,10 @@ Py::Object pysvn_client::cmd_status(const Py::Tuple& args, const Py::Dict &kws )
 			}
 		else
 			{
-			PythonAllowThreads permission( client_callbacks );
+			PythonAllowThreads permission( m_client_callbacks );
 			svn::Status file_status;
 
-			file_status = svn_client.singleStatus( norm_path.c_str() );
+			file_status = m_svn_client.singleStatus( norm_path.c_str() );
 
 			permission.allowThisThread(); // get access to python env
 
@@ -1346,7 +1346,7 @@ Py::Object pysvn_client::cmd_status(const Py::Tuple& args, const Py::Dict &kws )
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 
@@ -1368,14 +1368,14 @@ Py::Object pysvn_client::cmd_switch(const Py::Tuple& args, const Py::Dict &kws )
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		PythonAllowThreads permission( client_callbacks );
-		revnum = svn_client.doSwitch( norm_path.c_str(),
+		PythonAllowThreads permission( m_client_callbacks );
+		revnum = m_svn_client.doSwitch( norm_path.c_str(),
 				url.as_std_string().c_str(),
 				svn::Revision( &revision ), recurse );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, revnum ) );
@@ -1395,13 +1395,13 @@ Py::Object pysvn_client::cmd_update(const Py::Tuple& args, const Py::Dict &kws )
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		PythonAllowThreads permission( client_callbacks );
-		revnum = svn_client.update( norm_path.c_str(),
+		PythonAllowThreads permission( m_client_callbacks );
+		revnum = m_svn_client.update( norm_path.c_str(),
 					svn::Revision( &revision ), recurse );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, revnum ) );
@@ -1424,11 +1424,11 @@ Py::Object pysvn_client::set_auth_cache( const Py::Tuple& args )
 	Py::Int enable( args[0] );
 	try
 		{
-		svn_context.setAuthCache( long( enable ) != 0 );
+		m_svn_context.setAuthCache( long( enable ) != 0 );
 		}
 	catch( svn::ClientException &e )
 		{
-		throw Py::Exception( module.client_error, e.message() );
+		throw Py::Exception( m_module.client_error, e.message() );
 		}
 
 	return Py::Nothing();
