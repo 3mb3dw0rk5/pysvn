@@ -263,11 +263,7 @@ Py::Object pysvn_client::cmd_add(const Py::Tuple& args, const Py::Dict &kws )
 			Py::String path_str( path_list[i] );
 			std::string norm_path( svnNormalisedIfPath( path_str.as_std_string() ) );
 
-			if( m_client_callbacks.hasPermission() )
-			{
-				throw Py::Exception( m_module.client_error, 
-					"client in use on another thread" );
-			}
+			checkThreadPermission();
 
 			PythonAllowThreads permission( m_client_callbacks );
 			m_svn_client.add( norm_path.c_str(), recurse );
@@ -302,11 +298,7 @@ Py::Object pysvn_client::cmd_annotate(const Py::Tuple& args, const Py::Dict &kws
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		all_entries = m_svn_client.annotate( norm_path.c_str(),
@@ -353,11 +345,7 @@ Py::Object pysvn_client::cmd_cat(const Py::Tuple& args, const Py::Dict &kws )
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		text = m_svn_client.cat( norm_path.c_str(), svn::Revision( &revision ) );
@@ -385,11 +373,7 @@ Py::Object pysvn_client::cmd_checkout(const Py::Tuple& args, const Py::Dict &kws
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		revnum = m_svn_client.checkout( url.as_std_string().c_str(),
@@ -415,11 +399,7 @@ Py::Object pysvn_client::cmd_cleanup(const Py::Tuple& args )
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		m_svn_client.cleanup( norm_path.c_str() );
@@ -476,11 +456,7 @@ Py::Object pysvn_client::cmd_checkin(const Py::Tuple& args, const Py::Dict &kws 
 		svn_revnum_t revnum;
 		try
 			{
-			if( m_client_callbacks.hasPermission() )
-			{
-				throw Py::Exception( m_module.client_error, 
-					"client in use on another thread" );
-			}
+			checkThreadPermission();
 
 			PythonAllowThreads permission( m_client_callbacks );
 			revnum = m_svn_client.commit( targets,
@@ -517,11 +493,7 @@ Py::Object pysvn_client::cmd_copy(const Py::Tuple& args, const Py::Dict &kws )
 		std::string norm_src_path( svnNormalisedIfPath( src_path.as_std_string() ) );
 		std::string norm_dest_path( svnNormalisedIfPath( dest_path.as_std_string() ) );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		m_svn_client.copy( norm_src_path.c_str(),
@@ -565,11 +537,7 @@ Py::Object pysvn_client::cmd_diff(const Py::Tuple& args, const Py::Dict &kws )
 		std::string norm_tmp_path( svnNormalisedIfPath( tmp_path.as_std_string() ) );
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		text = m_svn_client.diff( norm_tmp_path.c_str(),
@@ -613,11 +581,7 @@ Py::Object pysvn_client::cmd_export(const Py::Tuple& args, const Py::Dict &kws )
 		std::string norm_src_path( svnNormalisedIfPath( src_path.as_std_string() ) );
 		std::string norm_dest_path( svnNormalisedIfPath( dest_path.as_std_string() ) );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		revnum = m_svn_client.doExport( norm_src_path.c_str(),
@@ -642,11 +606,7 @@ Py::Object pysvn_client::cmd_info(const Py::Tuple& args, const Py::Dict &kws )
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		svn::Entry info = m_svn_client.info( norm_path.c_str() );
@@ -672,11 +632,7 @@ Py::Object pysvn_client::cmd_import(const Py::Tuple& args, const Py::Dict &kws )
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		m_svn_client.import( norm_path.c_str(),
@@ -718,11 +674,7 @@ Py::Object pysvn_client::cmd_log(const Py::Tuple& args, const Py::Dict &kws )
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		all_entries = m_svn_client.log( norm_path.c_str(),
@@ -798,11 +750,7 @@ Py::Object pysvn_client::cmd_ls(const Py::Tuple& args, const Py::Dict &kws )
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		all_entries = m_svn_client.ls( norm_path.c_str(), &revision, recurse );
@@ -926,11 +874,7 @@ Py::Object pysvn_client::cmd_mkdir(const Py::Tuple& args )
 
 	try
 		{
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		m_svn_client.mkdir( targets, message.c_str() );
@@ -968,11 +912,7 @@ Py::Object pysvn_client::cmd_move(const Py::Tuple& args, const Py::Dict &kws )
 			std::string norm_src_path( svnNormalisedIfPath( src_path.as_std_string() ) );
 			std::string norm_dest_path( svnNormalisedIfPath( dest_path.as_std_string() ) );
 
-			if( m_client_callbacks.hasPermission() )
-			{
-				throw Py::Exception( m_module.client_error, 
-					"client in use on another thread" );
-			}
+			checkThreadPermission();
 
 			PythonAllowThreads permission( m_client_callbacks );
 			m_svn_client.move( norm_src_path.c_str(),
@@ -1010,11 +950,7 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple& args, const Py::Dict &kw
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		all_entries = m_svn_client.proplist( norm_path.c_str(), &revision, recurse );
@@ -1046,11 +982,7 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple& args, const Py::Dict &kws
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		all_entries = m_svn_client.propget( propname.as_std_string().c_str(), 
@@ -1084,11 +1016,7 @@ Py::Object pysvn_client::cmd_propset( const Py::Tuple& args, const Py::Dict &kws
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		m_svn_client.propset( propname.as_std_string().c_str(), propval.as_std_string().c_str(),
@@ -1122,11 +1050,7 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple& args, const Py::Dict &kws
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		m_svn_client.propdel( propname.as_std_string().c_str(),
@@ -1158,11 +1082,7 @@ Py::Object pysvn_client::cmd_revproplist( const Py::Tuple& args, const Py::Dict 
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		revnum_map_pair = m_svn_client.revproplist( norm_path.c_str(), &revision );
@@ -1207,11 +1127,7 @@ Py::Object pysvn_client::cmd_revpropget( const Py::Tuple& args, const Py::Dict &
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		revnum_value_pair = m_svn_client.revpropget( propname.as_std_string().c_str(),
@@ -1250,11 +1166,7 @@ Py::Object pysvn_client::cmd_revpropset( const Py::Tuple& args, const Py::Dict &
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		revnum = m_svn_client.revpropset( propname.as_std_string().c_str(),
@@ -1290,11 +1202,7 @@ Py::Object pysvn_client::cmd_revpropdel( const Py::Tuple& args, const Py::Dict &
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		revnum = m_svn_client.revpropdel( propname.as_std_string().c_str(),
@@ -1325,11 +1233,7 @@ Py::Object pysvn_client::cmd_relocate(const Py::Tuple& args, const Py::Dict &kws
 		std::string norm_path_str( svnNormalisedIfPath( path.as_std_string() ) );
 		svn::Path norm_path( norm_path_str );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		m_svn_client.relocate( norm_path,
@@ -1377,11 +1281,7 @@ Py::Object pysvn_client::cmd_remove(const Py::Tuple& args, const Py::Dict &kws )
 
 	try
 		{
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		m_svn_client.remove( targets, force );
@@ -1406,11 +1306,7 @@ Py::Object pysvn_client::cmd_resolved(const Py::Tuple& args, const Py::Dict &kws
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		m_svn_client.resolved( norm_path.c_str(), recurse );
@@ -1434,11 +1330,7 @@ Py::Object pysvn_client::cmd_revert(const Py::Tuple& args, const Py::Dict &kws )
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		m_svn_client.revert( norm_path.c_str(), recurse );
@@ -1478,11 +1370,7 @@ Py::Object pysvn_client::cmd_status(const Py::Tuple& args, const Py::Dict &kws )
 
 		if( is_path_dir( norm_path ) )
 			{
-			if( m_client_callbacks.hasPermission() )
-			{
-				throw Py::Exception( m_module.client_error, 
-					"client in use on another thread" );
-			}
+			checkThreadPermission();
 
 			PythonAllowThreads permission( m_client_callbacks );
 			all_status = m_svn_client.status( norm_path.c_str(),
@@ -1502,11 +1390,7 @@ Py::Object pysvn_client::cmd_status(const Py::Tuple& args, const Py::Dict &kws )
 			}
 		else
 			{
-			if( m_client_callbacks.hasPermission() )
-			{
-				throw Py::Exception( m_module.client_error, 
-					"client in use on another thread" );
-			}
+			checkThreadPermission();
 
 			PythonAllowThreads permission( m_client_callbacks );
 			svn::Status file_status;
@@ -1542,11 +1426,7 @@ Py::Object pysvn_client::cmd_switch(const Py::Tuple& args, const Py::Dict &kws )
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		revnum = m_svn_client.doSwitch( norm_path.c_str(),
@@ -1575,11 +1455,7 @@ Py::Object pysvn_client::cmd_update(const Py::Tuple& args, const Py::Dict &kws )
 		{
 		std::string norm_path( svnNormalisedIfPath( path.as_std_string() ) );
 
-		if( m_client_callbacks.hasPermission() )
-		{
-			throw Py::Exception( m_module.client_error, 
-				"client in use on another thread" );
-		}
+		checkThreadPermission();
 
 		PythonAllowThreads permission( m_client_callbacks );
 		revnum = m_svn_client.update( norm_path.c_str(),
@@ -1618,6 +1494,16 @@ Py::Object pysvn_client::set_auth_cache( const Py::Tuple& args )
 		}
 
 	return Py::Nothing();
+	}
+
+	// check that we are not in use on another thread
+void pysvn_client::checkThreadPermission()
+	{
+	if( m_client_callbacks.hasPermission() )
+		{
+		throw Py::Exception( m_module.client_error, 
+			"client in use on another thread" );
+		}
 	}
 
 void pysvn_client::init_type()

@@ -196,6 +196,8 @@ public:
 	Py::Object is_url( const Py::Tuple& args );
 	Py::Object set_auth_cache( const Py::Tuple& args );
 
+	// check that we are not in use on another thread
+	void checkThreadPermission();
 private:
 	pysvn_module &m_module;
 	pysvn_callbacks m_client_callbacks;
