@@ -20,14 +20,14 @@ export PYSVN="${PYTHON} ${WORKDIR}/Examples/Client/svn_cmd.py --config-dir ${TES
 svnadmin create ${TESTROOT}/repos
 
 echo Info: mkdir
-${PYSVN} mkdir file:///${TESTROOT}/repos/trunk -m "test-01 add trunk"
-${PYSVN} mkdir file:///${TESTROOT}/repos/trunk/test -m "test-01 add test"
+${PYSVN} mkdir file://${TESTROOT}/repos/trunk -m "test-01 add trunk"
+${PYSVN} mkdir file://${TESTROOT}/repos/trunk/test -m "test-01 add test"
 
 echo Info: ls
-${PYSVN} ls file:///${TESTROOT}/repos -v -R
+${PYSVN} ls file://${TESTROOT}/repos -v -R
 
 echo Info: checkout
-${PYSVN} checkout file:///${TESTROOT}/repos/trunk ${TESTROOT}/wc1
+${PYSVN} checkout file://${TESTROOT}/repos/trunk ${TESTROOT}/wc1
 python ${WORKDIR}/Tests/find.py ${TESTROOT}/wc1
 cd ${TESTROOT}/wc1/test
 
@@ -45,7 +45,7 @@ ${PYSVN} add file5.txt
 ${PYSVN} checkin -m "commit added files"
 
 echo Info: update - get a new wc that will update
-${PYSVN} checkout file:///${TESTROOT}/repos/trunk ${TESTROOT}/wc2
+${PYSVN} checkout file://${TESTROOT}/repos/trunk ${TESTROOT}/wc2
 
 echo Info: - checkin a mod from wc1
 echo line 2 >>${TESTROOT}/wc1/test/file1.txt
@@ -60,16 +60,16 @@ echo Info: annotate
 ${PYSVN} annotate ${TESTROOT}/wc2/test/file1.txt
 
 echo Info: cat
-${PYSVN} cat -r head file:///${TESTROOT}/repos/trunk/test/file1.txt
+${PYSVN} cat -r head file://${TESTROOT}/repos/trunk/test/file1.txt
 
 echo Info: cleanup
 
 echo Info: copy
-${PYSVN} mkdir file:///${TESTROOT}/repos/tags -m "test-01 add tags"
+${PYSVN} mkdir file://${TESTROOT}/repos/tags -m "test-01 add tags"
 echo tag the trunk >msg.tmp
-${PYSVN} copy file:///${TESTROOT}/repos/trunk file:///${TESTROOT}/repos/tags/version1 <msg.tmp
+${PYSVN} copy file://${TESTROOT}/repos/trunk file://${TESTROOT}/repos/tags/version1 <msg.tmp
 rm msg.tmp
-${PYSVN} ls -v file:///${TESTROOT}/repos/tags
+${PYSVN} ls -v file://${TESTROOT}/repos/tags
 ${PYSVN} copy ${TESTROOT}/wc2/test/file1.txt ${TESTROOT}/wc2/test/file1b.txt
 ${PYSVN} checkin ${TESTROOT}/wc2 -m "copy test"
 
@@ -78,7 +78,7 @@ echo new line >>${TESTROOT}/wc2/test/file1b.txt
 ${PYSVN} diff ${TESTROOT}/wc2
 
 echo Info: export
-${PYSVN} export file:///${TESTROOT}/repos/trunk/test ${TESTROOT}/export1
+${PYSVN} export file://${TESTROOT}/repos/trunk/test ${TESTROOT}/export1
 python ${WORKDIR}/Tests/find.py ${TESTROOT}/export1
 
 echo Info: import
@@ -91,8 +91,8 @@ echo Info: log
 ${PYSVN} log ${TESTROOT}/wc2
 
 echo Info: ls
-${PYSVN} ls file:///${TESTROOT}/repos/trunk/test
-${PYSVN} ls -v file:///${TESTROOT}/repos/trunk/test
+${PYSVN} ls file://${TESTROOT}/repos/trunk/test
+${PYSVN} ls -v file://${TESTROOT}/repos/trunk/test
 ${PYSVN} ls ${TESTROOT}/wc2/test
 ${PYSVN} ls -v ${TESTROOT}/wc2/test
 
@@ -102,7 +102,7 @@ echo Info: mkdir - done above
 
 echo Info: move
 echo move url test >msg.tmp
-${PYSVN} move file:///${TESTROOT}/repos/trunk/test/file2.txt file:///${TESTROOT}/repos/trunk/test/file2b.txt <msg.tmp
+${PYSVN} move file://${TESTROOT}/repos/trunk/test/file2.txt file://${TESTROOT}/repos/trunk/test/file2b.txt <msg.tmp
 rm msg.tmp
 ${PYSVN} move ${TESTROOT}/wc2/test/file3.txt ${TESTROOT}/wc2/test/file3b.txt
 ${PYSVN} checkin ${TESTROOT}/wc2 -m "move wc test"
@@ -158,17 +158,17 @@ ${PYSVN} revert file5.txt
 ${PYSVN} status
 
 echo Info: revproplist
-${PYSVN} revproplist file:///${TESTROOT}/repos/trunk
+${PYSVN} revproplist file://${TESTROOT}/repos/trunk
 
 echo Info: revpropget
-${PYSVN} revpropget svn:log file:///${TESTROOT}/repos/trunk
-${PYSVN} revpropget no_such_prop file:///${TESTROOT}/repos/trunk
+${PYSVN} revpropget svn:log file://${TESTROOT}/repos/trunk
+${PYSVN} revpropget no_such_prop file://${TESTROOT}/repos/trunk
 
 echo Info: revpropset
-${PYSVN} revpropset svn:log "Hello world" file:///${TESTROOT}/repos/trunk
+${PYSVN} revpropset svn:log "Hello world" file://${TESTROOT}/repos/trunk
 
 echo Info: revpropdel
-${PYSVN} revpropdel svn:log file:///${TESTROOT}/repos/trunk
+${PYSVN} revpropdel svn:log file://${TESTROOT}/repos/trunk
 
 echo Info: status - see above
 
@@ -176,15 +176,15 @@ echo Info: relocate
 mkdir ${TESTROOT}/root
 mv ${TESTROOT}/repos ${TESTROOT}/root
 ${PYSVN} info ${TESTROOT}/wc1
-${PYSVN} relocate file:///${TESTROOT}/repos/trunk file:///${TESTROOT}/root/repos/trunk ${TESTROOT}/wc1
+${PYSVN} relocate file://${TESTROOT}/repos/trunk file://${TESTROOT}/root/repos/trunk ${TESTROOT}/wc1
 ${PYSVN} info ${TESTROOT}/wc1
 ${PYSVN} info ${TESTROOT}/wc2
-${PYSVN} relocate file:///${TESTROOT}/repos/trunk file:///${TESTROOT}/root/repos/trunk ${TESTROOT}/wc2
+${PYSVN} relocate file://${TESTROOT}/repos/trunk file://${TESTROOT}/root/repos/trunk ${TESTROOT}/wc2
 ${PYSVN} info ${TESTROOT}/wc2
 
 echo Info: switch
 ${PYSVN} info ${TESTROOT}/wc2
-${PYSVN} switch ${TESTROOT}/wc2 file:///${TESTROOT}/root/repos/tags/version1
+${PYSVN} switch ${TESTROOT}/wc2 file://${TESTROOT}/root/repos/tags/version1
 ${PYSVN} info ${TESTROOT}/wc2
 
 echo Info: update - see above
