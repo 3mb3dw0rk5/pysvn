@@ -2008,73 +2008,6 @@ static void StatusEntriesFunc
 	apr_hash_set( seb->hash, path, APR_HASH_KEY_STRING, stat );
 	}
 
-Py::Object pysvn_client::set_auth_cache( const Py::Tuple &a_args, const Py::Dict &a_kws )
-	{
-	static argument_description args_desc[] =
-		{
-		{ true,  name_enable },
-		{ false, NULL }
-		};
-	FunctionArguments args( "set_auth_cache", args_desc, a_args, a_kws );
-	args.check();
-
-	bool enable( args.getBoolean( name_enable ) );
-	try
-		{
-		void *param = 0;
-		if( enable )
-			param = (void *)"1";
-
-		svn_auth_set_parameter
-			(
-			m_context.ctx()->auth_baton,
-			SVN_AUTH_PARAM_NO_AUTH_CACHE,
-			param
-			);
-		}
-	catch( SvnException &e )
-		{
-		throw Py::Exception( m_module.client_error, e.message() );
-		}
-
-	return Py::Nothing();
-	}
-
-Py::Object pysvn_client::set_auto_props( const Py::Tuple &a_args, const Py::Dict &a_kws )
-	{
-	static argument_description args_desc[] =
-		{
-		{ true,  name_enable },
-		{ false, NULL }
-		};
-	FunctionArguments args( "set_auto_props", args_desc, a_args, a_kws );
-	args.check();
-
-	bool enable( args.getBoolean( name_enable ) );
-	try
-		{
-                svn_config_t *cfg = (svn_config_t *)apr_hash_get
-			(
-			m_context.ctx()->config,
-			SVN_CONFIG_CATEGORY_CONFIG,
-			APR_HASH_KEY_STRING
-			);
-		svn_config_set_bool
-			(
-			cfg,
-			SVN_CONFIG_SECTION_MISCELLANY,
-			SVN_CONFIG_OPTION_ENABLE_AUTO_PROPS,
-			enable
-			);
-		}
-	catch( SvnException &e )
-		{
-		throw Py::Exception( m_module.client_error, e.message() );
-		}
-
-	return Py::Nothing();
-	}
-
 Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_kws )
 	{
 	static argument_description args_desc[] =
@@ -2247,6 +2180,73 @@ Py::Object pysvn_client::cmd_update( const Py::Tuple &a_args, const Py::Dict &a_
 		}
 
 	return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, revnum ) );
+	}
+
+Py::Object pysvn_client::set_auth_cache( const Py::Tuple &a_args, const Py::Dict &a_kws )
+	{
+	static argument_description args_desc[] =
+		{
+		{ true,  name_enable },
+		{ false, NULL }
+		};
+	FunctionArguments args( "set_auth_cache", args_desc, a_args, a_kws );
+	args.check();
+
+	bool enable( args.getBoolean( name_enable ) );
+	try
+		{
+		void *param = 0;
+		if( enable )
+			param = (void *)"1";
+
+		svn_auth_set_parameter
+			(
+			m_context.ctx()->auth_baton,
+			SVN_AUTH_PARAM_NO_AUTH_CACHE,
+			param
+			);
+		}
+	catch( SvnException &e )
+		{
+		throw Py::Exception( m_module.client_error, e.message() );
+		}
+
+	return Py::Nothing();
+	}
+
+Py::Object pysvn_client::set_auto_props( const Py::Tuple &a_args, const Py::Dict &a_kws )
+	{
+	static argument_description args_desc[] =
+		{
+		{ true,  name_enable },
+		{ false, NULL }
+		};
+	FunctionArguments args( "set_auto_props", args_desc, a_args, a_kws );
+	args.check();
+
+	bool enable( args.getBoolean( name_enable ) );
+	try
+		{
+                svn_config_t *cfg = (svn_config_t *)apr_hash_get
+			(
+			m_context.ctx()->config,
+			SVN_CONFIG_CATEGORY_CONFIG,
+			APR_HASH_KEY_STRING
+			);
+		svn_config_set_bool
+			(
+			cfg,
+			SVN_CONFIG_SECTION_MISCELLANY,
+			SVN_CONFIG_OPTION_ENABLE_AUTO_PROPS,
+			enable
+			);
+		}
+	catch( SvnException &e )
+		{
+		throw Py::Exception( m_module.client_error, e.message() );
+		}
+
+	return Py::Nothing();
 	}
 
 Py::Object pysvn_client::is_url( const Py::Tuple &a_args, const Py::Dict &a_kws )

@@ -19,9 +19,11 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-// SVN lives in a world of 
+// SVN lives in a world of its own for URL and path syntax
+// here are routines to convert from OS conventions to SVN's
 
-// is
+
+// is this a path of a url svn?
 bool is_svn_url( const std::string &path_or_url )
 	{
 	return svn_path_is_url( path_or_url.c_str() ) != 0;
