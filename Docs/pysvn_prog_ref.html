@@ -275,9 +275,9 @@ True if subversion is to use the username and password.
 <tr>
 <td><a href="#pysvn_client_diff">diff</a></td>
 <td><a href="#pysvn_client_export">export</a></td>
-<td><a href="#pysvn_client_info">info</a></td>
 <td><a href="#pysvn_client_import_">import_</a></td>
 <td><a href="#pysvn_client_info">info</a></td>
+<td><a href="#pysvn_client_is_url">is_url</a></td>
 <td><a href="#pysvn_client_log">log</a></td>
 <td><a href="#pysvn_client_ls">ls</a></td>
 </tr>
@@ -372,7 +372,11 @@ Clean up any locks in the working copy at path.  Usually such locks are the resu
 <h4><a name="pysvn_client_checkin"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.checkin</a></h4>
 <pre>
 revision = \
-checkin( path_list,
+checkin( path,
+        log_message,
+        recurse=True )
+revision = \
+checkin( [path,path],
         log_message,
         recurse=True )
 </pre>
@@ -385,7 +389,7 @@ Set recurse to True to recursively checkin a directory's children with the same 
 <pre>
 copy( src_url_or_path,
       dest_url_or_path,
-      src_revision=src_revision)
+      src_revision=pysvn.Revision( opt_revision_kind.head ))
 </pre>
 <p>
 Duplicate something in working copy or repos, remembering history.
@@ -438,12 +442,6 @@ export( src_url_or_path,
    not under revision control will not be copied.
 </ol>
 <p>checkin returns a pysvn.Revision containing the number of the checked in revision.</p>
-<h4><a name="pysvn_client_info"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.info</a></h4>
-<pre>
-entry = \
-info( path )
-</pre>
-<p>Return an pysvn Entry object describing the path.</p>
 <h4><a name="pysvn_client_import_"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.import_</a></h4>
 <pre>
 revision = \
@@ -464,6 +462,13 @@ Parent directories are created as necessary in the repository.
 entry = info( path )
 </pre>
 <p>return information on path as a <a href="#entry">Entry</a> object.</p>
+
+<h4><a name="pysvn_client_is_url"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.is_url</a></h4>
+<pre>
+rc = \
+is_url( url )
+</pre>
+<p>return True if the url is a known subversion url.</p>
 
 <h4><a name="pysvn_client_log"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.log</a></h4>
 <pre>
@@ -526,7 +531,7 @@ merge( url_or_path1,
 <pre>
 mkdir( url_or_path,
        log_message )
-mkdir( url_or_path_list,
+mkdir( [url_or_path,url_or_path],
        log_message )
 </pre>
 <p>Create a new directory under revision control.</p>
@@ -538,6 +543,8 @@ addition upon the next commit.</p>
 
 <p>If url_or_path is a URL, the directories are created in the repository via an
 immediate commit.</p>
+
+<p>url_or_path can be a list of URLs and paths</p>
 
 <p>In both cases, all the intermediate directories must already exist.</p>
 
@@ -573,12 +580,12 @@ immediate commit.</p>
 
 <h4><a name="pysvn_client_propdel"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.propdel</a></h4>
 <pre>
-rev = propdel( propname,
+rev = propdel( prop_name,
          url_or_path,
          revision=pysvn.Revision(),
          recurse=False )
 </pre>
-<p>delete the property propname from url_or_path</p>
+<p>delete the property prop_name from url_or_path</p>
 <p>The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
 if the src_path is a URL otherwise to pysvn.Revision( opt_revision_kind.working ).</p>
 
@@ -605,13 +612,13 @@ if the url_or_path is a URL otherwise to pysvn.Revision( opt_revision_kind.worki
 
 <h4><a name="pysvn_client_propset"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.propset</a></h4>
 <pre>
-rev = propset( propname,
-               propval,
+rev = propset( prop_name,
+               prop_value,
                url_or_path,
                revision=pysvn.Revision(),
                recurse=False )
 </pre>
-<p>set the property propname to propval in path</p>
+<p>set the property prop_name to prop_value in path</p>
 <p>The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
 if the url_or_path is a URL otherwise to pysvn.Revision( opt_revision_kind.working ).</p>
 
@@ -648,7 +655,9 @@ resolved( path,
 
 <h4><a name="pysvn_client_revert"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.revert</a></h4>
 <pre>
-revert( path_list,
+revert( path,
+        recurse=False )
+revert( [path,path],
         recurse=False )
 </pre>
 <p>Discard any changes in the working copy at path.
@@ -656,18 +665,18 @@ Set recurse to True to recursively revert a directory's children.</p
 
 <h4><a name="pysvn_client_revpropdel"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.revpropdel</a></h4>
 <pre>
-rev = revpropdel( propname,
+rev = revpropdel( prop_name,
          url,
          revision=pysvn.Revision( opt_revision_kind.head ),
          recurse=False )
 </pre>
-<p>Delete the revision property propname from url</p>
+<p>Delete the revision property prop_name from url</p>
 
 <h4><a name="pysvn_client_revpropget"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.revpropget</a></h4>
 <pre>
 prop_list = revpropget( prop_name,
                       url,
-                      src_revision=pysvn.Revision( opt_revision_kind.head ),
+                      revision=pysvn.Revision( opt_revision_kind.head ),
                       recurse=False )
 </pre>
 <p>Returns a list of tuples (path, prop_dict) where the prop_dict contains the revision property prop_name and its value</p>
@@ -675,7 +684,7 @@ prop_list = revpropget( prop_name,
 <h4><a name="pysvn_client_revproplist"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.revproplist</a></h4>
 <pre>
 prop_list = revproplist( url,
-                      src_revision=pysvn.Revision( opt_revision_kind.head ),
+                      revision=pysvn.Revision( opt_revision_kind.head ),
                       recurse=False )
 </pre>
 <p>Returns a list of tuples (path, prop_dict) where the prop_dict contains the revision properies and their values</p>
@@ -683,13 +692,13 @@ prop_list = revproplist( url,
 
 <h4><a name="pysvn_client_revpropset"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.revpropset</a></h4>
 <pre>
-rev = revpropset( propname,
-         propval,
+rev = revpropset( prop_name,
+         prop_value,
          url,
          revision=pysvn.Revision( opt_revision_kind.head ),
          recurse=False )
 </pre>
-<p>set the revision property propname to propval in path. The revision updated is returned.</p>
+<p>set the revision property prop_name to prop_value in path. The revision updated is returned.</p>
 
 <h4><a name="pysvn_client_set_auth_cache"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.set_auth_cache</a></h4>
 <pre>

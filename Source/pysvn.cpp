@@ -49,8 +49,8 @@ pysvn_module::pysvn_module()
 	pysvn_enum_value< svn_wc_notify_state_t >::init_type();
 	pysvn_enum_value< svn_node_kind_t >::init_type();
 
-	add_varargs_method("Client", &pysvn_module::new_client, class_client_doc);
-	add_varargs_method("Revision", &pysvn_module::new_revision, class_revision_doc);
+	add_keyword_method("Client", &pysvn_module::new_client, class_client_doc);
+	add_keyword_method("Revision", &pysvn_module::new_revision, class_revision_doc);
 
 	initialize( module_doc );
 
@@ -87,22 +87,29 @@ pysvn_module::pysvn_module()
 pysvn_module::~pysvn_module()
 	{}
 
-Py::Object pysvn_module::new_client(const Py::Tuple &args)
+static const char name_config_dir[] = "config_dir";
+
+Py::Object pysvn_module::new_client( const Py::Tuple &a_args, const Py::Dict &a_kws )
 	{
-	check_arguments( 0, 1, args );
-
-	std::string config_dir;
-
-	if( args.size() == 1 )
+	static argument_description args_desc[] =
 		{
-		Py::String py_config_dir( args[0] );
-		config_dir = py_config_dir.as_std_string();
-		}
+		{ false, name_config_dir },
+		{ false, NULL }
+		};
+
+	FunctionArguments args( "Client", args_desc, a_args, a_kws );
+	args.check();
+
+	std::string config_dir = args.getUtf8String( name_config_dir, "" );
 
 	return Py::asObject( new pysvn_client( *this, config_dir ) );
 	}
 
-Py::Object pysvn_module::new_revision(const Py::Tuple &args)
+static const char name_kind[] = "kind";
+static const char name_number[] = "number";
+static const char name_date[] = "date";
+
+Py::Object pysvn_module::new_revision( const Py::Tuple &a_args, const Py::Dict &a_kws )
 	{
 	//
 	// support only one of the following:
@@ -110,9 +117,17 @@ Py::Object pysvn_module::new_revision(const Py::Tuple &args)
 	// revision( kind, number )
 	// revision( kind, date )
 	//
-	check_arguments( 1, 2, args );
+	static argument_description args_desc[] =
+		{
+		{ true, name_kind },
+		{ false, name_date },
+		{ false, name_number },
+		{ false, NULL }
+		};
+	FunctionArguments args( "Revision", args_desc, a_args, a_kws );
+	args.check();
 
-	Py::ExtensionObject< pysvn_enum_value<svn_opt_revision_kind> > py_kind( args[0] );
+	Py::ExtensionObject< pysvn_enum_value<svn_opt_revision_kind> > py_kind( args.getArg( name_kind ) );
 
 	svn_opt_revision_kind kind = svn_opt_revision_kind( py_kind.extensionObject()->m_value );
 
@@ -121,8 +136,15 @@ Py::Object pysvn_module::new_revision(const Py::Tuple &args)
 		{
 	case svn_opt_revision_date:
 		{
-		check_arguments( 2, 2, args );
-		Py::Float date( args[1] );
+		static argument_description args_desc[] =
+			{
+			{ true, name_kind },
+			{ true, name_date },
+			{ false, NULL }
+			};
+		FunctionArguments args( "Revision", args_desc, a_args, a_kws );
+		args.check();
+		Py::Float date( args.getArg( name_date ) );
 
 		rev = new pysvn_revision( kind, double(date) );
 		}
@@ -130,14 +152,27 @@ Py::Object pysvn_module::new_revision(const Py::Tuple &args)
 
 	case svn_opt_revision_number:
 		{
-		check_arguments( 2, 2, args );
-		Py::Int revnum( args[1] );
+		static argument_description args_desc[] =
+			{
+			{ true, name_kind },
+			{ true, name_number },
+			{ false, NULL }
+			};
+		FunctionArguments args( "Revision", args_desc, a_args, a_kws );
+		args.check();
+		Py::Int revnum( args.getArg( name_date ) );
 
 		rev = new pysvn_revision( kind, 0, long( revnum ) );
 		}
 		break;
 	default:
-		check_arguments( 1, 1, args );
+		static argument_description args_desc[] =
+			{
+			{ true, name_kind },
+			{ false, NULL }
+			};
+		FunctionArguments args( "Revision", args_desc, a_args, a_kws );
+		args.check();
 
 		rev = new pysvn_revision( kind );
 		}
@@ -145,47 +180,6 @@ Py::Object pysvn_module::new_revision(const Py::Tuple &args)
 	return Py::asObject( rev );
 	}
 
-void check_arguments( int min_args, int max_args, const Py::Tuple &args )
-	{
-	if( args.size() < min_args )
-		throw Py::TypeError( "Too few arguments to function" );
-
-	if( args.size() > max_args )
-		throw Py::TypeError( "Too many arguments to function" );
-	}
-
-void check_arguments( int min_args, int max_args, const Py::Tuple &args,
-		const char **allowed_keywords, const Py::Dict &kws )
-	{
-	check_arguments( min_args, max_args, args );
-
-	Py::List names( kws.keys() );
-	for( int i=0; i< names.length(); i++ )
-		{
-		bool found = false;
-		Py::String py_name( names[i] );
-		std::string name( py_name );
-
-		const char **allowed_keywords_it = allowed_keywords;
-		while( *allowed_keywords_it != NULL )
-			{
-			if( name == *allowed_keywords_it )
-				{
-				found = true;
-				break;
-				}
-
-			++allowed_keywords_it;
-			}
-
-		if( !found )
-			{
-			std::string msg( "Unknown keyword argument to function: " );
-			msg += name;
-			throw Py::TypeError( msg );
-			}
-		}
-	}
 
 //--------------------------------------------------------------------------------
 //

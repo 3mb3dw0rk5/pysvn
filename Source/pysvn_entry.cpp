@@ -29,22 +29,6 @@ pysvn_entry::pysvn_entry( const svn_wc_entry_t *svn_entry, SvnContext &context)
 pysvn_entry::~pysvn_entry()
 	{ }
 
-Py::Object utf8_string_or_none( const char *str )
-	{
-	if( str == NULL )
-		return Py::Nothing();
-	else
-		return Py::String( str, "UTF-8" );
-	}
-
-static Py::Object path_string_or_none( const char *str, SvnPool &pool )
-	{
-	if( str == NULL )
-		return Py::Nothing();
-	else
-		return Py::String( osNormalisedPath( str, pool ), "UTF-8" );
-	}
-
 Py::Object pysvn_entry::getattr( const char *_name )
 	{
 	std::string name( _name );

@@ -25,8 +25,8 @@ public:
 	pysvn_module();
 	virtual ~pysvn_module();
 private:// functions
-	Py::Object new_client( const Py::Tuple &args );
-	Py::Object new_revision( const Py::Tuple &args );
+	Py::Object new_client( const Py::Tuple &a_args, const Py::Dict &a_kws );
+	Py::Object new_revision( const Py::Tuple &a_args, const Py::Dict &a_kws );
 
 public:// variables
 	Py::ExtensionExceptionType client_error;
@@ -167,7 +167,7 @@ public:
 	Py::Object cmd_annotate( const Py::Tuple& args, const Py::Dict &kws );
 	Py::Object cmd_cat( const Py::Tuple& args, const Py::Dict &kws );
 	Py::Object cmd_checkout( const Py::Tuple& args, const Py::Dict &kws );
-	Py::Object cmd_cleanup( const Py::Tuple& args );
+	Py::Object cmd_cleanup( const Py::Tuple& args, const Py::Dict &kws );
 	Py::Object cmd_checkin( const Py::Tuple& args, const Py::Dict &kws );
 	Py::Object cmd_copy( const Py::Tuple& args, const Py::Dict &kws );
 	Py::Object cmd_diff( const Py::Tuple& args, const Py::Dict &kws );
@@ -177,7 +177,7 @@ public:
 	Py::Object cmd_log( const Py::Tuple& args, const Py::Dict &kws );
 	Py::Object cmd_ls( const Py::Tuple& args, const Py::Dict &kws );
 	Py::Object cmd_merge( const Py::Tuple& args, const Py::Dict &kws );
-	Py::Object cmd_mkdir( const Py::Tuple& args );
+	Py::Object cmd_mkdir( const Py::Tuple& args, const Py::Dict &kws );
 	Py::Object cmd_move( const Py::Tuple& args, const Py::Dict &kws );
 	Py::Object cmd_propdel( const Py::Tuple& args, const Py::Dict &kws );
 	Py::Object cmd_propget( const Py::Tuple& args, const Py::Dict &kws );
@@ -196,9 +196,9 @@ public:
 	Py::Object cmd_update( const Py::Tuple& args, const Py::Dict &kws );
 
 	// SVN commands
-	Py::Object is_url( const Py::Tuple& args );
-	Py::Object set_auth_cache( const Py::Tuple& args );
-	Py::Object set_auto_props( const Py::Tuple& args );
+	Py::Object is_url( const Py::Tuple& args, const Py::Dict &kws );
+	Py::Object set_auth_cache( const Py::Tuple& args, const Py::Dict &kws );
+	Py::Object set_auto_props( const Py::Tuple& args, const Py::Dict &kws );
 
 	// check that we are not in use on another thread
 	void checkThreadPermission();
@@ -259,10 +259,47 @@ private:
 	};
 
 // help functions to check the arguments pass and throw AttributeError
-void check_arguments( int min_args, int max_args, const Py::Tuple &args );
-void check_arguments( int min_args, int max_args, const Py::Tuple &args,
-		const char **allowed_keywords, const Py::Dict &kws );
+struct argument_description
+{
+	bool m_required;	// true if this argument must be present
+	const char *m_arg_name;	// the name of this arg to lookup in the keywords dictionary
+};
 
+class FunctionArguments
+{
+public:
+	FunctionArguments
+		(
+		const char *function_name,
+		const argument_description *arg_info,
+		const Py::Tuple &args,
+		const Py::Dict &kws
+		);
+	~FunctionArguments();
+	void check();
+
+	bool hasArg( const char *arg_name );
+	Py::Object getArg( const char *arg_name );
+
+	bool getBoolean( const char *name );
+	bool getBoolean( const char *name, bool default_value );
+	std::string getUtf8String( const char *name );
+	std::string getUtf8String( const char *name, const std::string &default_value );
+	std::string getString( const char *name, const std::string &default_value );
+	std::string getString( const char *name );
+	svn_opt_revision_t getRevision( const char *name );
+	svn_opt_revision_t getRevision( const char *name, svn_opt_revision_kind default_value );
+
+private:
+	const std::string		m_function_name;
+	const argument_description	*m_arg_desc;
+	const Py::Tuple			&m_args;
+	const Py::Dict			&m_kws;
+
+	Py::Dict			m_checked_args;
+	int				m_min_args;
+	int				m_max_args;
+};
 
 extern Py::Object toObject( apr_time_t time );
 
@@ -536,4 +573,16 @@ private:
 	PythonAllowThreads *m_permission;
 	};
 
+//--------------------------------------------------------------------------------
+extern Py::Object utf8_string_or_none( const char *str );
+extern Py::Object path_string_or_none( const char *str, SvnPool &pool );
+extern Py::Object utf8_string_or_none( const std::string &str );
+extern apr_time_t convertStringToTime( const std::string &text, apr_time_t now, SvnPool &pool );
+extern Py::Object toObject( apr_time_t t );
+extern Py::Object toObject( svn_client_commit_info_t *commit_info );
+extern Py::Object propsToObject( apr_hash_t *props, SvnPool &pool );
+extern Py::Object proplistToObject( apr_array_header_t *props, SvnPool &pool );
+extern Py::String asUtf8String( Py::Object obj );
+extern apr_array_header_t *targetsFromStringOrList( Py::Object arg, SvnPool &pool );
+extern Py::List toListOfStrings( Py::Object &obj );
 //--------------------------------------------------------------------------------

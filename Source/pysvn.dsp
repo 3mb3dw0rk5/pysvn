@@ -111,6 +111,14 @@ SOURCE=pysvn.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=pysvn_arg_processing.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=pysvn_converters.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\pysvn.rc.template
 
 !IF  "$(CFG)" == "pysvn - Win32 Debug"
