@@ -25,7 +25,6 @@
 #endif
 
 #if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 2) || SVN_VER_MAJOR > 1
-#define PYSVN_HAS_REPOS_ROOT
 #define PYSVN_HAS_CLIENT_INFO
 #endif
 
@@ -214,10 +213,6 @@ public:
     Py::Object cmd_status( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_switch( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_update( const Py::Tuple& args, const Py::Dict &kws );
-
-#ifdef PYSVN_HAS_REPOS_ROOT
-    Py::Object cmd_get_repos_root( const Py::Tuple& args, const Py::Dict &kws );
-#endif
 
     // SVN commands
     Py::Object is_url( const Py::Tuple& args, const Py::Dict &kws );

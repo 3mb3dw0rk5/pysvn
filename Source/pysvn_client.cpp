@@ -884,93 +884,6 @@ Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_
     return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, revnum ) );
 }
 
-#ifdef PYSVN_HAS_REPOS_ROOT
-
-#include "svn_ra.h"
-#include "svn_pools.h"
-
-extern "C" {
-svn_error_t * 
-svn_client__open_ra_session (svn_ra_session_t **ra_session,
-                             const char *base_url,
-                             const char *base_dir,
-                             svn_wc_adm_access_t *base_access,
-                             apr_array_header_t *commit_items,
-                             svn_boolean_t use_admin,
-                             svn_boolean_t read_only_wc,
-                             svn_client_ctx_t *ctx,
-                             apr_pool_t *pool);
-
-svn_error_t *
-svn_client_get_repos_root (const char **repos_root,
-                          const char *url,
-                          svn_client_ctx_t *ctx,
-                          apr_pool_t *pool)
-{
-  svn_ra_session_t *ra_session;
-  apr_pool_t *subpool = svn_pool_create (pool);
-
-  /* use subpool to create a temporary RA session */
-  SVN_ERR (svn_client__open_ra_session (&ra_session, url,
-                                        NULL, /* no base dir */
-                                        NULL, NULL, FALSE, TRUE, 
-                                        ctx, subpool));
-
-  SVN_ERR (svn_ra_get_repos_root (ra_session, repos_root, subpool));
-
-  /* Copy the repos_root in to the passed-in pool. */
-  *repos_root = apr_pstrdup (pool, *repos_root);
-
-  /* destroy the RA session */
-  svn_pool_destroy (subpool);
-
-  return SVN_NO_ERROR;
-}
-
-}
-
-
-Py::Object pysvn_client::cmd_get_repos_root( const Py::Tuple &a_args, const Py::Dict &a_kws )
-{
-    static argument_description args_desc[] =
-    {
-    { true,  name_url },
-    { false, NULL }
-    };
-    FunctionArguments args( "get_repos_root", args_desc, a_args, a_kws );
-    args.check();
-
-    std::string url( args.getUtf8String( name_url ) );
-
-    SvnPool pool( m_context );
-    try
-    {
-        checkThreadPermission();
-
-        PythonAllowThreads permission( m_context );
-
-        const char *repos_root = NULL;
-
-        svn_error_t *error = svn_client_get_repos_root
-            (
-            &repos_root,
-	    url.c_str(),
-            m_context.ctx(),
-            pool
-            );
-        if( error != NULL )
-            throw SvnException( error );
-
-        return Py::String( repos_root );
-    }
-    catch( SvnException &e )
-    {
-        throw_client_error( e );
-    }
-}
-
-#endif
-
 
 #ifdef PYSVN_HAS_CLIENT_INFO
 extern "C"
@@ -2656,9 +2569,6 @@ void pysvn_client::init_type()
     add_keyword_method("copy", &pysvn_client::cmd_copy, SVN_COPY_DOC );
     add_keyword_method("diff", &pysvn_client::cmd_diff, SVN_DIFF_DOC );
     add_keyword_method("export", &pysvn_client::cmd_export, SVN_EXPORT_DOC );
-#ifdef PYSVN_HAS_REPOS_ROOT
-    add_keyword_method("get_repos_root", &pysvn_client::cmd_get_repos_root, "TBD" );
-#endif
     add_keyword_method("import_", &pysvn_client::cmd_import, SVN_IMPORT_DOC );
     add_keyword_method("info", &pysvn_client::cmd_info, SVN_INFO_DOC );
     add_keyword_method("is_url", &pysvn_client::is_url, IS_URL_DOC );
