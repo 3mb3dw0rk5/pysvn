@@ -4,7 +4,7 @@ echo PYTHON: ${PYTHON}
 echo Username: $(id -u -n)
 set -x
 
-mkdir testroot-01
+mkdir -p testroot-01
 rm -rf testroot-01
 mkdir testroot-01
 cd testroot-01
