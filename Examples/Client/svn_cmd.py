@@ -1,6 +1,6 @@
 '''
  ====================================================================
- Copyright (c) 2003 Barry A Scott.  All rights reserved.
+ Copyright (c) 2003-2005 Barry A Scott.  All rights reserved.
 
  This software is licensed as described in the file LICENSE.txt,
  which you should have received as part of this distribution.
@@ -207,7 +207,7 @@ class SvnCommand:
 	cmd_ann = cmd_annotate
 
 	def cmd_cat( self, args ):
-		revision = args.getOptionalRevision( '--revision', 'base' )
+		revision = args.getOptionalRevision( '--revision', 'head' )
 		text = self.client.cat( args.getPositionalArgs( 1, 1 )[0], revision=revision )
 		print text
 
@@ -355,7 +355,7 @@ class SvnCommand:
 		for log in all_logs:
 			print '-'*60
 			print 'rev %d: %s | %s | %d lines' % \
-				(log['revision'].number, log['author'], log['date'],
+				(log['revision'].number, log['author'], fmtDateTime( log['date'] ),
 				len(log['message'].split('\n')))
 
 			if len(log['changed_paths']) > 0:

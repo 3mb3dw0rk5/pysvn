@@ -1,3 +1,5 @@
+@prompt $P$S$G
+@echo WorkDir: %WORKDIR%
 setlocal
 set PYTHONPATH=%WORKDIR%\Source;%WORKDIR%\Examples\Client
 set PYSVN=%PY%\python %WORKDIR%\Examples\Client\svn_cmd.py --config-dir b:\configdir
@@ -51,7 +53,7 @@ rem annotate
 %PYSVN% annotate b:\wc2\test\file1.txt
 
 rem cat
-%PYSVN% cat file:///b:/repos/trunk/test/file1.txt
+%PYSVN% cat -r head file:///b:/repos/trunk/test/file1.txt
 
 rem cleanup
 
