@@ -1,0 +1,212 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 1.1.0  (Linux)">
+	<META NAME="CREATED" CONTENT="20031222;10522300">
+	<META NAME="CHANGED" CONTENT="20040131;16000900">
+	<STYLE>
+	<!--
+		@page { size: 21cm 29.7cm; margin: 2cm }
+		P { margin-bottom: 0.21cm }
+		H2 { margin-bottom: 0.21cm; color: #000080; page-break-after: avoid }
+		H2.western { font-family: "Helvetica", sans-serif; font-size: 14pt; font-style: italic; font-weight: bold }
+		H2.cjk { font-family: "MS Mincho"; font-size: 14pt; font-style: italic; font-weight: bold }
+		H2.ctl { font-family: "Tahoma"; font-size: 14pt; font-style: italic; font-weight: bold }
+		H3 { margin-bottom: 0.21cm; color: #000080; page-break-after: avoid }
+		H3.western { font-family: "Helvetica", sans-serif; font-size: 14pt; font-weight: bold }
+		H3.cjk { font-family: "MS Mincho"; font-size: 14pt; font-weight: bold }
+		H3.ctl { font-family: "Tahoma"; font-size: 14pt; font-weight: bold }
+		PRE { font-family: "Courier New", monospace; font-size: 10pt }
+		PRE.code { border: 1px solid #000000; padding: 0.05cm; color: #000080; font-size: 8pt }
+		A:link { color: #000080; text-decoration: underline }
+		CODE { font-family: "Courier New", monospace }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US" LINK="#000080" VLINK="#800000" DIR="LTR">
+<P STYLE="margin-top: 0.42cm; page-break-after: avoid"><FONT COLOR="#000080"><FONT FACE="Helvetica, sans-serif"><FONT SIZE=4><SPAN STYLE="font-weight: medium"><FONT SIZE=5 STYLE="font-size: 20pt">pysvn
+Programmer's Guide</FONT></SPAN></FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm">The pysvn module is a python interface
+to the Subversion version control system.  This API exposes client
+interfaces for managing a working copy, querying a repository, and
+synchronizing the two.</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm">This API cannot create new
+repositories; it can only interact with existing repositories.  If
+you need to create a repository, use the svnadmin command from
+Subversion.</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm">Using the API, you can check out a
+working copy, add, edit, and remove working files, and commit,
+compare, or discard your changes.  Repository properties such as
+keyword expansion, end of line characters, and ignore lists can also
+be examined and manipulated.</P>
+<H2 CLASS="western">Subversion model</H2>
+<P STYLE="margin-bottom: 0cm">Subversion operates on an
+update-edit-commit model.  A local, working copy is created.  Changes
+are made in the working copy, then committed to the central
+repository (which may be local or remote).</P>
+<P STYLE="margin-bottom: 0cm">This model allows and in fact expects
+that multiple people will occasionally edit the same file at the same
+time.  In most cases, Subversion merges these differences without
+intervention.  In the rare case where the differences are ambiguous,
+one of the commits fails, and the user or application will need to
+examine and resolve the differences before attempting to commit
+again.</P>
+<H2 CLASS="western">Common Tasks</H2>
+<P STYLE="margin-bottom: 0cm">This section gives examples of common
+tasks using the pysvn interface.  Operations applied to directories
+are processed recursively.  Add the argument <CODE>recurse=False</CODE>
+to prevent this behavior; for example, you may want to add a
+directory without adding its contents.</P>
+<H3 CLASS="western">Check out a working copy</H3>
+<PRE CLASS="code">import pysvn
+client = pysvn.Client()
+#check out the current version of the pysvn project
+client.checkout('~/examples/pysvn', 
+   'svn://localhost/example/trunk')
+#check out revision 11 of the pysvn project
+client.checkout('~/examples/pysvn-11', 
+   'svn://localhost/example/trunk', 
+   pysvn.Revision(pysvn.opt_revision_kind.number, 11))
+</PRE><P STYLE="margin-bottom: 0cm">
+This example creates a working copy of the example project in the
+directory examples/pysvn.  This project is used in the remaining
+examples.</P>
+<H3 CLASS="western">Add a file or directory to the repository</H3>
+<PRE CLASS="code">import pysvn
+# write a file foo.txt
+f = open('~/examples/pysvn/foo.txt', 'w')
+f.write('Sample versioned file via pithon\n')
+f.close()
+client = pysvn.Client()
+#schedule the addition; 
+#  the working copy will now track the file as a scheduled change
+client.add('~/examples/pysvn/foo.txt')
+#committing the change actually adds the file to the repository
+client.commit(['~/examples/pysvn/foo.txt'], 'Adding a sample file')</PRE><P STYLE="margin-bottom: 0cm">
+<BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm">This example creates the file <CODE>'foo.txt'</CODE>
+in the working copy, then adds it to the repository.  Note that the
+<CODE>Client<CODE>.i</CODE>mport_()</CODE> command does the addition
+and commit in a single step.  Most applications, however, queue up
+multiple changes and commit them together at a later time.</P>
+<H3 CLASS="western">Update the working copy 
+</H3>
+<PRE CLASS="code">import pysvn
+client = pysvn.Client()
+client.update('~/examples/pysvn')</PRE><P STYLE="margin-bottom: 0cm">
+<BR>
+</P>
+<P STYLE="margin-bottom: 0cm">Updating gets any changes other users
+have committed to the repository and applies them to your working
+copy.  Most applications do this on a regular basis to prevent
+conflicts.</P>
+<H3 CLASS="western">Commit changes to the repository</H3>
+<PRE CLASS="code">import pysvn
+# edit the file foo.txt
+f = open('~/examples/pysvn/foo.txt', 'w')
+f.write('Sample versioned file via python\n')
+f.close()
+#committing the change with a log message
+client = pysvn.Client()
+client.commit(['~/examples/pysvn'], 'Corrected spelling of python in foo.txt')</PRE><P STYLE="margin-bottom: 0cm">
+<BR>
+</P>
+<P STYLE="margin-bottom: 0cm">Commits in Subversion are atomic. 
+Either all scheduled changes are successfully committed, or none are.
+ Most applications either commit all changes in the working copy, as
+shown in this example, or pass a list of individual files and
+directories that need to be committed as a unit.</P>
+<H3 CLASS="western">Discard changes in the working copy</H3>
+<PRE CLASS="code">import pysvn
+# edit the file foo.txt
+f = open('~/examples/pysvn/foo.txt', 'w')
+f.write('This change will never be seen\n')
+f.close()
+#discard the edits
+client = pysvn.Client()
+client.revert('~/examples/pysvn/foo.txt')</PRE><P STYLE="margin-bottom: 0cm">
+<BR>
+</P>
+<P STYLE="margin-bottom: 0cm">This discards any uncommitted changes
+in the working copy and restores a file or directory to its unedited
+state.</P>
+<P STYLE="margin-bottom: 0cm">Files that are scheduled for addition
+or removal remain unversioned or are restored to the working copy,
+respectively.</P>
+<H3 CLASS="western">Rename or move a file</H3>
+<PRE CLASS="code">import pysvn
+client = pysvn.Client()
+#rename the file client side 
+client.move('~/examples/pysvn/foo.txt', '~/examples/pysvn/foo2.txt')
+#committing the change removes the file from the repository
+client.commit(['~/examples/pysvn/foo.txt', '~/examples/pysvn/foo2.txt'], 'Foo has become Foo2')
+</PRE><P STYLE="margin-bottom: 0cm">
+Moving or renaming a file removes the file under the old path or name
+and adds it in the new location while preserving information about
+previous versions.</P>
+<P STYLE="margin-bottom: 0cm">In this example, we passed both
+filenames to <CODE>Client.commit()</CODE>.  Passing the parent
+directory would also have been effective.</P>
+<P STYLE="margin-bottom: 0cm">The move and commit can be done in a
+single step on the server side; see the example in the Respository
+Tasks section.</P>
+<H3 CLASS="western">Remove a file or directory from the repository</H3>
+<PRE CLASS="code">import pysvn
+client = pysvn.Client()
+#schedule the removal; 
+#  the file will be removed from the working copy
+client.remove('~/examples/pysvn/foo2.txt')
+#committing the change removes the file from the repository
+client.commit(['~/examples/pysvn/foo2.txt'], 'Removing sample file')</PRE><P STYLE="margin-bottom: 0cm">
+<BR>
+</P>
+<P STYLE="margin-bottom: 0cm">Some people confuse removing a file or
+directory from the repository with purging it completely. The file
+still exists in previous versions and can be retrieved by checking
+out or otherwise examining the contents of a previous revision.</P>
+<P STYLE="margin-bottom: 0cm">Files are typically removed from the
+working copy immediately, while directories usually remain in the
+working copy until the removal is committed.</P>
+<H3 CLASS="western">Determine pending changes</H3>
+<PRE CLASS="code">import pysvn
+client = pysvn.Client()
+changes = client.status('~/examples/pysvn')
+print 'files to be added:'
+print [f.path for f in changes if f.text_status == pysvn.wc_status_kind.added]
+print 'files to be removed:'
+print [f.path for f in changes if f.text_status == pysvn.wc_status_kind.deleted]
+print 'files that have changed:'
+print [f.path for f in changes if f.text_status == pysvn.wc_status_kind.modified]
+print 'files with merge conflicts:'
+print [f.path for f in changes if f.text_status == pysvn.wc_status_kind.conflicted]
+print 'unversioned files:'
+print [f.path for f in changes if f.text_status == pysvn.wc_status_kind.unversioned]
+</PRE><H2 CLASS="western">
+Generating a diff or patch</H2>
+<H2 CLASS="western">Determining the repository URL</H2>
+<H2 CLASS="western">Repository Tasks</H2>
+<P STYLE="margin-bottom: 0cm">This section shows examples of tasks
+that manipulate or examine the repository. While the common tasks
+schedule changes through a local working copy, these tasks affect the
+repository directly.</P>
+<H2 CLASS="western">List the contents of a repository directory</H2>
+<H2 CLASS="western">Get the contents of a file from the repository</H2>
+<H2 CLASS="western">Create a branch or tag</H2>
+<H2 CLASS="western">Move or rename files in the repository</H2>
+<H2 CLASS="western">Compare two branches</H2>
+<H2 CLASS="western">Compare two versions of a file or directory</H2>
+<H2 CLASS="western"><BR><BR>
+</H2>
+<H2 CLASS="western"><BR><BR>
+</H2>
+</BODY>
+</HTML>
