@@ -165,7 +165,7 @@ Py::Object pysvn_module::new_revision( const Py::Tuple &a_args, const Py::Dict &
 			};
 		FunctionArguments args( "Revision", args_desc, a_args, a_kws );
 		args.check();
-		Py::Int revnum( args.getArg( name_date ) );
+		Py::Int revnum( args.getArg( name_number ) );
 
 		rev = new pysvn_revision( kind, 0, long( revnum ) );
 		}
