@@ -22,7 +22,7 @@ f.write(
 
     %s
 
-''' % (pysvn_version_string, python_version_string, svn_version_package_string, build_time_str) )
+''' % (pysvn_version_string, python_version_string, svn_version_string, build_time_str) )
 f.close()
 
 print 'Info: Creating pysvn-branded.iss from pysvn.iss'
@@ -43,5 +43,5 @@ f.close()
 print 'Info: Create setup_copy.cmd'
 f = file( 'tmp\\setup_copy.cmd', 'w' )
 f.write( 'copy tmp\\Output\\setup.exe tmp\\Output\\py%d%d-pysvn-svn%s-%s.exe\n' %
-	(sys.version_info[0], sys.version_info[1], svn_version_string, pysvn_version_string) )
+	(sys.version_info[0], sys.version_info[1], svn_version_package_string, pysvn_version_string) )
 f.close()
