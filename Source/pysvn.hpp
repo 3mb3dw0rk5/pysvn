@@ -584,5 +584,5 @@ extern Py::Object propsToObject( apr_hash_t *props, SvnPool &pool );
 extern Py::Object proplistToObject( apr_array_header_t *props, SvnPool &pool );
 extern Py::String asUtf8String( Py::Object obj );
 extern apr_array_header_t *targetsFromStringOrList( Py::Object arg, SvnPool &pool );
-extern Py::List toListOfStrings( Py::Object &obj );
+extern Py::List toListOfStrings( Py::Object obj );
 //--------------------------------------------------------------------------------

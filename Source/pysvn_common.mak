@@ -6,9 +6,10 @@
 
 CXX_OBJECTS=cxxsupport.o cxx_extensions.o cxxextensions.o IndirectPythonInterface.o
 PYSVN_OBJECTS=pysvn.o pysvn_callbacks.o pysvn_client.o pysvn_entry.o pysvn_enum_string.o \
-	pysvn_revision.o pysvn_status.o pysvn_docs.o pysvn_path.o
+	pysvn_revision.o pysvn_status.o pysvn_docs.o pysvn_path.o \
+	pysvn_arg_processing.o pysvn_converters.o pysvn_svnenv.o
 
-all: pysvn/_pysvn.so
+all: pysvn/_pysvn.so 
 
 pysvn/_pysvn.so: $(PYSVN_OBJECTS) $(CXX_OBJECTS)
 	$(LDSHARED) -o $@ $(PYSVN_OBJECTS) $(CXX_OBJECTS) $(LDLIBS)
@@ -43,6 +44,15 @@ pysvn_revision.o: pysvn_revision.cpp
 pysvn_status.o: pysvn_status.cpp
 	$(CCC) $(CCCFLAGS) -o $@ $<
 
+pysvn_arg_processing.o: pysvn_arg_processing.cpp
+	$(CCC) $(CCCFLAGS) -o $@ $<
+
+pysvn_converters.o: pysvn_converters.cpp
+	$(CCC) $(CCCFLAGS) -o $@ $<
+
+pysvn_svnenv.o: pysvn_svnenv.cpp
+	$(CCC) $(CCCFLAGS) -o $@ $<
+
 cxxsupport.o: $(PYCXX)/Src/cxxsupport.cxx
 	$(CCC) $(CCCFLAGS) -o $@ $<
 
@@ -61,4 +71,4 @@ clean:
 	rm -f pysvn/_pysvn.so
 
 test: pysvn/_pysvn.so
-	LD_LIBRARY_PATH=$(SVNCPP_LIB) $(PYTHON) -c "import pysvn;print pysvn.Client()"
+	LD_LIBRARY_PATH=$(PYTHON) -c "import pysvn;print pysvn.Client()"

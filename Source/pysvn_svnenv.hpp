@@ -1,7 +1,7 @@
 #ifndef __PYSVN_SVNENV__
 #define __PYSVN_SVNENV__
 
-#include "svn_client.h"
+#include <svn_client.h>
 #include <string>
 
 class SvnPool;

@@ -168,7 +168,7 @@ apr_array_header_t *targetsFromStringOrList( Py::Object arg, SvnPool &pool )
 	return targets;
 	}
 
-Py::List toListOfStrings( Py::Object &obj )
+Py::List toListOfStrings( Py::Object obj )
 	{
 	Py::List list;
 	if( obj.isList() )

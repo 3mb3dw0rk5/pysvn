@@ -42,12 +42,24 @@ FunctionArguments::~FunctionArguments()
 {
 }
 
+static char *int_to_string_inner( int n, char *buffer )
+{
+    char digit = (n%10) + '0';
+    int remainder = n/10;
+    if( remainder > 0 )
+        buffer = int_to_string_inner( remainder, buffer );
+    *buffer++ = digit;
+    return buffer;
+}
+
 static const char *int_to_string( int n )
 {
     static char number_string[20];
-    itoa( n, number_string, 10 );
+    char *buffer = int_to_string_inner( n, &number_string[0] );
     return number_string;
 }
+
+
 
 void FunctionArguments::check()
 {
