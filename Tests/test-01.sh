@@ -30,10 +30,7 @@ ${PYSVN} ls file:///${TESTROOT}/repos -v -R
 
 echo Info: checkout
 ${PYSVN} checkout file:///${TESTROOT}/repos/trunk ${TESTROOT}/wc1
-find ${TESTROOT}/wc1 -print >a.tmp
-sort <a.tmp >a2.tmp
-cat a2.tmp
-rm a.tmp a2.tmp
+python ${WORKDIR}/Tests/find.py ${TESTROOT}/wc1
 cd ${TESTROOT}/wc1/test
 
 echo Info: add
@@ -84,10 +81,7 @@ ${PYSVN} diff ${TESTROOT}/wc2
 
 echo Info: export
 ${PYSVN} export file:///${TESTROOT}/repos/trunk/test ${TESTROOT}/export1
-find ${TESTROOT}/export1 -print >a.tmp
-sort <a.tmp >a2.tmp
-cat a2.tmp
-rm a.tmp a2.tmp
+python ${WORKDIR}/Tests/find.py ${TESTROOT}/export1
 
 echo Info: import
 
