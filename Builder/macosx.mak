@@ -17,4 +17,4 @@ kit:
 	cd ../Kit/MacOSX && $(PYTHON) make_pkg.py
 
 test:
-	cd ../Tests && $(MAKE) -f macosx.mak all
+	cd ../Tests && $(MAKE) -f unix.mak all
