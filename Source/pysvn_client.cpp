@@ -64,6 +64,7 @@ static const char name_name[] = "name";
 static const char name_notice_ancestry[] = "notice_ancestry";
 static const char name_number[] = "number";
 static const char name_path[] = "path";
+static const char name_peg_revision[] = "peg_revision";
 static const char name_prop_name[] = "prop_name";
 static const char name_prop_value[] = "prop_value";
 static const char name_recurse[] = "recurse";
@@ -199,7 +200,7 @@ Py::Object pysvn_client::cmd_add( const Py::Tuple &a_args, const Py::Dict &a_kws
     {
     { true,  name_path },
     { false, name_recurse },
-#ifdef PYSVN_HAS_ADD2
+#ifdef PYSVN_HAS_CLIENT_ADD2
     { false, name_force },
 #endif
     { false, NULL }
@@ -210,7 +211,7 @@ Py::Object pysvn_client::cmd_add( const Py::Tuple &a_args, const Py::Dict &a_kws
     Py::List path_list( toListOfStrings( args.getArg( name_path ) ) );
 
     bool recurse = args.getBoolean( name_recurse, true );
-#ifdef PYSVN_HAS_ADD2
+#ifdef PYSVN_HAS_CLIENT_ADD2
     bool force = args.getBoolean( name_force, true );
 #endif
 
@@ -228,7 +229,7 @@ Py::Object pysvn_client::cmd_add( const Py::Tuple &a_args, const Py::Dict &a_kws
 
             SvnPool pool( m_context );
 
-#ifdef PYSVN_HAS_ADD2
+#ifdef PYSVN_HAS_CLIENT_ADD2
             svn_error_t * error = svn_client_add2
                 (
                 norm_path.c_str(),
@@ -795,7 +796,7 @@ Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_
     { true,  name_dest_path },
     { false, name_force },
     { false, name_revision },
-#ifdef PYSVN_HAS_EXPORT2
+#ifdef PYSVN_HAS_CLIENT_EXPORT2
     { false, name_native_eol },
 #endif
     { false, NULL }
@@ -815,7 +816,7 @@ Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_
          revision = args.getRevision( name_revision, svn_opt_revision_working );
 
 
-#ifdef PYSVN_HAS_EXPORT2
+#ifdef PYSVN_HAS_CLIENT_EXPORT2
     char *native_eol = NULL;
     if( args.hasArg( name_native_eol ) )
     {
@@ -848,7 +849,7 @@ Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_
 
         PythonAllowThreads permission( m_context );
 
-#ifdef PYSVN_HAS_EXPORT2
+#ifdef PYSVN_HAS_CLIENT_EXPORT2
         svn_error_t * error = svn_client_export2
             (
             &revnum,
@@ -971,6 +972,77 @@ Py::Object pysvn_client::cmd_get_repos_root( const Py::Tuple &a_args, const Py::
 #endif
 
 
+#ifdef PYSVN_HAS_CLIENT_INFO
+extern "C"
+{
+static svn_error_t *info_receiver(void *baton, const char *path, const svn_info_t *info, apr_pool_t *pool)
+{
+    Py::List *info_list = reinterpret_cast<Py::List *>( baton );
+
+    if( path != NULL )
+    {
+        Py::String py_path( path );
+        info_list->append( py_path );
+    }
+
+    return SVN_NO_ERROR;
+}
+}
+
+Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_url_or_path },
+    { false, name_revision },
+    { false, name_peg_revision},
+    { false, name_recurse },
+    { false, NULL }
+    };
+    FunctionArguments args( "info", args_desc, a_args, a_kws );
+    args.check();
+
+    std::string path( args.getUtf8String( name_url_or_path ) );
+
+    svn_opt_revision_t revision = args.getRevision( name_revision, svn_opt_revision_unspecified );
+    svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, svn_opt_revision_unspecified );
+
+    bool recurse = args.getBoolean( name_recurse, true );
+
+    Py::List info_list;
+    SvnPool pool( m_context );
+    try
+    {
+        std::string norm_path( svnNormalisedIfPath( path, pool ) );
+
+        checkThreadPermission();
+
+        PythonAllowThreads permission( m_context );
+
+        svn_error_t *error = 
+            svn_client_info
+                (
+                norm_path.c_str(),
+                &peg_revision,
+                &revision,
+                info_receiver,
+                reinterpret_cast<void *>( &info_list ),
+                recurse,
+                m_context.ctx(),
+                pool
+                );
+
+        if( error != NULL )
+            throw SvnException( error );
+
+        return info_list;
+    }
+    catch( SvnException &e )
+    {
+        throw_client_error( e );
+    }
+}
+#else
 Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
     static argument_description args_desc[] =
@@ -1013,6 +1085,7 @@ Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kw
         throw_client_error( e );
     }
 }
+#endif
 
 Py::Object pysvn_client::cmd_import( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
