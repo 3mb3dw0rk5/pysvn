@@ -150,7 +150,7 @@ class SvnCommand:
 		return message
 
 	def callback_getLogMessage( self ):
-		return 1, self.getLogMessage()
+		return True, self.getLogMessage()
 
 	def dispatch( self, argv ):
 
@@ -560,20 +560,20 @@ class SvnCommand:
 	def _cmd_status_print( self, all_files, detailed, show_committed, no_ignore ):
 		all_files.sort( self.by_path )
 		for file in all_files:
-			state = '%s%s%s%s%s' % (wc_status_kind_map[ file.text_status ],
-					wc_status_kind_map[ file.prop_status ],
-					' L'[ file.is_locked ],
-					' +'[ file.is_copied ],
-					' S'[ file.is_switched ])
-
-
-			if( file.repos_text_status != pysvn.wc_status_kind.none
-			or  file.repos_prop_status != pysvn.wc_status_kind.none ):
-				odd_status = '*'
-			else:
-				odd_status = ' '
-
 			if file.text_status != pysvn.wc_status_kind.ignored or no_ignore:
+				state = '%s%s%s%s%s' % (wc_status_kind_map[ file.text_status ],
+						wc_status_kind_map[ file.prop_status ],
+						' L'[ file.is_locked ],
+						' +'[ file.is_copied ],
+						' S'[ file.is_switched ])
+
+				if( file.repos_text_status != pysvn.wc_status_kind.none
+				or  file.repos_prop_status != pysvn.wc_status_kind.none ):
+					odd_status = '%s%s' % (wc_status_kind_map[ file.repos_text_status ],
+						wc_status_kind_map[ file.repos_prop_status ])
+				else:
+					odd_status = '  '
+
 				if detailed:
 					print '%s %s %6d %6d %-14s %s' % (state,
 						odd_status,
