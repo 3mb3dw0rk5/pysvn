@@ -6,7 +6,7 @@ import time
 
 python_version_string = '%d.%d.%d' % (sys.version_info[0], sys.version_info[1], sys.version_info[2])
 pysvn_version_string = '%d.%d.%d' % (pysvn.version[0], pysvn.version[1], pysvn.version[2])
-svn_version_string = '%d.%d.%d-%s' % pysvn.svn_version
+svn_version_string = '%d.%d.%d' % (pysvn.svn_version[0], pysvn.svn_version[1], pysvn.svn_version[2])
 
 build_time  = time.time()
 build_time_str = time.strftime( '%d-%b-%Y %H:%M', time.localtime( build_time ) )

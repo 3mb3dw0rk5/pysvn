@@ -13,7 +13,6 @@
 #include <iostream>
 
 // svncpp includes
-#include "svncpp/apr.hpp"
 #include "svncpp/client.hpp"
 #include "svncpp/dirent.hpp"
 #include "svncpp/exception.hpp"
@@ -196,7 +195,6 @@ public:
 private:
 	pysvn_module &module;
 	pysvn_callbacks client_callbacks;
-	svn::Apr apr_context;
 	svn::Context svn_context;
 	svn::Client svn_client;
 	};

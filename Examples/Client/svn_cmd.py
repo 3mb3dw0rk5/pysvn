@@ -367,7 +367,8 @@ class SvnCommand:
 			if verbose:
 				for file in all_files:
 					file['time_str'] = fmtDateTime( file['time'] )
-					print '%(created_rev)7d %(last_author)-10s %(size)6d %(time_str)s %(name)s' % file
+					file['created_rev_num'] = file['created_rev'].number
+					print '%(created_rev_num)7d %(last_author)-10s %(size)6d %(time_str)s %(name)s' % file
 			else:
 				for file in all_files:
 					print '%(name)s' % file

@@ -69,6 +69,6 @@ Source: "libeay32.dll"; DestDir: "{app}"
 Source: "ssleay32.dll"; DestDir: "{app}"
 
 [Icons]
-Name: "{group}\Documentation"; Filename: "{app}\pysvn.html";
-Name: "{group}\License"; Filename: "{app}\pysvn_LICENSE.txt";
-Name: "{group}\Web Site"; Filename: "http://pysvn.tigris.org";
+Name: "{group}\PySVN Documentation"; Filename: "{app}\pysvn.html";
+Name: "{group}\PySVN License"; Filename: "{app}\pysvn_LICENSE.txt";
+Name: "{group}\PySVN Web Site"; Filename: "http://pysvn.tigris.org";

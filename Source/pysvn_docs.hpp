@@ -40,8 +40,8 @@ Schedules the file or directory specfied in path for addition to the repository.
 Files are added at the next check in.\n"
 #define SVN_ANNOTATE_DOC \
 "annotation_list = annotate( path,\n\
-     revision_start=??,\n\
-     revision_end=?? )\n\
+     revision_start=pysvn.Revision( opt_revision_kind.number, 0 ),\n\
+     revision_end=pysvn.Revision( opt_revision_kind.head ) )\n\
 \n\
 annotate command.\n"
 #define SVN_CAT_DOC \
@@ -121,12 +121,16 @@ Recursively check in a copy of PATH to URL.\n\
 Parent directories are created as necessary in the repository."
 
 #define SVN_LOG_DOC \
-"log( path,\n\
-     revision_start=pysvn.Revision( opt_revision_kind.head ),\n\
-     revision_end=pysvn.Revision( opt_revision_kind.number, 0 ) )\n\
-View the log messages for the specifed path between revisions start and end.\
+"log_list = log( path,\n\
+                revision_start=pysvn.Revision( opt_revision_kind.head ),\n\
+                revision_end=pysvn.Revision( opt_revision_kind.number, 0 ),\n\
+                discover_changed_paths=False,\n\
+                strict_node_history=True )\n\
+Return the log messages for the specifed path between revisions start and end.\n\
+If strict_node_history is True do not cross copies while traversing history.\n\
+If discover_changed_paths is True return the set of changed paths for each revision reported.\n\
 \n\
-Show the log messages for a set of revisions or path."
+Show the log messages for a set of revisions of path."
 #define SVN_LS_DOC \
 "entries_list = ls( path,\n\
             revision=pysvn.Revision( opt_revision_kind.head ),\n\

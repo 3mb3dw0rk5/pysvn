@@ -9,12 +9,14 @@ if not "%1" == "" set PY_MAJ=%1
 set PY_MIN=3
 if not "%2" == "" set PY_MIN=%2
 
-set SVNVER=1.0.0
-set RAPIDSVNVER=0.5.0
-set PYCXX=%WORKDIR%\Import\pycxx_5_2_1
-set OPENSSL=L:\subversion\win32-%SVNVER%\openssl-0.9.7c
-set SUBVERSION=L:\subversion\win32-%SVNVER%\subversion-%SVNVER%
-set RAPIDSVN=L:\subversion\win32-%SVNVER%\rapidsvn-%RAPIDSVNVER%
+rem Save CWD
+pushd .
+call ..\ReleaseEngineering\win32\software-versions.cmd
+
+set PYCXX=%WORKDIR%\Import\pycxx_%PYCXX_VER%
+set OPENSSL=%BUILDROOT_DIR%\win32-%SVN_VER%\openssl-%OPENSSL_VER%
+set SUBVERSION=%BUILDROOT_DIR%\win32-%SVN_VER%\subversion-%SVN_VER%
+set RAPIDSVN=%BUILDROOT_DIR%\win32-%SVN_VER%\rapidsvn-%RAPIDSVN_VER%
 set PY=c:\python%PY_MAJ%%PY_MIN%
 set PYLIB=python%PY_MAJ%%PY_MIN%
 
@@ -23,3 +25,6 @@ PATH %PY%;%SUBVERSION%\db4-win32\bin;%SUBVERSION%\Release\subversion\svnadmin;%P
 
 rem prove the python version selected
 python -c "import sys;print 'Info: Python Version',sys.version"
+
+rem restore original CWD
+popd

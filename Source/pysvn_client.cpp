@@ -104,8 +104,7 @@ static void get_revision( svn_opt_revision_t &revision,
 
 //--------------------------------------------------------------------------------
 pysvn_client::pysvn_client( pysvn_module &_module, const std::string &config_dir )
-	: apr_context()
-	, svn_context( config_dir )
+	: svn_context( config_dir )
 	, client_callbacks()
 	, svn_client()
 	, module( _module )
@@ -690,13 +689,13 @@ Py::Object pysvn_client::cmd_log(const Py::Tuple& args, const Py::Dict &kws )
 			changed_entry_dict["path"] = Py::String( change_entry.path );
 			changed_entry_dict["action"] = Py::String( &change_entry.action, 1 );
 
-			if( !change_entry.copyfrom_path.empty() )
-				changed_entry_dict["copyfrom_path"] = Py::String( change_entry.copyfrom_path );
+			if( !change_entry.copyFromPath.empty() )
+				changed_entry_dict["copyfrom_path"] = Py::String( change_entry.copyFromPath );
 			else
 				changed_entry_dict["copyfrom_path"] = Py::Nothing();
 
-			if( SVN_IS_VALID_REVNUM( change_entry.copyfrom_revision ) )
-				changed_entry_dict["copyfrom_revision"] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, change_entry.copyfrom_revision ) );
+			if( SVN_IS_VALID_REVNUM( change_entry.copyFromRevision ) )
+				changed_entry_dict["copyfrom_revision"] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, change_entry.copyFromRevision ) );
 			else
 				changed_entry_dict["copyfrom_revision"] = Py::Nothing();
 
