@@ -4,7 +4,7 @@ echo PYTHON: ${PYTHON}
 echo Username: $(id -u -n)
 set -x
 
-mkdir -p testroot-01
+mkdir testroot-01
 rm -rf testroot-01
 mkdir testroot-01
 cd testroot-01
@@ -12,6 +12,9 @@ cd testroot-01
 set +x
 TESTROOT=$(pwd)
 set -x
+
+mkdir tmp
+export TMPDIR=${TESTROOT}/tmp
 
 export PYTHONPATH=${WORKDIR}/Source:${WORKDIR}/Examples/Client
 export PYSVN="${PYTHON} ${WORKDIR}/Examples/Client/svn_cmd.py --config-dir ${TESTROOT}/configdir"
@@ -27,7 +30,10 @@ ${PYSVN} ls file:///${TESTROOT}/repos -v -R
 
 echo Info: checkout
 ${PYSVN} checkout file:///${TESTROOT}/repos/trunk ${TESTROOT}/wc1
-find ${TESTROOT}/wc1 -print
+find ${TESTROOT}/wc1 -print >a.tmp
+sort <a.tmp >a2.tmp
+cat a2.tmp
+rm a.tmp a2.tmp
 cd ${TESTROOT}/wc1/test
 
 echo Info: add
@@ -78,7 +84,10 @@ ${PYSVN} diff ${TESTROOT}/wc2
 
 echo Info: export
 ${PYSVN} export file:///${TESTROOT}/repos/trunk/test ${TESTROOT}/export1
-find ${TESTROOT}/export1 -print
+find ${TESTROOT}/export1 -print >a.tmp
+sort <a.tmp >a2.tmp
+cat a2.tmp
+rm a.tmp a2.tmp
 
 echo Info: import
 
