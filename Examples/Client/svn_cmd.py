@@ -109,11 +109,10 @@ class SvnCommand:
 			sys.stdout.write( '(P)ermanent accept, (T)emporary accept or (R)eject: ' )
 			answer = sys.stdin.readline().strip()
 		if answer.lower() == 'p':
-			return 2, trust_data['failures']
+			return True, trust_data['failures'], True
 		if answer.lower() == 't':
-			return 1, trust_data['failures']
-		return 0, 0
-
+			return True, trust_data['failures'], False
+		return False, 0, False
 
 	def callback_cancel( self ):
 		return False

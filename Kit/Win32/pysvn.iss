@@ -56,7 +56,9 @@ Compression=bzip/9
 Source: "..\..\..\Source\pysvn\__init__.py"; DestDir: "{app}";
 Source: "..\..\..\Source\pysvn\_pysvn.pyd"; DestDir: "{app}";
 Source: "..\..\..\Docs\pysvn.html"; DestDir: "{app}";
-Source: "pysvn_LICENSE.txt"; DestDir: "{app}";
+Source: "..\..\..\Docs\pysvn_prog_guide.html"; DestDir: "{app}";
+Source: "..\..\..\Docs\pysvn_prog_ref.html"; DestDir: "{app}";
+Source: "LICENSE.txt"; DestDir: "{app}";
 
 Source: "..\..\..\Examples\Client\svn_cmd.py"; DestDir: "{app}\Examples\Client";
 Source: "..\..\..\Examples\Client\parse_datetime.py"; DestDir: "{app}\Examples\Client";
