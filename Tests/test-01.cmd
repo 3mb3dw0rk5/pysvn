@@ -11,7 +11,6 @@ subst b: /d
 subst b: %CD%\testroot-01
 cd /d b:\
 
-echo %PATH%
 svnadmin create b:\repos
 
 rem mkdir
