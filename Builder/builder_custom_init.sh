@@ -45,4 +45,4 @@ Darwin)
 esac
 
 # prove the python version selected is as expected
-${PYTHON} -c "import sys;print 'Info: Python Version',sys.version"
+${PYTHON} -c "import sys;print 'Info: Python Version %r' % sys.version"
