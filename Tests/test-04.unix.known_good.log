@@ -1,49 +1,49 @@
-WorkDir: /u/barry/wc/pysvn/Extension
+WorkDir: /home/barry/WorkingCopy/pysvn/Extension
 PYTHON: /usr/bin/python2.3
 Username: barry
 Info: Command: mkdir testroot-04
 Info: Command: cd testroot-04
 Info: Command: mkdir tmp
-Info: Command: svnadmin create /u/barry/wc/pysvn/Extension/Tests/testroot-04/repos
+Info: Command: svnadmin create /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/repos
 Info: Testing - mkdir
-Info: Command: /usr/bin/python2.3 /u/barry/wc/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /u/barry/wc/pysvn/Extension/Tests/testroot-04/configdir mkdir file:///u/barry/wc/pysvn/Extension/Tests/testroot-04/repos/trunk -m test-04 add trunk
-Info: Command: /usr/bin/python2.3 /u/barry/wc/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /u/barry/wc/pysvn/Extension/Tests/testroot-04/configdir mkdir file:///u/barry/wc/pysvn/Extension/Tests/testroot-04/repos/trunk/test -m test-04 add test
+Info: Command: /usr/bin/python2.3 /home/barry/WorkingCopy/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/configdir mkdir file:///home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/repos/trunk -m test-04 add trunk
+Info: Command: /usr/bin/python2.3 /home/barry/WorkingCopy/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/configdir mkdir file:///home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/repos/trunk/test -m test-04 add test
 Info: Install hooks
-Info: Command: /usr/bin/python2.3 /u/barry/wc/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /u/barry/wc/pysvn/Extension/Tests/testroot-04/configdir mkdir file:///u/barry/wc/pysvn/Extension/Tests/testroot-04/repos/trunk/test/a -m pre-commit test 1
+Info: Command: /usr/bin/python2.3 /home/barry/WorkingCopy/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/configdir mkdir file:///home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/repos/trunk/test/a -m pre-commit test 1
 Info: test_1.output start ----------------------------------------
-/usr/bin/python2.3 /u/barry/wc/pysvn/Extension/Tests/test_04_pre_commit_test_1.py /u/barry/wc/pysvn/Extension/Tests/testroot-04/repos 3
+/usr/bin/python2.3 /home/barry/WorkingCopy/pysvn/Extension/Tests/test_04_pre_commit_test_1.py /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/repos 3
 Info: pre commit test 1
-Info: Transaction( /u/barry/wc/pysvn/Extension/Tests/testroot-04/repos, 3) ...
+Info: Transaction( /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/repos, 3) ...
 Info: proplist() ...
 svn:log: pre-commit test 1
 svn:author: barry
-svn:date: 2005-03-27T17:22:23.500549Z
+svn:date: 2005-04-02T15:59:40.247507Z
 Info: changed() ...
 trunk/test/a: action='A', kind=<node_kind.dir>, text_mod=0, prop_mod=0
 Info: test_1.output end ------------------------------------------
 Info: Add two files
-Info: Command: /usr/bin/python2.3 /u/barry/wc/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /u/barry/wc/pysvn/Extension/Tests/testroot-04/configdir checkout file:///u/barry/wc/pysvn/Extension/Tests/testroot-04/repos/trunk/test /u/barry/wc/pysvn/Extension/Tests/testroot-04/wc
-A /u/barry/wc/pysvn/Extension/Tests/testroot-04/wc/a
-U /u/barry/wc/pysvn/Extension/Tests/testroot-04/wc
-? /u/barry/wc/pysvn/Extension/Tests/testroot-04/wc
-Info: Command: /usr/bin/python2.3 /u/barry/wc/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /u/barry/wc/pysvn/Extension/Tests/testroot-04/configdir add /u/barry/wc/pysvn/Extension/Tests/testroot-04/wc/file1.txt
-A /u/barry/wc/pysvn/Extension/Tests/testroot-04/wc/file1.txt
-Info: Command: /usr/bin/python2.3 /u/barry/wc/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /u/barry/wc/pysvn/Extension/Tests/testroot-04/configdir add /u/barry/wc/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
-A /u/barry/wc/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
-Info: Command: /usr/bin/python2.3 /u/barry/wc/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /u/barry/wc/pysvn/Extension/Tests/testroot-04/configdir checkin -m Add two files /u/barry/wc/pysvn/Extension/Tests/testroot-04/wc
-A /u/barry/wc/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
-A /u/barry/wc/pysvn/Extension/Tests/testroot-04/wc/file1.txt
-? /u/barry/wc/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
-? /u/barry/wc/pysvn/Extension/Tests/testroot-04/wc/file1.txt
+Info: Command: /usr/bin/python2.3 /home/barry/WorkingCopy/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/configdir checkout file:///home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/repos/trunk/test /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/wc
+A /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/wc/a
+U /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/wc
+? /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/wc
+Info: Command: /usr/bin/python2.3 /home/barry/WorkingCopy/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/configdir add /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/wc/file1.txt
+A /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/wc/file1.txt
+Info: Command: /usr/bin/python2.3 /home/barry/WorkingCopy/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/configdir add /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
+A /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
+Info: Command: /usr/bin/python2.3 /home/barry/WorkingCopy/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/configdir checkin -m Add two files /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/wc
+A wc/a/file1.txt
+A wc/file1.txt
+? /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
+? /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/wc/file1.txt
 Revision 4
 Info: test_1.output start ----------------------------------------
-/usr/bin/python2.3 /u/barry/wc/pysvn/Extension/Tests/test_04_pre_commit_test_1.py /u/barry/wc/pysvn/Extension/Tests/testroot-04/repos 4
+/usr/bin/python2.3 /home/barry/WorkingCopy/pysvn/Extension/Tests/test_04_pre_commit_test_1.py /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/repos 4
 Info: pre commit test 1
-Info: Transaction( /u/barry/wc/pysvn/Extension/Tests/testroot-04/repos, 4) ...
+Info: Transaction( /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/repos, 4) ...
 Info: proplist() ...
 svn:log: Add two files
 svn:author: barry
-svn:date: 2005-03-27T17:22:26.691494Z
+svn:date: 2005-04-02T15:59:43.757593Z
 Info: changed() ...
 trunk/test/a/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0
      contents: 'file1 A\n'
@@ -51,20 +51,20 @@ trunk/test/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0
      contents: 'file1 ROOT\n'
 Info: test_1.output end ------------------------------------------
 Info: Mod one file Mod one prop
-Info: Command: /usr/bin/python2.3 /u/barry/wc/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /u/barry/wc/pysvn/Extension/Tests/testroot-04/configdir propset svn:eol-style native /u/barry/wc/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
-Info: Command: /usr/bin/python2.3 /u/barry/wc/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /u/barry/wc/pysvn/Extension/Tests/testroot-04/configdir checkin -m Mod one file Mod one prop /u/barry/wc/pysvn/Extension/Tests/testroot-04/wc
-M /u/barry/wc/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
-M /u/barry/wc/pysvn/Extension/Tests/testroot-04/wc/file1.txt
-? /u/barry/wc/pysvn/Extension/Tests/testroot-04/wc/file1.txt
+Info: Command: /usr/bin/python2.3 /home/barry/WorkingCopy/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/configdir propset svn:eol-style native /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
+Info: Command: /usr/bin/python2.3 /home/barry/WorkingCopy/pysvn/Extension/Examples/Client/svn_cmd.py --config-dir /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/configdir checkin -m Mod one file Mod one prop /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/wc
+M wc/a/file1.txt
+M wc/file1.txt
+? /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/wc/file1.txt
 Revision 5
 Info: test_1.output start ----------------------------------------
-/usr/bin/python2.3 /u/barry/wc/pysvn/Extension/Tests/test_04_pre_commit_test_1.py /u/barry/wc/pysvn/Extension/Tests/testroot-04/repos 5
+/usr/bin/python2.3 /home/barry/WorkingCopy/pysvn/Extension/Tests/test_04_pre_commit_test_1.py /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/repos 5
 Info: pre commit test 1
-Info: Transaction( /u/barry/wc/pysvn/Extension/Tests/testroot-04/repos, 5) ...
+Info: Transaction( /home/barry/WorkingCopy/pysvn/Extension/Tests/testroot-04/repos, 5) ...
 Info: proplist() ...
 svn:log: Mod one file Mod one prop
 svn:author: barry
-svn:date: 2005-03-27T17:22:29.167805Z
+svn:date: 2005-04-02T15:59:46.099779Z
 Info: changed() ...
 trunk/test/a/file1.txt: action='R', kind=<node_kind.file>, text_mod=0, prop_mod=1
      svn:eol-style: native

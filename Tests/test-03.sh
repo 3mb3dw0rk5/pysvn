@@ -1,4 +1,9 @@
 #!/bin/sh
+# need to get rid of any symbolic links in the WORKDIR
+cd ${WORKDIR}
+export WORKDIR=$( $PYTHON -c 'import os;print os.getcwd()' )
+
+cd ${WORKDIR}/Tests
 echo WorkDir: ${WORKDIR}
 echo PYTHON: ${PYTHON}
 
