@@ -4,7 +4,7 @@ export WORKDIR=$(cd ..;pwd)
 # default to 2.3 if no value in $1 and $2
 export PY_MAJ=${1:-2}
 export PY_MIN=${2:-3}
-export PYCXX=${WORKDIR}/Import/pycxx_5_2_1
+export PYCXX=${WORKDIR}/Import/pycxx_${PYCXXVER}
 export PYTHON=/usr/bin/python${PY_MAJ}.${PY_MIN}
 export PYDIR=python${PY_MAJ}.${PY_MIN}
 export PYLIB=python${PY_MAJ}${PY_MIN}
