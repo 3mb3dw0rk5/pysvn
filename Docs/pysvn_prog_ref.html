@@ -584,7 +584,7 @@ if the src_path is a URL otherwise to pysvn.Revision( opt_revision_kind.working 
 <pre>
 prop_list = propget( prop_name,
                      url_or_path,
-                     src_revision=pysvn.Revision(),
+                     revision=pysvn.Revision(),
                      recurse=False )
 </pre>
 <p>Returns a list of tuples (url_or_path, prop_dict). The prop_dict contains the prop_name and its value if set on the url_or_path.</p>
@@ -594,7 +594,7 @@ if the url_or_path is a URL otherwise to pysvn.Revision( opt_revision_kind.worki
 <h4><a name="pysvn_client_proplist"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.proplist</a></h4>
 <pre>
 prop_list = proplist( url_or_path,
-                      src_revision=pysvn.Revision(),
+                      revision=pysvn.Revision(),
                       recurse=False )
 </pre>
 <p>Returns a list of tuples (path, prop_dict). The prop_dict contains the prop_names and their values if set on the path.</p>
