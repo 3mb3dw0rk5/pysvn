@@ -211,8 +211,12 @@ public:
 	// check that we are not in use on another thread
 	void checkThreadPermission();
 private:
+	// helper function that wraps up the logic to throw a client error exception
+	void throw_client_error( SvnException & );
+private:
 	pysvn_module	&m_module;
 	pysvn_context	m_context;
+	int		m_exception_style;
 	};
 
 class pysvn_revision : public Py::PythonExtension<pysvn_revision>

@@ -88,7 +88,8 @@ class SvnCommand:
 		self.client = None
 
 	def initClient( self, config_dir ):
-		self.client = c = pysvn.Client( config_dir )
+		self.client = pysvn.Client( config_dir )
+		self.client.exception_style = 1
 		self.client.callback_get_login = self.callback_getLogin
 		self.client.callback_get_log_message = self.callback_getLogMessage
 		self.client.callback_notify = self.callback_notify
@@ -169,7 +170,7 @@ class SvnCommand:
 
 			getattr( self, cmd_name, self.cmd_help )( args )
 		except pysvn.ClientError, e:
-			print e
+			print e.args[0]
 			return 1
 		except CommandError, e:
 			print e.reason()

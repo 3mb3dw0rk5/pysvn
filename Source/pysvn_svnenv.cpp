@@ -15,55 +15,49 @@
 static const char *toHex( unsigned int num );
 //--------------------------------------------------------------------------------
 //
-//	SvnException
+//        SvnException
 //
 //--------------------------------------------------------------------------------
 SvnException::SvnException( svn_error_t *error )
-: m_code( error->apr_err )
-, m_message()
+: m_message()
 , m_exception_arg()
 {
-    if( error->child == NULL )
+    std::string whole_message;
+
+    // set the error to be a list of (code, message) tuples
+    Py::List error_list;
+    while( error != NULL )
     {
-        // Just set a string in the simple case
-        // - which is the old behaviour
+        Py::Tuple t( 2 );
+
+        if( !m_message.empty() )
+        {
+            m_message += "\n";
+        }
+
+
         if( error->message != NULL )
         {
-            m_message = error->message;
+            t[0] = Py::String( error->message );
+            m_message += error->message;
         }
         else
         {
-            m_message = "Code: ";
-            m_message += toHex( error->apr_err );
+            std::string message = "Code: ";
+            message += toHex( error->apr_err );
+            t[0] = Py::String( message );
+            m_message += message;
         }
-	m_exception_arg = Py::String( m_message );
+        t[1] = Py::Int( error->apr_err );
+        error_list.append( t );
+
+        error = error->child;
     }
-    else
-    {
-        // set the error to be a list of (code, message) tuples
-        Py::List arg_list;
-        while( error != NULL )
-        {
-            Py::Tuple t( 2 );
+    Py::Tuple arg_list(2);
+    arg_list[0] = Py::String( m_message );
+    arg_list[1] = error_list;
 
-            t[0] = Py::Int( error->apr_err );
-            if( error->message != NULL )
-            {
-                t[1] = Py::String( error->message );
-            }
-            else
-            {
-                std::string message = "Code: ";
-                message += toHex( error->apr_err );
-                t[1] = Py::String( message );
-            }
-            arg_list.append( t );
-
-            error = error->child;
-        }
-
-        m_exception_arg = arg_list;
-    }
+    m_exception_arg = arg_list;
 }
 
 SvnException::SvnException( const SvnException &other )
@@ -85,14 +79,21 @@ apr_status_t SvnException::code() const
     return m_code;
 }
 
-Py::Object &SvnException::pythonExceptionArg()
+Py::Object &SvnException::pythonExceptionArg( int style )
 {
-    return m_exception_arg;
+    if( style == 1 )
+    {
+        return m_exception_arg;
+    }
+    else
+    {
+        return Py::String( m_message );
+    }
 }
 
 //--------------------------------------------------------------------------------
 //
-//	SvnContext
+//        SvnContext
 //
 //--------------------------------------------------------------------------------
 SvnContext::SvnContext( const std::string &config_dir_str )
@@ -102,7 +103,7 @@ SvnContext::SvnContext( const std::string &config_dir_str )
 
     const char *config_dir = NULL;
     if( !config_dir_str.empty() )
-	config_dir = config_dir_str.c_str();
+        config_dir = config_dir_str.c_str();
 
     svn_config_ensure( config_dir, m_pool );
 
@@ -355,7 +356,7 @@ svn_error_t *SvnContext::handlerSslClientCertPwPrompt
 
 //--------------------------------------------------------------------------------
 //
-//	Pool
+//        Pool
 //
 //--------------------------------------------------------------------------------
 SvnPool::SvnPool( SvnContext &ctx )
@@ -368,7 +369,7 @@ SvnPool::~SvnPool()
 {
     if( m_pool != NULL )
     {
-	svn_pool_destroy( m_pool );
+        svn_pool_destroy( m_pool );
     }
 }
 
