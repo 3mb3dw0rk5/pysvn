@@ -629,6 +629,8 @@ Py::Object pysvn_client::cmd_import(const Py::Tuple& args, const Py::Dict &kws )
 
 
 const char *log_keywords[] = {
+	"discover_changed_paths",
+	"strict_node_history",
 	"revision_start",
 	"revision_end",
 	NULL
@@ -643,6 +645,8 @@ Py::Object pysvn_client::cmd_log(const Py::Tuple& args, const Py::Dict &kws )
 	get_optional_revision( revision_start, "revision_start", svn_opt_revision_head, kws );
 	svn_opt_revision_t revision_end;
 	get_optional_revision( revision_end, "revision_end", svn_opt_revision_number, kws );
+	bool discover_changed_paths = get_optional_boolean( "discover_changed_paths", false, kws );
+	bool strict_node_history = get_optional_boolean( "strict_node_history", true, kws );
 
 	const svn::LogEntries *all_entries = NULL;
 	try
@@ -652,7 +656,9 @@ Py::Object pysvn_client::cmd_log(const Py::Tuple& args, const Py::Dict &kws )
 		PythonAllowThreads permission( client_callbacks );
 		all_entries = svn_client.log( norm_path.c_str(),
 			svn::Revision( &revision_start ),
-			svn::Revision( &revision_end ) );
+			svn::Revision( &revision_end ),
+			discover_changed_paths,
+			strict_node_history );
 		}
 	catch( svn::ClientException &e )
 		{
@@ -672,6 +678,32 @@ Py::Object pysvn_client::cmd_log(const Py::Tuple& args, const Py::Dict &kws )
 		entry_dict["date"] = Py::String( entry.date );
 		entry_dict["message"] = Py::String( entry.message );
 		entry_dict["revision"] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, entry.revision ) );
+
+		Py::List changed_paths_list;
+		std::list<svn::LogChangePathEntry>::const_iterator changed_paths_it = entry.changedPaths.begin();
+		while( changed_paths_it != entry.changedPaths.end() )
+			{
+			const svn::LogChangePathEntry &change_entry = *changed_paths_it;
+			++changed_paths_it;
+
+			Py::Dict changed_entry_dict;
+			changed_entry_dict["path"] = Py::String( change_entry.path );
+			changed_entry_dict["action"] = Py::String( &change_entry.action, 1 );
+
+			if( !change_entry.copyfrom_path.empty() )
+				changed_entry_dict["copyfrom_path"] = Py::String( change_entry.copyfrom_path );
+			else
+				changed_entry_dict["copyfrom_path"] = Py::Nothing();
+
+			if( SVN_IS_VALID_REVNUM( change_entry.copyfrom_revision ) )
+				changed_entry_dict["copyfrom_revision"] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, change_entry.copyfrom_revision ) );
+			else
+				changed_entry_dict["copyfrom_revision"] = Py::Nothing();
+
+			changed_paths_list.append( changed_entry_dict );
+			}
+
+		entry_dict["changed_paths"] = changed_paths_list;
 
 		entries_list.append( entry_dict );
 		}
@@ -715,7 +747,7 @@ Py::Object pysvn_client::cmd_ls(const Py::Tuple& args, const Py::Dict &kws )
 		entry_dict["name"] = Py::String( entry.name() );
 		entry_dict["kind"] = toEnumValue( entry.kind() );
 		entry_dict["size"] = Py::Long( Py::Float( double( static_cast<signed_int64>( entry.size() ) ) ) );
-		entry_dict["created_rev"] = Py::Int( entry.createdRev() );
+		entry_dict["created_rev"] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, entry.createdRev() ) );
 		entry_dict["time"] = toObject( entry.time() );
 		entry_dict["last_author"] = Py::String( entry.lastAuthor() );
 

@@ -327,16 +327,31 @@ class SvnCommand:
 
 	def cmd_log( self, args ):
 		start_revision, end_revision = args.getOptionalRevisionPair( '--revision', 'head', '0' )
+		verbose = args.getBooleanOption( '--verbose', True )
 		positional_args = args.getPositionalArgs( 1, 1 )
 		all_logs = self.client.log( positional_args[0],
-					revision_start=start_revision, revision_end=end_revision )
+					revision_start=start_revision,
+					revision_end=end_revision,
+					discover_changed_paths=verbose )
 
 		for log in all_logs:
 			print '-'*60
 			print 'rev %d: %s | %s | %d lines' % \
 				(log['revision'].number, log['author'], log['date'],
 				len(log['message'].split('\n')))
+
+			if len(log['changed_paths']) > 0:
+				print 'Changed paths:'
+				for change_info in log['changed_paths']:
+					if change_info['copyfrom_path'] is None:
+						print '  %s %s' % (change_info['action'], change_info['path'])
+					else:
+						print '  %s %s (from %s:%d)' % \
+							(change_info['action'], change_info['path'],
+							change_info['copyfrom_path'], change_info['copyfrom_revision'].number)
+
 			print log['message']
+
 		print '-'*60
 
 	def cmd_ls( self, args ):
@@ -788,6 +803,8 @@ class SvnArguments:
 
 			# another error case
 			return [rev_string]
+		else:
+			return rev_string.split(':',1)
 
 	def getCommandName( self, default_command ):
 		if len(self.positional_args) > 0:
@@ -848,8 +865,8 @@ class SvnArguments:
 					# M means M:end_default
 					rev_strings.append( end_default )
 
-			return [self._parseRevisionArg( rev_string[0] ),
-				self._parseRevisionArg( rev_string[1] )]
+			return [self._parseRevisionArg( rev_strings[0] ),
+				self._parseRevisionArg( rev_strings[1] )]
 		else:
 			return (self._parseRevisionArg( start_default ),
 				self._parseRevisionArg( end_default ))

@@ -464,7 +464,9 @@ entry = info( path )
 log_messages = \
 log( path,
      revision_start=pysvn.Revision( opt_revision_kind.head ),
-     revision_end=pysvn.Revision( opt_revision_kind.number, 0 ) )
+     revision_end=pysvn.Revision( opt_revision_kind.number, 0 ),
+     discover_changed_paths=False,
+     strict_node_history=True )
 </pre>
 <p>
 return the log messages for the specifed path between revisions start and end.
@@ -474,7 +476,14 @@ return the log messages for the specifed path between revisions start and end.
 <li>author - string - the name of the author wrote the log message
 <li>date - string - the date of the log message
 <li>message - string - the text of the log message
-<li>revision - pysvn.Revision - the revision of the log message
+<li>revision - pysvn.<a href="#pysvn_revision">Revision</a> - the revision of the log message
+<li>changed_paths - list of dictionaries. The dictionaries contains:
+<ul>
+<li>path - string - the path in the repository
+<li>action - string
+<li>copyfrom_path - string - if copied the original path else None
+<li>copyfrom_rec - pysvn.<a href="#pysvn_revision">Revision</a> - if copied the revision of the original else None
+</ul>
 </ul>
 <h4><a name="pysvn_client_ls"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.ls</a></h4>
 <pre>
@@ -491,7 +500,7 @@ The dictionary contains:
 <li>name - string - name of the file
 <li>kind - node_kind - one of the pysvn.node_kind values
 <li>size - long - size of file
-<li>created_rev - pysvn.Revision - the revision of the last change
+<li>created_rev - pysvn.<a href="#pysvn_revision">Revision</a> - the revision of the last change
 <li>time - float - the time of the last change
 <li>last_author - the author of the last change
 </ul>
