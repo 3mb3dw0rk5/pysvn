@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GR /GX /Zi /Od /I "$(PY)\include" /I "." /I "$(RAPIDSVN)\include" /I "$(PYCXX)" /I "$(SUBVERSION)/apr/include" /I "$(SUBVERSION)/apr-util/include" /I "$(SUBVERSION)/apr-util/xml/expat/lib" /I "$(SUBVERSION)/subversion/include" /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /D "noPY_WIN32_DELAYLOAD_PYTHON_DLL" /FR /YX /FD /Zm200 /c /Tp
+# ADD CPP /nologo /MD /W3 /GR /GX /Zi /Od /I "$(PY)\include" /I "." /I "$(PYCXX)" /I "$(APR)/apr/include" /I "$(APR)/apr-util/include" /I "$(APR)/apr-util/xml/expat/lib" /I "$(SUBVERSION)/subversion/include" /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /D "noPY_WIN32_DELAYLOAD_PYTHON_DLL" /FR /YX /FD /Zm200 /c /Tp
 # ADD BASE MTL /nologo /mktyplib203 /o "NUL" /win32
 # ADD MTL /nologo /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x409
@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib Rpcrt4.lib Mswsock.lib $(RAPIDSVN)\src\svncpp\Debug\svncpp.lib $(SUBVERSION)\Debug\subversion\libsvn_client\libsvn_client-1.lib $(SUBVERSION)\Debug\subversion\libsvn_delta\libsvn_delta-1.lib $(SUBVERSION)\Debug\subversion\libsvn_diff\libsvn_diff-1.lib $(SUBVERSION)\Debug\subversion\libsvn_fs\libsvn_fs-1.lib $(SUBVERSION)\Debug\subversion\libsvn_ra\libsvn_ra-1.lib $(SUBVERSION)\Debug\subversion\libsvn_ra_dav\libsvn_ra_dav-1.lib $(SUBVERSION)\Debug\subversion\libsvn_ra_local\libsvn_ra_local-1.lib $(SUBVERSION)\Debug\subversion\libsvn_ra_svn\libsvn_ra_svn-1.lib $(SUBVERSION)\Debug\subversion\libsvn_repos\libsvn_repos-1.lib $(SUBVERSION)\Debug\subversion\libsvn_subr\libsvn_subr-1.lib $(SUBVERSION)\Debug\subversion\libsvn_wc\libsvn_wc-1.lib $(SUBVERSION)\apr-iconv\LibD\apriconv.lib $(SUBVERSION)\apr-util\LibD\aprutil.lib $(SUBVERSION)\apr-util\xml\expat\lib\LibD\xml.lib $(SUBVERSION)\apr\LibD\apr.lib $(SUBVERSION)\db4-win32\lib\libdb42.lib $(SUBVERSION)\neon\libneonD.lib ws2_32.lib $(PYLIB).lib /nologo /subsystem:windows /dll /pdb:"sept" /debug /machine:I386 /out:"pysvn\_pysvn.pyd" /libpath:"$(PY)\libs" /export:init_pysvn
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib Rpcrt4.lib Mswsock.lib $(SUBVERSION)\Debug\subversion\libsvn_client\libsvn_client-1.lib $(SUBVERSION)\Debug\subversion\libsvn_delta\libsvn_delta-1.lib $(SUBVERSION)\Debug\subversion\libsvn_diff\libsvn_diff-1.lib $(SUBVERSION)\Debug\subversion\libsvn_fs\libsvn_fs-1.lib $(SUBVERSION)\Debug\subversion\libsvn_fs_base\libsvn_fs_base-1.lib $(SUBVERSION)\Debug\subversion\libsvn_fs_fs\libsvn_fs_fs-1.lib $(SUBVERSION)\Debug\subversion\libsvn_ra\libsvn_ra-1.lib $(SUBVERSION)\Debug\subversion\libsvn_ra_dav\libsvn_ra_dav-1.lib $(SUBVERSION)\Debug\subversion\libsvn_ra_local\libsvn_ra_local-1.lib $(SUBVERSION)\Debug\subversion\libsvn_ra_svn\libsvn_ra_svn-1.lib $(SUBVERSION)\Debug\subversion\libsvn_repos\libsvn_repos-1.lib $(SUBVERSION)\Debug\subversion\libsvn_subr\libsvn_subr-1.lib $(SUBVERSION)\Debug\subversion\libsvn_wc\libsvn_wc-1.lib $(APR)\apr-iconv\Debug\libapriconv.lib $(APR)\apr-util\Debug\libaprutil.lib $(APR)\apr-util\xml\expat\lib\LibD\xml.lib $(APR)\apr\Debug\libapr.lib $(SUBVERSION)\db4-win32\lib\libdb42.lib $(SUBVERSION)\neon\libneonD.lib ws2_32.lib $(PYLIB).lib /nologo /subsystem:windows /dll /pdb:"sept" /debug /machine:I386 /out:"pysvn\_pysvn.pyd" /libpath:"$(PY)\libs" /export:init_pysvn
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "pysvn - Win32 Release"
@@ -70,7 +70,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GR /GX /Zi /Od /Ob2 /I "$(PY)\include" /I "." /I "$(RAPIDSVN)\include" /I "$(PYCXX)" /I "$(SUBVERSION)/apr/include" /I "$(SUBVERSION)/apr-util/include" /I "$(SUBVERSION)/apr-util/xml/expat/lib" /I "$(SUBVERSION)/subversion/include" /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /D "noPY_WIN32_DELAYLOAD_PYTHON_DLL" /FR /YX /FD /Zm200 /c /Tp
+# ADD CPP /nologo /MD /W3 /GR /GX /Zi /Od /Ob2 /I "$(PY)\include" /I "." /I "$(PYCXX)" /I "$(APR)/apr/include" /I "$(APR)/apr-util/include" /I "$(APR)/apr-util/xml/expat/lib" /I "$(SUBVERSION)/subversion/include" /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /D "noPY_WIN32_DELAYLOAD_PYTHON_DLL" /FR /YX /FD /Zm200 /c /Tp
 # ADD BASE MTL /nologo /mktyplib203 /o "NUL" /win32
 # ADD MTL /nologo /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x409
@@ -80,7 +80,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib Rpcrt4.lib Mswsock.lib $(RAPIDSVN)\src\svncpp\Release\svncpp.lib $(SUBVERSION)\Release\subversion\libsvn_client\libsvn_client-1.lib $(SUBVERSION)\Release\subversion\libsvn_delta\libsvn_delta-1.lib $(SUBVERSION)\Release\subversion\libsvn_diff\libsvn_diff-1.lib $(SUBVERSION)\Release\subversion\libsvn_fs\libsvn_fs-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra\libsvn_ra-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra_dav\libsvn_ra_dav-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra_local\libsvn_ra_local-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra_svn\libsvn_ra_svn-1.lib $(SUBVERSION)\Release\subversion\libsvn_repos\libsvn_repos-1.lib $(SUBVERSION)\Release\subversion\libsvn_subr\libsvn_subr-1.lib $(SUBVERSION)\Release\subversion\libsvn_wc\libsvn_wc-1.lib $(SUBVERSION)\apr-iconv\LibR\apriconv.lib $(SUBVERSION)\apr-util\LibR\aprutil.lib $(SUBVERSION)\apr-util\xml\expat\lib\LibR\xml.lib $(SUBVERSION)\apr\LibR\apr.lib $(SUBVERSION)\db4-win32\lib\libdb42.lib $(SUBVERSION)\neon\libneon.lib ws2_32.lib $(PYLIB).lib /nologo /subsystem:windows /dll /pdb:"sept" /debug /machine:I386 /out:"pysvn\_pysvn.pyd" /libpath:"$(PY)\libs" /export:init_pysvn
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib Rpcrt4.lib Mswsock.lib $(SUBVERSION)\Release\subversion\libsvn_client\libsvn_client-1.lib $(SUBVERSION)\Release\subversion\libsvn_delta\libsvn_delta-1.lib $(SUBVERSION)\Release\subversion\libsvn_diff\libsvn_diff-1.lib $(SUBVERSION)\Release\subversion\libsvn_fs\libsvn_fs-1.lib $(SUBVERSION)\Release\subversion\libsvn_fs_base\libsvn_fs_base-1.lib $(SUBVERSION)\Release\subversion\libsvn_fs_fs\libsvn_fs_fs-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra\libsvn_ra-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra_dav\libsvn_ra_dav-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra_local\libsvn_ra_local-1.lib $(SUBVERSION)\Release\subversion\libsvn_ra_svn\libsvn_ra_svn-1.lib $(SUBVERSION)\Release\subversion\libsvn_repos\libsvn_repos-1.lib $(SUBVERSION)\Release\subversion\libsvn_subr\libsvn_subr-1.lib $(SUBVERSION)\Release\subversion\libsvn_wc\libsvn_wc-1.lib $(APR)\apr-iconv\RELEASE\libapriconv.lib $(APR)\apr-util\RELEASE\libaprutil.lib $(APR)\apr-util\xml\expat\lib\LibR\xml.lib $(APR)\apr\RELEASE\libapr.lib $(SUBVERSION)\db4-win32\lib\libdb42.lib $(SUBVERSION)\neon\libneon.lib ws2_32.lib $(PYLIB).lib /nologo /subsystem:windows /dll /pdb:"sept" /debug /machine:I386 /out:"pysvn\_pysvn.pyd" /libpath:"$(PY)\libs" /export:init_pysvn
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
@@ -146,6 +146,10 @@ SOURCE=pysvn_callbacks.cpp
 # Begin Source File
 
 SOURCE=pysvn_client.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=pysvn_svnenv.cpp
 # End Source File
 # Begin Source File
 

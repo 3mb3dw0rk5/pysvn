@@ -20,8 +20,9 @@
 
 static bool get_string( Py::Object &fn, Py::Tuple &args, std::string & _msg );
 
-pysvn_callbacks::pysvn_callbacks()
-	: m_pyfn_GetLogin()
+pysvn_context::pysvn_context( const std::string &config_dir )
+	: SvnContext( config_dir )
+	, m_pyfn_GetLogin()
 	, m_pyfn_Notify()
 	, m_pyfn_GetLogMessage()
 	, m_pyfn_SslServerPrompt()
@@ -30,30 +31,31 @@ pysvn_callbacks::pysvn_callbacks()
 	, m_pyfn_SslClientCertPwPrompt()
 	, m_permission( NULL )
 	, m_error_message()
+	, m_log_message()
 	{ }
 
 
-pysvn_callbacks::~pysvn_callbacks()
+pysvn_context::~pysvn_context()
 	{ }
 
-bool pysvn_callbacks::hasPermission()
+bool pysvn_context::hasPermission()
 	{
 	return m_permission != NULL;
 	}
 
-void pysvn_callbacks::setPermission( PythonAllowThreads &_permission )
+void pysvn_context::setPermission( PythonAllowThreads &_permission )
 	{
 	assert( m_permission == NULL );
 	m_permission = &_permission;
 	m_error_message = "";
 	}
 
-void pysvn_callbacks::clearPermission()
+void pysvn_context::clearPermission()
 	{
 	m_permission = NULL;
 	}
 
-void pysvn_callbacks::checkForError( Py::ExtensionExceptionType &exception_for_error )
+void pysvn_context::checkForError( Py::ExtensionExceptionType &exception_for_error )
 	{
 	// see if any errors occurred in the callbacks
 	if( !m_error_message.empty() )
@@ -71,7 +73,7 @@ void pysvn_callbacks::checkForError( Py::ExtensionExceptionType &exception_for_e
 //
 // @retval true continue
 //
-bool pysvn_callbacks::contextGetLogin( const std::string & _realm,
+bool pysvn_context::contextGetLogin( const std::string & _realm,
 		std::string & _username, 
 		std::string & _password,
 		bool &_may_save )
@@ -135,13 +137,16 @@ bool pysvn_callbacks::contextGetLogin( const std::string & _realm,
 // this method will be called to notify about
 // the progress of an ongoing action
 //
-void pysvn_callbacks::contextNotify (const char *path,
-		svn_wc_notify_action_t action,
-		svn_node_kind_t kind,
-		const char *mime_type,
-		svn_wc_notify_state_t content_state,
-		svn_wc_notify_state_t prop_state,
-		svn_revnum_t revnum )
+void pysvn_context::contextNotify
+	(
+	const char *path,
+	svn_wc_notify_action_t action,
+	svn_node_kind_t kind,
+	const char *mime_type,
+	svn_wc_notify_state_t content_state,
+	svn_wc_notify_state_t prop_state,
+	svn_revnum_t revnum
+	)
 	{
 	PythonDisallowThreads callback_permission( m_permission );
 
@@ -187,7 +192,7 @@ void pysvn_callbacks::contextNotify (const char *path,
 //
 //	Return true to cancel a long running operation
 //
-bool pysvn_callbacks::contextCancel()
+bool pysvn_context::contextCancel()
 	{
 	PythonDisallowThreads callback_permission( m_permission );
 
@@ -222,17 +227,27 @@ bool pysvn_callbacks::contextCancel()
 		}
 	}
 
+void pysvn_context::setLogMessage( const std::string & a_msg )
+	{
+	m_log_message = a_msg;
+	}
+
 //
 // this method will be called to retrieve
 // a log message
 //
-// WORKAROUND FOR apr_xlate PROBLEM: 
-// STRINGS ALREADY HAVE TO BE UTF8!!!
-//
-bool pysvn_callbacks::contextGetLogMessage( std::string & _msg )
+bool pysvn_context::contextGetLogMessage( std::string & a_msg )
 	{
+	if( !m_log_message.empty() )
+		{
+		a_msg = m_log_message;
+		m_log_message.erase();
+
+		return true;
+		}
+
 	PythonDisallowThreads callback_permission( m_permission );
-	
+
 	if( !m_pyfn_GetLogMessage.isCallable() )
 		{
 		m_error_message = "callback_get_log_message required";
@@ -242,7 +257,7 @@ bool pysvn_callbacks::contextGetLogMessage( std::string & _msg )
 	Py::Tuple args( 0 );
 	try
 		{
-		return get_string( m_pyfn_GetLogMessage, args, _msg );
+		return get_string( m_pyfn_GetLogMessage, args, a_msg );
 		}
 	catch( Py::Exception &e )
 		{
@@ -262,10 +277,12 @@ bool pysvn_callbacks::contextGetLogMessage( std::string & _msg )
 // @param data 
 // @return @a SslServerTrustAnswer
 //
-svn::ContextListener::SslServerTrustAnswer pysvn_callbacks::contextSslServerTrustPrompt
+bool pysvn_context::contextSslServerTrustPrompt
 		( 
-		const SslServerTrustData & data, 
-		apr_uint32_t & acceptedFailures
+		const svn_auth_ssl_server_cert_info_t &info, 
+		const std::string &realm,
+		apr_uint32_t &a_accepted_failures,
+		bool &accept_permanent
 		)
 	{
 	PythonDisallowThreads callback_permission( m_permission );
@@ -275,22 +292,22 @@ svn::ContextListener::SslServerTrustAnswer pysvn_callbacks::contextSslServerTrus
 		{
 		m_error_message = "callback_ssl_server_trust_prompt required";
 
-		return DONT_ACCEPT;
+		return false;
 		}
 
 	Py::Callable callback( m_pyfn_SslServerTrustPrompt );
 
-	Py::Dict trust_data;
-	trust_data[Py::String("failures")] = Py::Int( long(data.failures) );
-	trust_data[Py::String("hostname")] = Py::String( data.hostname );
-	trust_data[Py::String("finger_print")] = Py::String( data.fingerprint );
-	trust_data[Py::String("valid_from")] = Py::String( data.validFrom );
-	trust_data[Py::String("valid_until")] = Py::String( data.validUntil );
-	trust_data[Py::String("issuer_dname")] = Py::String( data.issuerDName );
-	trust_data[Py::String("realm")] = Py::String( data.realm );
+	Py::Dict trust_info;
+	trust_info[Py::String("failures")] = Py::Int( long( a_accepted_failures ) );
+	trust_info[Py::String("hostname")] = Py::String( info.hostname );
+	trust_info[Py::String("finger_print")] = Py::String( info.fingerprint );
+	trust_info[Py::String("valid_from")] = Py::String( info.valid_from );
+	trust_info[Py::String("valid_until")] = Py::String( info.valid_until );
+	trust_info[Py::String("issuer_dname")] = Py::String( info.issuer_dname );
+	trust_info[Py::String("realm")] = Py::String( realm );
 
 	Py::Tuple args( 1 );
-	args[0] = trust_data;
+	args[0] = trust_info;
 
 	Py::Tuple result_tuple;
 	Py::Int retcode;
@@ -304,14 +321,14 @@ svn::ContextListener::SslServerTrustAnswer pysvn_callbacks::contextSslServerTrus
 		accepted_failures = result_tuple[1];
 		may_save = result_tuple[2];
 
-		acceptedFailures = long(accepted_failures);
+		a_accepted_failures = long( accepted_failures );
 		if( long( retcode ) != 0 )
-			if( long( may_save ) != 0 )
-				return ACCEPT_PERMANENTLY;
-			else
-				return ACCEPT_TEMPORARILY;
+			{
+			accept_permanent = long( may_save ) != 0;
+			return true;
+			}
 		else
-			return DONT_ACCEPT;
+			return false;
 		}
 	catch( Py::Exception &e )
 		{
@@ -321,15 +338,14 @@ svn::ContextListener::SslServerTrustAnswer pysvn_callbacks::contextSslServerTrus
 		m_error_message = "unhandled exception in callback_ssl_server_trust_prompt";
 		}
 
-	return DONT_ACCEPT;
+	return false;
 	}
-
 
 //
 // this method is called to retrieve client side
 // information
 //
-bool pysvn_callbacks::contextSslClientCertPrompt( std::string & certFile )
+bool pysvn_context::contextSslClientCertPrompt( std::string & certFile )
 	{
 	PythonDisallowThreads callback_permission( m_permission );
 
@@ -362,7 +378,7 @@ bool pysvn_callbacks::contextSslClientCertPrompt( std::string & certFile )
 //
 // @param password
 //
-bool pysvn_callbacks::contextSslClientCertPwPrompt( std::string &_password, 
+bool pysvn_context::contextSslClientCertPwPrompt( std::string &_password, 
 		const std::string &_realm, bool &_may_save )
 	{
 	PythonDisallowThreads callback_permission( m_permission );

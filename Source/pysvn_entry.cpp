@@ -21,27 +21,28 @@
 
 //--------------------------------------------------------------------------------
 
-pysvn_entry::pysvn_entry( const svn::Entry &_svn_entry )
-	: m_svn_entry( _svn_entry )
+pysvn_entry::pysvn_entry( const svn_wc_entry_t *svn_entry, SvnContext &context)
+	: m_pool( context )
+	, m_svn_entry( svn_wc_entry_dup( svn_entry, m_pool ) )
 	{ }
 
 pysvn_entry::~pysvn_entry()
 	{ }
 
-static Py::Object string_or_none( const char *str )
+Py::Object utf8_string_or_none( const char *str )
 	{
 	if( str == NULL )
 		return Py::Nothing();
 	else
-		return Py::String( str );
+		return Py::String( str, "UTF-8" );
 	}
 
-static Py::Object path_string_or_none( const char *str )
+static Py::Object path_string_or_none( const char *str, SvnPool &pool )
 	{
 	if( str == NULL )
 		return Py::Nothing();
 	else
-		return Py::String( osNormalisedPath( str ) );
+		return Py::String( osNormalisedPath( str, pool ), "UTF-8" );
 	}
 
 Py::Object pysvn_entry::getattr( const char *_name )
@@ -85,117 +86,117 @@ Py::Object pysvn_entry::getattr( const char *_name )
 
 	else if( name == "checksum" )
 		{
-		if( m_svn_entry.isValid() )
-			return string_or_none( m_svn_entry.checksum() );
+		if( m_svn_entry != NULL )
+			return utf8_string_or_none( m_svn_entry->checksum );
 		}
 	else if( name == "commit_author" )
 		{
-		if( m_svn_entry.isValid() )
-			return string_or_none( m_svn_entry.cmtAuthor() );
+		if( m_svn_entry != NULL )
+			return utf8_string_or_none( m_svn_entry->cmt_author );
 		}
 	else if( name == "commit_revision" )
 		{
-		if( m_svn_entry.isValid() )
-			return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, m_svn_entry.cmtRev() ) );
+		if( m_svn_entry != NULL )
+			return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, m_svn_entry->cmt_rev ) );
 		}
 	else if( name == "commit_time" )
 		{
-		if( m_svn_entry.isValid() )
-			return toObject( m_svn_entry.cmtDate() );
+		if( m_svn_entry != NULL )
+			return toObject( m_svn_entry->cmt_date );
 		}
 	else if( name == "conflict_new" )
 		{
-		if( m_svn_entry.isValid() )
-			return path_string_or_none( m_svn_entry.conflictNew() );
+		if( m_svn_entry != NULL )
+			return path_string_or_none( m_svn_entry->conflict_new, m_pool );
 		}
 	else if( name == "conflict_old" )
 		{
-		if( m_svn_entry.isValid() )
-			return path_string_or_none( m_svn_entry.conflictOld() );
+		if( m_svn_entry != NULL )
+			return path_string_or_none( m_svn_entry->conflict_old, m_pool );
 		}
 	else if( name == "conflict_work" )
 		{
-		if( m_svn_entry.isValid() )
-			return path_string_or_none( m_svn_entry.conflictWrk() );
+		if( m_svn_entry != NULL )
+			return path_string_or_none( m_svn_entry->conflict_wrk, m_pool );
 		}
 	else if( name == "copy_from_revision" )
 		{
-		if( m_svn_entry.isValid() )
-			return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, m_svn_entry.copyfromRev() ) );
+		if( m_svn_entry != NULL )
+			return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, m_svn_entry->copyfrom_rev ) );
 		}
 	else if( name == "copy_from_url" )
 		{
-		if( m_svn_entry.isValid() )
-			return string_or_none( m_svn_entry.copyfromUrl() );
+		if( m_svn_entry != NULL )
+			return utf8_string_or_none( m_svn_entry->copyfrom_url );
 		}
 	else if( name == "is_absent" )
 		{
-		if( m_svn_entry.isValid() )
-			return Py::Int( m_svn_entry.isAbsent() );
+		if( m_svn_entry != NULL )
+			return Py::Int( m_svn_entry->absent );
 		}
 	else if( name == "is_copied" )
 		{
-		if( m_svn_entry.isValid() )
-			return Py::Int( m_svn_entry.isCopied() );
+		if( m_svn_entry != NULL )
+			return Py::Int( m_svn_entry->copied );
 		}
 	else if( name == "is_deleted" )
 		{
-		if( m_svn_entry.isValid() )
-			return Py::Int( m_svn_entry.isDeleted() );
+		if( m_svn_entry != NULL )
+			return Py::Int( m_svn_entry->deleted );
 		}
 	else if( name == "is_valid" )
 		{
-		return Py::Int( m_svn_entry.isValid() );
+		return Py::Int( m_svn_entry != NULL );
 		}
 	else if( name == "kind" )
 		{
-		if( m_svn_entry.isValid() )
-			return toEnumValue( m_svn_entry.kind() );
+		if( m_svn_entry != NULL )
+			return toEnumValue( m_svn_entry->kind );
 		}
 	else if( name == "name" )
 		{
-		if( m_svn_entry.isValid() )
-			return path_string_or_none( m_svn_entry.name() );
+		if( m_svn_entry != NULL )
+			return path_string_or_none( m_svn_entry->name, m_pool );
 		}
 	else if( name == "properties_time" )
 		{
-		if( m_svn_entry.isValid() )
-			return toObject( m_svn_entry.propTime() );
+		if( m_svn_entry != NULL )
+			return toObject( m_svn_entry->prop_time );
 		}
 	else if( name == "property_reject_file" )
 		{
-		if( m_svn_entry.isValid() )
-			return path_string_or_none( m_svn_entry.prejfile() );
+		if( m_svn_entry != NULL )
+			return path_string_or_none( m_svn_entry->prejfile, m_pool );
 		}
 	else if( name == "repos" )
 		{
-		if( m_svn_entry.isValid() )
-			return string_or_none( m_svn_entry.repos() );
+		if( m_svn_entry != NULL )
+			return utf8_string_or_none( m_svn_entry->repos );
 		}
 	else if( name == "revision" )
 		{
-		if( m_svn_entry.isValid() )
-			return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, m_svn_entry.revision() ) );
+		if( m_svn_entry != NULL )
+			return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, m_svn_entry->revision ) );
 		}
 	else if( name == "schedule" )
 		{
-		if( m_svn_entry.isValid() )
-			return toEnumValue( m_svn_entry.schedule() );
+		if( m_svn_entry != NULL )
+			return toEnumValue( m_svn_entry->schedule );
 		}
 	else if( name == "text_time" )
 		{
-		if( m_svn_entry.isValid() )
-			return toObject( m_svn_entry.textTime() );
+		if( m_svn_entry != NULL )
+			return toObject( m_svn_entry->text_time );
 		}
 	else if( name == "url" )
 		{
-		if( m_svn_entry.isValid() )
-			return string_or_none( m_svn_entry.url() );
+		if( m_svn_entry != NULL )
+			return utf8_string_or_none( m_svn_entry->url );
 		}
 	else if( name == "uuid" )
 		{
-		if( m_svn_entry.isValid() )
-			return string_or_none( m_svn_entry.uuid() );
+		if( m_svn_entry != NULL )
+			return utf8_string_or_none( m_svn_entry->uuid );
 		}
 	else
 		return getattr_methods( _name );

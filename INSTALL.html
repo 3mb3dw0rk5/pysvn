@@ -10,9 +10,8 @@
 
 <p>To build pysvn you will require:</p>
 <ul>
-<li><a href="http://sourceforge.net/project/showfiles.php?group_id=3180">PyCXX V5.2.2</a>
-<li><a href="http://rapidsvn.tigris.org">rapidsvn</a> 0.6.0 for the svncpp library
-<li><a href="http://subversion.tigris.org">subversion</a> 1.0.x</a>
+<li><a href="http://sourceforge.net/project/showfiles.php?group_id=3180">PyCXX V5.3.0</a>
+<li><a href="http://subversion.tigris.org">subversion</a> 1.x.x</a>
 </ul>
 
 <h3>Building on win32</h3>
@@ -23,12 +22,9 @@ and <a href="http://www.jrsoftware.org/">INNO</a> 4.0.10 to create the installat
 built with VC++ 2003.NET released (issues of C runtime compatibility).</p>
 
 <ol>
-<li>build subversion (tested with 1.0.0 to 1.0.5)
-<li>checkout the rapidsvn 0.6.0 sources
-<li>Apply any patches from the Patches directory
-<li>build rapidsvn
+<li>build subversion (tested with 1.0.0 to 1.0.6 and 1.1.0)
 <li>fetch and expand the pysvn source code into <i>extdir</i>
-<li>Expand pycxx_5_2_2.tar.gz into <i>extdir</i>\Import
+<li>Expand pycxx_5_3_0.tar.gz into <i>extdir</i>\Import
 <li>edit Builder\builder_custom_init.cmd to match the locations of the sources.
 <li>cd Builder
 <li>builder_custom_init.cmd
@@ -45,12 +41,9 @@ built with VC++ 2003.NET released (issues of C runtime compatibility).</p>
 <h3>Building on linux systems.</h3>
 
 <ol>
-<li>build subversion (tested with 1.0.0 to 1.0.5)
-<li>checkout the rapidsvn 0.6.0 sources
-<li>Apply any patches from the Patches directory
-<li>build rapidsvn
+<li>build subversion (tested with 1.0.0 to 1.0.6 and 1.1.0)
 <li>get the pysvn source code
-<li>tar xzf pycxx_5_2_2.tar.gz into <i>extdir</i>/Import
+<li>tar xzf pycxx_5_3_0.tar.gz into <i>extdir</i>/Import
 <li>edit Builder/builder_custom_init.sh to match the locations of the sources.
 <li>cd Builder
 <li>. builder_custom_init.sh

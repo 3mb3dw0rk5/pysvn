@@ -28,9 +28,8 @@ bool is_svn_url( const std::string &path_or_url )
 	}
 
 // convert a path to what SVN likes
-std::string svnNormalisedIfPath( const std::string &unnormalised )
+std::string svnNormalisedIfPath( const std::string &unnormalised, SvnPool &pool )
 	{
-	svn::Pool pool;
 	if( is_svn_url( unnormalised ) )
 		return unnormalised;
 
@@ -39,26 +38,9 @@ std::string svnNormalisedIfPath( const std::string &unnormalised )
 	}
 
 // convert a path to what the native OS likes
-std::string osNormalisedPath( const std::string &unnormalised )
+std::string osNormalisedPath( const std::string &unnormalised, SvnPool &pool )
 	{
-	svn::Pool pool;
 	const char *local_path = svn_path_local_style( unnormalised.c_str(), pool );
 
 	return std::string( local_path );
-	}
-
-// true if path exists and is a directory
-bool is_path_dir( const std::string &path )
-	{
-	// is it the svn current dir string?
-	if( path == "" )
-		return true;
-
-	struct stat stat_buf;
-
-	int rc = stat( path.c_str(), &stat_buf );
-	if( rc == 0 && (stat_buf.st_mode & S_IFDIR) != 0 )
-		return true;
-
-	return false;
 	}

@@ -44,10 +44,5 @@ Darwin)
 	;;
 esac
 
-# always build rapidsvn into an unversioned dir
-export SVNCPP_INC=${TARGET}/rapidsvn/include
-export SVNCPP_LIB=${TARGET}/rapidsvn/src/svncpp/.libs
-export LD_LIBRARY_PATH=${SVNCPP_LIB}
-
 # prove the python version selected is as expected
 ${PYTHON} -c "import sys;print 'Info: Python Version',sys.version"

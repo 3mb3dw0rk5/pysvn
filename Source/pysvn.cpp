@@ -209,7 +209,7 @@ void check_arguments( int min_args, int max_args, const Py::Tuple &args,
 //	} // allow d'tor to release the lock
 //
 //--------------------------------------------------------------------------------
-PythonAllowThreads::PythonAllowThreads( pysvn_callbacks &_callbacks )
+PythonAllowThreads::PythonAllowThreads( pysvn_context &_callbacks )
 	: m_callbacks( _callbacks )
 	, m_save( NULL )
 	{

@@ -446,10 +446,11 @@ info( path )
 <p>Return an pysvn Entry object describing the path.</p>
 <h4><a name="pysvn_client_import_"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.import_</a></h4>
 <pre>
+revision = \
 import_( path,
-        url,
-        log_message,
-        recurse=True )
+         url,
+         log_message,
+         recurse=True )
 </pre>
 <p>
 Commit an unversioned file or tree into the repository.
@@ -457,6 +458,7 @@ Commit an unversioned file or tree into the repository.
 <p>Recursively commit a copy of PATH to URL.
 Parent directories are created as necessary in the repository.
 </p>
+<p>import_ returns a pysvn.Revision containing the number of the checked in revision.</p>
 <h4><a name="pysvn_client_info"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.info</a></h4>
 <pre>
 entry = info( path )
@@ -646,7 +648,7 @@ resolved( path,
 
 <h4><a name="pysvn_client_revert"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.revert</a></h4>
 <pre>
-revert( path,
+revert( path_list,
         recurse=False )
 </pre>
 <p>Discard any changes in the working copy at path.

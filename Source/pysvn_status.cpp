@@ -21,8 +21,11 @@
 
 //--------------------------------------------------------------------------------
 
-pysvn_status::pysvn_status( const svn::Status &_svn_status )
-	: m_svn_status( _svn_status )
+pysvn_status::pysvn_status( const char *path, svn_wc_status_t *svn_status, SvnContext &context )
+	: m_context( context )
+	, m_pool( m_context )
+	, m_path( path )
+	, m_svn_status( svn_wc_dup_status( svn_status, m_pool ) )
 	{ }
 
 pysvn_status::~pysvn_status()
@@ -56,43 +59,47 @@ Py::Object pysvn_status::getattr( const char *_name )
 
 	else if( name == "path" )
 		{
-		return Py::String( osNormalisedPath( m_svn_status.path() ) );
+		return Py::String( osNormalisedPath( m_path, m_pool ), "UTF-8" );
 		}
 	else if( name == "entry" )
 		{
-		return Py::asObject( new pysvn_entry( m_svn_status.entry() ) );
+		if( m_svn_status->entry == NULL )
+			return Py::Nothing();
+		else
+			return Py::asObject( new pysvn_entry( m_svn_status->entry, m_context ) );
 		}
 	else if( name == "is_versioned" )
 		{
-		return Py::Int( m_svn_status.isVersioned() );
+		long is_versioned = (long)(m_svn_status->text_status > svn_wc_status_unversioned);
+		return Py::Int( is_versioned );
 		}
 	else if( name == "is_locked" )
 		{
-		return Py::Int( m_svn_status.isLocked() );
+		return Py::Int( m_svn_status->locked );
 		}
 	else if( name == "is_copied" )
 		{
-		return Py::Int( m_svn_status.isCopied() );
+		return Py::Int( m_svn_status->copied );
 		}
 	else if( name == "is_switched" )
 		{
-		return Py::Int( m_svn_status.isSwitched() );
+		return Py::Int( m_svn_status->switched );
 		}
 	else if( name == "prop_status" )
 		{
-		return toEnumValue( m_svn_status.propStatus() );
+		return toEnumValue( m_svn_status->prop_status );
 		}
 	else if( name == "text_status" )
 		{
-		return toEnumValue( m_svn_status.textStatus() );
+		return toEnumValue( m_svn_status->text_status );
 		}
 	else if( name == "repos_prop_status" )
 		{
-		return toEnumValue( m_svn_status.reposPropStatus() );
+		return toEnumValue( m_svn_status->repos_prop_status );
 		}
 	else if( name == "repos_text_status" )
 		{
-		return toEnumValue( m_svn_status.reposTextStatus() );
+		return toEnumValue( m_svn_status->repos_text_status );
 		}
 	else
 		return getattr_methods( _name );

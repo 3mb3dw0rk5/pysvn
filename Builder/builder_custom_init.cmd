@@ -13,18 +13,19 @@ rem Save CWD
 pushd .
 
 rem in development the version info can be found
-rem otherwise the builder will have run its aleady
+rem otherwise the builder will have run it already
 if exist ..\..\ReleaseEngineering\win32\software-versions.cmd call ..\..\ReleaseEngineering\win32\software-versions.cmd
 
-set PYCXX=%WORKDIR%\Import\pycxx_%PYCXX_VER%
+rem set PYCXX=%WORKDIR%\Import\pycxx_%PYCXX_VER%
+set PYCXX=L:\wc\PyCXX\CXX
 set OPENSSL=%BUILDROOT_DIR%\win32-%SVN_VER%\openssl-%OPENSSL_VER%
 set SUBVERSION=%BUILDROOT_DIR%\win32-%SVN_VER%\subversion-%SVN_VER%
-set RAPIDSVN=%BUILDROOT_DIR%\win32-%SVN_VER%\rapidsvn-%RAPIDSVN_VER%
+set APR=%BUILDROOT_DIR%\win32-%SVN_VER%\httpd-%HTTPD_VER%\srclib
 set PY=c:\python%PY_MAJ%%PY_MIN%
 set PYLIB=python%PY_MAJ%%PY_MIN%
 
 rem Need python and DB4 on the path
-PATH %PY%;%SUBVERSION%\db4-win32\bin;%SUBVERSION%\Release\subversion\svnadmin;%PATH%
+PATH %PY%;%SUBVERSION%\db4-win32\bin;%SUBVERSION%\Release\subversion\svnadmin;%APR%\apr\Release;%APR%\apr-util\Release;%APR%\apr-iconv\Release;%PATH%
 
 rem prove the python version selected
 python -c "import sys;print 'Info: Python Version',sys.version"

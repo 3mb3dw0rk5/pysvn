@@ -12,15 +12,7 @@
 #include "CXX/Extensions.hxx"
 #include <iostream>
 
-// svncpp includes
-#include "svncpp/client.hpp"
-#include "svncpp/dirent.hpp"
-#include "svncpp/exception.hpp"
-#include "svncpp/revision.hpp"
-#include "svncpp/status.hpp"
-#include "svncpp/context.hpp"
-#include "svncpp/context_listener.hpp"
-#include "svncpp/property.hpp"
+#include "pysvn_svnenv.hpp"
 
 #include <string>
 #include <list>
@@ -44,11 +36,11 @@ public:// variables
 //--------------------------------------------------------------------------------
 class PythonAllowThreads;
 
-class pysvn_callbacks : public svn::ContextListener
+class pysvn_context : public SvnContext
 	{
 public:
-	pysvn_callbacks();
-	virtual ~pysvn_callbacks();
+	pysvn_context( const std::string &config_dir );
+	virtual ~pysvn_context();
 
 	// return true if the callbacks are being used on some thread
 	bool hasPermission();
@@ -73,33 +65,36 @@ public:	// data
 	Py::Object m_pyfn_SslClientCertPrompt;
 	Py::Object m_pyfn_SslClientCertPwPrompt;
 
+	void setLogMessage( const std::string &message );
+
 private:// methods
 
 	//
 	// this method will be called to retrieve
 	// authentication information
 	//
-	// WORKAROUND FOR apr_xlate PROBLEM: 
-	// STRINGS ALREADY HAVE TO BE UTF8!!!
-	//
-	// @retval true continue
-	//
-	bool contextGetLogin (const std::string & realm,
-                     std::string & username, 
-                     std::string & password,
-		     bool &may_save);
+	bool contextGetLogin 
+		(
+		const std::string & realm,
+		std::string & username, 
+		std::string & password,
+		bool &may_save
+		);
 
 	// 
 	// this method will be called to notify about
 	// the progress of an ongoing action
 	//
-	void contextNotify (const char *path,
-		       svn_wc_notify_action_t action,
-		       svn_node_kind_t kind,
-		       const char *mime_type,
-		       svn_wc_notify_state_t content_state,
-		       svn_wc_notify_state_t prop_state,
-		       svn_revnum_t revision);
+	void contextNotify
+		(
+		const char *path,
+		svn_wc_notify_action_t action,
+		svn_node_kind_t kind,
+		const char *mime_type,
+		svn_wc_notify_state_t content_state,
+		svn_wc_notify_state_t prop_state,
+		svn_revnum_t revision
+		);
 
 	//
 	// this method will be called periodically to allow
@@ -114,9 +109,6 @@ private:// methods
 	// this method will be called to retrieve
 	// a log message
 	//
-	// WORKAROUND FOR apr_xlate PROBLEM: 
-	// STRINGS ALREADY HAVE TO BE UTF8!!!
-	//
 	bool contextGetLogMessage( std::string & msg );
 
 	//
@@ -126,11 +118,13 @@ private:// methods
 	// @param data 
 	// @return @a SslServerTrustAnswer
 	//
-	SslServerTrustAnswer
-	contextSslServerTrustPrompt(
-		const SslServerTrustData & data, 
-		apr_uint32_t & acceptedFailures );
-
+	bool contextSslServerTrustPrompt
+		(
+		const svn_auth_ssl_server_cert_info_t &info, 
+		const std::string &realm,
+		apr_uint32_t &a_accepted_failures,
+		bool &accept_permanent
+		);
 	//
 	// this method is called to retrieve client side
 	// information
@@ -143,13 +137,18 @@ private:// methods
 	//
 	// @param password
 	//
-	bool contextSslClientCertPwPrompt( std::string & password,
-		const std::string &realm, bool &may_save );
+	bool contextSslClientCertPwPrompt
+		(
+		std::string & password,
+		const std::string &realm,
+		bool &may_save
+		);
 
 private:// vaiables
 
 	PythonAllowThreads	*m_permission;
 	std::string		m_error_message;
+	std::string		m_log_message;
 	};
 
 class pysvn_client : public Py::PythonExtension<pysvn_client>
@@ -204,32 +203,8 @@ public:
 	// check that we are not in use on another thread
 	void checkThreadPermission();
 private:
-	pysvn_module &m_module;
-	pysvn_callbacks m_client_callbacks;
-	svn::Context m_svn_context;
-	svn::Client m_svn_client;
-	};
-
-class pysvn_properties : public Py::PythonExtension<pysvn_properties>
-	{
-public:
-	pysvn_properties();
-	virtual ~pysvn_properties();
-
-	// override functions from PythonExtension
-	static void init_type( void );
-
-	// support mapping type
-	Py::Object has_key( const Py::Tuple &args );
-	Py::Object keys( const Py::Tuple &args );
-	Py::Object items( const Py::Tuple &args );
-
-	virtual int mapping_length();
-	virtual Py::Object mapping_subscript( const Py::Object & );
-	virtual int mapping_ass_subscript( const Py::Object &, const Py::Object & );
-
-private:
-	svn::Property m_svn_properties;
+	pysvn_module	&m_module;
+	pysvn_context	m_context;
 	};
 
 class pysvn_revision : public Py::PythonExtension<pysvn_revision>
@@ -254,7 +229,7 @@ private:
 class pysvn_status : public Py::PythonExtension<pysvn_status>
 	{
 public:
-	pysvn_status( const svn::Status &svn_status );
+	pysvn_status( const char *path, svn_wc_status_t *svn_status, SvnContext &context );
 
 	virtual ~pysvn_status();
 
@@ -262,15 +237,16 @@ public:
 
 	static void init_type(void);
 private:
-	const svn::Status m_svn_status;
+	SvnContext		&m_context;
+	SvnPool			m_pool;
+	std::string		m_path;
+	const svn_wc_status_t	*m_svn_status;
 	};
-
-
 
 class pysvn_entry : public Py::PythonExtension<pysvn_entry>
 	{
 public:
-	pysvn_entry( const svn::Entry &svn_entry );
+	pysvn_entry( const svn_wc_entry_t *svn_entry, SvnContext &context );
 
 	virtual ~pysvn_entry();
 
@@ -278,9 +254,9 @@ public:
 
 	static void init_type(void);
 private:
-	const svn::Entry m_svn_entry;
+	SvnPool m_pool;
+	const svn_wc_entry_t *m_svn_entry;
 	};
-
 
 // help functions to check the arguments pass and throw AttributeError
 void check_arguments( int min_args, int max_args, const Py::Tuple &args );
@@ -499,10 +475,10 @@ extern bool is_path_dir( const std::string &path );
 extern bool is_svn_url( const std::string &path_or_url );
 
 // convert a path to what SVN likes only if its not a URL
-extern std::string svnNormalisedIfPath( const std::string &unnormalised );
+extern std::string svnNormalisedIfPath( const std::string &unnormalised, SvnPool &pool );
 
 // convert a path to what the native OS likes
-extern std::string osNormalisedPath( const std::string &unnormalised );
+extern std::string osNormalisedPath( const std::string &unnormalised, SvnPool &pool );
 
 // need a type to convert from apr_time_t to signed_int64 to double
 #if defined(_MSC_VER)
@@ -538,14 +514,14 @@ class PythonAllowThreads
 	{
 public:
 	// calls allowOtherThreads()
-	PythonAllowThreads( pysvn_callbacks &_callbacks );
+	PythonAllowThreads( pysvn_context &_context );
 	// calls allowThisThread() if necessary
 	~PythonAllowThreads();
 
 	void allowOtherThreads();
 	void allowThisThread();
 private:
-	pysvn_callbacks			&m_callbacks;
+	pysvn_context			&m_callbacks;
 	PyThreadState			*m_save;
 	};
 
