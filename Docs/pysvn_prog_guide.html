@@ -41,7 +41,7 @@ Subversion.</P>
 <P STYLE="margin-bottom: 0cm"><BR>
 </P>
 <P STYLE="margin-bottom: 0cm">Using the API, you can check out a
-working copy, add, edit, and remove working files, and commit,
+working copy, add, edit, and remove working files, and check in,
 compare, or discard your changes.  Repository properties such as
 keyword expansion, end of line characters, and ignore lists can also
 be examined and manipulated.</P>
@@ -86,9 +86,9 @@ f.close()
 client = pysvn.Client()
 #schedule the addition; 
 #  the working copy will now track the file as a scheduled change
-client.add('~/examples/pysvn/foo.txt')
+client.add('./examples/pysvn/foo.txt')
 #committing the change actually adds the file to the repository
-client.commit(['~/examples/pysvn/foo.txt'], 'Adding a sample file')</PRE><P STYLE="margin-bottom: 0cm">
+client.checkin(['./examples/pysvn/foo.txt'], 'Adding a sample file')</PRE><P STYLE="margin-bottom: 0cm">
 <BR>
 </P>
 <P STYLE="margin-bottom: 0cm"><BR>
@@ -102,7 +102,7 @@ multiple changes and commit them together at a later time.</P>
 </H3>
 <PRE CLASS="code">import pysvn
 client = pysvn.Client()
-client.update('~/examples/pysvn')</PRE><P STYLE="margin-bottom: 0cm">
+client.update('./examples/pysvn')</PRE><P STYLE="margin-bottom: 0cm">
 <BR>
 </P>
 <P STYLE="margin-bottom: 0cm">Updating gets any changes other users
@@ -112,12 +112,12 @@ conflicts.</P>
 <H3 CLASS="western">Commit changes to the repository</H3>
 <PRE CLASS="code">import pysvn
 # edit the file foo.txt
-f = open('~/examples/pysvn/foo.txt', 'w')
+f = open('./examples/pysvn/foo.txt', 'w')
 f.write('Sample versioned file via python\n')
 f.close()
-#committing the change with a log message
+# checkin the change with a log message
 client = pysvn.Client()
-client.commit(['~/examples/pysvn'], 'Corrected spelling of python in foo.txt')</PRE><P STYLE="margin-bottom: 0cm">
+client.checkin(['./examples/pysvn'], 'Corrected spelling of python in foo.txt')</PRE><P STYLE="margin-bottom: 0cm">
 <BR>
 </P>
 <P STYLE="margin-bottom: 0cm">Commits in Subversion are atomic. 
@@ -128,12 +128,12 @@ directories that need to be committed as a unit.</P>
 <H3 CLASS="western">Discard changes in the working copy</H3>
 <PRE CLASS="code">import pysvn
 # edit the file foo.txt
-f = open('~/examples/pysvn/foo.txt', 'w')
+f = open('./examples/pysvn/foo.txt', 'w')
 f.write('This change will never be seen\n')
 f.close()
 #discard the edits
 client = pysvn.Client()
-client.revert('~/examples/pysvn/foo.txt')</PRE><P STYLE="margin-bottom: 0cm">
+client.revert('./examples/pysvn/foo.txt')</PRE><P STYLE="margin-bottom: 0cm">
 <BR>
 </P>
 <P STYLE="margin-bottom: 0cm">This discards any uncommitted changes
@@ -146,17 +146,17 @@ respectively.</P>
 <PRE CLASS="code">import pysvn
 client = pysvn.Client()
 #rename the file client side 
-client.move('~/examples/pysvn/foo.txt', '~/examples/pysvn/foo2.txt')
-#committing the change removes the file from the repository
-client.commit(['~/examples/pysvn/foo.txt', '~/examples/pysvn/foo2.txt'], 'Foo has become Foo2')
+client.move('./examples/pysvn/foo.txt', './examples/pysvn/foo2.txt')
+#checkin the change removes the file from the repository
+client.checkin(['./examples/pysvn/foo.txt', './examples/pysvn/foo2.txt'], 'Foo has become Foo2')
 </PRE><P STYLE="margin-bottom: 0cm">
 Moving or renaming a file removes the file under the old path or name
 and adds it in the new location while preserving information about
 previous versions.</P>
 <P STYLE="margin-bottom: 0cm">In this example, we passed both
-filenames to <CODE>Client.commit()</CODE>.  Passing the parent
+filenames to <CODE>Client.checkin()</CODE>.  Passing the parent
 directory would also have been effective.</P>
-<P STYLE="margin-bottom: 0cm">The move and commit can be done in a
+<P STYLE="margin-bottom: 0cm">The move and checkin can be done in a
 single step on the server side; see the example in the Respository
 Tasks section.</P>
 <H3 CLASS="western">Remove a file or directory from the repository</H3>
@@ -164,9 +164,9 @@ Tasks section.</P>
 client = pysvn.Client()
 #schedule the removal; 
 #  the file will be removed from the working copy
-client.remove('~/examples/pysvn/foo2.txt')
+client.remove('./examples/pysvn/foo2.txt')
 #committing the change removes the file from the repository
-client.commit(['~/examples/pysvn/foo2.txt'], 'Removing sample file')</PRE><P STYLE="margin-bottom: 0cm">
+client.checkin(['./examples/pysvn/foo2.txt'], 'Removing sample file')</PRE><P STYLE="margin-bottom: 0cm">
 <BR>
 </P>
 <P STYLE="margin-bottom: 0cm">Some people confuse removing a file or
@@ -179,7 +179,7 @@ working copy until the removal is committed.</P>
 <H3 CLASS="western">Determine pending changes</H3>
 <PRE CLASS="code">import pysvn
 client = pysvn.Client()
-changes = client.status('~/examples/pysvn')
+changes = client.status('./examples/pysvn')
 print 'files to be added:'
 print [f.path for f in changes if f.text_status == pysvn.wc_status_kind.added]
 print 'files to be removed:'

@@ -264,9 +264,9 @@ True if subversion is to use the username and password.
 <td><a href="#pysvn_client_add">add</a></td>
 <td><a href="#pysvn_client_annotate">annotate</a></td>
 <td><a href="#pysvn_client_cat">cat</a></td>
+<td><a href="#pysvn_client_checkin">checkin</a></td>
 <td><a href="#pysvn_client_checkout">checkout</a></td>
 <td><a href="#pysvn_client_cleanup">cleanup</a></td>
-<td><a href="#pysvn_client_commit">commit</a></td>
 <td><a href="#pysvn_client_copy">copy</a></td>
 </tr>
 <tr>
@@ -315,7 +315,7 @@ add( [path,path],
 <p>
      Schedules all the files or directories specfied in the paths for addition to the repository.
      Set recurse to True to recursively add a directory's children.
-     Files are added at the next commit.
+     Files are added at the next checkin.
 </p>
 <h4><a name="pysvn_client_annotate"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.annotate</a></h4>
 <pre>
@@ -365,7 +365,7 @@ cleanup( path )
 <p>
 Clean up any locks in the working copy at path.  Usually such locks are the result of a failed or interrupted operation.
 </p>
-<h4><a name="pysvn_client_commit"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.commit</a></h4>
+<h4><a name="pysvn_client_checkin"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.checkin</a></h4>
 <pre>
 revision = \
 checkin( path_list,
