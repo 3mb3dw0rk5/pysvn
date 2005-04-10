@@ -34,6 +34,7 @@ gives an tutorial introduction to the pysvn module.
 
 <ul>
 <li><a href="#pysvn_client">Client</a> - the subversion client interface
+<li><a href="#pysvn_transaction">Transaction</a> - the subversion transaction interface
 <li><a href="#pysvn_revision">Revision</a> - subversion revision objects
 <li><a href="#pysvn_clienterror">ClientError</a> - Exception class raised by client commands on error
 <li><a href="#pysvn_status">Status</a> - subversion status object
@@ -817,6 +818,137 @@ Set recurse to True to recursively update a directory's children.</p>
 Note that updating to an older revision does not change the 
 current revision.  To make the current version identical to an older revision, 
 use a merge followed by a commit.</p>
+
+
+<h2><a name="pysvn_transaction"><a href="#pysvn">pysvn</a>.Transaction - Subversion transaction interface</a></h2>
+
+<p>Interface summary:</p>
+
+<pre>
+transaction = pysvn.Transaction()
+transaction = pysvn.Transaction( repos_path, transaction_name )
+</pre>
+
+<p>The Transaction object allows you to implement hook code for the SVN repository.
+The pre-commit and pre-revprop-change hooks are the only hooks that are currently appropiate in SVN.
+See the SVN documentation for details on hook scripts.</p>
+
+<p>A Transaction object can only be used on one thread at a time. If two threads attempt to call methods of
+Transaction at the same time one of the threads will get a pysvn.TransactionError exception with the value
+ 'transaction in use on another thread'.</p>
+
+<h3><a name="pysvn_transaction_methods">Transaction methods</a></h3>
+
+<table border="0" cellspacing="0" cellpadding="5">
+<tr bgcolor="#e0e0e0">
+
+<td><a href="#pysvn_transaction_cat">cat</a></td>
+<td><a href="#pysvn_transaction_changed">changed</a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr bgcolor="#e0e0e0">
+<td><a href="#pysvn_transaction_propdel">propdel</a></td>
+<td><a href="#pysvn_transaction_propget">propget</a></td>
+<td><a href="#pysvn_transaction_proplist">proplist</a></td>
+<td><a href="#pysvn_transaction_propset">propset</a></td>
+</tr>
+
+<tr bgcolor="#e0e0e0">
+<td><a href="#pysvn_transaction_revpropdel">revpropdel</a></td>
+<td><a href="#pysvn_transaction_revpropget">revpropget</a></td>
+<td><a href="#pysvn_transaction_revproplist">revproplist</a></td>
+<td><a href="#pysvn_transaction_revpropset">revpropset</a></td>
+</tr>
+</table>
+
+<h4><a name="pysvn_transaction_cat"><a href="#pysvn">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.cat</a></h4>
+<pre>
+file_text = \
+cat( path )
+</pre>
+<p>
+Return the contents of path as a string, file_text.
+</p>
+
+<h4><a name="pysvn_transaction_changed"><a href="#pysvn">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.changed</a></h4>
+<pre>
+file_text = \
+changed()
+</pre>
+<p>
+Return a dict of all changes in the transaction.
+The keys in the dict are the path names and the values are tuples contraining
+action, kind, text_mod, prop_mod.</p>
+<ul>
+<li>action - string - a single letter indicating the action 'A' for add, 'M' for modify, 'D' for delete
+<li>kind - node_kind - one of the pysvn.node_kind values
+<li>text_mod - int - is != 0 if the text in this path has been modified
+<li>prop_mod - int - is != 0 if the properties in this path have been modified
+</ul>
+</p>
+
+<h4><a name="pysvn_transaction_propdel"><a href="#pysvn">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.propdel</a></h4>
+<pre>
+propdel( prop_name,
+         path )
+</pre>
+<p>Delete the property prop_name from path in the transaction.</p>
+
+<h4><a name="pysvn_transaction_propget"><a href="#pysvn">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.propget</a></h4>
+<pre>
+prop_value = \
+propget( prop_name,
+         path )
+</pre>
+<p>Returns the prop_value as a string or None if the prop_name is not in the transaction.</p>
+
+<h4><a name="pysvn_transaction_proplist"><a href="#pysvn">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.proplist</a></h4>
+<pre>
+prop_dict = \
+proplist( path )
+</pre>
+<p>Returns a prop_dict. 
+The prop_dict contains the prop_names and their values if set on the path in the transaction.</p>
+
+<h4><a name="pysvn_transaction_propset"><a href="#pysvn">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.propset</a></h4>
+<pre>
+propset( prop_name,
+         prop_value,
+         path )
+</pre>
+<p>Set the property prop_name to prop_value in path in the transaction.</p>
+
+<h4><a name="pysvn_transaction_revpropdel"><a href="#pysvn">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.revpropdel</a></h4>
+<pre>
+revpropdel( prop_name )
+</pre>
+<p>Delete the revision property prop_name in the transaction.</p>
+
+<h4><a name="pysvn_transaction_revpropget"><a href="#pysvn">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.revpropget</a></h4>
+<pre>
+prop_val = \
+revpropget( prop_name )
+</pre>
+<p>Returns the prop_val with the revision property value or None if not set in the transaction.</p>
+
+<h4><a name="pysvn_transaction_revproplist"><a href="#pysvn">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.revproplist</a></h4>
+<pre>
+prop_dict = \
+revproplist()
+</pre>
+<p>Returns a prop_dict where the prop_dict contains the revision properies and their values in the transaction.</p>
+
+
+<h4><a name="pysvn_transaction_revpropset"><a href="#pysvn">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.revpropset</a></h4>
+<pre>
+rev = \
+revpropset( prop_name,
+            prop_value )
+</pre>
+<p>set the revision property prop_name to prop_value in path in the transaction. The revision updated is returned.</p>
+
 
 <h2><a href="#pysvn">pysvn</a>.<a name="pysvn_revision">Revision - subversion revision</a></h2>
 

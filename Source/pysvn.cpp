@@ -114,7 +114,7 @@ Py::Object pysvn_module::new_client( const Py::Tuple &a_args, const Py::Dict &a_
 }
 
 static const char name_repos_path[] = "repos_path";
-static const char name_transaction[] = "transaction";
+static const char name_transaction_name[] = "transaction_name";
 
 
 Py::Object pysvn_module::new_transaction( const Py::Tuple &a_args, const Py::Dict &a_kws )
@@ -122,7 +122,7 @@ Py::Object pysvn_module::new_transaction( const Py::Tuple &a_args, const Py::Dic
     static argument_description args_desc[] =
     {
     { true, name_repos_path },
-    { true, name_transaction },
+    { true, name_transaction_name },
     { false, NULL }
     };
 
@@ -130,7 +130,7 @@ Py::Object pysvn_module::new_transaction( const Py::Tuple &a_args, const Py::Dic
     args.check();
 
     std::string repos_path = args.getUtf8String( name_repos_path );
-    std::string transaction_name = args.getUtf8String( name_transaction );
+    std::string transaction_name = args.getUtf8String( name_transaction_name );
 
     return Py::asObject( new pysvn_transaction( *this, repos_path, transaction_name ) );
 }
