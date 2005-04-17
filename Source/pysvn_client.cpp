@@ -996,6 +996,7 @@ Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kw
     catch( SvnException &e )
     {
         throw_client_error( e );
+        return Py::Nothing();       // needed to remove warning about return value missing
     }
 }
 #endif
