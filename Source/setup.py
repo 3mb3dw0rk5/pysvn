@@ -121,6 +121,7 @@ makefile_template_macosx = '''#
 PYTHON=%(python_exe)s
 CCC=g++ -c
 CCCFLAGS=-Wno-long-double -fPIC -fexceptions -frtti %(includes)s
+PYCXX=%(pycxx_dir)s
 LDSHARED=g++ -bundle -g -u _PyMac_Error -framework System -framework Python
 LDLIBS= \
 %(svn_lib_dir)s/libsvn_client-1.a \
