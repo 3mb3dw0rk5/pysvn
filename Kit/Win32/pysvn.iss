@@ -65,6 +65,7 @@ Source: "..\..\..\Examples\Client\parse_datetime.py"; DestDir: "{app}\Examples\C
 
 Source: "libapr.dll"; DestDir: "{app}"
 Source: "libaprutil.dll"; DestDir: "{app}"
+Source: "libapriconv.dll"; DestDir: "{app}"
 
 Source: "libdb42.dll"; DestDir: "{app}"
 
