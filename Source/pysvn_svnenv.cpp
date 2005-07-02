@@ -151,10 +151,17 @@ SvnContext::SvnContext( const std::string &config_dir_str )
     m_context.auth_baton = auth_baton;
     m_context.log_msg_func = handlerLogMsg;
     m_context.log_msg_baton = this;
-    m_context.notify_func = handlerNotify;
-    m_context.notify_baton = this;
     m_context.cancel_func = handlerCancel;
     m_context.cancel_baton = this;
+#ifdef PYSVN_HAS_CONTEXT_NOTIFY2
+    m_context.notify_func2 = handlerNotify2;
+    m_context.notify_baton2 = this;
+    m_context.notify_func = NULL;
+    m_context.notify_baton = NULL;
+#else
+    m_context.notify_func = handlerNotify;
+    m_context.notify_baton = this;
+#endif
 }
 
 SvnContext::~SvnContext()
@@ -175,7 +182,6 @@ svn_client_ctx_t *SvnContext::ctx()
 {
     return &m_context;
 }
-
 
 svn_error_t *SvnContext::handlerLogMsg
     (
@@ -199,6 +205,19 @@ svn_error_t *SvnContext::handlerLogMsg
     return SVN_NO_ERROR;
 }
 
+#ifdef PYSVN_HAS_CONTEXT_NOTIFY2
+void SvnContext::handlerNotify2
+    (
+    void *baton,
+    const svn_wc_notify_t *notify,
+    apr_pool_t *pool
+    )
+{
+    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+
+    context->contextNotify2( notify, pool );
+}
+#else
 void SvnContext::handlerNotify
     (
     void * baton,
@@ -215,6 +234,7 @@ void SvnContext::handlerNotify
 
     context->contextNotify( path, action, kind, mime_type, content_state, prop_state, revision );
 }
+#endif
 
 svn_error_t *SvnContext::handlerCancel
     (

@@ -119,9 +119,14 @@ Create an unversioned copy of a tree.\n\
 2. Exports a clean directory tree from the working copy specified by\n\
    src_path into dest_path.  All local changes will be preserved, but files\n\
    not under revision control will not be copied."
+
 #define SVN_INFO_DOC \
 "entry = info( path )\n\
 return info on path"
+
+#define SVN_INFO2_DOC \
+"entry_list = info2( path_or_url )\n\
+return info on path_or_url"
 
 #define SVN_IMPORT_DOC \
 "import_( path,\n\

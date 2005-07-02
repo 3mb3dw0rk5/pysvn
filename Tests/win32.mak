@@ -1,4 +1,4 @@
-all: test-04.win32.new.log test-01.win32.new.log test-03.win32.new.log
+all: test-01.win32.new.log test-03.win32.new.log test-04.win32.new.log
 
 clean:
 	if exist test-01.win32.new.log del test-01.win32.new.log

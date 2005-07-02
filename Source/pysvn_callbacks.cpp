@@ -1,6 +1,6 @@
 //
 // ====================================================================
-// Copyright (c) 2003-2004 Barry A Scott.  All rights reserved.
+// Copyright (c) 2003-2005 Barry A Scott.  All rights reserved.
 //
 // This software is licensed as described in the file LICENSE.txt,
 // which you should have received as part of this distribution.
@@ -142,6 +142,52 @@ bool pysvn_context::contextGetLogin
 // this method will be called to notify about
 // the progress of an ongoing action
 //
+
+#ifdef PYSVN_HAS_CONTEXT_NOTIFY2
+void pysvn_context::contextNotify2
+    (
+    const svn_wc_notify_t *notify,
+    apr_pool_t *pool
+    )
+{
+    PythonDisallowThreads callback_permission( m_permission );
+
+    // make sure we can call the users object
+    if( !m_pyfn_Notify.isCallable() )
+        return;
+
+    Py::Callable callback( m_pyfn_Notify );
+
+    Py::Tuple args( 1 );
+    Py::Dict info;
+    args[0] = info;
+
+    info["path"] = Py::String( notify->path );
+    info["action"] = toEnumValue( notify->action );
+    info["kind"] = toEnumValue( notify->kind );
+    if( notify->mime_type == NULL )
+        info["mime_type"] = Py::Nothing();
+    else
+        info["mime_type"] = Py::String( notify->mime_type );
+    info["content_state"] = toEnumValue( notify->content_state );
+    info["prop_state"] = toEnumValue( notify->prop_state );
+    info["revision"] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, notify->revision ) );
+
+    Py::Object results;
+
+    try
+    {
+        results = callback.apply( args );
+    }
+    catch( Py::Exception &e )
+    {
+        PyErr_Print();
+        e.clear();
+
+        m_error_message = "unhandled exception in callback_notify";
+    }
+}
+#else
 void pysvn_context::contextNotify
     (
     const char *path,
@@ -176,9 +222,6 @@ void pysvn_context::contextNotify
     info["prop_state"] = toEnumValue( prop_state );
     info["revision"] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, revnum ) );
 
-    Py::Int( revision );
-
-    // bool, username, password
     Py::Object results;
 
     try
@@ -193,6 +236,7 @@ void pysvn_context::contextNotify
         m_error_message = "unhandled exception in callback_notify";
     }
 }
+#endif
 
 //
 //    Return true to cancel a long running operation

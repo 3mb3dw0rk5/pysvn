@@ -18,24 +18,6 @@
 #include <list>
 #include <map>
 
-
-#if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 1) || SVN_VER_MAJOR > 1
-#define PYSVN_HAS_CLIENT_ADD2
-#define PYSVN_HAS_CLIENT_EXPORT2
-#endif
-
-#if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 2) || SVN_VER_MAJOR > 1
-#define PYSVN_HAS_CLIENT_INFO
-#endif
-
-#ifndef PYCXX_MAKEVERSION
-#error PyCXX version 5.3.3 is required
-#endif
-
-#if PYCXX_VERSION < PYCXX_MAKEVERSION( 5, 3, 3 )
-#error PyCXX version 5.3.3 is required
-#endif
-
 //--------------------------------------------------------------------------------
 class pysvn_module : public Py::ExtensionModule<pysvn_module>
 {
@@ -104,6 +86,13 @@ private:// methods
     // this method will be called to notify about
     // the progress of an ongoing action
     //
+#ifdef PYSVN_HAS_CONTEXT_NOTIFY2
+    void contextNotify2
+        (
+        const svn_wc_notify_t *notify,
+        apr_pool_t *pool
+        );
+#else
     void contextNotify
         (
         const char *path,
@@ -114,6 +103,7 @@ private:// methods
         svn_wc_notify_state_t prop_state,
         svn_revnum_t revision
         );
+#endif
 
     //
     // this method will be called periodically to allow
@@ -192,8 +182,14 @@ public:
     Py::Object cmd_diff( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_export( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_info( const Py::Tuple& args, const Py::Dict &kws );
+#ifdef PYSVN_HAS_CLIENT_INFO
+    Py::Object cmd_info2( const Py::Tuple& args, const Py::Dict &kws );
+#endif
     Py::Object cmd_import( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_log( const Py::Tuple& args, const Py::Dict &kws );
+#ifdef PYSVN_HAS_CLIENT_LOCK
+    Py::Object cmd_lock( const Py::Tuple& args, const Py::Dict &kws );
+#endif
     Py::Object cmd_ls( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_merge( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_mkdir( const Py::Tuple& args, const Py::Dict &kws );
@@ -212,6 +208,9 @@ public:
     Py::Object cmd_revpropset( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_status( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_switch( const Py::Tuple& args, const Py::Dict &kws );
+#ifdef PYSVN_HAS_CLIENT_UNLOCK
+    Py::Object cmd_unlock( const Py::Tuple& args, const Py::Dict &kws );
+#endif
     Py::Object cmd_update( const Py::Tuple& args, const Py::Dict &kws );
 
     // SVN commands

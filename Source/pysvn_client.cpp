@@ -37,6 +37,7 @@ static const char name_callback_ssl_client_cert_prompt[] = "callback_ssl_client_
 static const char name_callback_ssl_server_prompt[] = "callback_ssl_server_prompt";
 static const char name_callback_ssl_server_trust_prompt[] = "callback_ssl_server_trust_prompt";
 static const char name_changed_paths[] = "changed_paths";
+static const char name_comment[] = "comment";
 static const char name_copyfrom_path[] = "copyfrom_path";
 static const char name_copyfrom_revision[] = "copyfrom_revision";
 static const char name_created_rev[] = "created_rev";
@@ -56,6 +57,7 @@ static const char name_ignore[] = "ignore";
 static const char name_ignore_ancestry[] = "ignore_ancestry";
 static const char name_kind[] = "kind";
 static const char name_last_author[] = "last_author";
+static const char name_lock[] = "lock";
 static const char name_line[] = "line";
 static const char name_local_path[] = "local_path";
 static const char name_log_message[] = "log_message";
@@ -80,6 +82,7 @@ static const char name_strict_node_history[] = "strict_node_history";
 static const char name_time[] = "time";
 static const char name_tmp_path[] = "tmp_path";
 static const char name_to_url[] = "to_url";
+static const char name_unlock[] = "unlock";
 static const char name_update[] = "update";
 static const char name_url[] = "url";
 static const char name_url_or_path[] = "url_or_path";
@@ -902,7 +905,7 @@ static svn_error_t *info_receiver(void *baton, const char *path, const svn_info_
 }
 }
 
-Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kws )
+Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
     static argument_description args_desc[] =
     {
@@ -912,7 +915,7 @@ Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kw
     { false, name_recurse },
     { false, NULL }
     };
-    FunctionArguments args( "info", args_desc, a_args, a_kws );
+    FunctionArguments args( "info2", args_desc, a_args, a_kws );
     args.check();
 
     std::string path( args.getUtf8String( name_url_or_path ) );
@@ -953,9 +956,11 @@ Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kw
     catch( SvnException &e )
     {
         throw_client_error( e );
+        return Py::Nothing();       // needed to remove warning about return value missing
     }
 }
-#else
+#endif
+
 Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
     static argument_description args_desc[] =
@@ -999,7 +1004,6 @@ Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kw
         return Py::Nothing();       // needed to remove warning about return value missing
     }
 }
-#endif
 
 Py::Object pysvn_client::cmd_import( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
@@ -1163,6 +1167,64 @@ static svn_error_t *logReceiver
 
     return NULL;
 }
+
+#ifdef PYSVN_HAS_CLIENT_LOCK
+Py::Object pysvn_client::cmd_lock( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_path },
+    { true,  name_comment },
+    { false, name_force },
+    { false, NULL }
+    };
+    FunctionArguments args( "lock", args_desc, a_args, a_kws );
+    args.check();
+
+    SvnPool pool( m_context );
+
+    apr_array_header_t *targets = targetsFromStringOrList( args.getArg( name_path ), pool );
+
+    std::string type_error_message;
+    try
+    {
+        type_error_message = "expecting string for comment (arg 2)";
+
+        std::string comment( args.getUtf8String( name_comment ) );
+
+        type_error_message = "expecting boolean for force keyword arg";
+        bool force = args.getBoolean( name_force, true );
+
+        try
+        {
+            checkThreadPermission();
+
+            PythonAllowThreads permission( m_context );
+
+            svn_error_t *error = svn_client_lock
+                (
+                targets,
+                comment.c_str(),
+                force,        // non recursive
+                m_context,
+                pool
+                );
+            if( error != NULL )
+                throw SvnException( error );
+        }
+        catch( SvnException &e )
+        {
+            throw_client_error( e );
+        }
+    }
+    catch( Py::TypeError & )
+    {
+        throw Py::TypeError( type_error_message );
+    }
+
+    return Py::None();
+}
+#endif
 
 Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
@@ -2339,6 +2401,58 @@ Py::Object pysvn_client::cmd_switch( const Py::Tuple &a_args, const Py::Dict &a_
     return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, revnum ) );
 }
 
+#ifdef PYSVN_HAS_CLIENT_UNLOCK
+Py::Object pysvn_client::cmd_unlock( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_path },
+    { false, name_force },
+    { false, NULL }
+    };
+    FunctionArguments args( "lock", args_desc, a_args, a_kws );
+    args.check();
+
+    SvnPool pool( m_context );
+
+    apr_array_header_t *targets = targetsFromStringOrList( args.getArg( name_path ), pool );
+
+    std::string type_error_message;
+    try
+    {
+        type_error_message = "expecting boolean for force keyword arg";
+        bool force = args.getBoolean( name_force, true );
+
+        try
+        {
+            checkThreadPermission();
+
+            PythonAllowThreads permission( m_context );
+
+            svn_error_t *error = svn_client_unlock
+                (
+                targets,
+                force,
+                m_context,
+                pool
+                );
+            if( error != NULL )
+                throw SvnException( error );
+        }
+        catch( SvnException &e )
+        {
+            throw_client_error( e );
+        }
+    }
+    catch( Py::TypeError & )
+    {
+        throw Py::TypeError( type_error_message );
+    }
+
+    return Py::None();
+}
+#endif
+
 Py::Object pysvn_client::cmd_update( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
     static argument_description args_desc[] =
@@ -2572,6 +2686,7 @@ void pysvn_client::init_type()
     add_keyword_method("export", &pysvn_client::cmd_export, SVN_EXPORT_DOC );
     add_keyword_method("import_", &pysvn_client::cmd_import, SVN_IMPORT_DOC );
     add_keyword_method("info", &pysvn_client::cmd_info, SVN_INFO_DOC );
+    add_keyword_method("info2", &pysvn_client::cmd_info2, SVN_INFO2_DOC );
     add_keyword_method("is_url", &pysvn_client::is_url, IS_URL_DOC );
     add_keyword_method("log", &pysvn_client::cmd_log, SVN_LOG_DOC );
     add_keyword_method("ls", &pysvn_client::cmd_ls, SVN_LS_DOC );

@@ -6,7 +6,29 @@
 #include <svn_repos.h>
 #include <string>
 
+#if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 1) || SVN_VER_MAJOR > 1
+#define PYSVN_HAS_CLIENT_ADD2
+#define PYSVN_HAS_CLIENT_EXPORT2
+#endif
+
+#if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 2) || SVN_VER_MAJOR > 1
+#define PYSVN_HAS_CLIENT_INFO
+#define PYSVN_HAS_CLIENT_LOCK
+#define PYSVN_HAS_CLIENT_UNLOCK
+#define PYSVN_HAS_CONTEXT_NOTIFY2
+#endif
+
+
 #include "CXX/Objects.hxx"
+
+#ifndef PYCXX_MAKEVERSION
+#error PyCXX version 5.3.3 is required
+#endif
+
+#if PYCXX_VERSION < PYCXX_MAKEVERSION( 5, 3, 3 )
+#error PyCXX version 5.3.3 is required
+#endif
+
 
 class SvnPool;
 class SvnContext;
@@ -79,6 +101,13 @@ public:
     // this method will be called to notify about
     // the progress of an ongoing action
     //
+#ifdef PYSVN_HAS_CONTEXT_NOTIFY2
+    virtual void contextNotify2
+        (
+        const svn_wc_notify_t *notify,
+        apr_pool_t *pool
+        ) = 0;
+#else
     virtual void contextNotify
         (
         const char *path,
@@ -89,6 +118,7 @@ public:
         svn_wc_notify_state_t prop_state,
         svn_revnum_t revision
         ) = 0;
+#endif
 
     //
     // this method will be called periodically to allow
@@ -157,6 +187,14 @@ private:
         apr_pool_t *pool
         );
 
+#ifdef PYSVN_HAS_CONTEXT_NOTIFY2
+    static void SvnContext::handlerNotify2
+        (
+        void * baton,
+	const svn_wc_notify_t *notify,
+	apr_pool_t *pool        
+        );
+#else
     static void SvnContext::handlerNotify
         (
         void * baton,
@@ -168,7 +206,7 @@ private:
         svn_wc_notify_state_t prop_state,
         svn_revnum_t revision
         );
-
+#endif
     static svn_error_t *SvnContext::handlerCancel
         (
         void * baton

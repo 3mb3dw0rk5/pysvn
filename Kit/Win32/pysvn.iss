@@ -67,7 +67,7 @@ Source: "libapr.dll"; DestDir: "{app}"
 Source: "libaprutil.dll"; DestDir: "{app}"
 Source: "libapriconv.dll"; DestDir: "{app}"
 
-Source: "libdb42.dll"; DestDir: "{app}"
+Source: "libdb43.dll"; DestDir: "{app}"
 
 Source: "libeay32.dll"; DestDir: "{app}"
 Source: "ssleay32.dll"; DestDir: "{app}"

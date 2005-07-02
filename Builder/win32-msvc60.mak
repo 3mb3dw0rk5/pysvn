@@ -3,10 +3,10 @@ BUILD_TYPE=Release
 build: all test kit
 
 all:
-	cd ..\Source && msdev pysvn.dsw /make "pysvn - Win32 $(BUILD_TYPE)"
+	cd ..\Source && msdev /useenv pysvn.dsw /make "pysvn - Win32 $(BUILD_TYPE)"
 
 clean:
-	cd ..\Source && msdev pysvn.dsw /make "pysvn - Win32 $(BUILD_TYPE)" /clean
+	cd ..\Source && msdev /useenv pysvn.dsw /make "pysvn - Win32 $(BUILD_TYPE)" /clean
 	cd ..\Tests && $(MAKE) -f win32.mak clean
 	cd ..\kit\Win32 && $(MAKE) clean
 

@@ -4,7 +4,7 @@ all_msvc71: kit_msvc71
 
 kit_msvc60: pysvn-branded.iss info_before.txt copy_setup.cmd
 	copy ..\..\LICENSE.txt tmp\LICENSE.txt
-	copy $(SUBVERSION)\db4-win32\bin\libdb42.dll tmp
+	copy $(SUBVERSION)\db4-win\bin\libdb43.dll tmp
 	copy $(OPENSSL)\out32dll\libeay32.dll tmp
 	copy $(OPENSSL)\out32dll\ssleay32.dll tmp
 	copy $(APR)\apr\release\libapr.dll tmp
@@ -15,7 +15,7 @@ kit_msvc60: pysvn-branded.iss info_before.txt copy_setup.cmd
 
 kit_msvc71: pysvn-branded.iss info_before.txt copy_setup.cmd
 	copy ..\..\LICENSE.txt tmp\LICENSE.txt
-	copy $(SUBVERSION)\db4-win32\bin\libdb42.dll tmp
+	copy $(SUBVERSION)\db4-win\bin\libdb43.dll tmp
 	copy $(OPENSSL)\out32dll\libeay32.dll tmp
 	copy $(OPENSSL)\out32dll\ssleay32.dll tmp
 	copy $(APR)\apr\release\libapr.dll tmp
