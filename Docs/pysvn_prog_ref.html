@@ -395,6 +395,9 @@ checkout the repository at url into the location specified by path.
 Set recurse to True to recursively check out a directory's children.
 Specify a revision to check out a particular version of the source tree.</p>
 <p>checkout returns a pysvn.Revision containing the number of the checked out revision.
+Note: Subversion seems to return 0 rather then the actual revision.
+Use a notify callback and record the revision reported for the <a href="#pysvn">pysvn</a>.wc_notify_action.update_completed event.
+This is what the svn command does.
 </p>
 <h4><a name="pysvn_client_cleanup"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.cleanup</a></h4>
 <pre>

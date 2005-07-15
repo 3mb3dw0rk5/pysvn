@@ -14,10 +14,9 @@
 #if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 2) || SVN_VER_MAJOR > 1
 #define PYSVN_HAS_CLIENT_INFO
 #define PYSVN_HAS_CLIENT_LOCK
-#define PYSVN_HAS_CLIENT_UNLOCK
+#define PYSVN_HAS_CLIENT_CHECKOUT2
 #define PYSVN_HAS_CONTEXT_NOTIFY2
 #endif
-
 
 #include "CXX/Objects.hxx"
 

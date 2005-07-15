@@ -139,6 +139,17 @@ Check in an unversioned file or tree into the repository.\n\
 Recursively check in a copy of PATH to URL.\n\
 Parent directories are created as necessary in the repository."
 
+
+#ifdef PYSVN_HAS_CLIENT_LOCK
+#define SVN_LOCK_DOC \
+"lock( url_or_path,\n\
+      message,\n\
+      force=False)\n\
+Lock the url_or_path give the message as the reason. Set force True to break\n\
+replace an existing lock with this one.\n\
+"
+#endif
+
 #define SVN_LOG_DOC \
 "log_list = log( path,\n\
                 revision_start=pysvn.Revision( opt_revision_kind.head ),\n\
@@ -150,6 +161,7 @@ If strict_node_history is True do not cross copies while traversing history.\n\
 If discover_changed_paths is True return the set of changed paths for each revision reported.\n\
 \n\
 Show the log messages for a set of revisions of path."
+
 #define SVN_LS_DOC \
 "entries_list = ls( path,\n\
             revision=pysvn.Revision( opt_revision_kind.head ),\n\
@@ -312,6 +324,17 @@ Update the working copy to a different URL.\n\
    Note:  this is the way to move a working copy to a new branch.\n\
 \n\
 2. Reconnect the working copy when the repository URL has changed."
+
+#ifdef PYSVN_HAS_CLIENT_LOCK
+#define SVN_UNLOCK_DOC \
+"unlock( url_or_path,\n\
+        force=False)\n\
+Unlock the url_or_path. Set force True to break\n\
+unlock an existing lock.\n\
+"
+#endif
+
+
 #define SVN_UPDATE_DOC \
 "revision = \\\n\
 update( path,\n\

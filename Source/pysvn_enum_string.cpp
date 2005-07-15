@@ -110,6 +110,20 @@ template <> EnumString< svn_wc_notify_action_t >::EnumString()
 
     // Processed a single revision's blame.
     add( svn_wc_notify_blame_revision, "annotate_revision" );
+
+#ifdef PYSVN_HAS_CLIENT_LOCK
+  // Locking a path.
+  add( svn_wc_notify_locked, "locked" );
+
+  //Unlocking a path.
+  add( svn_wc_notify_unlocked, "unlocked" );
+
+  // Failed to lock a path.
+  add( svn_wc_notify_failed_lock, "failed_lock" );
+
+  // Failed to unlock a path.
+  add( svn_wc_notify_failed_unlock, "failed_unlock" );
+#endif
 }
 
 template <> EnumString< svn_wc_status_kind >::EnumString()

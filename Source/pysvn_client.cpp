@@ -898,7 +898,10 @@ static svn_error_t *info_receiver(void *baton, const char *path, const svn_info_
     if( path != NULL )
     {
         Py::String py_path( path );
-        info_list->append( py_path );
+        Py::Tuple py_pair( 2 );
+        py_pair[0] = py_path;
+        py_pair[1] = toObject( info );
+        info_list->append( py_pair );
     }
 
     return SVN_NO_ERROR;
@@ -1828,7 +1831,7 @@ Py::Object pysvn_client::cmd_propset( const Py::Tuple &a_args, const Py::Dict &a
 
         PythonAllowThreads permission( m_context );
 
-        const svn_string_t *svn_propval = svn_string_create( propval.c_str(), pool );
+        const svn_string_t *svn_propval = svn_string_ncreate( propval.c_str(), propval.size(), pool );
 
         svn_error_t *error = svn_client_propset
             (
@@ -2229,7 +2232,7 @@ Py::Object pysvn_client::cmd_revpropset( const Py::Tuple &a_args, const Py::Dict
 
         PythonAllowThreads permission( m_context );
 
-        const svn_string_t *svn_propval = svn_string_create( propval.c_str(), pool );
+        const svn_string_t *svn_propval = svn_string_ncreate( propval.c_str(), propval.size(), pool );
         svn_error_t *error = svn_client_revprop_set
             (
             propname.c_str(),
@@ -2401,7 +2404,7 @@ Py::Object pysvn_client::cmd_switch( const Py::Tuple &a_args, const Py::Dict &a_
     return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, revnum ) );
 }
 
-#ifdef PYSVN_HAS_CLIENT_UNLOCK
+#ifdef PYSVN_HAS_CLIENT_LOCK
 Py::Object pysvn_client::cmd_unlock( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
     static argument_description args_desc[] =
@@ -2410,7 +2413,7 @@ Py::Object pysvn_client::cmd_unlock( const Py::Tuple &a_args, const Py::Dict &a_
     { false, name_force },
     { false, NULL }
     };
-    FunctionArguments args( "lock", args_desc, a_args, a_kws );
+    FunctionArguments args( "unlock", args_desc, a_args, a_kws );
     args.check();
 
     SvnPool pool( m_context );
@@ -2686,8 +2689,14 @@ void pysvn_client::init_type()
     add_keyword_method("export", &pysvn_client::cmd_export, SVN_EXPORT_DOC );
     add_keyword_method("import_", &pysvn_client::cmd_import, SVN_IMPORT_DOC );
     add_keyword_method("info", &pysvn_client::cmd_info, SVN_INFO_DOC );
+
+#ifdef PYSVN_HAS_CLIENT_INFO
     add_keyword_method("info2", &pysvn_client::cmd_info2, SVN_INFO2_DOC );
+#endif
     add_keyword_method("is_url", &pysvn_client::is_url, IS_URL_DOC );
+#ifdef PYSVN_HAS_CLIENT_LOCK
+    add_keyword_method("lock", &pysvn_client::cmd_lock, SVN_LOCK_DOC );
+#endif
     add_keyword_method("log", &pysvn_client::cmd_log, SVN_LOG_DOC );
     add_keyword_method("ls", &pysvn_client::cmd_ls, SVN_LS_DOC );
     add_keyword_method("merge", &pysvn_client::cmd_merge, SVN_MERGE_DOC );
@@ -2711,6 +2720,9 @@ void pysvn_client::init_type()
     add_keyword_method("set_auto_props", &pysvn_client::set_auto_props, SET_AUTO_PROPS_DOC );
     add_keyword_method("status", &pysvn_client::cmd_status, SVN_STATUS_DOC );
     add_keyword_method("switch", &pysvn_client::cmd_switch, SVN_SWITCH_DOC );
+#ifdef PYSVN_HAS_CLIENT_LOCK
+    add_keyword_method("unlock", &pysvn_client::cmd_unlock, SVN_UNLOCK_DOC );
+#endif
     add_keyword_method("update", &pysvn_client::cmd_update, SVN_UPDATE_DOC );
 }
 

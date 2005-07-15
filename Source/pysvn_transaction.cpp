@@ -429,7 +429,7 @@ Py::Object pysvn_transaction::cmd_propset( const Py::Tuple &a_args, const Py::Di
         if( error != NULL )
             throw SvnException( error );
 
-        const svn_string_t *svn_prop_val = svn_string_create( prop_val.c_str(), pool );
+        const svn_string_t *svn_prop_val = svn_string_ncreate( prop_val.c_str(), prop_val.size(), pool );
 
         svn_node_kind_t kind;
         error = svn_fs_check_path( &kind, txn_root, path.c_str(), pool );
@@ -583,7 +583,7 @@ Py::Object pysvn_transaction::cmd_revpropset( const Py::Tuple &a_args, const Py:
     svn_revnum_t revnum = 0;
     try
     {
-        const svn_string_t *svn_prop_val = svn_string_create( prop_val.c_str(), pool );
+        const svn_string_t *svn_prop_val = svn_string_ncreate( prop_val.c_str(), prop_val.size(), pool );
         svn_error_t *error = svn_fs_change_txn_prop
             (
             m_transaction,
