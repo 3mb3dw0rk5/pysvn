@@ -5,7 +5,7 @@ L:\wc\pysvn\trunk\pysvn\Extension\Tests > setlocal
 
 L:\wc\pysvn\trunk\pysvn\Extension\Tests > set PYTHONPATH=l:\wc\pysvn\trunk\pysvn\Extension\Source;l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client 
 
-L:\wc\pysvn\trunk\pysvn\Extension\Tests > set PYSVN=c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir 
+L:\wc\pysvn\trunk\pysvn\Extension\Tests > set PYSVN=c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir 
 
 L:\wc\pysvn\trunk\pysvn\Extension\Tests > mkdir testroot-04 
 
@@ -17,9 +17,9 @@ B:\ > svnadmin create b:\repos
 
 B:\ > rem mkdir 
 
-B:\ > c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir mkdir file:///b:/repos/trunk -m "test-01 add trunk" 
+B:\ > c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir mkdir file:///b:/repos/trunk -m "test-01 add trunk" 
 
-B:\ > c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir mkdir file:///b:/repos/trunk/test -m "test-01 add test" 
+B:\ > c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir mkdir file:///b:/repos/trunk/test -m "test-01 add test" 
 
 B:\ > rem Install hooks 
 
@@ -39,7 +39,7 @@ B:\ > echo c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Tests\test_0
 
 B:\ > rem Add one dir 
 
-B:\ > c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir mkdir file:///b:/repos/trunk/test/a -m "pre-commit test 1" 
+B:\ > c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir mkdir file:///b:/repos/trunk/test/a -m "pre-commit test 1" 
 
 B:\ > rem test_1.output start ---------------------------------------- 
 
@@ -51,7 +51,7 @@ Info: proplist() ...
 svn:log: pre-commit test 1
 svn:check-locks: true
 svn:author: barry
-svn:date: 2005-06-22T20:23:42.057210Z
+svn:date: 2005-07-17T15:57:42.786832Z
 Info: changed() ...
 trunk/test/a: action='A', kind=<node_kind.dir>, text_mod=0, prop_mod=0
 
@@ -59,26 +59,24 @@ B:\ > rem  test_1.output end ------------------------------------------
 
 B:\ > rem Add two files 
 
-B:\ > c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir co file:///b:/repos/trunk/test b:\wc 
+B:\ > c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir co file:///b:/repos/trunk/test b:\wc 
 A b:/wc/a
 U b:/wc
-? b:/wc
+Checked out revision 3
 
 B:\ > echo file1 ROOT  1>b:\wc\file1.txt 
 
 B:\ > echo file1 A  1>b:\wc\a\file1.txt 
 
-B:\ > c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir add b:\wc\file1.txt 
+B:\ > c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir add b:\wc\file1.txt 
 A b:/wc/file1.txt
 
-B:\ > c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir add b:\wc\a\file1.txt 
+B:\ > c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir add b:\wc\a\file1.txt 
 A b:/wc/a/file1.txt
 
-B:\ > c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir ci -m "Add two files" b:\wc 
+B:\ > c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir ci -m "Add two files" b:\wc 
 A wc/a/file1.txt
 A wc/file1.txt
-? B:/wc/a/file1.txt
-? B:/wc/file1.txt
 Revision 4
 
 B:\ > rem test_1.output start ---------------------------------------- 
@@ -91,7 +89,7 @@ Info: proplist() ...
 svn:log: Add two files
 svn:check-locks: true
 svn:author: barry
-svn:date: 2005-06-22T20:23:46.103149Z
+svn:date: 2005-07-17T15:57:46.882804Z
 Info: changed() ...
 trunk/test/a/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0
      contents: 'file1 A \r\n'
@@ -104,13 +102,11 @@ B:\ > rem Mod one file Mod one prop
 
 B:\ > echo file1 ROOT ln 2  1>b:\wc\file1.txt 
 
-B:\ > c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir propset svn:eol-style native b:\wc\a\file1.txt 
+B:\ > c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir propset svn:eol-style native b:\wc\a\file1.txt 
 
-B:\ > c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --config-dir b:\configdir ci -m "Mod one file Mod one prop" b:\wc 
+B:\ > c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir ci -m "Mod one file Mod one prop" b:\wc 
 M wc/a/file1.txt
 M wc/file1.txt
-? B:/wc/a/file1.txt
-? B:/wc/file1.txt
 Revision 5
 
 B:\ > rem test_1.output start ---------------------------------------- 
@@ -123,7 +119,7 @@ Info: proplist() ...
 svn:log: Mod one file Mod one prop
 svn:check-locks: true
 svn:author: barry
-svn:date: 2005-06-22T20:23:48.346442Z
+svn:date: 2005-07-17T15:57:49.316351Z
 Info: changed() ...
 trunk/test/a/file1.txt: action='R', kind=<node_kind.file>, text_mod=1, prop_mod=1
      svn:eol-style: native

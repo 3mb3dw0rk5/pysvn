@@ -93,6 +93,7 @@ class SvnCommand:
         self.client = None
         self.revision_update_complete = None
         self.notify_message_list = []
+        self.pysvn_testing = False
 
     def initClient( self, config_dir ):
         self.client = pysvn.Client( config_dir )
@@ -180,7 +181,7 @@ class SvnCommand:
 
             self.initClient( args.getOptionalValue( '--config-dir', '' ) )
             self.client.set_auth_cache( args.getBooleanOption( '--no-auth-cache', False ) )
-            self.pysvn_testing = args.getBooleanOption( '--pysvn-testing', False )
+            self.pysvn_testing = args.getBooleanOption( '--pysvn-testing', True )
             getattr( self, cmd_name, self.cmd_help )( args )
 
             self.printNotifyMessages()
@@ -379,8 +380,8 @@ class SvnCommand:
             print 'Checksum:', entry.checksum
 
     def cmd_info2( self, args ):
-        recurse = args.getBooleanOption( '--recursive', False )
-        revision = args.getOptionalRevision( '--revision', 'head' )
+        recurse = args.getBooleanOption( '--recursive', True )
+        revision = args.getOptionalRevision( '--revision', 'unspecified' )
         positional_args = args.getPositionalArgs( 0, 1 )
         if len(positional_args) == 0:
             positional_args.append( '.' )
@@ -388,7 +389,54 @@ class SvnCommand:
 
         all_entries = self.client.info2( path, revision=revision,  recurse=recurse )
 
-        print all_entries
+        for path, info in all_entries:
+            print
+            print 'Path:',path
+
+            if info['URL']:
+                print 'Url:',info['URL']
+            if info['rev']:
+                print 'Revision:',info['rev'].number
+            if info['repos_root_URL']:
+                print 'Repository root URL:',info['repos_root_URL']
+            if info['repos_UUID']:
+                print 'Repository UUID:',info['repos_UUID']
+            if info['last_changed_author']:
+                print 'Last changed author:',info['last_changed_author']
+            if info['last_changed_date']:
+                print 'Last Changed Date:', fmtDateTime( info['last_changed_date'] )
+            if info['last_changed_rev'].kind == pysvn.opt_revision_kind.number:
+                print 'Last changed revision:',info['last_changed_rev'].number
+            if info['kind'] == pysvn.node_kind.file:
+                print 'Node kind: file'
+            elif info['kind'] == pysvn.node_kind.dir:
+                print 'Node kind: directory'
+            elif info['kind'] == pysvn.node_kind.none:
+                print 'Node kind: none'
+            else:
+                print 'Node kind: unknown'
+            if info['lock']:
+                print 'Lock stuff'
+            if info['wc_info']:
+                wc_info = info['wc_info']
+                if wc_info['schedule'] == pysvn.wc_schedule.normal:
+                    print "Schedule: normal"
+                elif wc_info['schedule'] == pysvn.wc_schedule.add:
+                    print "Schedule: add"
+                elif wc_info['schedule'] == pysvn.wc_schedule.delete:
+                    print "Schedule: delete"
+                elif wc_info['schedule'] == pysvn.wc_schedule.replace:
+                    print "Schedule: replace"
+                if wc_info['copyfrom_url']:
+                    print 'Copied From URL:', wc_info['copyfrom_url']
+                    print 'Copied From Rev:', wc_info['copyfrom_rev'].number
+                if wc_info['text_time']:
+                    print 'Text Last Updated:', fmtDateTime( wc_info['text_time'] )
+                if wc_info['prop_time']:
+                    print 'Properties Last Updated:', fmtDateTime( wc_info['prop_time'] )
+                if wc_info['checksum']:
+                    print 'Checksum:', wc_info['checksum']
+
 
     def cmd_import( self, args ):
         msg = self.getOptionalValue( '--message', '' )
@@ -873,6 +921,8 @@ class SvnArguments:
             return pysvn.Revision( pysvn.opt_revision_kind.committed )
         if rev_string.lower() == 'prev':
             return pysvn.Revision( pysvn.opt_revision_kind.prev )
+        if rev_string.lower() == 'unspecified':
+            return pysvn.Revision( pysvn.opt_revision_kind.unspecified )
         if rev_string[0] == '{' and rev_string[-1] == '}':
             try:
                 date = parse_datetime.parse_time( rev_string[1:-2] )

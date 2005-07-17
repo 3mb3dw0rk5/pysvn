@@ -19,6 +19,33 @@
 #include "svn_time.h"
 
 static const char name_utf8[] = "utf-8";
+static const std::string str_checksum( "checksum" );
+static const std::string str_comment( "comment" );
+static const std::string str_conflict_new( "conflict_new" );
+static const std::string str_conflict_old( "conflict_old" );
+static const std::string str_conflict_wrk( "conflict_wrk" );
+static const std::string str_copyfrom_rev( "copyfrom_rev" );
+static const std::string str_copyfrom_url( "copyfrom_url" );
+static const std::string str_creation_date( "creation_date" );
+static const std::string str_expiration_date( "expiration_date" );
+static const std::string str_is_dav_comment( "is_dav_comment" );
+static const std::string str_kind( "kind" );
+static const std::string str_last_changed_author( "last_changed_author" );
+static const std::string str_last_changed_date( "last_changed_date" );
+static const std::string str_last_changed_rev( "last_changed_rev" );
+static const std::string str_lock( "lock" );
+static const std::string str_owner( "owner" );
+static const std::string str_path( "path" );
+static const std::string str_prejfile( "prejfile" );
+static const std::string str_prop_time( "prop_time" );
+static const std::string str_repos_root_URL( "repos_root_URL" );
+static const std::string str_repos_UUID( "repos_UUID" );
+static const std::string str_rev( "rev" );
+static const std::string str_schedule( "schedule" );
+static const std::string str_text_time( "text_time" );
+static const std::string str_token( "token" );
+static const std::string str_URL( "URL" );
+static const std::string str_wc_info( "wc_info" );
 
 Py::Object utf8_string_or_none( const char *str )
 {
@@ -83,77 +110,75 @@ Py::Object toObject( const svn_info_t *info )
 {
     Py::Dict py_info;
 
-    /** Where the item lives in the repository. */
-    Py::Object o;
-    o = utf8_string_or_none( info->URL );
-    py_info["URL"] = o;
+    // Where the item lives in the repository.
+    py_info[str_URL] = utf8_string_or_none( info->URL );
 
-    /** The revision of the object.  If path_or_url is a working-copy
-    * path, then this is its current working revnum.  If path_or_url
-    * is a URL, then this is the repos revision that path_or_url lives in. */
-    py_info["rev"] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, info->rev ) );
+    // The revision of the object.  If path_or_url is a working-copy
+    // path, then this is its current working revnum.  If path_or_url
+    // is a URL, then this is the repos revision that path_or_url lives in.
+    py_info[str_rev] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, info->rev ) );
 
-    /** The node's kind. */
-    py_info["kind"] = toEnumValue( info->kind );
+    // The node's kind.
+    py_info[str_kind] = toEnumValue( info->kind );
 
-    /** The root URL of the repository. */
-    py_info["repos_root_URL"] = utf8_string_or_none( info->repos_root_URL );
+    // The root URL of the repository.
+    py_info[str_repos_root_URL] = utf8_string_or_none( info->repos_root_URL );
 
-    /** The repository's UUID. */
-    py_info["repos_UUID"] = utf8_string_or_none( info->repos_UUID );
+    // The repository's UUID.
+    py_info[str_repos_UUID] = utf8_string_or_none( info->repos_UUID );
 
-    /** The last revision in which this object changed. */
-    py_info["last_changed_rev"] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, info->last_changed_rev ) );
+    // The last revision in which this object changed.
+    py_info[str_last_changed_rev] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, info->last_changed_rev ) );
 
-    /** The date of the last_changed_rev. */
-    py_info["last_changed_date"] = toObject( info->last_changed_date );
+    // The date of the last_changed_rev.
+    py_info[str_last_changed_date] = toObject( info->last_changed_date );
 
-    /** The author of the last_changed_rev. */
-    py_info["last_changed_author"] = utf8_string_or_none( info->last_changed_author );
+    // The author of the last_changed_rev.
+    py_info[str_last_changed_author] = utf8_string_or_none( info->last_changed_author );
 
-    /** An exclusive lock, if present.  Could be either local or remote. */
+    // An exclusive lock, if present.  Could be either local or remote.
     if( info->lock == NULL )
     {
-        py_info["lock"] = Py::None();
+        py_info[str_lock] = Py::None();
     }
     else
     {
         Py::Dict py_lock;
-        py_lock["path"] = utf8_string_or_none( info->lock->path );
-        py_lock["token"] = utf8_string_or_none( info->lock->token );
-        py_lock["owner"] = utf8_string_or_none( info->lock->owner );
-        py_lock["comment"] = utf8_string_or_none( info->lock->comment );
-        py_lock["is_dav_comment"] = Py::Int( info->lock->is_dav_comment != 0 );
+        py_lock[str_path] = utf8_string_or_none( info->lock->path );
+        py_lock[str_token] = utf8_string_or_none( info->lock->token );
+        py_lock[str_owner] = utf8_string_or_none( info->lock->owner );
+        py_lock[str_comment] = utf8_string_or_none( info->lock->comment );
+        py_lock[str_is_dav_comment] = Py::Int( info->lock->is_dav_comment != 0 );
         if( info->lock->creation_date == 0 )
-            py_lock["creation_date"] = Py::None();
+            py_lock[str_creation_date] = Py::None();
         else
-            py_lock["creation_date"] = toObject( info->lock->creation_date );
+            py_lock[str_creation_date] = toObject( info->lock->creation_date );
         if( info->lock->expiration_date == 0 )
-            py_lock["expiration_date"] = Py::None();
+            py_lock[str_expiration_date] = Py::None();
         else
-            py_lock["expiration_date"] = toObject( info->lock->expiration_date );
+            py_lock[str_expiration_date] = toObject( info->lock->expiration_date );
 
-        py_info["lock"] = py_lock;
+        py_info[str_lock] = py_lock;
     }
 
-    /** Whether or not to ignore the next 10 wc-specific fields. */
+    // Whether or not to ignore the next 10 wc-specific fields.
     if( info->has_wc_info == 0 )
     {
-        py_info["wc_info"] = Py::None();
+        py_info[str_wc_info] = Py::None();
     }
     {
         Py::Dict py_wc_info;
-        py_wc_info["schedule"] = toEnumValue( info->schedule );
-        py_wc_info["copyfrom_url"] = utf8_string_or_none( info->copyfrom_url );
-        py_wc_info["copyfrom_rev"] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, info->copyfrom_rev ) );
-        py_wc_info["text_time"] = toObject( info->text_time );
-        py_wc_info["prop_time"] = toObject( info->prop_time );
-        py_wc_info["checksum"] = utf8_string_or_none( info->checksum );
-        py_wc_info["conflict_old"] = utf8_string_or_none( info->conflict_old );
-        py_wc_info["conflict_new"] = utf8_string_or_none( info->conflict_new );
-        py_wc_info["conflict_wrk"] = utf8_string_or_none( info->conflict_wrk );
-        py_wc_info["prejfile"] = utf8_string_or_none( info->prejfile );
-        py_info["wc_info"] = py_wc_info;
+        py_wc_info[str_schedule] = toEnumValue( info->schedule );
+        py_wc_info[str_copyfrom_url] = utf8_string_or_none( info->copyfrom_url );
+        py_wc_info[str_copyfrom_rev] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, info->copyfrom_rev ) );
+        py_wc_info[str_text_time] = toObject( info->text_time );
+        py_wc_info[str_prop_time] = toObject( info->prop_time );
+        py_wc_info[str_checksum] = utf8_string_or_none( info->checksum );
+        py_wc_info[str_conflict_old] = utf8_string_or_none( info->conflict_old );
+        py_wc_info[str_conflict_new] = utf8_string_or_none( info->conflict_new );
+        py_wc_info[str_conflict_wrk] = utf8_string_or_none( info->conflict_wrk );
+        py_wc_info[str_prejfile] = utf8_string_or_none( info->prejfile );
+        py_info[str_wc_info] = py_wc_info;
     }
 
     return py_info;

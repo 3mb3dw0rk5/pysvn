@@ -886,11 +886,27 @@ Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_
 
 
 #ifdef PYSVN_HAS_CLIENT_INFO
+class InfoReceiveBaton
+{
+public:
+    InfoReceiveBaton( PythonAllowThreads *permission)
+        : m_permission( permission )
+        , m_info_list()
+        {}
+    ~InfoReceiveBaton()
+        {}
+
+    PythonAllowThreads  *m_permission;
+    Py::List            m_info_list;
+};
+
 extern "C"
 {
-static svn_error_t *info_receiver(void *baton, const char *path, const svn_info_t *info, apr_pool_t *pool)
+static svn_error_t *info_receiver_c( void *baton_, const char *path, const svn_info_t *info, apr_pool_t *pool )
 {
-    Py::List *info_list = reinterpret_cast<Py::List *>( baton );
+    InfoReceiveBaton *baton = reinterpret_cast<InfoReceiveBaton *>( baton_ );
+
+    PythonDisallowThreads callback_permission( baton->m_permission );
 
     if( path != NULL )
     {
@@ -898,7 +914,7 @@ static svn_error_t *info_receiver(void *baton, const char *path, const svn_info_
         Py::Tuple py_pair( 2 );
         py_pair[0] = py_path;
         py_pair[1] = toObject( info );
-        info_list->append( py_pair );
+        baton->m_info_list.append( py_pair );
     }
 
     return SVN_NO_ERROR;
@@ -925,7 +941,6 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
 
     bool recurse = args.getBoolean( name_recurse, true );
 
-    Py::List info_list;
     SvnPool pool( m_context );
     try
     {
@@ -935,14 +950,16 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
 
         PythonAllowThreads permission( m_context );
 
+        InfoReceiveBaton info_baton( &permission );
+
         svn_error_t *error = 
             svn_client_info
                 (
                 norm_path.c_str(),
                 &peg_revision,
                 &revision,
-                info_receiver,
-                reinterpret_cast<void *>( &info_list ),
+                info_receiver_c,
+                reinterpret_cast<void *>( &info_baton ),
                 recurse,
                 m_context.ctx(),
                 pool
@@ -951,12 +968,12 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
         if( error != NULL )
             throw SvnException( error );
 
-        return info_list;
+        return info_baton.m_info_list;
     }
     catch( SvnException &e )
     {
         throw_client_error( e );
-        return Py::Nothing();       // needed to remove warning about return value missing
+        return Py::None();          // needed to remove warning about return value missing
     }
 }
 #endif
