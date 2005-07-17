@@ -66,7 +66,7 @@ cxx_extensions.o: $(PYCXX)/Src/cxx_extensions.cxx
 	$(CCC) $(CCCFLAGS) -o $@ $<
 
 cxxextensions.o: $(PYCXX)/Src/cxxextensions.c
-	$(CC) -c $(CCCFLAGS) -o $@ $<
+	$(CC) -c $(CCFLAGS) -o $@ $<
 
 IndirectPythonInterface.o: $(PYCXX)/Src/IndirectPythonInterface.cxx
 	$(CCC) $(CCCFLAGS) -o $@ $< 

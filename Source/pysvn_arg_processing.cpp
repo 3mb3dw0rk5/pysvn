@@ -65,7 +65,7 @@ static char *int_to_string_inner( int n, char *buffer )
 static const char *int_to_string( int n )
 {
     static char number_string[20];
-    char *buffer = int_to_string_inner( n, &number_string[0] );
+    int_to_string_inner( n, &number_string[0] );
     return number_string;
 }
 
@@ -82,17 +82,17 @@ void FunctionArguments::check()
         throw Py::TypeError( msg );
     }
 
-    int i;
+    Py::Tuple::size_type t_i;
     // place all the positional args in the checked args dict
-    for( i=0; i<m_args.size(); i++ )
+    for( t_i=0; t_i<m_args.size(); t_i++ )
     {
-        m_checked_args[ m_arg_desc[i].m_arg_name ] = m_args[i];
+        m_checked_args[ m_arg_desc[t_i].m_arg_name ] = m_args[t_i];
     }
 
     // look for args by name in the kws dict
-    for( i=0; i<m_max_args; i++ )
+    for( t_i=0; t_i<m_max_args; t_i++ )
     {
-        const argument_description &arg_desc = m_arg_desc[i];
+        const argument_description &arg_desc = m_arg_desc[t_i];
 
         // check for duplicate
         if( m_kws.hasKey( arg_desc.m_arg_name ) )
@@ -111,16 +111,17 @@ void FunctionArguments::check()
     }
 
     // check for names we dont known about
+    Py::List::size_type l_i;
     Py::List names( m_kws.keys() );
-    for( i=0; i< names.length(); i++ )
+    for( l_i=0; l_i< names.length(); l_i++ )
     {
         bool found = false;
-        Py::String py_name( names[i] );
+        Py::String py_name( names[l_i] );
         std::string name( py_name );
 
-        for( i=0; i<m_max_args; i++ )
+        for( t_i=0; t_i<m_max_args; t_i++ )
         {
-            if( name == m_arg_desc[i].m_arg_name )
+            if( name == m_arg_desc[t_i].m_arg_name )
                 {
                 found = true;
                 break;
@@ -138,9 +139,9 @@ void FunctionArguments::check()
     }
 
     // check for min args
-    for( i=0; i<m_min_args; i++ )
+    for( t_i=0; t_i<m_min_args; t_i++ )
     {
-        const argument_description &arg_desc = m_arg_desc[i];
+        const argument_description &arg_desc = m_arg_desc[t_i];
 
         // check for duplicate
         if( !m_checked_args.hasKey( arg_desc.m_arg_name ) )

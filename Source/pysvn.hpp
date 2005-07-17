@@ -227,8 +227,8 @@ private:
     void throw_client_error( SvnException & );
 private:
     pysvn_module    &m_module;
-    pysvn_context    m_context;
-    int        m_exception_style;
+    pysvn_context   m_context;
+    int             m_exception_style;
 };
 
 class pysvn_transaction : public Py::PythonExtension<pysvn_transaction>
@@ -363,8 +363,8 @@ private:
     const Py::Dict              &m_kws;
 
     Py::Dict                    m_checked_args;
-    int                         m_min_args;
-    int                         m_max_args;
+    Py::Tuple::size_type        m_min_args;
+    Py::Tuple::size_type        m_max_args;
 };
 
 extern Py::Object toObject( apr_time_t time );

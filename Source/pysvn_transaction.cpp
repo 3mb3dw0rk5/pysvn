@@ -47,8 +47,8 @@ pysvn_transaction::pysvn_transaction
     const std::string &repos_path,
     const std::string &transaction_name
     )
-: m_transaction()
-, m_module( _module )
+: m_module( _module )
+, m_transaction()
 , m_exception_style( 1 )
 {
     svn_error_t *error = m_transaction.init( repos_path, transaction_name );
@@ -128,8 +128,6 @@ Py::Object pysvn_transaction::cmd_cat( const Py::Tuple &a_args, const Py::Dict &
     std::string path( args.getUtf8String( name_path ) );
 
     SvnPool pool( m_transaction );
-    svn_repos_node_t *tree = NULL;
-
 
     svn_stringbuf_t * stringbuf = svn_stringbuf_create( empty_string, pool );
     svn_stream_t * stream = svn_stream_from_stringbuf( stringbuf, pool );
@@ -419,7 +417,6 @@ Py::Object pysvn_transaction::cmd_propset( const Py::Tuple &a_args, const Py::Di
 
     SvnPool pool( m_transaction );
 
-    svn_revnum_t revnum = 0;
     try
     {
         svn_error_t * error;
@@ -580,7 +577,6 @@ Py::Object pysvn_transaction::cmd_revpropset( const Py::Tuple &a_args, const Py:
 
     SvnPool pool( m_transaction );
 
-    svn_revnum_t revnum = 0;
     try
     {
         const svn_string_t *svn_prop_val = svn_string_ncreate( prop_val.c_str(), prop_val.size(), pool );

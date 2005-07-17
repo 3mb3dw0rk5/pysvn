@@ -104,7 +104,9 @@ makefile_template = '''#
 #
 PYTHON=%(python_exe)s
 CCC=g++ -c
-CCCFLAGS=-fPIC -fexceptions -frtti %(includes)s
+CCCFLAGS=-Wall -fPIC -fexceptions -frtti %(includes)s
+CC=gcc -c
+CCFLAGS=-Wall -fPIC %(includes)s
 PYCXX=%(pycxx_dir)s
 LDSHARED=g++ -shared
 LDLIBS=-L%(svn_lib_dir)s \
@@ -120,7 +122,9 @@ makefile_template_macosx = '''#
 #
 PYTHON=%(python_exe)s
 CCC=g++ -c
-CCCFLAGS=-Wno-long-double -fPIC -fexceptions -frtti %(includes)s
+CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s
+CC=gcc -c
+CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s
 PYCXX=%(pycxx_dir)s
 LDSHARED=g++ -bundle -g -u _PyMac_Error -framework System -framework Python
 LDLIBS= \

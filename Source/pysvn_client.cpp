@@ -93,8 +93,8 @@ static const char name_utf8[] = "UTF-8";
 
 //--------------------------------------------------------------------------------
 pysvn_client::pysvn_client( pysvn_module &_module, const std::string &config_dir )
-: m_context( config_dir )
-, m_module( _module )
+: m_module( _module )
+, m_context( config_dir )
 , m_exception_style( 0 )
 {
 }
@@ -607,9 +607,6 @@ Py::Object pysvn_client::cmd_copy( const Py::Tuple &a_args, const Py::Dict &a_kw
 
         type_error_message = "expecting revision for keyword src_revision";
         svn_opt_revision_t revision = args.getRevision( name_src_revision, svn_opt_revision_head );
-
-        type_error_message = "expecting boolean for keyword force";
-        bool force = args.getBoolean( name_force, false );
 
         try
         {

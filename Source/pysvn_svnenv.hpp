@@ -74,7 +74,7 @@ class SvnContext
 {
 public:
     SvnContext( const std::string &config_dir="" );
-    ~SvnContext();
+    virtual ~SvnContext();
 
     operator svn_client_ctx_t *();
     svn_client_ctx_t *ctx();

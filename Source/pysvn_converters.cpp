@@ -155,6 +155,8 @@ Py::Object toObject( const svn_info_t *info )
         py_wc_info["prejfile"] = utf8_string_or_none( info->prejfile );
         py_info["wc_info"] = py_wc_info;
     }
+
+    return py_info;
 }
 
 Py::Object propsToObject( apr_hash_t *props, SvnPool &pool )
@@ -219,7 +221,7 @@ apr_array_header_t *targetsFromStringOrList( Py::Object arg, SvnPool &pool )
         {
             Py::List path_list( arg );
 
-            for( int i=0; i<path_list.length(); i++ )
+            for( Py::List::size_type i=0; i<path_list.length(); i++ )
             {
                 type_error_message = "expecting path list members to be strings (arg 1)";
 
@@ -256,7 +258,7 @@ Py::List toListOfStrings( Py::Object obj )
         list.append( obj );
 
     // check all members of the list are strings
-    for( int i=0; i<list.length(); i++ )
+    for( Py::List::size_type i=0; i<list.length(); i++ )
     {
         Py::String path_str( list[i] );
     }
