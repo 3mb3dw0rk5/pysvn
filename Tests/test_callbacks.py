@@ -1,7 +1,7 @@
-src_dir='../Source'
+src_dir='../../Source'
 import os
 if not os.path.exists( os.path.join( src_dir, 'pysvn/__init__.py' ) ):
-    raise 'Hell','Where is the pysvn module?'
+    raise 'Hell','Where is the pysvn module? pwd=%s' % os.getcwd()
 
 import sys
 sys.path.insert( 0, src_dir )

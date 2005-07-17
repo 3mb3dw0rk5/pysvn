@@ -7,5 +7,6 @@ mkdir testroot-03
 subst b: %CD%\testroot-03
 
 mkdir b:\configdir
-%PYTHON% test_callbacks.py
+cd testroot-03
+%PYTHON% ..\test_callbacks.py
 endlocal
