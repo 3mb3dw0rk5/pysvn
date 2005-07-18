@@ -1052,7 +1052,6 @@ Py::Object pysvn_client::cmd_import( const Py::Tuple &a_args, const Py::Dict &a_
 
         PythonAllowThreads permission( m_context );
 
-
         m_context.setLogMessage( message.c_str() );
 
         svn_error_t *error = svn_client_import
@@ -1461,6 +1460,10 @@ Py::Object pysvn_client::cmd_merge( const Py::Tuple &a_args, const Py::Dict &a_k
         std::string norm_path1( svnNormalisedIfPath( path1, pool ) );
         std::string norm_path2( svnNormalisedIfPath( path2, pool ) );
         std::string norm_local_path( svnNormalisedIfPath( local_path, pool ) );
+
+        checkThreadPermission();
+
+        PythonAllowThreads permission( m_context );
 
         svn_error_t *error = svn_client_merge
             (
