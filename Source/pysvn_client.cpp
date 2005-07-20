@@ -256,6 +256,9 @@ Py::Object pysvn_client::cmd_add( const Py::Tuple &a_args, const Py::Dict &a_kws
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -364,6 +367,9 @@ Py::Object pysvn_client::cmd_annotate( const Py::Tuple &a_args, const Py::Dict &
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -428,6 +434,9 @@ Py::Object pysvn_client::cmd_cat( const Py::Tuple &a_args, const Py::Dict &a_kws
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -481,6 +490,9 @@ Py::Object pysvn_client::cmd_checkout( const Py::Tuple &a_args, const Py::Dict &
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -515,6 +527,9 @@ Py::Object pysvn_client::cmd_cleanup( const Py::Tuple &a_args, const Py::Dict &a
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -570,6 +585,9 @@ Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a
         }
         catch( SvnException &e )
         {
+            // use callback error over ClientException
+            m_context.checkForError( m_module.client_error );
+
             throw_client_error( e );
         }
     }
@@ -782,6 +800,9 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -878,6 +899,9 @@ Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -972,6 +996,9 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
         return Py::None();          // needed to remove warning about return value missing
     }
@@ -1017,6 +1044,9 @@ Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kw
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
         return Py::Nothing();       // needed to remove warning about return value missing
     }
@@ -1069,6 +1099,9 @@ Py::Object pysvn_client::cmd_import( const Py::Tuple &a_args, const Py::Dict &a_
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -1230,6 +1263,9 @@ Py::Object pysvn_client::cmd_lock( const Py::Tuple &a_args, const Py::Dict &a_kw
         }
         catch( SvnException &e )
         {
+            // use callback error over ClientException
+            m_context.checkForError( m_module.client_error );
+
             throw_client_error( e );
         }
     }
@@ -1290,6 +1326,9 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -1384,6 +1423,9 @@ Py::Object pysvn_client::cmd_ls( const Py::Tuple &a_args, const Py::Dict &a_kws 
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -1484,6 +1526,9 @@ Py::Object pysvn_client::cmd_merge( const Py::Tuple &a_args, const Py::Dict &a_k
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -1545,6 +1590,9 @@ Py::Object pysvn_client::cmd_mkdir( const Py::Tuple &a_args, const Py::Dict &a_k
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -1607,6 +1655,9 @@ Py::Object pysvn_client::cmd_move( const Py::Tuple &a_args, const Py::Dict &a_kw
         }
         catch( SvnException &e )
         {
+            // use callback error over ClientException
+            m_context.checkForError( m_module.client_error );
+
             throw_client_error( e );
         }
     }
@@ -1663,6 +1714,9 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -1717,6 +1771,9 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -1803,6 +1860,9 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
         }
         catch( SvnException &e )
         {
+            // use callback error over ClientException
+            m_context.checkForError( m_module.client_error );
+
             throw_client_error( e );
         }
 
@@ -1863,6 +1923,9 @@ Py::Object pysvn_client::cmd_propset( const Py::Tuple &a_args, const Py::Dict &a
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -1911,6 +1974,9 @@ Py::Object pysvn_client::cmd_relocate( const Py::Tuple &a_args, const Py::Dict &
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -1953,6 +2019,9 @@ Py::Object pysvn_client::cmd_remove( const Py::Tuple &a_args, const Py::Dict &a_
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -1995,6 +2064,9 @@ Py::Object pysvn_client::cmd_resolved( const Py::Tuple &a_args, const Py::Dict &
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -2039,6 +2111,9 @@ Py::Object pysvn_client::cmd_revert( const Py::Tuple &a_args, const Py::Dict &a_
         }
         catch( SvnException &e )
         {
+            // use callback error over ClientException
+            m_context.checkForError( m_module.client_error );
+
             throw_client_error( e );
         }
     }
@@ -2097,6 +2172,9 @@ Py::Object pysvn_client::cmd_revpropdel( const Py::Tuple &a_args, const Py::Dict
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -2147,6 +2225,9 @@ Py::Object pysvn_client::cmd_revpropget( const Py::Tuple &a_args, const Py::Dict
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -2206,6 +2287,9 @@ Py::Object pysvn_client::cmd_revproplist( const Py::Tuple &a_args, const Py::Dic
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -2266,6 +2350,9 @@ Py::Object pysvn_client::cmd_revpropset( const Py::Tuple &a_args, const Py::Dict
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -2354,6 +2441,9 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -2415,6 +2505,9 @@ Py::Object pysvn_client::cmd_switch( const Py::Tuple &a_args, const Py::Dict &a_
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -2461,6 +2554,9 @@ Py::Object pysvn_client::cmd_unlock( const Py::Tuple &a_args, const Py::Dict &a_
         }
         catch( SvnException &e )
         {
+            // use callback error over ClientException
+            m_context.checkForError( m_module.client_error );
+
             throw_client_error( e );
         }
     }
@@ -2514,6 +2610,9 @@ Py::Object pysvn_client::cmd_update( const Py::Tuple &a_args, const Py::Dict &a_
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -2540,6 +2639,9 @@ Py::Object pysvn_client::get_auth_cache( const Py::Tuple &a_args, const Py::Dict
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -2576,6 +2678,9 @@ Py::Object pysvn_client::set_auth_cache( const Py::Tuple &a_args, const Py::Dict
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -2613,6 +2718,9 @@ Py::Object pysvn_client::get_auto_props( const Py::Tuple &a_args, const Py::Dict
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
@@ -2648,6 +2756,9 @@ Py::Object pysvn_client::set_auto_props( const Py::Tuple &a_args, const Py::Dict
     }
     catch( SvnException &e )
     {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
         throw_client_error( e );
     }
 
