@@ -43,6 +43,7 @@ rem - checkin a mod from wc1
 echo line 2 >>b:\wc1\test\file1.txt
 %PYSVN% checkin -m "commit modified file"
 
+%PYSVN% checkin -m "commit modified file"
 rem update
 %PYSVN% update b:\wc2
 
@@ -94,6 +95,11 @@ rem ls
 %PYSVN% ls -v b:\wc2\test
 
 rem merge
+echo test add file merge 1 >file-merge-1.txt
+echo test add file merge 2 >file-merge-2.txt
+%PYSVN% add file-merge-1.txt
+%PYSVN% add file-merge-2.txt
+%PYSVN% checkin -m "commit merge files"
 
 rem mkdir - done above
 

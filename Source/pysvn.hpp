@@ -295,7 +295,7 @@ private:
 class pysvn_status : public Py::PythonExtension<pysvn_status>
 {
 public:
-    pysvn_status( const char *path, svn_wc_status_t *svn_status, SvnContext &context );
+    pysvn_status( const char *path, pysvn_wc_status_t *svn_status, SvnContext &context );
 
     virtual ~pysvn_status();
 
@@ -306,7 +306,10 @@ private:
     SvnContext              &m_context;
     SvnPool                 m_pool;
     std::string             m_path;
-    const svn_wc_status_t   *m_svn_status;
+    const pysvn_wc_status_t *m_svn_status;
+#ifdef PYSVN_HAS_CLIENT_STATUS2
+    Py::Object              m_repos_lock;
+#endif
 };
 
 class pysvn_entry : public Py::PythonExtension<pysvn_entry>

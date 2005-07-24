@@ -1,6 +1,6 @@
 //
 // ====================================================================
-// Copyright (c) 2003-2004 Barry A Scott.  All rights reserved.
+// Copyright (c) 2003-2005 Barry A Scott.  All rights reserved.
 //
 // This software is licensed as described in the file LICENSE.txt,
 // which you should have received as part of this distribution.
@@ -21,12 +21,42 @@
 
 //--------------------------------------------------------------------------------
 
-pysvn_status::pysvn_status( const char *path, svn_wc_status_t *svn_status, SvnContext &context )
+pysvn_status::pysvn_status( const char *path, pysvn_wc_status_t *svn_status, SvnContext &context )
 : m_context( context )
 , m_pool( m_context )
 , m_path( path )
+#ifdef PYSVN_HAS_CLIENT_STATUS2
+, m_svn_status( svn_wc_dup_status2( svn_status, m_pool ) )
+, m_repos_lock()
+#else
 , m_svn_status( svn_wc_dup_status( svn_status, m_pool ) )
+#endif
 {
+#ifdef PYSVN_HAS_CLIENT_STATUS2
+    if( svn_status->repos_lock == NULL )
+    {
+        m_repos_lock = Py::None();
+    }
+    else
+    {
+        Py::Dict py_lock;
+        py_lock["path"] = utf8_string_or_none( svn_status->repos_lock->path );
+        py_lock["token"] = utf8_string_or_none( svn_status->repos_lock->token );
+        py_lock["owner"] = utf8_string_or_none( svn_status->repos_lock->owner );
+        py_lock["comment"] = utf8_string_or_none( svn_status->repos_lock->comment );
+        py_lock["is_dav_comment"] = Py::Int( svn_status->repos_lock->is_dav_comment != 0 );
+        if( svn_status->repos_lock->creation_date == 0 )
+            py_lock["creation_date"] = Py::None();
+        else
+            py_lock["creation_date"] = toObject( svn_status->repos_lock->creation_date );
+        if( svn_status->repos_lock->expiration_date == 0 )
+            py_lock["expiration_date"] = Py::None();
+        else
+            py_lock["expiration_date"] = toObject( svn_status->repos_lock->expiration_date );
+
+        m_repos_lock = py_lock;
+    }
+#endif
 }
 
 pysvn_status::~pysvn_status()
@@ -55,6 +85,9 @@ Py::Object pysvn_status::getattr( const char *_name )
         members.append( Py::String( "text_status" ) );
         members.append( Py::String( "repos_prop_status" ) );
         members.append( Py::String( "repos_text_status" ) );
+#ifdef PYSVN_HAS_CLIENT_STATUS2
+        members.append( Py::String( "repos_lock" ) );
+#endif
 
         return members;
     }
@@ -65,10 +98,16 @@ Py::Object pysvn_status::getattr( const char *_name )
     else if( name == "entry" )
     {
         if( m_svn_status->entry == NULL )
-            return Py::Nothing();
+            return Py::None();
         else
             return Py::asObject( new pysvn_entry( m_svn_status->entry, m_context ) );
     }
+#ifdef PYSVN_HAS_CLIENT_STATUS2
+    else if( name == "repos_lock" )
+    {
+        return m_repos_lock;
+    }
+#endif
     else if( name == "is_versioned" )
     {
         long is_versioned = (long)(m_svn_status->text_status > svn_wc_status_unversioned);

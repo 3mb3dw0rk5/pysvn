@@ -55,6 +55,8 @@ static const char name_from_url[] = "from_url";
 static const char name_get_all[] = "get_all";
 static const char name_ignore[] = "ignore";
 static const char name_ignore_ancestry[] = "ignore_ancestry";
+static const char name_ignore_content_type[] = "ignore_content_type";
+static const char name_ignore_externals[] = "ignore_externals";
 static const char name_kind[] = "kind";
 static const char name_last_author[] = "last_author";
 static const char name_lock[] = "lock";
@@ -453,6 +455,10 @@ Py::Object pysvn_client::cmd_checkout( const Py::Tuple &a_args, const Py::Dict &
     { true,  name_path },
     { false, name_recurse },
     { false, name_revision },
+#ifdef PYSVN_HAS_CLIENT_CHECKOUT2
+    { false, name_peg_revision },
+    { false, name_ignore_externals },
+#endif
     { false, NULL }
     };
     FunctionArguments args( "checkout", args_desc, a_args, a_kws );
@@ -462,7 +468,10 @@ Py::Object pysvn_client::cmd_checkout( const Py::Tuple &a_args, const Py::Dict &
     std::string path( args.getUtf8String( name_path ) );
     bool recurse = args.getBoolean( name_recurse, true );
     svn_opt_revision_t revision = args.getRevision( name_revision, svn_opt_revision_head );
-
+#ifdef PYSVN_HAS_CLIENT_CHECKOUT2
+    svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, svn_opt_revision_unspecified );
+    bool ignore_externals = args.getBoolean( name_ignore_externals, false );
+#endif
     SvnPool pool( m_context );
 
     svn_revnum_t revnum = 0;
@@ -475,7 +484,21 @@ Py::Object pysvn_client::cmd_checkout( const Py::Tuple &a_args, const Py::Dict &
         PythonAllowThreads permission( m_context );
 
         svn_revnum_t revnum = 0;
-        svn_error_t * error = svn_client_checkout
+#ifdef PYSVN_HAS_CLIENT_CHECKOUT2
+        svn_error_t *error = svn_client_checkout2
+            (
+            &revnum,
+            url.c_str(),
+            norm_path.c_str(),
+            &peg_revision,
+            &revision,
+            recurse,
+            ignore_externals,
+            m_context,
+            pool
+            );
+#else
+        svn_error_t *error = svn_client_checkout
             (
             &revnum,
             url.c_str(),
@@ -485,6 +508,7 @@ Py::Object pysvn_client::cmd_checkout( const Py::Tuple &a_args, const Py::Dict &
             m_context,
             pool
             );
+#endif
         if( error != NULL )
             throw SvnException( error );
     }
@@ -742,22 +766,30 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
     { true,  name_tmp_path },
     { true,  name_url_or_path },
     { false, name_revision1 },
+    { false, name_url_or_path2 },
     { false, name_revision2 },
     { false, name_recurse },
     { false, name_ignore_ancestry },
     { false, name_diff_deleted },
+#ifdef PYSVN_HAS_CLIENT_DIFF2
+    { false, name_ignore_content_type },
+#endif
     { false, NULL }
     };
     FunctionArguments args( "diff", args_desc, a_args, a_kws );
     args.check();
 
     std::string tmp_path( args.getUtf8String( name_tmp_path ) );
-    std::string path( args.getUtf8String( name_url_or_path ) );
+    std::string path1( args.getUtf8String( name_url_or_path ) );
     svn_opt_revision_t revision1 = args.getRevision( name_revision1, svn_opt_revision_base );
+    std::string path2( args.getUtf8String( name_url_or_path2, path1 ) );
     svn_opt_revision_t revision2 = args.getRevision( name_revision2, svn_opt_revision_working );
     bool recurse = args.getBoolean( name_recurse, true );
     bool ignore_ancestry = args.getBoolean( name_ignore_ancestry, false );
     bool diff_deleted = args.getBoolean( name_diff_deleted, true );
+#ifdef PYSVN_HAS_CLIENT_DIFF2
+    bool ignore_content_type = args.getBoolean( name_ignore_content_type, false );
+#endif
 
     SvnPool pool( m_context );
 
@@ -766,7 +798,8 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
     try
     {
         std::string norm_tmp_path( svnNormalisedIfPath( tmp_path, pool ) );
-        std::string norm_path( svnNormalisedIfPath( path, pool ) );
+        std::string norm_path1( svnNormalisedIfPath( path1, pool ) );
+        std::string norm_path2( svnNormalisedIfPath( path2, pool ) );
 
         checkThreadPermission();
 
@@ -779,19 +812,36 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
 
         apr_array_header_t *options = apr_array_make( pool, 0, 0 );
 
-        svn_error_t *error = svn_client_diff
+#ifdef PYSVN_HAS_CLIENT_DIFF2
+        svn_error_t *error = svn_client_diff2
             (
             options,
-            norm_path.c_str(), &revision1,
-            norm_path.c_str(), &revision2,
+            norm_path1.c_str(), &revision1,
+            norm_path2.c_str(), &revision2,
             recurse,
             ignore_ancestry,
-            diff_deleted,
+            !diff_deleted,
+            ignore_content_type,
             output_file.file(),
             error_file.file(),
             m_context,
             pool
             );
+#else
+        svn_error_t *error = svn_client_diff
+            (
+            options,
+            norm_path1.c_str(), &revision1,
+            norm_path2.c_str(), &revision2,
+            recurse,
+            ignore_ancestry,
+            !diff_deleted,
+            output_file.file(),
+            error_file.file(),
+            m_context,
+            pool
+            );
+#endif
         if( error != NULL )
             throw SvnException( error );
 
@@ -2366,6 +2416,22 @@ struct StatusEntriesBaton
     apr_hash_t* hash;
 };
 
+#ifdef PYSVN_HAS_CLIENT_STATUS2
+static void StatusEntriesFunc
+    (
+    void *baton,
+    const char *path,
+    svn_wc_status2_t *status
+    )
+{
+    svn_wc_status2_t *stat;
+    StatusEntriesBaton* seb = (StatusEntriesBaton*)baton;
+
+    path = apr_pstrdup( seb->pool, path );
+    stat = svn_wc_dup_status2( status, seb->pool );
+    apr_hash_set( seb->hash, path, APR_HASH_KEY_STRING, stat );
+}
+#else
 static void StatusEntriesFunc
     (
     void *baton,
@@ -2373,13 +2439,14 @@ static void StatusEntriesFunc
     svn_wc_status_t *status
     )
 {
-    svn_wc_status_t* stat;
+    svn_wc_status_t *stat;
     StatusEntriesBaton* seb = (StatusEntriesBaton*)baton;
 
     path = apr_pstrdup( seb->pool, path );
     stat = svn_wc_dup_status( status, seb->pool );
     apr_hash_set( seb->hash, path, APR_HASH_KEY_STRING, stat );
 }
+#endif
 
 Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
@@ -2390,6 +2457,9 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
     { false, name_get_all },
     { false, name_update },
     { false, name_ignore },
+#ifdef PYSVN_HAS_CLIENT_STATUS2
+    { false, name_ignore_externals },
+#endif
     { false, NULL }
     };
     FunctionArguments args( "status", args_desc, a_args, a_kws );
@@ -2399,7 +2469,10 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
     bool recurse = args.getBoolean( name_recurse, true );
     bool get_all = args.getBoolean( name_get_all, true );
     bool update = args.getBoolean( name_update, false );
-    bool no_ignore = args.getBoolean( name_ignore, true );
+    bool ignore = args.getBoolean( name_ignore, false );
+#ifdef PYSVN_HAS_CLIENT_STATUS2
+    bool ignore_externals = args.getBoolean( name_ignore_externals, false );
+#endif
 
     SvnPool pool( m_context );
     apr_hash_t *status_hash = NULL;
@@ -2422,6 +2495,23 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
         baton.hash = status_hash;
         baton.pool = pool;
 
+#ifdef PYSVN_HAS_CLIENT_STATUS2
+        svn_error_t *error = svn_client_status2
+            (
+            &revnum,            // revnum
+            norm_path.c_str(),  // path
+            &rev,
+            StatusEntriesFunc,  // status func
+            &baton,             // status baton
+            recurse,
+            get_all,
+            update,
+            !ignore,
+            ignore_externals,
+            m_context,
+            pool
+            );
+#else
         svn_error_t *error = svn_client_status
             (
             &revnum,            // revnum
@@ -2432,10 +2522,12 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
             recurse,
             get_all,
             update,
-            no_ignore,
+            !ignore,
             m_context,
             pool
             );
+#endif
+
         if( error != NULL )
             throw SvnException( error );
     }
@@ -2453,7 +2545,7 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
     for (int i = statusarray->nelts-1; i >= 0; i--)
     {
         const svn_sort__item_t *item = &APR_ARRAY_IDX( statusarray, i, const svn_sort__item_t );
-        svn_wc_status_t *status = (svn_wc_status_t *)item->value;
+        pysvn_wc_status_t *status = (pysvn_wc_status_t *)item->value;
 
         entries_list.append( Py::asObject( new pysvn_status( (const char *)item->key, status, m_context ) ) );
     }

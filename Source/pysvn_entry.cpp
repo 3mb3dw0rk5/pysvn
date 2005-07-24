@@ -65,7 +65,12 @@ Py::Object pysvn_entry::getattr( const char *_name )
         members.append( Py::String( "text_time" ) );
         members.append( Py::String( "url" ) );
         members.append( Py::String( "uuid" ) );
-
+#ifdef PYSVN_HAS_CLIENT_STATUS2
+        members.append( Py::String( "lock_token" ) );
+        members.append( Py::String( "lock_owner" ) );
+        members.append( Py::String( "lock_comment" ) );
+        members.append( Py::String( "lock_creation_date" ) );
+#endif
         return members;
     }
 
@@ -183,10 +188,33 @@ Py::Object pysvn_entry::getattr( const char *_name )
         if( m_svn_entry != NULL )
             return utf8_string_or_none( m_svn_entry->uuid );
     }
+#ifdef PYSVN_HAS_CLIENT_STATUS2
+    else if( name == "lock_token" )
+    {
+        if( m_svn_entry != NULL )
+            return utf8_string_or_none( m_svn_entry->lock_token );
+    }
+    else if( name == "lock_owner" )
+    {
+        if( m_svn_entry != NULL )
+            return utf8_string_or_none( m_svn_entry->lock_owner );
+    }
+    else if( name == "lock_comment" )
+    {
+        if( m_svn_entry != NULL )
+            return utf8_string_or_none( m_svn_entry->lock_comment );
+    }
+    else if( name == "lock_creation_date" )
+    {
+        if( m_svn_entry != NULL )
+            return toObject( m_svn_entry->lock_creation_date );
+    }
+#endif
+
     else
         return getattr_methods( _name );
 
-    // the name is valid bit the object is not valid
+    // the name is valid but the object is not valid
     return Py::Nothing();
 }
 

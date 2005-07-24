@@ -295,6 +295,7 @@ class SvnCommand:
     cmd_cp = cmd_copy
 
     def cmd_diff( self, args ):
+        print 'cmd_diff'
         recurse = args.getBooleanOption( '--non-recursive', False )
         positional_args = args.getPositionalArgs( 0, 1 )
         if len(positional_args) == 0:
@@ -416,7 +417,14 @@ class SvnCommand:
             else:
                 print 'Node kind: unknown'
             if info['lock']:
-                print 'Lock stuff'
+                print info['lock']
+                print 'Lock Owner:',info['lock']['owner']
+                print 'Lock Creation Date:',fmtDateTime( info['lock']['creation_date'] )
+                if info['lock']['expiration_date'] is not None:
+                    print 'Lock Expiration Date:',fmtDateTime( info['lock']['expiration_date'] )
+                print 'Lock Token:',info['lock']['token']
+                print 'Lock Comment:'
+                print info['lock']['comment']
             if info['wc_info']:
                 wc_info = info['wc_info']
                 if wc_info['schedule'] == pysvn.wc_schedule.normal:
@@ -702,6 +710,7 @@ class SvnCommand:
             if file.text_status == pysvn.wc_status_kind.ignored and ignore:
                 continue
 
+
             state = '%s%s%s%s%s' % (wc_status_kind_map[ file.text_status ],
                     wc_status_kind_map[ file.prop_status ],
                     ' L'[ file.is_locked ],
@@ -715,29 +724,35 @@ class SvnCommand:
             else:
                 odd_status = '  '
 
+            lock_state = ' '
+            if file.entry is not None and hasattr( file.entry, 'lock_token' ):
+                if file.entry.lock_token is not None:
+                    lock_state = 'K'
+
             if file.entry is not None and detailed:
-                print '%s %s %6d %6d %-14s %s' % (state,
+                print '%s%s %s %6d %6d %-14s %s' % (state, lock_state,
                     odd_status,
                     file.entry.revision.number,
                     file.entry.commit_revision.number,
                     file.entry.commit_author,
                     file.path)
             elif detailed:
-                print '%s %s %6s %6s %-14s %s' % (state,
+                print '%s%s %s %6s %6s %-14s %s' % (state, lock_state,
                     odd_status,
                     '',
                     '',
                     '',
                     file.path)
             elif update:
-                print '%s %s %s' % (state,
+                print '%s%s %s %s' % (state, lock_state,
                     odd_status,
                     file.path)
 
             else:
                 if( file.text_status != pysvn.wc_status_kind.normal
-                or file.prop_status != pysvn.wc_status_kind.normal ):
-                    print '%s %s' % (state, file.path)
+                or file.prop_status != pysvn.wc_status_kind.normal
+                or lock_state.strip() != ''):
+                    print '%s%s %s' % (state, lock_state, file.path)
 
     cmd_st = cmd_status
     cmd_stat = cmd_status

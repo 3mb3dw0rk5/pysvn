@@ -74,13 +74,25 @@ pysvn_module::pysvn_module()
 
     d["version"] = version;
 
-    Py::Tuple svn_version(4);
-    svn_version[0] = Py::Int( SVN_VER_MAJOR );
-    svn_version[1] = Py::Int( SVN_VER_MINOR );
-    svn_version[2] = Py::Int( SVN_VER_MICRO );
-    svn_version[3] = Py::String( SVN_VER_TAG );
+    Py::Tuple svn_api_version(4);
+    svn_api_version[0] = Py::Int( SVN_VER_MAJOR );
+    svn_api_version[1] = Py::Int( SVN_VER_MINOR );
+    svn_api_version[2] = Py::Int( SVN_VER_MICRO );
+    svn_api_version[3] = Py::String( SVN_VER_TAG );
 
+#ifdef PYSVN_HAS_CLIENT_VERSION
+    const svn_version_t *client_version = svn_client_version();
+    Py::Tuple svn_version(4);
+    svn_version[0] = Py::Int( client_version->major );
+    svn_version[1] = Py::Int( client_version->minor );
+    svn_version[2] = Py::Int( client_version->patch );
+    svn_version[3] = Py::String( client_version->tag );
     d["svn_version"] = svn_version;
+    d["svn_api_version"] = svn_api_version;
+#else
+    d["svn_version"] = svn_api_version;
+    d["svn_api_version"] = svn_api_version;
+#endif
 
     d["opt_revision_kind"] = Py::asObject( new pysvn_enum< svn_opt_revision_kind >() );
     d["wc_notify_action"] = Py::asObject( new pysvn_enum< svn_wc_notify_action_t >() );
