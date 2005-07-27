@@ -700,8 +700,7 @@ public:
 
     ~pysvn_apr_file()
     {
-        if( m_apr_file )
-            apr_file_close( m_apr_file );
+        close();
         if( m_filename )
             svn_error_clear( svn_io_remove_file( m_filename, m_pool ) );
     }
@@ -785,7 +784,7 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
     std::string path2( args.getUtf8String( name_url_or_path2, path1 ) );
     svn_opt_revision_t revision2 = args.getRevision( name_revision2, svn_opt_revision_working );
     bool recurse = args.getBoolean( name_recurse, true );
-    bool ignore_ancestry = args.getBoolean( name_ignore_ancestry, false );
+    bool ignore_ancestry = args.getBoolean( name_ignore_ancestry, true );
     bool diff_deleted = args.getBoolean( name_diff_deleted, true );
 #ifdef PYSVN_HAS_CLIENT_DIFF2
     bool ignore_content_type = args.getBoolean( name_ignore_content_type, false );
@@ -844,6 +843,8 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
 #endif
         if( error != NULL )
             throw SvnException( error );
+
+        output_file.close();
 
         output_file.open_tmp_file();
         error = svn_stringbuf_from_aprfile( &stringbuf, output_file.file(), pool );
