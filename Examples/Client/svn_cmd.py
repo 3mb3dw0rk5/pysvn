@@ -70,7 +70,7 @@ pysvn.wc_notify_action.failed_revert: 'F',
 pysvn.wc_notify_action.resolved: 'R',
 pysvn.wc_notify_action.restore: 'R',
 pysvn.wc_notify_action.revert: 'R',
-pysvn.wc_notify_action.skip: '?skip',
+pysvn.wc_notify_action.skip: 'skip',
 pysvn.wc_notify_action.status_completed: None,
 pysvn.wc_notify_action.status_external: 'X',
 pysvn.wc_notify_action.update_add: 'A',
@@ -94,6 +94,11 @@ class SvnCommand:
         self.revision_update_complete = None
         self.notify_message_list = []
         self.pysvn_testing = False
+        self.debug_enabled = False
+
+    def debug( self, msg, args=() ):
+        if self.debug_enabled:
+            print 'Debug:', msg % args
 
     def initClient( self, config_dir ):
         self.client = pysvn.Client( config_dir )
@@ -182,6 +187,8 @@ class SvnCommand:
             self.initClient( args.getOptionalValue( '--config-dir', '' ) )
             self.client.set_auth_cache( args.getBooleanOption( '--no-auth-cache', False ) )
             self.pysvn_testing = args.getBooleanOption( '--pysvn-testing', True )
+            self.debug_enabled = args.getBooleanOption( '--debug', True )
+
             getattr( self, cmd_name, self.cmd_help )( args )
 
             self.printNotifyMessages()
@@ -205,6 +212,14 @@ class SvnCommand:
             for msg in self.notify_message_list:
                 print msg
             self.notify_message_list = []
+
+    def cmd_version( self, args ):
+        print 'PYSVN Version:',pysvn.version
+        print 'SVN Version:',pysvn.svn_version
+        if hasattr( pysvn, 'svn_api_version' ):
+            print 'SVN API Version:',pysvn.svn_api_version
+        print 'pysvn._pysvn',pysvn._pysvn
+
 
     def cmd_is_url( self, args ):
         path = args.getPositionalArgs( 1 )[0]
@@ -295,8 +310,8 @@ class SvnCommand:
     cmd_cp = cmd_copy
 
     def cmd_diff( self, args ):
-        print 'cmd_diff'
         recurse = args.getBooleanOption( '--non-recursive', False )
+        revision1, revision2 = args.getOptionalRevisionPair( '--revision', 'base', 'working' )
         positional_args = args.getPositionalArgs( 0, 1 )
         if len(positional_args) == 0:
             positional_args.append( '.' )
@@ -305,11 +320,23 @@ class SvnCommand:
             tmpdir = os.environ['TEMP']
         elif os.environ.has_key('TMPDIR'):
             tmpdir = os.environ['TMPDIR']
-        else:
+        elif os.environ.has_key('TMP'):
+            tmpdir = os.environ['TMP']
+        elif os.path.exists( '/usr/tmp' ):
             tmpdir = '/usr/tmp'
+        elif os.path.exists( '/tmp' ):
+            tmpdir = '/tmp'
+        else:
+            print 'No tmp dir!'
+            return
 
         tmpdir = os.path.join( tmpdir, 'svn_tmp' )
+        self.debug( 'cmd_diff %r, %r, %r, %r, %r' % (tmpdir, positional_args[0], recurse, revision1, revision2) )
+        diff_text = self.client.diff( tmpdir, positional_args[0] )
+        print diff_text
         diff_text = self.client.diff( tmpdir, positional_args[0], recurse=recurse )
+        print diff_text
+        diff_text = self.client.diff( tmpdir, positional_args[0], recurse=recurse, revision1=revision1, revision2=revision2 )
         print diff_text
 
     def cmd_export( self, args ):
@@ -417,7 +444,6 @@ class SvnCommand:
             else:
                 print 'Node kind: unknown'
             if info['lock']:
-                print info['lock']
                 print 'Lock Owner:',info['lock']['owner']
                 print 'Lock Creation Date:',fmtDateTime( info['lock']['creation_date'] )
                 if info['lock']['expiration_date'] is not None:
@@ -454,8 +480,9 @@ class SvnCommand:
 
     def cmd_lock( self, args ):
         msg = args.getOptionalValue( '--message', '' )
-        force = args.getBooleanOption( '--force', False )
+        force = args.getBooleanOption( '--force', True )
         positional_args = args.getPositionalArgs( 1, 1 )
+        print 'lock(',positional_args[0], msg, force,')'
         self.client.lock( positional_args[0], msg, force );
 
     def cmd_log( self, args ):
@@ -847,7 +874,7 @@ long_opt_info = {
     '--verbose': 0,             # print extra information
     '--extensions': 1,          # pass ARG as bundled options to GNU diff
     '--pysvn-testing': 0,       # modify behaviour to assist testing pysvn
-
+    '--debug': 0,               # do debug stuff
 }
 
 # map short name to long
@@ -1016,8 +1043,8 @@ class SvnArguments:
         if len(rev_strings) == 1:
             raise CommandError,'mandatory %s requires a pair of revisions' % opt_name
 
-        return [self._parseRevisionArg( rev_string[0] ),
-            self._parseRevisionArg( rev_string[1] )]
+        return [self._parseRevisionArg( rev_strings[0] ),
+            self._parseRevisionArg( rev_strings[1] )]
 
     def getOptionalRevisionPair( self, opt_name, start_default, end_default=None ):
         # parse a M:N or M as revision pair

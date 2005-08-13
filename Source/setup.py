@@ -126,7 +126,7 @@ CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s
 CC=gcc -c
 CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s
 PYCXX=%(pycxx_dir)s
-LDSHARED=g++ -bundle -g -u _PyMac_Error -framework System -framework Python
+LDSHARED=g++ -bundle -g -u _PyMac_Error -framework System -framework Python -framework CoreFoundation
 LDLIBS= \
 %(svn_lib_dir)s/libsvn_client-1.a \
 %(svn_lib_dir)s/libsvn_subr-1.a \
@@ -148,7 +148,7 @@ LDLIBS= \
 %(svn_lib_dir)s/libcrypto.a \
 %(svn_lib_dir)s/libexpat.a \
 %(svn_lib_dir)s/libxml2.a \
-%(svn_lib_dir)s/libdb-4.2.a \
+%(svn_lib_dir)s/libdb-4.3.a \
 %(svn_lib_dir)s/libintl.a \
 \
  -liconv -lz
