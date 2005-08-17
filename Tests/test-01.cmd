@@ -1,3 +1,4 @@
+@echo off
 @prompt $P$S$G
 @echo WorkDir: %WORKDIR%
 @echo PYTHON: %PYTHON%
@@ -5,190 +6,244 @@
 setlocal
 set PYTHONPATH=%WORKDIR%\Source;%WORKDIR%\Examples\Client
 set PYSVN=%PYTHON% %WORKDIR%\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir
-mkdir testroot-01
-subst b: %CD%\testroot-01
-cd /d b:\
+echo Info: PYSVN CMD %PYSVN%
+call :cmd_shell mkdir testroot-01
+call :cmd_shell subst b: %CD%\testroot-01
+call :cmd_shell cd /d b:\
 
-svnadmin create b:\repos
+call :cmd_shell svnadmin create b:\repos
 
-rem mkdir
-%PYSVN% mkdir file:///b:/repos/trunk -m "test-01 add trunk"
-%PYSVN% mkdir file:///b:/repos/trunk/test -m "test-01 add test"
+echo Info: Test - mkdir
+call :cmd_pysvn mkdir file:///b:/repos/trunk -m "test-01 add trunk"
+call :cmd_pysvn mkdir file:///b:/repos/trunk/test -m "test-01 add test"
 
-rem ls
-%PYSVN% ls file:///b:/repos -v -R
+echo Info: Test - ls
+call :cmd_pysvn ls file:///b:/repos -v -R
 
-rem checkout
-%PYSVN% checkout file:///b:/repos/trunk b:\wc1
-dir b:\wc1 /s /b /a-h
-cd /d b:\wc1\test
+echo Info: Test - checkout
+call :cmd_pysvn checkout file:///b:/repos/trunk b:\wc1
+call :cmd_shell dir b:\wc1 /s /b /a-h
+call :cmd_shell cd /d b:\wc1\test
 
-rem add
-echo test add file 1 >file1.txt
-echo test add file 2 >file2.txt
-echo test add file 3 >file3.txt
-echo test add file 4 >file4.txt
-echo test add file 5 >file5.txt
-%PYSVN% add file1.txt
-%PYSVN% add file2.txt
-%PYSVN% add file3.txt
-%PYSVN% add file4.txt
-%PYSVN% add --force file5.txt
-%PYSVN% checkin -m "commit added files"
+echo Info: Test - add
+call :cmd_createfile file1.txt test add file 1
+call :cmd_createfile file2.txt test add file 2
+call :cmd_createfile file3.txt test add file 3
+call :cmd_createfile file4.txt test add file 4
+call :cmd_createfile file5.txt test add file 5
+call :cmd_pysvn add file1.txt
+call :cmd_pysvn add file2.txt
+call :cmd_pysvn add file3.txt
+call :cmd_pysvn add file4.txt
+call :cmd_pysvn add --force file5.txt
+call :cmd_pysvn checkin -m "commit added files"
 
-rem update - get a new wc that will update
-%PYSVN% checkout file:///b:/repos/trunk b:\wc2
+echo Info: Test - update - get a new wc that will update
+call :cmd_pysvn checkout file:///b:/repos/trunk b:\wc2
 
-rem - checkin a mod from wc1
-echo line 2 >>b:\wc1\test\file1.txt
-%PYSVN% checkin -m "commit modified file"
+echo Info: Test - - checkin a mod from wc1
+call :cmd_appendfile b:\wc1\test\file1.txt line 2
+call :cmd_pysvn checkin -m "commit modified file"
 
-%PYSVN% checkin -m "commit modified file"
-rem update
-%PYSVN% update b:\wc2
+call :cmd_pysvn checkin -m "commit modified file"
+echo Info: Test - update
+call :cmd_pysvn update b:\wc2
 
-rem the rest in lexical order
+echo Info: Test - the rest in lexical order
 
-rem annotate
-%PYSVN% annotate b:\wc2\test\file1.txt
+echo Info: Test - annotate
+call :cmd_pysvn annotate b:\wc2\test\file1.txt
 
-rem cat
-%PYSVN% cat -r head file:///b:/repos/trunk/test/file1.txt
+echo Info: Test - cat
+call :cmd_pysvn cat -r head file:///b:/repos/trunk/test/file1.txt
 
-rem cleanup
+echo Info: Test - cleanup
 
-rem copy
-%PYSVN% mkdir file:///b:/repos/tags -m "test-01 add tags"
-echo tag the trunk | %PYSVN% copy file:///b:/repos/trunk file:///b:/repos/tags/version1
-%PYSVN% ls -v file:///b:/repos/tags
-%PYSVN% copy b:\wc2\test\file1.txt b:\wc2\test\file1b.txt
-%PYSVN% propset svn:eol-style native b:\wc2\test\file1b.txt
-%PYSVN% checkin b:\wc2 -m "copy test"
+echo Info: Test - copy
+call :cmd_pysvn mkdir file:///b:/repos/tags -m "test-01 add tags"
+call :cmd_createfile msg.tmp tag the trunk
+call :cmd_pysvn copy file:///b:/repos/trunk file:///b:/repos/tags/version1 <msg.tmp
+call :cmd_pysvn ls -v file:///b:/repos/tags
+call :cmd_pysvn copy b:\wc2\test\file1.txt b:\wc2\test\file1b.txt
+call :cmd_pysvn propset svn:eol-style native b:\wc2\test\file1b.txt
+call :cmd_pysvn checkin b:\wc2 -m "copy test"
 
-rem diff
-echo new line >>b:\wc2\test\file1b.txt
-%PYSVN% diff b:\wc2
+echo Info: Test - diff
+call :cmd_appendfile b:\wc2\test\file1b.txt new line
+call :cmd_pysvn diff b:\wc2
 
-rem export
-%PYSVN% export file:///b:/repos/trunk/test b:\export1.native
-%PYSVN% export --native-eol CR file:///b:/repos/trunk/test b:\export1.cr
-%PYSVN% export --native-eol LF file:///b:/repos/trunk/test b:\export1.lf
-%PYSVN% export --native-eol CRLF file:///b:/repos/trunk/test b:\export1.crlf
-dir /s /b b:\export1.native
-dir /s /b b:\export1.cr
-dir /s /b b:\export1.lf
-dir /s /b b:\export1.crlf
+echo Info: Test - export
+call :cmd_pysvn export file:///b:/repos/trunk/test b:\export1.native
+call :cmd_pysvn export --native-eol CR file:///b:/repos/trunk/test b:\export1.cr
+call :cmd_pysvn export --native-eol LF file:///b:/repos/trunk/test b:\export1.lf
+call :cmd_pysvn export --native-eol CRLF file:///b:/repos/trunk/test b:\export1.crlf
+call :cmd_shell dir /s /b b:\export1.native
+call :cmd_shell dir /s /b b:\export1.cr
+call :cmd_shell dir /s /b b:\export1.lf
+call :cmd_shell dir /s /b b:\export1.crlf
 
-rem import
+echo Info: Test - import
 
-rem info
-%PYSVN% info b:\wc2\test
-%PYSVN% info b:\wc2\test\file1.txt
+echo Info: Test - info
+call :cmd_pysvn info b:\wc2\test
+call :cmd_pysvn info b:\wc2\test\file1.txt
 
-rem log
-%PYSVN% log b:\wc2
+echo Info: Test - log
+call :cmd_pysvn log b:\wc2
 
-rem ls
-%PYSVN% ls file:///b:/repos/trunk/test
-%PYSVN% ls -v file:///b:/repos/trunk/test
-%PYSVN% ls b:\wc2\test
-%PYSVN% ls -v b:\wc2\test
+echo Info: Test - ls
+call :cmd_pysvn ls file:///b:/repos/trunk/test
+call :cmd_pysvn ls -v file:///b:/repos/trunk/test
+call :cmd_pysvn ls b:\wc2\test
+call :cmd_pysvn ls -v b:\wc2\test
 
-rem merge
-echo test add file merge 1 >file-merge-1.txt
-echo test add file merge 2 >file-merge-2.txt
-%PYSVN% add file-merge-1.txt
-%PYSVN% add file-merge-2.txt
-%PYSVN% checkin -m "commit merge files"
+echo Info: Test - merge - see below
+echo Info: Test - mkdir - done above
 
-rem mkdir - done above
-
-rem move
-echo move url test |%PYSVN% move file:///b:/repos/trunk/test/file2.txt file:///b:/repos/trunk/test/file2b.txt 
-%PYSVN% move b:\wc2\test\file3.txt b:\wc2\test\file3b.txt
-%PYSVN% checkin b:\wc2 -m "move wc test"
+echo Info: Test - move
+call :cmd_createfile msg.tmp move url test
+call :cmd_pysvn move file:///b:/repos/trunk/test/file2.txt file:///b:/repos/trunk/test/file2b.txt <msg.tmp
+call :cmd_pysvn move b:\wc2\test\file3.txt b:\wc2\test\file3b.txt
+call :cmd_pysvn checkin b:\wc2 -m "move wc test"
 
 
-rem status
-echo file 4 is changing >>b:\wc1\test\file4.txt
-%PYSVN% checkin b:\wc1 -m "change wc1 for status -u to detect"
+echo Info: Test - status
+call :cmd_appendfile b:\wc1\test\file4.txt file 4 is changing
+call :cmd_pysvn checkin b:\wc1 -m "change wc1 for status -u to detect"
 
-%PYSVN% status b:\wc2
-%PYSVN% status --verbose b:\wc2
-%PYSVN% status --show-updates b:\wc2
-%PYSVN% status --show-updates --verbose b:\wc2
-%PYSVN% update
-%PYSVN% status --show-updates b:\wc2
-%PYSVN% status --show-updates --verbose b:\wc2
-%PYSVN% checkin b:\wc2 -m "prop change"
+call :cmd_pysvn status b:\wc2
+call :cmd_pysvn status --verbose b:\wc2
+call :cmd_pysvn status --show-updates b:\wc2
+call :cmd_pysvn status --show-updates --verbose b:\wc2
+call :cmd_pysvn update
+call :cmd_pysvn status --show-updates b:\wc2
+call :cmd_pysvn status --show-updates --verbose b:\wc2
+call :cmd_pysvn checkin b:\wc2 -m "prop change"
 
-rem propdel
-cd /d b:\wc2\test
-%PYSVN% propset test:prop1 del_me file4.txt
-%PYSVN% proplist -v file4.txt
-%PYSVN% propdel test:prop1 file4.txt
-%PYSVN% proplist -v file4.txt
+echo Info: Test - propdel
+call :cmd_shell cd /d b:\wc2\test
+call :cmd_pysvn propset test:prop1 del_me file4.txt
+call :cmd_pysvn proplist -v file4.txt
+call :cmd_pysvn propdel test:prop1 file4.txt
+call :cmd_pysvn proplist -v file4.txt
 
-rem propget
-%PYSVN% propget svn:eol-style file4.txt
+echo Info: Test - propget
+call :cmd_pysvn propget svn:eol-style file4.txt
 
-rem proplist - see above
+echo Info: Test - proplist - see above
 
-rem propset
-cd /d b:\wc2\test
-%PYSVN% proplist -v file4.txt
-%PYSVN% propset svn:eol-style native file4.txt
-%PYSVN% proplist -v file4.txt
+echo Info: Test - propset
+call :cmd_shell cd /d b:\wc2\test
+call :cmd_pysvn proplist -v file4.txt
+call :cmd_pysvn propset svn:eol-style native file4.txt
+call :cmd_pysvn proplist -v file4.txt
 
-rem remove
-cd /d b:\wc2\test
-%PYSVN% remove file5.txt
-%PYSVN% status
+echo Info: Test - remove
+call :cmd_shell cd /d b:\wc2\test
+call :cmd_pysvn remove file5.txt
+call :cmd_pysvn status
 
-rem resolved
-echo conflict in file4 yes >>b:\wc1\test\file4.txt
-echo conflict in file4 no >>b:\wc2\test\file4.txt
-%PYSVN% checkin b:\wc1\test -m "make a conflict part 1"
-%PYSVN% update b:\wc2\test
-%PYSVN% status
-copy b:\wc2\test\file4.txt.mine b:\wc2\test\file4.txt
-%PYSVN% resolved b:\wc2\test\file4.txt
-%PYSVN% checkin b:\wc2\test\file4.txt -m "resolve a confict part 2"
+echo Info: Test - resolved
+call :cmd_appendfile b:\wc1\test\file4.txt conflict in file4 yes
+call :cmd_appendfile b:\wc2\test\file4.txt conflict in file4 no
+call :cmd_pysvn checkin b:\wc1\test -m "make a conflict part 1"
+call :cmd_pysvn update b:\wc2\test
+call :cmd_pysvn status
+call :cmd_shell copy b:\wc2\test\file4.txt.mine b:\wc2\test\file4.txt
+call :cmd_pysvn resolved b:\wc2\test\file4.txt
+call :cmd_pysvn checkin b:\wc2\test\file4.txt -m "resolve a confict part 2"
 
-rem revert
-%PYSVN% revert file5.txt
-%PYSVN% status
+echo Info: Test - revert
+call :cmd_pysvn revert file5.txt
+call :cmd_pysvn status
 
-rem revproplist
-%PYSVN% revproplist file:///b:/repos/trunk
+echo Info: Test - revproplist
+call :cmd_pysvn revproplist file:///b:/repos/trunk
 
-rem revpropget
-%PYSVN% revpropget svn:log file:///b:/repos/trunk
-%PYSVN% revpropget no_such_prop file:///b:/repos/trunk
+echo Info: Test - revpropget
+call :cmd_pysvn revpropget svn:log file:///b:/repos/trunk
+call :cmd_pysvn revpropget no_such_prop file:///b:/repos/trunk
 
-rem revpropset
-%PYSVN% revpropset svn:log "Hello world" file:///b:/repos/trunk
+echo Info: Test - revpropset
+call :cmd_pysvn revpropset svn:log "Hello world" file:///b:/repos/trunk
 
-rem revpropdel
-%PYSVN% revpropdel svn:log file:///b:/repos/trunk
+echo Info: Test - revpropdel
+call :cmd_pysvn revpropdel svn:log file:///b:/repos/trunk
 
-rem status - see above
+echo Info: Test - status - see above
 
-rem relocate
-mkdir b:\root
-move b:\repos b:\root
-%PYSVN% info b:\wc1
-%PYSVN% relocate file:///b:/repos/trunk file:///b:/root/repos/trunk b:\wc1
-%PYSVN% info b:\wc1
-%PYSVN% info b:\wc2
-%PYSVN% relocate file:///b:/repos/trunk file:///b:/root/repos/trunk b:\wc2
-%PYSVN% info b:\wc2
+echo Info: Test - relocate
+call :cmd_shell mkdir b:\root
+call :cmd_shell move b:\repos b:\root
+call :cmd_pysvn info b:\wc1
+call :cmd_pysvn relocate file:///b:/repos/trunk file:///b:/root/repos/trunk b:\wc1
+call :cmd_pysvn info b:\wc1
+call :cmd_pysvn info b:\wc2
+call :cmd_pysvn relocate file:///b:/repos/trunk file:///b:/root/repos/trunk b:\wc2
+call :cmd_pysvn info b:\wc2
 
-rem switch
-%PYSVN% info b:\wc2
-%PYSVN% switch b:\wc2 file:///b:/root/repos/tags/version1
-%PYSVN% info b:\wc2
+echo Info: Test - switch
+call :cmd_pysvn info b:\wc2
+call :cmd_pysvn switch b:\wc2 file:///b:/root/repos/tags/version1
+call :cmd_pysvn info b:\wc2
 
-rem update - see above
+echo Info: Test - update - see above
 
+echo Info: Test - Info: Testing - merge
+call :cmd_pysvn checkout file:///b:/root/repos/trunk b:\wc3
+call :cmd_shell cd b:\wc3\test
+call :cmd_createfile file-merge-1.txt test add file merge 1
+call :cmd_createfile file-merge-2.txt test add file merge 2
+call :cmd_pysvn add file-merge-1.txt
+call :cmd_pysvn add file-merge-2.txt
+call :cmd_pysvn commit -m "add test merge files" .
+
+call :cmd_createfile msg.tmp make a branch
+call :cmd_pysvn copy file:///b:/root/repos/trunk/test file:///b:/root/repos/trunk/test-branch <msg.tmp
+call :cmd_pysvn update b:\wc3
+
+call :cmd_createfile file-merge-3.txt test add file merge 3
+call :cmd_pysvn add file-merge-3.txt
+call :cmd_pysvn rm file-merge-1.txt
+call :cmd_appendfile file-merge-2.txt modify merge 2
+
+call :cmd_pysvn commit -m "change test merge files" .
+
+call :cmd_pysvn merge --dry-run --revision 14:15 file:///b:/root/repos/trunk/test b:\wc3\test-branch
+call :cmd_pysvn merge --revision 14:15 file:///b:/root/repos/trunk/test b:\wc3\test-branch
+call :cmd_pysvn status b:\wc3\test-branch
+call :cmd_pysvn diff b:\wc3\test-branch
+
+echo Info: Test - end
+goto :eof
 endlocal
+
+:cmd_shell
+    echo.
+    echo Info: CMD %*
+    %*
+    goto :eof
+
+:cmd_pysvn
+    echo.
+    echo Info: PYSVN CMD %*
+    %PYSVN% %*
+    goto :eof
+
+:cmd_createfile
+    set FILENAME=%1
+    shift
+    echo Info: Create File %FILENAME% - %1 %2 %3 %4 %5 %6 %7 %8 %9
+    call :cmd__echo %1 %2 %3 %4 %5 %6 %7 %8 %9 >%FILENAME%
+    goto :eof
+
+:cmd_appendfile
+    set FILENAME=%1
+    shift
+    echo Info: Append File %FILENAME% - %1 %2 %3 %4 %5 %6 %7 %8 %9
+    call :cmd__echo %1 %2 %3 %4 %5 %6 %7 %8 %9 >>%FILENAME%
+    goto :eof
+
+:cmd__echo
+    echo %*
+    goto :eof

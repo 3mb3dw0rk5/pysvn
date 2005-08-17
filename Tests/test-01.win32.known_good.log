@@ -1,40 +1,32 @@
 WorkDir: l:\wc\pysvn\trunk\pysvn\Extension
 PYTHON: c:\python23\python.exe
+Info: PYSVN CMD c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir
 
-L:\wc\pysvn\trunk\pysvn\Extension\Tests >setlocal
+Info: CMD mkdir testroot-01
 
-L:\wc\pysvn\trunk\pysvn\Extension\Tests >set PYTHONPATH=l:\wc\pysvn\trunk\pysvn\Extension\Source;l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client 
+Info: CMD subst b: L:\wc\pysvn\trunk\pysvn\Extension\Tests\testroot-01
 
-L:\wc\pysvn\trunk\pysvn\Extension\Tests >set PYSVN=c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir 
+Info: CMD cd /d b:\
 
-L:\wc\pysvn\trunk\pysvn\Extension\Tests >mkdir testroot-01 
+Info: CMD svnadmin create b:\repos
+Info: Test - mkdir
 
-L:\wc\pysvn\trunk\pysvn\Extension\Tests >subst b: L:\wc\pysvn\trunk\pysvn\Extension\Tests\testroot-01 
+Info: PYSVN CMD mkdir file:///b:/repos/trunk -m "test-01 add trunk"
 
-L:\wc\pysvn\trunk\pysvn\Extension\Tests >cd /d b:\ 
+Info: PYSVN CMD mkdir file:///b:/repos/trunk/test -m "test-01 add test"
+Info: Test - ls
 
-B:\ >svnadmin create b:\repos 
+Info: PYSVN CMD ls file:///b:/repos -v -R
+      2 barry           0 17-Aug-2005 22:07:39 file:///b:/repos/trunk
+      2 barry           0 17-Aug-2005 22:07:39 file:///b:/repos/trunk/test
+Info: Test - checkout
 
-B:\ >rem mkdir 
-
-B:\ >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir mkdir file:///b:/repos/trunk -m "test-01 add trunk" 
-
-B:\ >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir mkdir file:///b:/repos/trunk/test -m "test-01 add test" 
-
-B:\ >rem ls 
-
-B:\ >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir ls file:///b:/repos -v -R 
-      2 barry           0 17-Jul-2005 16:54:16 file:///b:/repos/trunk
-      2 barry           0 17-Jul-2005 16:54:16 file:///b:/repos/trunk/test
-
-B:\ >rem checkout 
-
-B:\ >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir checkout file:///b:/repos/trunk b:\wc1 
+Info: PYSVN CMD checkout file:///b:/repos/trunk b:\wc1
 A b:/wc1/test
 U b:/wc1
 Checked out revision 2
 
-B:\ >dir b:\wc1 /s /b /a-h 
+Info: CMD dir b:\wc1 /s /b /a-h
 b:\wc1\test
 b:\wc1\.svn\empty-file
 b:\wc1\.svn\entries
@@ -63,46 +55,39 @@ b:\wc1\test\.svn\tmp\props
 b:\wc1\test\.svn\tmp\text-base
 b:\wc1\test\.svn\tmp\wcprops
 
-B:\ >cd /d b:\wc1\test 
+Info: CMD cd /d b:\wc1\test
+Info: Test - add
+Info: Create File file1.txt - test add file 1     
+Info: Create File file2.txt - test add file 2     
+Info: Create File file3.txt - test add file 3     
+Info: Create File file4.txt - test add file 4     
+Info: Create File file5.txt - test add file 5     
 
-B:\wc1\test >rem add 
-
-B:\wc1\test >echo test add file 1  1>file1.txt 
-
-B:\wc1\test >echo test add file 2  1>file2.txt 
-
-B:\wc1\test >echo test add file 3  1>file3.txt 
-
-B:\wc1\test >echo test add file 4  1>file4.txt 
-
-B:\wc1\test >echo test add file 5  1>file5.txt 
-
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir add file1.txt 
+Info: PYSVN CMD add file1.txt
 A file1.txt
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir add file2.txt 
+Info: PYSVN CMD add file2.txt
 A file2.txt
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir add file3.txt 
+Info: PYSVN CMD add file3.txt
 A file3.txt
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir add file4.txt 
+Info: PYSVN CMD add file4.txt
 A file4.txt
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir add --force file5.txt 
+Info: PYSVN CMD add --force file5.txt
 A file5.txt
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir checkin -m "commit added files" 
+Info: PYSVN CMD checkin -m "commit added files"
 A test/file1.txt
 A test/file2.txt
 A test/file3.txt
 A test/file4.txt
 A test/file5.txt
 Revision 3
+Info: Test - update - get a new wc that will update
 
-B:\wc1\test >rem update - get a new wc that will update 
-
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir checkout file:///b:/repos/trunk b:\wc2 
+Info: PYSVN CMD checkout file:///b:/repos/trunk b:\wc2
 A b:/wc2/test
 A b:/wc2/test/file1.txt
 A b:/wc2/test/file2.txt
@@ -111,72 +96,91 @@ A b:/wc2/test/file4.txt
 A b:/wc2/test/file5.txt
 U b:/wc2
 Checked out revision 3
+Info: Test - - checkin a mod from wc1
+Info: Append File b:\wc1\test\file1.txt - line 2       
 
-B:\wc1\test >rem - checkin a mod from wc1 
-
-B:\wc1\test >echo line 2  1>>b:\wc1\test\file1.txt 
-
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir checkin -m "commit modified file" 
+Info: PYSVN CMD checkin -m "commit modified file"
 M test/file1.txt
 Revision 4
 
-B:\wc1\test >rem update 
+Info: PYSVN CMD checkin -m "commit modified file"
+Nothing to commit
+Info: Test - update
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir update b:\wc2 
+Info: PYSVN CMD update b:\wc2
 U b:/wc2
 U b:/wc2/test
 U b:/wc2/test/file1.txt
 Updated to revision 4
+Info: Test - the rest in lexical order
+Info: Test - annotate
 
-B:\wc1\test >rem the rest in lexical order 
-
-B:\wc1\test >rem annotate 
-
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir annotate b:\wc2\test\file1.txt 
+Info: PYSVN CMD annotate b:\wc2\test\file1.txt
 A /trunk/test/file1.txt
 A /trunk/test/file1.txt
-0| r3 | barry | 2005-07-17T15:54:23.766686Z | test add file 1 
-1| r4 | barry | 2005-07-17T15:54:26.710979Z | line 2 
+0| r3 | barry | 2005-08-17T21:07:43.298606Z | test add file 1
+1| r4 | barry | 2005-08-17T21:07:45.461759Z | line 2
+Info: Test - cat
 
-B:\wc1\test >rem cat 
+Info: PYSVN CMD cat -r head file:///b:/repos/trunk/test/file1.txt
+test add file 1
+line 2
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir cat -r head file:///b:/repos/trunk/test/file1.txt 
-test add file 1 
-line 2 
+Info: Test - cleanup
+Info: Test - copy
 
+Info: PYSVN CMD mkdir file:///b:/repos/tags -m "test-01 add tags"
+Info: Create File msg.tmp - tag the trunk      
 
-B:\wc1\test >rem cleanup 
-
-B:\wc1\test >rem copy 
-
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir mkdir file:///b:/repos/tags -m "test-01 add tags" 
-
-B:\wc1\test >echo tag the trunk   | c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir copy file:///b:/repos/trunk file:///b:/repos/tags/version1 
+Info: PYSVN CMD copy file:///b:/repos/trunk file:///b:/repos/tags/version1
 Log message
 --- -------
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir ls -v file:///b:/repos/tags 
-      6 barry           0 17-Jul-2005 16:54:31 file:///b:/repos/tags/version1
+Info: PYSVN CMD ls -v file:///b:/repos/tags
+      6 barry           0 17-Aug-2005 22:07:48 file:///b:/repos/tags/version1
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir copy b:\wc2\test\file1.txt b:\wc2\test\file1b.txt 
+Info: PYSVN CMD copy b:\wc2\test\file1.txt b:\wc2\test\file1b.txt
 A b:/wc2/test/file1b.txt
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir propset svn:eol-style native b:\wc2\test\file1b.txt 
+Info: PYSVN CMD propset svn:eol-style native b:\wc2\test\file1b.txt
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir checkin b:\wc2 -m "copy test" 
+Info: PYSVN CMD checkin b:\wc2 -m "copy test"
 A wc2/test/file1b.txt
 Revision 7
+Info: Test - diff
+Info: Append File b:\wc2\test\file1b.txt - new line       
 
-B:\wc1\test >rem diff 
+Info: PYSVN CMD diff b:\wc2
+Index: b:/wc2/test/file1b.txt
+===================================================================
+--- b:/wc2/test/file1b.txt	(revision 7)
++++ b:/wc2/test/file1b.txt	(working copy)
+@@ -1,2 +1,3 @@
+ test add file 1
+ line 2
++new line
 
-B:\wc1\test >echo new line  1>>b:\wc2\test\file1b.txt 
+Index: b:/wc2/test/file1b.txt
+===================================================================
+--- b:/wc2/test/file1b.txt	(revision 7)
++++ b:/wc2/test/file1b.txt	(working copy)
+@@ -1,2 +1,3 @@
+ test add file 1
+ line 2
++new line
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir diff b:\wc2 
+Index: b:/wc2/test/file1b.txt
+===================================================================
+--- b:/wc2/test/file1b.txt	(revision 7)
++++ b:/wc2/test/file1b.txt	(working copy)
+@@ -1,2 +1,3 @@
+ test add file 1
+ line 2
++new line
 
+Info: Test - export
 
-B:\wc1\test >rem export 
-
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir export file:///b:/repos/trunk/test b:\export1.native 
+Info: PYSVN CMD export file:///b:/repos/trunk/test b:\export1.native
 A b:\export1.native
 A b:\export1.native/file1.txt
 A b:\export1.native/file1b.txt
@@ -185,7 +189,7 @@ A b:\export1.native/file3.txt
 A b:\export1.native/file4.txt
 A b:\export1.native/file5.txt
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir export --native-eol CR file:///b:/repos/trunk/test b:\export1.cr 
+Info: PYSVN CMD export --native-eol CR file:///b:/repos/trunk/test b:\export1.cr
 A b:\export1.cr
 A b:\export1.cr/file1.txt
 A b:\export1.cr/file1b.txt
@@ -194,7 +198,7 @@ A b:\export1.cr/file3.txt
 A b:\export1.cr/file4.txt
 A b:\export1.cr/file5.txt
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir export --native-eol LF file:///b:/repos/trunk/test b:\export1.lf 
+Info: PYSVN CMD export --native-eol LF file:///b:/repos/trunk/test b:\export1.lf
 A b:\export1.lf
 A b:\export1.lf/file1.txt
 A b:\export1.lf/file1b.txt
@@ -203,7 +207,7 @@ A b:\export1.lf/file3.txt
 A b:\export1.lf/file4.txt
 A b:\export1.lf/file5.txt
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir export --native-eol CRLF file:///b:/repos/trunk/test b:\export1.crlf 
+Info: PYSVN CMD export --native-eol CRLF file:///b:/repos/trunk/test b:\export1.crlf
 A b:\export1.crlf
 A b:\export1.crlf/file1.txt
 A b:\export1.crlf/file1b.txt
@@ -212,7 +216,7 @@ A b:\export1.crlf/file3.txt
 A b:\export1.crlf/file4.txt
 A b:\export1.crlf/file5.txt
 
-B:\wc1\test >dir /s /b b:\export1.native 
+Info: CMD dir /s /b b:\export1.native
 b:\export1.native\file1.txt
 b:\export1.native\file1b.txt
 b:\export1.native\file2.txt
@@ -220,7 +224,7 @@ b:\export1.native\file3.txt
 b:\export1.native\file4.txt
 b:\export1.native\file5.txt
 
-B:\wc1\test >dir /s /b b:\export1.cr 
+Info: CMD dir /s /b b:\export1.cr
 b:\export1.cr\file1.txt
 b:\export1.cr\file1b.txt
 b:\export1.cr\file2.txt
@@ -228,7 +232,7 @@ b:\export1.cr\file3.txt
 b:\export1.cr\file4.txt
 b:\export1.cr\file5.txt
 
-B:\wc1\test >dir /s /b b:\export1.lf 
+Info: CMD dir /s /b b:\export1.lf
 b:\export1.lf\file1.txt
 b:\export1.lf\file1b.txt
 b:\export1.lf\file2.txt
@@ -236,66 +240,62 @@ b:\export1.lf\file3.txt
 b:\export1.lf\file4.txt
 b:\export1.lf\file5.txt
 
-B:\wc1\test >dir /s /b b:\export1.crlf 
+Info: CMD dir /s /b b:\export1.crlf
 b:\export1.crlf\file1.txt
 b:\export1.crlf\file1b.txt
 b:\export1.crlf\file2.txt
 b:\export1.crlf\file3.txt
 b:\export1.crlf\file4.txt
 b:\export1.crlf\file5.txt
+Info: Test - import
+Info: Test - info
 
-B:\wc1\test >rem import 
-
-B:\wc1\test >rem info 
-
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir info b:\wc2\test 
+Info: PYSVN CMD info b:\wc2\test
 Path: b:\wc2\test
 Name: .
 Url: file:///b:/repos/trunk/test
-Repository UUID: 27efed74-ca80-054f-aa78-1525a611bd79
+Repository UUID: 7556f6f1-020f-1944-90ac-defb4236b8e1
 Revision: 4
 Node kind: directory
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 17-Jul-2005 16:54:26
+Last Changed Date: 17-Aug-2005 22:07:45
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir info b:\wc2\test\file1.txt 
+Info: PYSVN CMD info b:\wc2\test\file1.txt
 Path: b:\wc2\test\file1.txt
 Name: file1.txt
 Url: file:///b:/repos/trunk/test/file1.txt
-Repository UUID: 27efed74-ca80-054f-aa78-1525a611bd79
+Repository UUID: 7556f6f1-020f-1944-90ac-defb4236b8e1
 Revision: 4
 Node kind: file
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 17-Jul-2005 16:54:26
-Text Last Updated: 17-Jul-2005 16:54:27
-Properties Last Updated: 17-Jul-2005 16:54:27
-Checksum: 373fc04732c677b8e9e401e5a3673a22
+Last Changed Date: 17-Aug-2005 22:07:45
+Text Last Updated: 17-Aug-2005 22:07:46
+Properties Last Updated: 17-Aug-2005 22:07:46
+Checksum: cb0b37e264ebcc467e9f37a069e034d7
+Info: Test - log
 
-B:\wc1\test >rem log 
-
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir log b:\wc2 
+Info: PYSVN CMD log b:\wc2
 ------------------------------------------------------------
-rev 7: barry | 17-Jul-2005 16:54:34 | 1 lines
+rev 7: barry | 17-Aug-2005 22:07:50 | 1 lines
 copy test
 ------------------------------------------------------------
-rev 4: barry | 17-Jul-2005 16:54:26 | 1 lines
+rev 4: barry | 17-Aug-2005 22:07:45 | 1 lines
 commit modified file
 ------------------------------------------------------------
-rev 3: barry | 17-Jul-2005 16:54:23 | 1 lines
+rev 3: barry | 17-Aug-2005 22:07:43 | 1 lines
 commit added files
 ------------------------------------------------------------
-rev 2: barry | 17-Jul-2005 16:54:16 | 1 lines
+rev 2: barry | 17-Aug-2005 22:07:39 | 1 lines
 test-01 add test
 ------------------------------------------------------------
-rev 1: barry | 17-Jul-2005 16:54:15 | 1 lines
+rev 1: barry | 17-Aug-2005 22:07:39 | 1 lines
 test-01 add trunk
 ------------------------------------------------------------
+Info: Test - ls
 
-B:\wc1\test >rem ls 
-
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir ls file:///b:/repos/trunk/test 
+Info: PYSVN CMD ls file:///b:/repos/trunk/test
 file:///b:/repos/trunk/test/file1.txt
 file:///b:/repos/trunk/test/file1b.txt
 file:///b:/repos/trunk/test/file2.txt
@@ -303,15 +303,15 @@ file:///b:/repos/trunk/test/file3.txt
 file:///b:/repos/trunk/test/file4.txt
 file:///b:/repos/trunk/test/file5.txt
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir ls -v file:///b:/repos/trunk/test 
-      4 barry          27 17-Jul-2005 16:54:26 file:///b:/repos/trunk/test/file1.txt
-      7 barry          25 17-Jul-2005 16:54:34 file:///b:/repos/trunk/test/file1b.txt
-      3 barry          18 17-Jul-2005 16:54:23 file:///b:/repos/trunk/test/file2.txt
-      3 barry          18 17-Jul-2005 16:54:23 file:///b:/repos/trunk/test/file3.txt
-      3 barry          18 17-Jul-2005 16:54:23 file:///b:/repos/trunk/test/file4.txt
-      3 barry          18 17-Jul-2005 16:54:23 file:///b:/repos/trunk/test/file5.txt
+Info: PYSVN CMD ls -v file:///b:/repos/trunk/test
+      4 barry          25 17-Aug-2005 22:07:45 file:///b:/repos/trunk/test/file1.txt
+      7 barry          23 17-Aug-2005 22:07:50 file:///b:/repos/trunk/test/file1b.txt
+      3 barry          17 17-Aug-2005 22:07:43 file:///b:/repos/trunk/test/file2.txt
+      3 barry          17 17-Aug-2005 22:07:43 file:///b:/repos/trunk/test/file3.txt
+      3 barry          17 17-Aug-2005 22:07:43 file:///b:/repos/trunk/test/file4.txt
+      3 barry          17 17-Aug-2005 22:07:43 file:///b:/repos/trunk/test/file5.txt
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir ls b:\wc2\test 
+Info: PYSVN CMD ls b:\wc2\test
 b:/wc2/test/file1.txt
 b:/wc2/test/file1b.txt
 b:/wc2/test/file2.txt
@@ -319,72 +319,68 @@ b:/wc2/test/file3.txt
 b:/wc2/test/file4.txt
 b:/wc2/test/file5.txt
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir ls -v b:\wc2\test 
-      4 barry          27 17-Jul-2005 16:54:26 b:/wc2/test/file1.txt
-      7 barry          25 17-Jul-2005 16:54:34 b:/wc2/test/file1b.txt
-      3 barry          18 17-Jul-2005 16:54:23 b:/wc2/test/file2.txt
-      3 barry          18 17-Jul-2005 16:54:23 b:/wc2/test/file3.txt
-      3 barry          18 17-Jul-2005 16:54:23 b:/wc2/test/file4.txt
-      3 barry          18 17-Jul-2005 16:54:23 b:/wc2/test/file5.txt
+Info: PYSVN CMD ls -v b:\wc2\test
+      4 barry          25 17-Aug-2005 22:07:45 b:/wc2/test/file1.txt
+      7 barry          23 17-Aug-2005 22:07:50 b:/wc2/test/file1b.txt
+      3 barry          17 17-Aug-2005 22:07:43 b:/wc2/test/file2.txt
+      3 barry          17 17-Aug-2005 22:07:43 b:/wc2/test/file3.txt
+      3 barry          17 17-Aug-2005 22:07:43 b:/wc2/test/file4.txt
+      3 barry          17 17-Aug-2005 22:07:43 b:/wc2/test/file5.txt
+Info: Test - merge - see below
+Info: Test - mkdir - done above
+Info: Test - move
+Info: Create File msg.tmp - move url test      
 
-B:\wc1\test >rem merge 
-
-B:\wc1\test >rem mkdir - done above 
-
-B:\wc1\test >rem move 
-
-B:\wc1\test >echo move url test   | c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir move file:///b:/repos/trunk/test/file2.txt file:///b:/repos/trunk/test/file2b.txt  
+Info: PYSVN CMD move file:///b:/repos/trunk/test/file2.txt file:///b:/repos/trunk/test/file2b.txt
 Log message
 --- -------
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir move b:\wc2\test\file3.txt b:\wc2\test\file3b.txt 
+Info: PYSVN CMD move b:\wc2\test\file3.txt b:\wc2\test\file3b.txt
 A b:/wc2/test/file3b.txt
 D b:/wc2/test/file3.txt
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir checkin b:\wc2 -m "move wc test" 
+Info: PYSVN CMD checkin b:\wc2 -m "move wc test"
 A wc2/test/file3b.txt
 D wc2/test/file3.txt
 M wc2/test/file1b.txt
 Revision 9
+Info: Test - status
+Info: Append File b:\wc1\test\file4.txt - file 4 is changing     
 
-B:\wc1\test >rem status 
-
-B:\wc1\test >echo file 4 is changing  1>>b:\wc1\test\file4.txt 
-
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir checkin b:\wc1 -m "change wc1 for status -u to detect" 
+Info: PYSVN CMD checkin b:\wc1 -m "change wc1 for status -u to detect"
 M test/file4.txt
 Revision 10
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir status b:\wc2 
+Info: PYSVN CMD status b:\wc2
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir status --verbose b:\wc2 
-              4      4 barry          b:\wc2
-              4      4 barry          b:\wc2\test
-              4      4 barry          b:\wc2\test\file1.txt
-              9      9 barry          b:\wc2\test\file1b.txt
-              4      3 barry          b:\wc2\test\file2.txt
-              9      9 barry          b:\wc2\test\file3b.txt
-              4      3 barry          b:\wc2\test\file4.txt
-              4      3 barry          b:\wc2\test\file5.txt
+Info: PYSVN CMD status --verbose b:\wc2
+               4      4 barry          b:\wc2
+               4      4 barry          b:\wc2\test
+               4      4 barry          b:\wc2\test\file1.txt
+               9      9 barry          b:\wc2\test\file1b.txt
+               4      3 barry          b:\wc2\test\file2.txt
+               9      9 barry          b:\wc2\test\file3b.txt
+               4      3 barry          b:\wc2\test\file4.txt
+               4      3 barry          b:\wc2\test\file5.txt
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir status --show-updates b:\wc2 
-      M  b:\wc2\test
-      D  b:\wc2\test\file2.txt
-      A  b:\wc2\test\file2b.txt
-      M  b:\wc2\test\file4.txt
+Info: PYSVN CMD status --show-updates b:\wc2
+       M  b:\wc2\test
+       D  b:\wc2\test\file2.txt
+       A  b:\wc2\test\file2b.txt
+       M  b:\wc2\test\file4.txt
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir status --show-updates --verbose b:\wc2 
-              4      4 barry          b:\wc2
-      M       4      4 barry          b:\wc2\test
-              4      4 barry          b:\wc2\test\file1.txt
-              9      9 barry          b:\wc2\test\file1b.txt
-      D       4      3 barry          b:\wc2\test\file2.txt
-      A                               b:\wc2\test\file2b.txt
-              9      9 barry          b:\wc2\test\file3b.txt
-      M       4      3 barry          b:\wc2\test\file4.txt
-              4      3 barry          b:\wc2\test\file5.txt
+Info: PYSVN CMD status --show-updates --verbose b:\wc2
+               4      4 barry          b:\wc2
+       M       4      4 barry          b:\wc2\test
+               4      4 barry          b:\wc2\test\file1.txt
+               9      9 barry          b:\wc2\test\file1b.txt
+       D       4      3 barry          b:\wc2\test\file2.txt
+       A                               b:\wc2\test\file2b.txt
+               9      9 barry          b:\wc2\test\file3b.txt
+       M       4      3 barry          b:\wc2\test\file4.txt
+               4      3 barry          b:\wc2\test\file5.txt
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir update 
+Info: PYSVN CMD update
 A file1b.txt
 A file2b.txt
 A file3b.txt
@@ -392,80 +388,72 @@ D file2.txt
 D file3.txt
 Updated to revision 10
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir status --show-updates b:\wc2 
-      M  b:\wc2\test
-      D  b:\wc2\test\file2.txt
-      A  b:\wc2\test\file2b.txt
-      M  b:\wc2\test\file4.txt
+Info: PYSVN CMD status --show-updates b:\wc2
+       M  b:\wc2\test
+       D  b:\wc2\test\file2.txt
+       A  b:\wc2\test\file2b.txt
+       M  b:\wc2\test\file4.txt
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir status --show-updates --verbose b:\wc2 
-              4      4 barry          b:\wc2
-      M       4      4 barry          b:\wc2\test
-              4      4 barry          b:\wc2\test\file1.txt
-              9      9 barry          b:\wc2\test\file1b.txt
-      D       4      3 barry          b:\wc2\test\file2.txt
-      A                               b:\wc2\test\file2b.txt
-              9      9 barry          b:\wc2\test\file3b.txt
-      M       4      3 barry          b:\wc2\test\file4.txt
-              4      3 barry          b:\wc2\test\file5.txt
+Info: PYSVN CMD status --show-updates --verbose b:\wc2
+               4      4 barry          b:\wc2
+       M       4      4 barry          b:\wc2\test
+               4      4 barry          b:\wc2\test\file1.txt
+               9      9 barry          b:\wc2\test\file1b.txt
+       D       4      3 barry          b:\wc2\test\file2.txt
+       A                               b:\wc2\test\file2b.txt
+               9      9 barry          b:\wc2\test\file3b.txt
+       M       4      3 barry          b:\wc2\test\file4.txt
+               4      3 barry          b:\wc2\test\file5.txt
 
-B:\wc1\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir checkin b:\wc2 -m "prop change" 
+Info: PYSVN CMD checkin b:\wc2 -m "prop change"
 Nothing to commit
+Info: Test - propdel
 
-B:\wc1\test >rem propdel 
+Info: CMD cd /d b:\wc2\test
 
-B:\wc1\test >cd /d b:\wc2\test 
+Info: PYSVN CMD propset test:prop1 del_me file4.txt
 
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir propset test:prop1 del_me file4.txt 
-
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir proplist -v file4.txt 
+Info: PYSVN CMD proplist -v file4.txt
 Properties on 'file4.txt':
   test:prop1: del_me
 
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir propdel test:prop1 file4.txt 
+Info: PYSVN CMD propdel test:prop1 file4.txt
 
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir proplist -v file4.txt 
+Info: PYSVN CMD proplist -v file4.txt
+Info: Test - propget
 
-B:\wc2\test >rem propget 
+Info: PYSVN CMD propget svn:eol-style file4.txt
+Info: Test - proplist - see above
+Info: Test - propset
 
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir propget svn:eol-style file4.txt 
+Info: CMD cd /d b:\wc2\test
 
-B:\wc2\test >rem proplist - see above 
+Info: PYSVN CMD proplist -v file4.txt
 
-B:\wc2\test >rem propset 
+Info: PYSVN CMD propset svn:eol-style native file4.txt
 
-B:\wc2\test >cd /d b:\wc2\test 
-
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir proplist -v file4.txt 
-
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir propset svn:eol-style native file4.txt 
-
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir proplist -v file4.txt 
+Info: PYSVN CMD proplist -v file4.txt
 Properties on 'file4.txt':
   svn:eol-style: native
+Info: Test - remove
 
-B:\wc2\test >rem remove 
+Info: CMD cd /d b:\wc2\test
 
-B:\wc2\test >cd /d b:\wc2\test 
-
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir remove file5.txt 
+Info: PYSVN CMD remove file5.txt
 D file5.txt
 
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir status 
- M    file4.txt
-D     file5.txt
+Info: PYSVN CMD status
+ M     file4.txt
+D      file5.txt
+Info: Test - resolved
+Info: Append File b:\wc1\test\file4.txt - conflict in file4 yes     
+Info: Append File b:\wc2\test\file4.txt - conflict in file4 no     
 
-B:\wc2\test >rem resolved 
-
-B:\wc2\test >echo conflict in file4 yes  1>>b:\wc1\test\file4.txt 
-
-B:\wc2\test >echo conflict in file4 no  1>>b:\wc2\test\file4.txt 
-
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir checkin b:\wc1\test -m "make a conflict part 1" 
+Info: PYSVN CMD checkin b:\wc1\test -m "make a conflict part 1"
 M wc1/test/file4.txt
 Revision 11
 
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir update b:\wc2\test 
+Info: PYSVN CMD update b:\wc2\test
 A b:/wc2/test/file2b.txt
 D b:/wc2/test/file2.txt
 U b:/wc2
@@ -473,130 +461,122 @@ U b:/wc2/test
 U b:/wc2/test/file4.txt
 Updated to revision 11
 
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir status 
-CM    file4.txt
-?     file4.txt.mine
-?     file4.txt.r11
-?     file4.txt.r4
-D     file5.txt
+Info: PYSVN CMD status
+CM     file4.txt
+?      file4.txt.mine
+?      file4.txt.r11
+?      file4.txt.r4
+D      file5.txt
 
-B:\wc2\test >copy b:\wc2\test\file4.txt.mine b:\wc2\test\file4.txt 
+Info: CMD copy b:\wc2\test\file4.txt.mine b:\wc2\test\file4.txt
         1 file(s) copied.
 
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir resolved b:\wc2\test\file4.txt 
+Info: PYSVN CMD resolved b:\wc2\test\file4.txt
 R b:/wc2/test/file4.txt
 
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir checkin b:\wc2\test\file4.txt -m "resolve a confict part 2" 
+Info: PYSVN CMD checkin b:\wc2\test\file4.txt -m "resolve a confict part 2"
 M file4.txt
 Revision 12
+Info: Test - revert
 
-B:\wc2\test >rem revert 
-
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir revert file5.txt 
+Info: PYSVN CMD revert file5.txt
 R file5.txt
 
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir status 
+Info: PYSVN CMD status
+Info: Test - revproplist
 
-B:\wc2\test >rem revproplist 
-
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir revproplist file:///b:/repos/trunk 
+Info: PYSVN CMD revproplist file:///b:/repos/trunk
 Revision: 12
 svn:author: barry
-svn:date: 2005-07-17T15:55:03.925232Z
+svn:date: 2005-08-17T21:08:12.190727Z
 svn:log: resolve a confict part 2
+Info: Test - revpropget
 
-B:\wc2\test >rem revpropget 
-
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir revpropget svn:log file:///b:/repos/trunk 
+Info: PYSVN CMD revpropget svn:log file:///b:/repos/trunk
 Revision: 12
 svn:log: resolve a confict part 2
 
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir revpropget no_such_prop file:///b:/repos/trunk 
+Info: PYSVN CMD revpropget no_such_prop file:///b:/repos/trunk
 Revision: 12
 no_such_prop: None
+Info: Test - revpropset
 
-B:\wc2\test >rem revpropset 
-
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir revpropset svn:log "Hello world" file:///b:/repos/trunk 
+Info: PYSVN CMD revpropset svn:log "Hello world" file:///b:/repos/trunk
 Repository has not been enabled to accept revision propchanges;
 ask the administrator to create a pre-revprop-change hook
+Info: Test - revpropdel
 
-B:\wc2\test >rem revpropdel 
-
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir revpropdel svn:log file:///b:/repos/trunk 
+Info: PYSVN CMD revpropdel svn:log file:///b:/repos/trunk
 Repository has not been enabled to accept revision propchanges;
 ask the administrator to create a pre-revprop-change hook
+Info: Test - status - see above
+Info: Test - relocate
 
-B:\wc2\test >rem status - see above 
+Info: CMD mkdir b:\root
 
-B:\wc2\test >rem relocate 
+Info: CMD move b:\repos b:\root
 
-B:\wc2\test >mkdir b:\root 
-
-B:\wc2\test >move b:\repos b:\root 
-
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir info b:\wc1 
+Info: PYSVN CMD info b:\wc1
 Path: b:\wc1
 Name: .
 Url: file:///b:/repos/trunk
-Repository UUID: 27efed74-ca80-054f-aa78-1525a611bd79
+Repository UUID: 7556f6f1-020f-1944-90ac-defb4236b8e1
 Revision: 2
 Node kind: directory
 Last Changed Author: barry
 Last Changed Rev: 2
-Last Changed Date: 17-Jul-2005 16:54:16
+Last Changed Date: 17-Aug-2005 22:07:39
 
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir relocate file:///b:/repos/trunk file:///b:/root/repos/trunk b:\wc1 
+Info: PYSVN CMD relocate file:///b:/repos/trunk file:///b:/root/repos/trunk b:\wc1
 
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir info b:\wc1 
+Info: PYSVN CMD info b:\wc1
 Path: b:\wc1
 Name: .
 Url: file:///b:/root/repos/trunk
-Repository UUID: 27efed74-ca80-054f-aa78-1525a611bd79
+Repository UUID: 7556f6f1-020f-1944-90ac-defb4236b8e1
 Revision: 2
 Node kind: directory
 Last Changed Author: barry
 Last Changed Rev: 2
-Last Changed Date: 17-Jul-2005 16:54:16
+Last Changed Date: 17-Aug-2005 22:07:39
 
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir info b:\wc2 
+Info: PYSVN CMD info b:\wc2
 Path: b:\wc2
 Name: .
 Url: file:///b:/repos/trunk
-Repository UUID: 27efed74-ca80-054f-aa78-1525a611bd79
+Repository UUID: 7556f6f1-020f-1944-90ac-defb4236b8e1
 Revision: 4
 Node kind: directory
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 17-Jul-2005 16:54:26
+Last Changed Date: 17-Aug-2005 22:07:45
 
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir relocate file:///b:/repos/trunk file:///b:/root/repos/trunk b:\wc2 
+Info: PYSVN CMD relocate file:///b:/repos/trunk file:///b:/root/repos/trunk b:\wc2
 
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir info b:\wc2 
+Info: PYSVN CMD info b:\wc2
 Path: b:\wc2
 Name: .
 Url: file:///b:/root/repos/trunk
-Repository UUID: 27efed74-ca80-054f-aa78-1525a611bd79
+Repository UUID: 7556f6f1-020f-1944-90ac-defb4236b8e1
 Revision: 4
 Node kind: directory
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 17-Jul-2005 16:54:26
+Last Changed Date: 17-Aug-2005 22:07:45
+Info: Test - switch
 
-B:\wc2\test >rem switch 
-
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir info b:\wc2 
+Info: PYSVN CMD info b:\wc2
 Path: b:\wc2
 Name: .
 Url: file:///b:/root/repos/trunk
-Repository UUID: 27efed74-ca80-054f-aa78-1525a611bd79
+Repository UUID: 7556f6f1-020f-1944-90ac-defb4236b8e1
 Revision: 4
 Node kind: directory
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 17-Jul-2005 16:54:26
+Last Changed Date: 17-Aug-2005 22:07:45
 
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir switch b:\wc2 file:///b:/root/repos/tags/version1 
+Info: PYSVN CMD switch b:\wc2 file:///b:/root/repos/tags/version1
 A b:/wc2/test/file2.txt
 A b:/wc2/test/file3.txt
 D b:/wc2/test/file1b.txt
@@ -606,17 +586,136 @@ U b:/wc2
 U b:/wc2/test
 U b:/wc2/test/file4.txt
 
-B:\wc2\test >c:\python23\python.exe l:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir info b:\wc2 
+Info: PYSVN CMD info b:\wc2
 Path: b:\wc2
 Name: .
 Url: file:///b:/root/repos/tags/version1
-Repository UUID: 27efed74-ca80-054f-aa78-1525a611bd79
+Repository UUID: 7556f6f1-020f-1944-90ac-defb4236b8e1
 Revision: 12
 Node kind: directory
 Last Changed Author: barry
 Last Changed Rev: 6
-Last Changed Date: 17-Jul-2005 16:54:31
+Last Changed Date: 17-Aug-2005 22:07:48
+Info: Test - update - see above
+Info: Test - Info: Testing - merge
 
-B:\wc2\test >rem update - see above 
+Info: PYSVN CMD checkout file:///b:/root/repos/trunk b:\wc3
+A b:/wc3/test
+A b:/wc3/test/file1.txt
+A b:/wc3/test/file1b.txt
+A b:/wc3/test/file2b.txt
+A b:/wc3/test/file3b.txt
+A b:/wc3/test/file4.txt
+A b:/wc3/test/file5.txt
+U b:/wc3
+Checked out revision 12
 
-B:\wc2\test >endlocal
+Info: CMD cd b:\wc3\test
+Info: Create File file-merge-1.txt - test add file merge 1    
+Info: Create File file-merge-2.txt - test add file merge 2    
+
+Info: PYSVN CMD add file-merge-1.txt
+A file-merge-1.txt
+
+Info: PYSVN CMD add file-merge-2.txt
+A file-merge-2.txt
+
+Info: PYSVN CMD commit -m "add test merge files" .
+A test/file-merge-1.txt
+A test/file-merge-2.txt
+Revision 13
+Info: Create File msg.tmp - make a branch      
+
+Info: PYSVN CMD copy file:///b:/root/repos/trunk/test file:///b:/root/repos/trunk/test-branch
+Log message
+--- -------
+
+Info: PYSVN CMD update b:\wc3
+A b:/wc3/test-branch
+A b:/wc3/test-branch/file-merge-1.txt
+A b:/wc3/test-branch/file-merge-2.txt
+A b:/wc3/test-branch/file1.txt
+A b:/wc3/test-branch/file1b.txt
+A b:/wc3/test-branch/file2b.txt
+A b:/wc3/test-branch/file3b.txt
+A b:/wc3/test-branch/file4.txt
+A b:/wc3/test-branch/file5.txt
+U b:/wc3
+U b:/wc3/test
+Updated to revision 14
+Info: Create File file-merge-3.txt - test add file merge 3    
+
+Info: PYSVN CMD add file-merge-3.txt
+A file-merge-3.txt
+
+Info: PYSVN CMD rm file-merge-1.txt
+D file-merge-1.txt
+Info: Append File file-merge-2.txt - modify merge 2      
+
+Info: PYSVN CMD commit -m "change test merge files" .
+A test/file-merge-3.txt
+D test/file-merge-1.txt
+M test/file-merge-2.txt
+Revision 15
+
+Info: PYSVN CMD merge --dry-run --revision 14:15 file:///b:/root/repos/trunk/test b:\wc3\test-branch
+A b:/wc3/test-branch/file-merge-3.txt
+D b:/wc3/test-branch/file-merge-1.txt
+U b:/wc3/test-branch
+U b:/wc3/test-branch/file-merge-2.txt
+
+Info: PYSVN CMD merge --revision 14:15 file:///b:/root/repos/trunk/test b:\wc3\test-branch
+A b:/wc3/test-branch/file-merge-3.txt
+U b:/wc3/test-branch
+U b:/wc3/test-branch/file-merge-2.txt
+skip b:/wc3/test-branch/file-merge-1.txt
+
+Info: PYSVN CMD status b:\wc3\test-branch
+D      b:\wc3\test-branch\file-merge-1.txt
+M      b:\wc3\test-branch\file-merge-2.txt
+A  +   b:\wc3\test-branch\file-merge-3.txt
+
+Info: PYSVN CMD diff b:\wc3\test-branch
+Index: b:/wc3/test-branch/file-merge-1.txt
+===================================================================
+--- b:/wc3/test-branch/file-merge-1.txt	(revision 14)
++++ b:/wc3/test-branch/file-merge-1.txt	(working copy)
+@@ -1 +0,0 @@
+-test add file merge 1
+Index: b:/wc3/test-branch/file-merge-2.txt
+===================================================================
+--- b:/wc3/test-branch/file-merge-2.txt	(revision 14)
++++ b:/wc3/test-branch/file-merge-2.txt	(working copy)
+@@ -1 +1,2 @@
+ test add file merge 2
++modify merge 2
+
+Index: b:/wc3/test-branch/file-merge-1.txt
+===================================================================
+--- b:/wc3/test-branch/file-merge-1.txt	(revision 14)
++++ b:/wc3/test-branch/file-merge-1.txt	(working copy)
+@@ -1 +0,0 @@
+-test add file merge 1
+Index: b:/wc3/test-branch/file-merge-2.txt
+===================================================================
+--- b:/wc3/test-branch/file-merge-2.txt	(revision 14)
++++ b:/wc3/test-branch/file-merge-2.txt	(working copy)
+@@ -1 +1,2 @@
+ test add file merge 2
++modify merge 2
+
+Index: b:/wc3/test-branch/file-merge-1.txt
+===================================================================
+--- b:/wc3/test-branch/file-merge-1.txt	(revision 14)
++++ b:/wc3/test-branch/file-merge-1.txt	(working copy)
+@@ -1 +0,0 @@
+-test add file merge 1
+Index: b:/wc3/test-branch/file-merge-2.txt
+===================================================================
+--- b:/wc3/test-branch/file-merge-2.txt	(revision 14)
++++ b:/wc3/test-branch/file-merge-2.txt	(working copy)
+@@ -1 +1,2 @@
+ test add file merge 2
++modify merge 2
+
+Info: Test - end

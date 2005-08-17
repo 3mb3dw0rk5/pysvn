@@ -106,4 +106,4 @@ cmd_pysvn update ${TESTROOT}/wc1/test
 echo Info: Test - status of locked files
 cmd_pysvn status --verbose ${TESTROOT}/wc1
 
-cmd true
+true
