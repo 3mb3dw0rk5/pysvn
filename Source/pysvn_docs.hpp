@@ -46,24 +46,24 @@ when adding files otherwise when disabled will not\n"
 "is_url( path_or_url )\n\
 return true if path_or_url is a SVN URL\n"
 
-#define SVN_ADD_DOC \
+#define PYSVN_ADD_DOC \
 "add( path,\n\
      recurse=True )\n\
 \n\
 Schedules the file or directory specfied in path for addition to the repository.  Set recurse to True to recursively add a directory's children.\n\
 Files are added at the next check in.\n"
-#define SVN_ANNOTATE_DOC \
-"annotation_list = annotate( path,\n\
+#define PYSVN_ANNOTATE_DOC \
+"annotation_list = annotate( url_or_path,\n\
      revision_start=pysvn.Revision( opt_revision_kind.number, 0 ),\n\
      revision_end=pysvn.Revision( opt_revision_kind.head ) )\n\
 \n\
 annotate command.\n"
-#define SVN_CAT_DOC \
-"cat( path,\n\
+#define PYSVN_CAT_DOC \
+"cat( url_or_path,\n\
      revision=pysvn.Revision( opt_revision_kind.head ) )\n\
 \n\
 Return the contents of path for the specified revision."
-#define SVN_CHECKOUT_DOC \
+#define PYSVN_CHECKOUT_DOC \
 "checkout( url,\n\
           path,\n\
           recurse=True,\n\
@@ -71,20 +71,20 @@ Return the contents of path for the specified revision."
 \n\
 Checkout the repository at url into the location specified by path.  Set recurse to True to recursively check out a directory's children.\n\
 Specify a revision to check out a particular version of the source tree."
-#define SVN_CLEANUP_DOC \
+#define PYSVN_CLEANUP_DOC \
 "cleanup( path )\n\
 \n\
 Clean up any locks in the working copy at path.  Usually such locks are the result of a failed or interrupted operation.\n"
-#define SVN_CHECKIN_DOC \
+#define PYSVN_CHECKIN_DOC \
 "checkin( path_list,\n\
         log_message,\n\
         recurse=True )\n\
 \n\
 Check in the files in the path_list to the repository with the specifed log_message.  Set recurse to True to recursively check in a directory's children. with \
 the same log message.\n"
-#define SVN_COPY_DOC \
-"copy( src_path,\n\
-      dest_path,\n\
+#define PYSVN_COPY_DOC \
+"copy( src_url_or_path,\n\
+      dest_url_or_path,\n\
       src_revision=pysvn.Revision( opt_revision_kind.head ) )\n\
 \n\
 Duplicate something in working copy or repos, remembering history.\n\
@@ -94,18 +94,53 @@ src_path and dest_path can each be either a working copy (WC) path or URL:\n\
   WC  -> URL:  immediately check in a copy of WC to URL\n\
   URL -> WC:   check out URL into WC, schedule for addition\n\
   URL -> URL:  complete server-side copy;  used to branch & tag"
-#define SVN_DIFF_DOC \
+#ifdef PYSVN_HAS_CLIENT_DIFF2
+#define PYSVN_DIFF_DOC \
 "diff( tmp_path,\n\
-      path,\n\
+      url_or_path,\n\
       revision1=pysvn.Revision( opt_revision_kind.base ),\n\
+      url_or_path2,\n\
       revision2=pysvn.Revision( opt_revision_kind.working ),\n\
       recurse=True,\n\
       ignore_ancestry=False,\n\
-      no_diff_deleted=False )\n\
+      diff_deleted=True,\n\
+      ignore_content_type )\n\
 \n\
 Display the differences between two paths."
-#define SVN_EXPORT_DOC \
-"export( src_path,\n\
+#else
+#define PYSVN_DIFF_DOC \
+"diff( tmp_path,\n\
+      url_or_path,\n\
+      revision1=pysvn.Revision( opt_revision_kind.base ),\n\
+      url_or_path2,\n\
+      revision2=pysvn.Revision( opt_revision_kind.working ),\n\
+      recurse=True,\n\
+      ignore_ancestry=False,\n\
+      diff_deleted=True )\n\
+\n\
+Display the differences between two paths."
+#endif
+
+#ifdef PYSVN_HAS_CLIENT_EXPORT2
+#define PYSVN_EXPORT_DOC \
+"export( src_url_or_path,\n\
+        dest_path,\n\
+        force=False,\n\
+        revision=pysvn.Revision( opt_revision_kind.head ),\n\
+        native_eol=False )\n\
+\n\
+Create an unversioned copy of a tree.\n\
+\n\
+1. Exports a clean directory tree from the repository specified by\n\
+   URL src_path, at revision if it is given, otherwise at HEAD, into\n\
+   dest_path.\n\
+\n\
+2. Exports a clean directory tree from the working copy specified by\n\
+   src_path into dest_path.  All local changes will be preserved, but files\n\
+   not under revision control will not be copied."
+#else
+#define PYSVN_EXPORT_DOC \
+"export( src_url_or_path,\n\
         dest_path,\n\
         force=False,\n\
         revision=pysvn.Revision( opt_revision_kind.head ) )\n\
@@ -119,16 +154,26 @@ Create an unversioned copy of a tree.\n\
 2. Exports a clean directory tree from the working copy specified by\n\
    src_path into dest_path.  All local changes will be preserved, but files\n\
    not under revision control will not be copied."
+#endif
 
-#define SVN_INFO_DOC \
+#define PYSVN_INFO_DOC \
 "entry = info( path )\n\
 return info on path"
 
-#define SVN_INFO2_DOC \
-"entry_list = info2( path_or_url )\n\
-return info on path_or_url"
+#ifdef PYSVN_HAS_CLIENT_INFO
+#define PYSVN_INFO2_DOC \
+"entry_list = \n\
+info2( url_or_path,\n\
+       revision=pysvn.Revision( opt_revision_kind.unspecified )\n\
+       peg_revision=pysvn.Revision( opt_revision_kind.unspecified )\n\
+       recurse=False )\n\
+\n\
+return info on url_or_path"
+#else
+#define PYSVN_INFO2_DOC ""
+#endif
 
-#define SVN_IMPORT_DOC \
+#define PYSVN_IMPORT_DOC \
 "import_( path,\n\
         url,\n\
         log_message,\n\
@@ -141,17 +186,19 @@ Parent directories are created as necessary in the repository."
 
 
 #ifdef PYSVN_HAS_CLIENT_LOCK
-#define SVN_LOCK_DOC \
+#define PYSVN_LOCK_DOC \
 "lock( url_or_path,\n\
       message,\n\
       force=False)\n\
 Lock the url_or_path give the message as the reason. Set force True to break\n\
 replace an existing lock with this one.\n\
 "
+#else
+#define PYSVN_LOCK_DOC ""
 #endif
 
-#define SVN_LOG_DOC \
-"log_list = log( path,\n\
+#define PYSVN_LOG_DOC \
+"log_list = log( url_or_path,\n\
                 revision_start=pysvn.Revision( opt_revision_kind.head ),\n\
                 revision_end=pysvn.Revision( opt_revision_kind.number, 0 ),\n\
                 discover_changed_paths=False,\n\
@@ -162,27 +209,29 @@ If discover_changed_paths is True return the set of changed paths for each revis
 \n\
 Show the log messages for a set of revisions of path."
 
-#define SVN_LS_DOC \
-"entries_list = ls( path,\n\
+#define PYSVN_LS_DOC \
+"entries_list = ls( url_or_path,\n\
             revision=pysvn.Revision( opt_revision_kind.head ),\n\
             recurse=True )\n\
 \n\
 Return entries_list for the given path at the provided revision."
-#define SVN_MERGE_DOC \
-"merge( path1,\n\
+#define PYSVN_MERGE_DOC \
+"merge( url_or_path1,\n\
        revision1,\n\
-       path2,\n\
+       url_or_path2,\n\
        revision2,\n\
        local_path,\n\
        force=False,\n\
-       recurse=True )\n\
+       recurse=True,\n\
+       notice_ancestry=False,\n\
+       dry_run=False )\n\
 \n\
 Apply the differences between two sources to a working copy path."
 
-#define SVN_MKDIR_DOC \
-"mkdir( path,\n\
+#define PYSVN_MKDIR_DOC \
+"mkdir( url_or_path,\n\
        log_message )\n\
-mkdir( path_list,\n\
+mkdir( [url_or_path,...],\n\
        log_message )\n\
 \n\
 Create a new directory under revision control.\n\
@@ -196,9 +245,9 @@ If run on URLs, the directories are created in the repository via an\n\
 immediate check in.\n\
 \n\
 In both cases, all the intermediate directories must already exist."
-#define SVN_MOVE_DOC \
-"move( src_path,\n\
-      dest_path,\n\
+#define PYSVN_MOVE_DOC \
+"move( src_url_or_path,\n\
+      dest_url_or_path,\n\
       src_revision=pysvn.Revision( opt_revision_kind.head ),\n\
       force=False )\n\
 \n\
@@ -210,39 +259,38 @@ src_path and dest_path can both be working copy (WC) paths or URLs:\n\
   WC  -> WC:   move and schedule for addition (with history)\n\
   URL -> URL:  complete server-side rename."
 
-#define SVN_PROPDEL_DOC \
-"rev = propdel( propname,\n\
-         path,\n\
+#define PYSVN_PROPDEL_DOC \
+"rev = propdel( prop_name,\n\
+         url_or_path,\n\
          revision=pysvn.Revision( opt_revision_kind.head ),\n\
          recurse=False )\n\
 \n\
 delete the property propname from path\n\
 "
-#define SVN_PROPGET_DOC \
+#define PYSVN_PROPGET_DOC \
 "prop_list = propget( prop_name,\n\
-                      path,\n\
+                      url_or_path,\n\
                       src_revision=pysvn.Revision( opt_revision_kind.head ),\n\
                       recurse=False )\n\
 Returns a list of tuples (path, prop_dict)\n\
 "
-#define SVN_PROPLIST_DOC \
-"prop_list = proplist( path,\n\
-                      src_revision=pysvn.Revision( opt_revision_kind.head ),\n\
+#define PYSVN_PROPLIST_DOC \
+"prop_list = proplist( url_or_path,\n\
+                      revision=pysvn.Revision( opt_revision_kind.head ),\n\
                       recurse=False )\n\
 Returns a list of tuples (path, prop_dict)\n\
 "
-#define SVN_PROPSET_DOC \
-"rev = propset( propname,\n\
-         propval,\n\
-         path,\n\
+#define PYSVN_PROPSET_DOC \
+"rev = propset( prop_name,\n\
+         prop_value,\n\
+         url_or_path,\n\
          revision=pysvn.Revision( opt_revision_kind.head ),\n\
          recurse=False )\n\
 \n\
-set the property propname to propval in path\n\
+set the property prop_name to prop_value in url_or_path\n\
 "
-#define SVN_RELOCATE_DOC \
-"relocate( path,\n\
-           from_url,\n\
+#define PYSVN_RELOCATE_DOC \
+"relocate( from_url,\n\
            to_url,\n\
            path,\n\
            recurse=True)\n\
@@ -250,8 +298,10 @@ set the property propname to propval in path\n\
 relocate the working copy from from_url to to_url of path\n\
 "
 
-#define SVN_REMOVE_DOC \
-"remove( path_list,\n\
+#define PYSVN_REMOVE_DOC \
+"remove( url_or_path,\n\
+        force=False )\n\
+remove( [url_or_path, ...],\n\
         force=False )\n\
 \n\
 If run on a working copy PATHs, each item is scheduled for deletion\n\
@@ -264,54 +314,66 @@ behaviour.\n\
 If run on URLs, the items are deleted from the repository via an\n\
 immediate check in."
 
-#define SVN_RESOLVED_DOC \
+#define PYSVN_RESOLVED_DOC \
 "resolved( path,\n\
           recurse=True )\n\
 Mark the conflicted file at path as resolved."
-#define SVN_REVERT_DOC \
+#define PYSVN_REVERT_DOC \
 "revert( path,\n\
         recurse=False )\n\
 Discard any changes in the working copy at path. Set recurse to True to recursively revert a directory's children.\n"
 
-#define SVN_REVPROPDEL_DOC \
-"rev = revpropdel( propname,\n\
-                  path,\n\
+#define PYSVN_REVPROPDEL_DOC \
+"rev = revpropdel( prop_name,\n\
+                  url,\n\
                   revision=pysvn.Revision( opt_revision_kind.head ),\n\
                   force=False )\n\
 \n\
-delete the property propname from path\n\
+delete the property prop_name from url\n\
 "
-#define SVN_REVPROPGET_DOC \
+
+#define PYSVN_REVPROPGET_DOC \
 "prop_list = revpropget( prop_name,\n\
-                        path,\n\
-                        src_revision=pysvn.Revision( opt_revision_kind.head ) )\n\
+                        url,\n\
+                        revision=pysvn.Revision( opt_revision_kind.head ) )\n\
 Returns a list of tuples (path, prop_dict)\n\
 "
-#define SVN_REVPROPLIST_DOC \
-"prop_list = revproplist( path,\n\
-                         src_revision=pysvn.Revision( opt_revision_kind.head ) )\n\
+#define PYSVN_REVPROPLIST_DOC \
+"prop_list = revproplist( url,\n\
+                         revision=pysvn.Revision( opt_revision_kind.head ) )\n\
 Returns a list of tuples (path, prop_dict)\n\
 "
-#define SVN_REVPROPSET_DOC \
+#define PYSVN_REVPROPSET_DOC \
 "rev = revpropset( prop_name,\n\
          prop_value,\n\
-         path,\n\
+         url,\n\
          revision=pysvn.Revision( opt_revision_kind.head ),\n\
          force=False )\n\
 \n\
 set the property propname to propval in path\n\
 "
-#define SVN_SINGLE_STATUS_DOC \
-"path_status = single_status( path )\n\
-returns status for a single file in path_status"
-#define SVN_STATUS_DOC \
+
+
+#ifdef PYSVN_HAS_CLIENT_STATUS2
+#define PYSVN_STATUS_DOC \
 "path_status_list = status( path,\n\
            recurse=True,\n\
            get_all=False,\n\
            update=False,\n\
-           no_ignore=False )\n\
+           ignore=False,\n\
+           ignore_externals=False )\n\
 returns status for all files in the directory path in path_status_list"
-#define SVN_SWITCH_DOC \
+#else
+#define PYSVN_STATUS_DOC \
+"path_status_list = status( path,\n\
+           recurse=True,\n\
+           get_all=False,\n\
+           update=False,\n\
+           ignore=False )\n\
+returns status for all files in the directory path in path_status_list"
+#endif
+
+#define PYSVN_SWITCH_DOC \
 "switch( path,\n\
         url,\n\
         recurse=True,\n\
@@ -326,16 +388,18 @@ Update the working copy to a different URL.\n\
 2. Reconnect the working copy when the repository URL has changed."
 
 #ifdef PYSVN_HAS_CLIENT_LOCK
-#define SVN_UNLOCK_DOC \
+#define PYSVN_UNLOCK_DOC \
 "unlock( url_or_path,\n\
         force=False)\n\
 Unlock the url_or_path. Set force True to break\n\
 unlock an existing lock.\n\
 "
+#else
+#define PYSVN_UNLOCK_DOC ""
 #endif
 
 
-#define SVN_UPDATE_DOC \
+#define PYSVN_UPDATE_DOC \
 "revision = \\\n\
 update( path,\n\
         recurse=True,\n\
@@ -345,7 +409,6 @@ Update the file in the working copy at path to the specified revision.  Set recu
 This command is typically used to get the latest changes from the repository.  Note that updating to an older revision does not change the \n\
 current revision.  To make the current version identical to an older revision, use a merge followed by a check in.\n\
 update returns a pysvn.Revision containing the number of the revision the working copy was updated to."
-
 
 
 
@@ -371,14 +434,14 @@ TBD\n\
 "
 
 #define TXN_PROPDEL_DOC \
-"propdel( propname )\n\
+"propdel( prop_name )\n\
 \n\
-delete the property propname from the transaction\n\
+delete the property prop_name from the transaction\n\
 "
 #define TXN_PROPGET_DOC \
-"prop_val = propget( prop_name )\n\
+"prop_value = propget( prop_name )\n\
 \n\
-Returns the prop_val string for prop_name in the transaction\n\
+Returns the prop_value string for prop_name in the transaction\n\
 "
 #define TXN_PROPLIST_DOC \
 "prop_dict = proplist()\n\
@@ -387,20 +450,20 @@ Returns a dict with all the properties in the transaction\n\
 "
 #define TXN_PROPSET_DOC \
 "propset( prop_name,\n\
-          prop_val )\n\
+          prop_value )\n\
 \n\
-set the property prop_name to prop_val in the transaction\n\
+set the property prop_name to prop_value in the transaction\n\
 "
 
 #define TXN_REVPROPDEL_DOC \
-"revpropdel( revpropname )\n\
+"revpropdel( prop_name )\n\
 \n\
-delete the revproperty revpropname from the transaction\n\
+delete the revproperty prop_name from the transaction\n\
 "
 #define TXN_REVPROPGET_DOC \
-"revprop_val = revpropget( revprop_name )\n\
+"prop_value = revpropget( prop_name )\n\
 \n\
-Returns the revprop_val string for revprop_name in the transaction\n\
+Returns the prop_value string for prop_name in the transaction\n\
 "
 #define TXN_REVPROPLIST_DOC \
 "revprop_dict = revproplist()\n\
@@ -408,8 +471,8 @@ Returns the revprop_val string for revprop_name in the transaction\n\
 Returns a dict with all the revproperties in the transaction\n\
 "
 #define TXN_REVPROPSET_DOC \
-"revpropset( revprop_name,\n\
-          revprop_val )\n\
+"revpropset( prop_name,\n\
+          prop_value )\n\
 \n\
-set the revproperty revprop_name to revprop_val in the transaction\n\
+set the revproperty prop_name to prop_value in the transaction\n\
 "
