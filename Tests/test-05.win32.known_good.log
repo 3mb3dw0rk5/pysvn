@@ -58,17 +58,16 @@ Info: PYSVN CMD info2 b:\wc1\test\file1.txt
 Path: b:/wc1/test/file1.txt
 Url: file:///b:/repos/trunk/test/file1.txt
 Revision: 3
-Repository UUID: 65147c1d-630f-1944-8d26-0b4b435a2bbb
+Repository UUID: 65f9d009-88f2-5140-85e2-2453ad397164
 Last changed author: barry
-Last Changed Date: 17-Aug-2005 22:09:21
+Last Changed Date: 30-Aug-2005 23:36:19
 Last changed revision: 3
 Node kind: file
-Text Last Updated: 17-Aug-2005 22:09:20
+Text Last Updated: 30-Aug-2005 23:36:18
 Checksum: 1e41522fd7b6b6325667c8554893a6db
 Info: Test - lock unlocked file
 
 Info: PYSVN CMD lock b:\wc1\test\file1.txt
-lock( b:\wc1\test\file1.txt  False )
 locked file1.txt
 Info: Test - status of locked files
 
@@ -84,17 +83,17 @@ Info: PYSVN CMD info2 b:\wc1\test\file1.txt
 Path: b:/wc1/test/file1.txt
 Url: file:///b:/repos/trunk/test/file1.txt
 Revision: 3
-Repository UUID: 65147c1d-630f-1944-8d26-0b4b435a2bbb
+Repository UUID: 65f9d009-88f2-5140-85e2-2453ad397164
 Last changed author: barry
-Last Changed Date: 17-Aug-2005 22:09:21
+Last Changed Date: 30-Aug-2005 23:36:19
 Last changed revision: 3
 Node kind: file
 Lock Owner: barry
-Lock Creation Date: 17-Aug-2005 22:09:24
-Lock Token: opaquelocktoken:ba2b7ef0-fe3a-7942-bde6-5d6a49e45842
+Lock Creation Date: 30-Aug-2005 23:36:22
+Lock Token: opaquelocktoken:c4829277-dd96-ed4a-9af7-45db269348ac
 Lock Comment:
 
-Text Last Updated: 17-Aug-2005 22:09:20
+Text Last Updated: 30-Aug-2005 23:36:18
 Checksum: 1e41522fd7b6b6325667c8554893a6db
 Info: Test - attempt to checkin over a locked file
 
@@ -110,12 +109,10 @@ Cannot verify lock on path '/trunk/test/file1.txt'; no matching lock-token avail
 Info: Test - lock locked file
 
 Info: PYSVN CMD lock b:\wc2\test\file1.txt
-lock( b:\wc2\test\file1.txt  False )
 failed_lock file1.txt
 Info: Test - lock --force locked file
 
 Info: PYSVN CMD lock --force b:\wc2\test\file1.txt -m "Stealing lock"
-lock( b:\wc2\test\file1.txt Stealing lock True )
 locked file1.txt
 Info: Test - info2 of locked files
 
@@ -124,18 +121,18 @@ Info: PYSVN CMD info2 b:\wc2\test\file1.txt
 Path: b:/wc2/test/file1.txt
 Url: file:///b:/repos/trunk/test/file1.txt
 Revision: 3
-Repository UUID: 65147c1d-630f-1944-8d26-0b4b435a2bbb
+Repository UUID: 65f9d009-88f2-5140-85e2-2453ad397164
 Last changed author: barry
-Last Changed Date: 17-Aug-2005 22:09:21
+Last Changed Date: 30-Aug-2005 23:36:19
 Last changed revision: 3
 Node kind: file
 Lock Owner: barry
-Lock Creation Date: 17-Aug-2005 22:09:26
-Lock Token: opaquelocktoken:2d5fb134-a8ea-6a4a-9144-d23e59bdb88d
+Lock Creation Date: 30-Aug-2005 23:36:24
+Lock Token: opaquelocktoken:039b7fa8-5a65-1041-bbb5-6d6f357e026a
 Lock Comment:
 Stealing lock
-Text Last Updated: 17-Aug-2005 22:09:22
-Properties Last Updated: 17-Aug-2005 22:09:22
+Text Last Updated: 30-Aug-2005 23:36:20
+Properties Last Updated: 30-Aug-2005 23:36:20
 Checksum: 1e41522fd7b6b6325667c8554893a6db
 Info: Test - status of locked files
 

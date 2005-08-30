@@ -482,7 +482,6 @@ class SvnCommand:
         msg = args.getOptionalValue( '--message', '' )
         force = args.getBooleanOption( '--force', True )
         positional_args = args.getPositionalArgs( 1, 1 )
-        print 'lock(',positional_args[0], msg, force,')'
         self.client.lock( positional_args[0], msg, force );
 
     def cmd_log( self, args ):
