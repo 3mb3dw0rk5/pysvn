@@ -63,6 +63,8 @@ Source: "LICENSE.txt"; DestDir: "{app}";
 Source: "..\..\..\Examples\Client\svn_cmd.py"; DestDir: "{app}\Examples\Client";
 Source: "..\..\..\Examples\Client\parse_datetime.py"; DestDir: "{app}\Examples\Client";
 
+Source: "intl3_svn.dll"; DestDir: "{app}"
+
 Source: "libapr.dll"; DestDir: "{app}"
 Source: "libaprutil.dll"; DestDir: "{app}"
 Source: "libapriconv.dll"; DestDir: "{app}"
