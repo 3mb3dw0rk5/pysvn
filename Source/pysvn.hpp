@@ -654,7 +654,9 @@ extern Py::Object utf8_string_or_none( const std::string &str );
 extern apr_time_t convertStringToTime( const std::string &text, apr_time_t now, SvnPool &pool );
 extern Py::Object toObject( apr_time_t t );
 extern Py::Object toObject( svn_client_commit_info_t *commit_info );
+#ifdef PYSVN_HAS_CLIENT_INFO
 extern Py::Object toObject( const svn_info_t *info );
+#endif
 extern Py::Object propsToObject( apr_hash_t *props, SvnPool &pool );
 extern void proplistToObject( Py::List &py_path_propmap_list, apr_array_header_t *props, SvnPool &pool );
 extern Py::String asUtf8String( Py::Object obj );

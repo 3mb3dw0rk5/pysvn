@@ -106,6 +106,7 @@ Py::Object toObject( svn_client_commit_info_t *commit_info )
     return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, commit_info->revision ) );
 }
 
+#ifdef PYSVN_HAS_CLIENT_INFO
 Py::Object toObject( const svn_info_t *info )
 {
     Py::Dict py_info;
@@ -183,6 +184,7 @@ Py::Object toObject( const svn_info_t *info )
 
     return py_info;
 }
+#endif
 
 Py::Object propsToObject( apr_hash_t *props, SvnPool &pool )
 {
