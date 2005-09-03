@@ -20,8 +20,9 @@ pkg_filename = 'py%s%s_pysvn_svn%s-%s' % (pymaj, pymin, svn_version_package_stri
 print 'Info: Packageing %s' % pkg_filename
 build_time  = time.time()
 build_time_str = time.strftime( '%d-%b-%Y %H:%M', time.localtime( build_time ) )
-
+year = time.strftime( '%Y', time.localtime( build_time ) )
 tmpdir = os.path.join( os.getcwd(), 'tmp' )
+
 if os.path.exists( tmpdir ):
 	print 'Info: Clean up tmp directory'
 	os.system( 'rm -rf tmp' )
@@ -48,6 +49,10 @@ for cp_src, cp_dst_dir_fmt in [
 		'Contents/pysvn'),
 	('../../Source/pysvn/_pysvn.so',
 		'Contents/pysvn'),
+	('/sw/lib/libintl.3.dylib',
+		'Contents/pysvn'),
+	('/sw/lib/libiconv.2.dylib',
+		'Contents/pysvn'),
 	('../../LICENSE.txt',
 		'Resources/License.txt'),
 	('../../LICENSE.txt',
@@ -66,13 +71,27 @@ for cp_src, cp_dst_dir_fmt in [
 	print 'Info:  cp %s' % cp_src
 	os.system( 'cp -f %s tmp/%s' % (cp_src, cp_dst_dir_fmt % locals()) )
 
+print 'Info: Fix the install paths for the dylib files'
+os.system( 'install_name_tool'
+    ' -change'
+    ' /sw/lib/libintl.3.dylib'
+    ' /System/Library/Frameworks/Python.framework/Versions/2.3/lib/python2.3/site-packages/pysvn/libintl.3.dylib'
+    ' %s' %
+    'tmp/Contents/pysvn/_pysvn.so' )
+os.system( 'install_name_tool'
+    ' -change'
+    ' /sw/lib/libiconv.2.dylib'
+    ' /System/Library/Frameworks/Python.framework/Versions/2.3/lib/python2.3/site-packages/pysvn/libiconv.2.dylib'
+    ' %s' %
+    'tmp/Contents/pysvn/_pysvn.so' )
+
 print 'Info: Create tmp/Resources/ReadMe.txt'
 f = file('tmp/Resources/ReadMe.txt','w')
 f.write('''<html>
 <body>
 <h1>PySVN %(pysvn_version_string)s for Apple Mac OS X Python %(pymaj)s.%(pymin)s and Subversion %(svn_version_string)s</h1>
 
-<h2>Copyright Barry A. Scott (c) 2003-2004</h2>
+<h2>Copyright Barry A. Scott (c) 2003-%(year)s</h2>
 
 <h2>Mail <a href="mailto:barry@barrys-emacs.org">barry@barrys-emacs.org</a></h2>
 
