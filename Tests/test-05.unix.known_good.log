@@ -57,17 +57,16 @@ Info: pysvn command: info2 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05
 Path: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/repos/trunk/test/file1.txt
 Revision: 3
-Repository UUID: 4058f156-12ff-0310-806d-caa04ac60a8f
+Repository UUID: acc0a1c0-e4ff-0310-a40d-afc8c898fc88
 Last changed author: barry
-Last Changed Date: 24-Aug-2005 11:26:06
+Last Changed Date: 03-Sep-2005 22:28:02
 Last changed revision: 3
 Node kind: file
-Text Last Updated: 24-Aug-2005 11:26:05
+Text Last Updated: 03-Sep-2005 22:28:01
 Checksum: e99afc2363b20ca1e52cd9ce4e8577eb
 Info: Test - lock unlocked file
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test
 Info: pysvn command: lock /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt
-lock( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt  False )
 locked file1.txt
 Info: Test - status of locked files
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test
@@ -83,17 +82,17 @@ Info: pysvn command: info2 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05
 Path: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/repos/trunk/test/file1.txt
 Revision: 3
-Repository UUID: 4058f156-12ff-0310-806d-caa04ac60a8f
+Repository UUID: acc0a1c0-e4ff-0310-a40d-afc8c898fc88
 Last changed author: barry
-Last Changed Date: 24-Aug-2005 11:26:06
+Last Changed Date: 03-Sep-2005 22:28:02
 Last changed revision: 3
 Node kind: file
 Lock Owner: barry
-Lock Creation Date: 24-Aug-2005 11:26:09
-Lock Token: opaquelocktoken:2d404957-12ff-0310-811e-a3032e320360
+Lock Creation Date: 03-Sep-2005 22:28:05
+Lock Token: opaquelocktoken:d16ff5c0-e4ff-0310-bbe6-e81d5fbdcd70
 Lock Comment:
 
-Text Last Updated: 24-Aug-2005 11:26:05
+Text Last Updated: 03-Sep-2005 22:28:01
 Checksum: e99afc2363b20ca1e52cd9ce4e8577eb
 Info: Test - attempt to checkin over a locked file
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test
@@ -107,12 +106,10 @@ Cannot verify lock on path '/trunk/test/file1.txt'; no matching lock-token avail
 Info: Test - lock locked file
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test
 Info: pysvn command: lock /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test/file1.txt
-lock( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test/file1.txt  False )
 failed_lock file1.txt
 Info: Test - lock --force locked file
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test
 Info: pysvn command: lock --force /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test/file1.txt -m Stealing lock
-lock( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test/file1.txt Stealing lock True )
 locked file1.txt
 Info: Test - info2 of locked files
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test
@@ -121,18 +118,18 @@ Info: pysvn command: info2 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05
 Path: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test/file1.txt
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/repos/trunk/test/file1.txt
 Revision: 3
-Repository UUID: 4058f156-12ff-0310-806d-caa04ac60a8f
+Repository UUID: acc0a1c0-e4ff-0310-a40d-afc8c898fc88
 Last changed author: barry
-Last Changed Date: 24-Aug-2005 11:26:06
+Last Changed Date: 03-Sep-2005 22:28:02
 Last changed revision: 3
 Node kind: file
 Lock Owner: barry
-Lock Creation Date: 24-Aug-2005 11:26:10
-Lock Token: opaquelocktoken:80066457-12ff-0310-af99-a88449f51800
+Lock Creation Date: 03-Sep-2005 22:28:06
+Lock Token: opaquelocktoken:a87410c1-e4ff-0310-803d-b5673934f25c
 Lock Comment:
 Stealing lock
-Text Last Updated: 24-Aug-2005 11:26:07
-Properties Last Updated: 24-Aug-2005 11:26:07
+Text Last Updated: 03-Sep-2005 22:28:03
+Properties Last Updated: 03-Sep-2005 22:28:03
 Checksum: e99afc2363b20ca1e52cd9ce4e8577eb
 Info: Test - status of locked files
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test
