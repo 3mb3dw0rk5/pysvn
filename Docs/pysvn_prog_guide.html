@@ -55,12 +55,12 @@ directory without adding its contents.</p>
 <pre>import pysvn
 client = pysvn.Client()
 #check out the current version of the pysvn project
-client.checkout('svn://localhost/example/trunk',
-    '~/examples/pysvn')
+client.checkout('http://localhost/example/trunk',
+    './examples/pysvn')
 #check out revision 11 of the pysvn project
-client.checkout('svn://localhost/example/trunk', 
-   '~/examples/pysvn-11',
-   pysvn.Revision(pysvn.opt_revision_kind.number, 11))
+client.checkout('http://localhost/example/trunk', 
+   './examples/pysvn-11',
+   revision=pysvn.Revision(pysvn.opt_revision_kind.number, 11))
 </pre><p>
 This example creates a working copy of the example project in the
 directory examples/pysvn.  This project is used in the remaining
@@ -69,7 +69,7 @@ examples.</p>
 <h3>Add a file or directory to the repository</h3>
 <pre>import pysvn
 # write a file foo.txt
-f = open('~/examples/pysvn/foo.txt', 'w')
+f = file('./examples/pysvn/foo.txt', 'w')
 f.write('Sample versioned file via pithon\n')
 f.close()
 client = pysvn.Client()
@@ -111,7 +111,7 @@ directories that need to be committed as a unit.</p>
 <h3>Discard changes in the working copy</h3>
 <pre>import pysvn
 # edit the file foo.txt
-f = open('./examples/pysvn/foo.txt', 'w')
+f = file('./examples/pysvn/foo.txt', 'w')
 f.write('This change will never be seen\n')
 f.close()
 #discard the edits
@@ -178,7 +178,7 @@ print [f.path for f in changes if f.text_status == pysvn.wc_status_kind.unversio
 Generating a diff or patch</h2>
 <pre>import pysvn
 client = pysvn.Client()
-diff_text = client.diff('.')
+diff_text = client.diff('./tmp-file-prefix-', '.')
 </pre>
 
 <h2>Determining the repository URL</h2>
