@@ -167,6 +167,7 @@ Py::Object toObject( const svn_info_t *info )
     {
         py_info[str_wc_info] = Py::None();
     }
+    else
     {
         Py::Dict py_wc_info;
         py_wc_info[str_schedule] = toEnumValue( info->schedule );
