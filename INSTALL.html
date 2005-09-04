@@ -15,15 +15,15 @@ code {background-color: #dddddd; }
 
 <p>To build pysvn you will require:</p>
 <ul>
+<li><a href="http://subversion.tigris.org">subversion</a> 1.1.x or 1.2.x
 <li><a href="http://sourceforge.net/project/showfiles.php?group_id=3180">PyCXX V5.3.4</a> which is included in the pysvn source kit.
-<li><a href="http://subversion.tigris.org">subversion</a> 1.x.x</a>
 </ul>
 
 <h3>Building on win32</h3>
 <p>These instructions assume you have Microsoft Visual C++ 6.0 to compile the code
 and <a href="http://www.jrsoftware.org/">INNO</a> 4.0.10 to create the installation kit.</p>
-<p>Note: you must build with MSVC6 as python 2.3 was built with that version.</p>
-<p>Note: you must build with MSVC 2003.NET for python 2.4 or later.</p>
+<p>Note: You must build with MSVC 6.0 as python 2.3 and earlier was built with that version.</p>
+<p>Note: You must build with MSVC 2003.NET for python 2.4 or later.</p>
 
 <ol>
 <li>build subversion (tested with SVN 1.1.4 and SVN 1.2.3)
@@ -45,13 +45,13 @@ and <a href="http://www.jrsoftware.org/">INNO</a> 4.0.10 to create the installat
 <h3>Building on unix and Mac OS X systems.</h3>
 
 <ol>
-<li>build subversion (tested with 1.1.4 and 1.2.3)
+<li>Install subversion
 <li>get the pysvn source code
 <li><code>tar xzf pycxx_5_3_4.tar.gz</code> into <em>extdir</em>/Import if not using a source kit
-<li>cd Source
+<li><code>cd Source</code>
 <li>Create the Makefile using <code>python setup.py configure</code>
 <li><code>make</code>
-<li>cd Tests
+<li><code>cd Tests</code>
 <li>Test pysvn by running <code>make -f unix.mak PYTHON=<em>path-to-python-to-use</em></code>
 </ol>
 
