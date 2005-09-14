@@ -726,7 +726,7 @@ public:
         apr_status_t status = apr_file_open( &m_apr_file, m_filename, APR_READ, APR_OS_DEFAULT, m_pool );
         if( status )
         {
-            std::string msg( "openning file " ); msg += m_filename;
+            std::string msg( "opening file " ); msg += m_filename;
             throw SvnException( svn_error_create( status, NULL, msg.c_str() ) );
         }
     }
@@ -847,6 +847,8 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
 
         output_file.open_tmp_file();
         error = svn_stringbuf_from_aprfile( &stringbuf, output_file.file(), pool );
+        if( error != NULL )
+            throw SvnException( error );
     }
     catch( SvnException &e )
     {
@@ -856,7 +858,8 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
         throw_client_error( e );
     }
 
-    return Py::String( stringbuf->data, stringbuf->len, name_utf8 );
+    // cannot convert to Unicode as we have no idea of the encoding of the bytes
+    return Py::String( stringbuf->data, (int)stringbuf->len );
 }
 
 Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_kws )
