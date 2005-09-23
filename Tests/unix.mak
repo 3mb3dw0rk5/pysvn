@@ -29,8 +29,8 @@ test-01.unix.new.log: test-01.sh test-01.unix.known_good.log
 
 test-03.unix.new.log: test-03.sh test-03.unix.known_good.log
 	-rm -rf testroot-03
-	test "$$(id -u -n)" = "barry" && ./test-03.sh >test-03.unix.new.log 2>&1
-	test "$$(id -u -n)" = "barry" && python benchmark_diff.py test-03.unix.known_good.log test-03.unix.new.log
+	if [ "$$(id -u -n)" = "barry" ]; then ./test-03.sh >test-03.unix.new.log 2>&1;fi
+	if [ "$$(id -u -n)" = "barry" ]; then python benchmark_diff.py test-03.unix.known_good.log test-03.unix.new.log; fi
 
 test-04.unix.new.log: test-04.sh test-04.unix.known_good.log
 	-rm -rf testroot-04
@@ -39,8 +39,8 @@ test-04.unix.new.log: test-04.sh test-04.unix.known_good.log
 
 test-05.unix.new.log: test-05.sh test-05.unix.known_good.log
 	-rm -rf testroot-05
-	PYTHONPATH=../Source ${PYTHON} svn_min_version.py 1 2 1 && ./test-05.sh >test-05.unix.new.log 2>&1
-	PYTHONPATH=../Source ${PYTHON} svn_min_version.py 1 2 1 && python benchmark_diff.py test-05.unix.known_good.log test-05.unix.new.log
+	if PYTHONPATH=../Source ${PYTHON} svn_min_version.py 1 2 1; then ./test-05.sh >test-05.unix.new.log 2>&1; fi
+	if PYTHONPATH=../Source ${PYTHON} svn_min_version.py 1 2 1; then python benchmark_diff.py test-05.unix.known_good.log test-05.unix.new.log; fi
 
 #
 #	Helpers while developing and verifying tests
