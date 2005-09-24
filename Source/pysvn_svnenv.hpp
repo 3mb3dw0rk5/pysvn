@@ -1,6 +1,16 @@
 #ifndef __PYSVN_SVNENV__
 #define __PYSVN_SVNENV__
 
+#include "CXX/Objects.hxx"
+
+#ifndef PYCXX_MAKEVERSION
+#error PyCXX version 5.3.3 is required
+#endif
+
+#if PYCXX_VERSION < PYCXX_MAKEVERSION( 5, 3, 3 )
+#error PyCXX version 5.3.3 is required
+#endif
+
 #include <svn_client.h>
 #include <svn_fs.h>
 #include <svn_repos.h>
@@ -39,17 +49,6 @@ typedef svn_wc_status2_t pysvn_wc_status_t;
 #else
 typedef svn_wc_status_t pysvn_wc_status_t;
 #endif
-
-#include "CXX/Objects.hxx"
-
-#ifndef PYCXX_MAKEVERSION
-#error PyCXX version 5.3.3 is required
-#endif
-
-#if PYCXX_VERSION < PYCXX_MAKEVERSION( 5, 3, 3 )
-#error PyCXX version 5.3.3 is required
-#endif
-
 
 class SvnPool;
 class SvnContext;
