@@ -358,7 +358,7 @@ set the property propname to propval in path\n\
 #define PYSVN_STATUS_DOC \
 "path_status_list = status( path,\n\
            recurse=True,\n\
-           get_all=False,\n\
+           get_all=True,\n\
            update=False,\n\
            ignore=False,\n\
            ignore_externals=False )\n\
@@ -367,7 +367,7 @@ returns status for all files in the directory path in path_status_list"
 #define PYSVN_STATUS_DOC \
 "path_status_list = status( path,\n\
            recurse=True,\n\
-           get_all=False,\n\
+           get_all=True,\n\
            update=False,\n\
            ignore=False )\n\
 returns status for all files in the directory path in path_status_list"
