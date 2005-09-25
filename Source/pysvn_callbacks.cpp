@@ -172,6 +172,15 @@ void pysvn_context::contextNotify2
     info["content_state"] = toEnumValue( notify->content_state );
     info["prop_state"] = toEnumValue( notify->prop_state );
     info["revision"] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, notify->revision ) );
+    if( notify->err != NULL )
+    {
+        SvnException error( notify->err );
+        info["error"] = error.pythonExceptionArg( 1 );
+    }
+    else
+    {
+        info["error"] = Py::None();
+    }
 
     Py::Object results;
 

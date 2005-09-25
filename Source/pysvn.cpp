@@ -41,18 +41,24 @@ pysvn_module::pysvn_module()
     pysvn_entry::init_type();
 
     pysvn_enum< svn_opt_revision_kind >::init_type();
-    pysvn_enum< svn_wc_notify_action_t >::init_type();
-    pysvn_enum< svn_wc_status_kind >::init_type();
-    pysvn_enum< svn_wc_schedule_t >::init_type();
-    pysvn_enum< svn_wc_merge_outcome_t >::init_type();
-    pysvn_enum< svn_wc_notify_state_t >::init_type();
-    pysvn_enum< svn_node_kind_t >::init_type();
-
     pysvn_enum_value< svn_opt_revision_kind >::init_type();
+
+    pysvn_enum< svn_wc_notify_action_t >::init_type();
     pysvn_enum_value< svn_wc_notify_action_t >::init_type();
+
+    pysvn_enum< svn_wc_status_kind >::init_type();
     pysvn_enum_value< svn_wc_status_kind >::init_type();
+
+    pysvn_enum< svn_wc_schedule_t >::init_type();
+    pysvn_enum_value< svn_wc_schedule_t >::init_type();
+
+    pysvn_enum< svn_wc_merge_outcome_t >::init_type();
     pysvn_enum_value< svn_wc_merge_outcome_t >::init_type();
+
+    pysvn_enum< svn_wc_notify_state_t >::init_type();
     pysvn_enum_value< svn_wc_notify_state_t >::init_type();
+
+    pysvn_enum< svn_node_kind_t >::init_type();
     pysvn_enum_value< svn_node_kind_t >::init_type();
 
     add_keyword_method("Client", &pysvn_module::new_client, class_client_doc);

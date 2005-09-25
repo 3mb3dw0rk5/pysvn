@@ -2957,49 +2957,6 @@ template <> void pysvn_enum< svn_opt_revision_kind >::init_type(void)
     behaviors().supportGetattr();
 }
 
-template <> void pysvn_enum< svn_wc_notify_action_t >::init_type(void)
-{
-    behaviors().name("wc_notify_action");
-    behaviors().doc("wc_notify_action enumeration");
-    behaviors().supportGetattr();
-}
-
-template <> void pysvn_enum< svn_wc_status_kind >::init_type(void)
-{
-    behaviors().name("wc_status_kind");
-    behaviors().doc("wc_status_kind enumeration");
-    behaviors().supportGetattr();
-}
-
-template <> void pysvn_enum< svn_wc_schedule_t >::init_type(void)
-{
-    behaviors().name("wc_schedule");
-    behaviors().doc("wc_schedule enumeration");
-    behaviors().supportGetattr();
-}
-
-template <> void pysvn_enum< svn_wc_merge_outcome_t >::init_type(void)
-{
-    behaviors().name("wc_merge_outcome");
-    behaviors().doc("wc_merge_outcome enumeration");
-    behaviors().supportGetattr();
-}
-
-template <> void pysvn_enum< svn_wc_notify_state_t >::init_type(void)
-{
-    behaviors().name("wc_notify_state");
-    behaviors().doc("wc_notify_state enumeration");
-    behaviors().supportGetattr();
-}
-
-template <> void pysvn_enum< svn_node_kind_t >::init_type(void)
-{
-    behaviors().name("node_kind");
-    behaviors().doc("node_kind enumeration");
-    behaviors().supportGetattr();
-}
-
-//--------------------------------------------------------------------------------
 template <> void pysvn_enum_value< svn_opt_revision_kind >::init_type(void)
 {
     behaviors().name("opt_revision_kind");
@@ -3008,6 +2965,13 @@ template <> void pysvn_enum_value< svn_opt_revision_kind >::init_type(void)
     behaviors().supportRepr();
     behaviors().supportStr();
     behaviors().supportHash();
+}
+
+template <> void pysvn_enum< svn_wc_notify_action_t >::init_type(void)
+{
+    behaviors().name("wc_notify_action");
+    behaviors().doc("wc_notify_action enumeration");
+    behaviors().supportGetattr();
 }
 
 template <> void pysvn_enum_value< svn_wc_notify_action_t >::init_type(void)
@@ -3020,6 +2984,13 @@ template <> void pysvn_enum_value< svn_wc_notify_action_t >::init_type(void)
     behaviors().supportHash();
 }
 
+template <> void pysvn_enum< svn_wc_status_kind >::init_type(void)
+{
+    behaviors().name("wc_status_kind");
+    behaviors().doc("wc_status_kind enumeration");
+    behaviors().supportGetattr();
+}
+
 template <> void pysvn_enum_value< svn_wc_status_kind >::init_type(void)
 {
     behaviors().name("wc_status_kind");
@@ -3028,6 +2999,30 @@ template <> void pysvn_enum_value< svn_wc_status_kind >::init_type(void)
     behaviors().supportRepr();
     behaviors().supportStr();
     behaviors().supportHash();
+}
+
+template <> void pysvn_enum< svn_wc_schedule_t >::init_type(void)
+{
+    behaviors().name("wc_schedule");
+    behaviors().doc("wc_schedule enumeration");
+    behaviors().supportGetattr();
+}
+
+template <> void pysvn_enum_value< svn_wc_schedule_t >::init_type(void)
+{
+    behaviors().name("wc_schedule");
+    behaviors().doc("wc_schedule value");
+    behaviors().supportCompare();
+    behaviors().supportRepr();
+    behaviors().supportStr();
+    behaviors().supportHash();
+}
+
+template <> void pysvn_enum< svn_wc_merge_outcome_t >::init_type(void)
+{
+    behaviors().name("wc_merge_outcome");
+    behaviors().doc("wc_merge_outcome enumeration");
+    behaviors().supportGetattr();
 }
 
 template <> void pysvn_enum_value< svn_wc_merge_outcome_t >::init_type(void)
@@ -3040,6 +3035,13 @@ template <> void pysvn_enum_value< svn_wc_merge_outcome_t >::init_type(void)
     behaviors().supportHash();
 }
 
+template <> void pysvn_enum< svn_wc_notify_state_t >::init_type(void)
+{
+    behaviors().name("wc_notify_state");
+    behaviors().doc("wc_notify_state enumeration");
+    behaviors().supportGetattr();
+}
+
 template <> void pysvn_enum_value< svn_wc_notify_state_t >::init_type(void)
 {
     behaviors().name("wc_notify_state");
@@ -3048,6 +3050,13 @@ template <> void pysvn_enum_value< svn_wc_notify_state_t >::init_type(void)
     behaviors().supportRepr();
     behaviors().supportStr();
     behaviors().supportHash();
+}
+
+template <> void pysvn_enum< svn_node_kind_t >::init_type(void)
+{
+    behaviors().name("node_kind");
+    behaviors().doc("node_kind enumeration");
+    behaviors().supportGetattr();
 }
 
 template <> void pysvn_enum_value< svn_node_kind_t >::init_type(void)
