@@ -77,8 +77,7 @@ Py::Object pysvn_revision::getattr( const char *_name )
         else
             return Py::Nothing();
     }
-    else
-        return getattr_methods( _name );
+    return getattr_methods( _name );
 }
 
 int pysvn_revision::setattr( const char *_name, const Py::Object &value )

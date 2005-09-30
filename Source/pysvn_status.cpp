@@ -141,8 +141,7 @@ Py::Object pysvn_status::getattr( const char *_name )
     {
         return toEnumValue( m_svn_status->repos_text_status );
     }
-    else
-        return getattr_methods( _name );
+    return getattr_methods( _name );
 }
 
 static const char class_doc[] =

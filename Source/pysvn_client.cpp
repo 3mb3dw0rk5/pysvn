@@ -2743,8 +2743,7 @@ Py::Object pysvn_client::get_auth_cache( const Py::Tuple &a_args, const Py::Dict
     bool no_auth_cache = (param != NULL && param[0] == '1');
     if( no_auth_cache )
         return Py::Int( 0 );
-    else
-        return Py::Int( 1 );
+    return Py::Int( 1 );
 }
 
 Py::Object pysvn_client::set_auth_cache( const Py::Tuple &a_args, const Py::Dict &a_kws )
