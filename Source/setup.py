@@ -89,12 +89,15 @@ class MakeFileCreater:
         return cmp( self.mac_os_x_version[0:len(version)], list(version) )
 
     def createMakefile( self, argv ):
+        print 'Info: Creating makefile for python %r' % (sys.version_info,)
+
         include_dir_list = []
 
         # add python include dirs
         include_dir_list.append( distutils.sysconfig.get_python_inc() )
         if distutils.sysconfig.get_python_inc() != distutils.sysconfig.get_python_inc( True ):
             include_dir_list.append( distutils.sysconfig.get_python_inc( True ) )
+        print 'Info: Python includes %s' % ' '.join( include_dir_list )
 
         # add pycxx include
         pycxx_dir = self.find_pycxx( argv )
@@ -195,8 +198,7 @@ include pysvn_common.mak
         return self.find_dir( argv,
                     'PyCXX include',
                     '--pycxx-dir=',
-                    [   '../Import/pycxx_5_3_4',
-                        '../Import/pycxx_5_3_3'],
+                    [   '../Import/pycxx_5_3_5'],
                     'CXX/Version.hxx' )
 
     def find_svn_inc( self, argv ):

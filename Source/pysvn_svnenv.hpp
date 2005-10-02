@@ -4,11 +4,11 @@
 #include "CXX/Objects.hxx"
 
 #ifndef PYCXX_MAKEVERSION
-#error PyCXX version 5.3.3 is required
+#error PyCXX version 5.3.5 is required
 #endif
 
-#if PYCXX_VERSION < PYCXX_MAKEVERSION( 5, 3, 3 )
-#error PyCXX version 5.3.3 is required
+#if PYCXX_VERSION < PYCXX_MAKEVERSION( 5, 3, 5 )
+#error PyCXX version 5.3.5 is required
 #endif
 
 #include <svn_client.h>
