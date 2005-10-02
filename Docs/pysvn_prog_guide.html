@@ -222,5 +222,48 @@ client = pysvn.Client()
 client.move( 'file_old.txt', 'file_new.txt' )
 </pre>
 
+<h2>Lock a file</h2>
+<pre>import pysvn
+client = pysvn.Client()
+client.lock( 'file.txt', 'reason for locking' )
+</pre>
+
+<h2>Lock a file overriding another user or working copies lock</h2>
+<pre>import pysvn
+client = pysvn.Client()
+client.lock( 'file.txt', 'reason for locking', force=True )
+</pre>
+
+
+<h2>Unlock a file</h2>
+<pre>import pysvn
+client = pysvn.Client()
+client.unlock( 'file.txt' )
+</pre>
+
+<h2>Unlock a file locked by another user or working copy</h2>
+<pre>import pysvn
+client = pysvn.Client()
+client.unlock( 'file.txt', force=True )
+</pre>
+
+<h2>Test for a locked file</h2>
+
+<p>Method 1:</p>
+<pre>all_entries = self.client.info2( path, recurse=False )
+for path, info in all_entries:
+    if info['lock']:
+        if info['lock']['token'] != '':
+            print '%s is locked' % path
+        print info['lock']['comment']
+</pre>
+<p>Method 2:</p>
+<pre>all_status = self.client.status( path, recurse=False, update=True )
+for status in all_status:
+    if status.entry is not None:
+        if status.entry.lock_token is not None:
+            print '%s is locked' % status.path
+</pre>
+
 </body>
 </html>
