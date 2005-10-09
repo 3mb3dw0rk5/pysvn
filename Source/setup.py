@@ -215,6 +215,7 @@ include pysvn_common.mak
                     'SVN library',
                     '--svn-lib-dir=',
                     [   '/usr/lib',                             # typical Linux
+                        '/usr/lib64',                           # typical 64bit Linux
                         '/usr/local/lib',                       # typical *BSD
                         '/sw/lib'],                             # Darwin
                     self.is_mac_os_x and 'libsvn_client-1.dylib' or 'libsvn_client-1.so' )
@@ -225,6 +226,7 @@ include pysvn_common.mak
                     '--apr-inc-dir=',
                     [   '/usr/include/apr-0',                   # typical Linux
                         '/usr/include/apache2',                 # alternate Linux
+                        '/usr/include/httpd',                   # alternate Linux
                         '/usr/local/include/apr0',              # typical *BSD
                         '/usr/local/include/apache2',           # alternate *BSD
                         '/sw/include/apr-0'],                   # Darwin
