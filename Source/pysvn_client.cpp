@@ -386,7 +386,7 @@ Py::Object pysvn_client::cmd_annotate( const Py::Tuple &a_args, const Py::Dict &
         Py::Dict entry_dict;
         entry_dict[name_author] = Py::String( entry.m_author, name_utf8 );
         entry_dict[name_date] = Py::String( entry.m_date );
-        entry_dict[name_line] = Py::String( entry.m_line, name_utf8 );
+        entry_dict[name_line] = Py::String( entry.m_line );
         entry_dict[name_number] = Py::Int( long( entry.m_line_no ) );
         entry_dict[name_revision] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, entry.m_revision ) );
 
