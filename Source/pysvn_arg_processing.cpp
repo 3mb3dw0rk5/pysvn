@@ -194,6 +194,23 @@ bool FunctionArguments::getBoolean( const char *name, bool default_value )
     }
 }
 
+int FunctionArguments::getInteger( const char *name )
+{
+    Py::Int int_val( getArg( name ) );
+    return int_val;
+}
+
+int FunctionArguments::getInteger( const char *name, int default_value )
+{
+    if( hasArg( name ) )
+    {
+        return getInteger( name );
+    }
+    else
+    {
+        return default_value;
+    }
+}
 std::string FunctionArguments::getUtf8String( const char *name )
 {
     Py::String any( getArg( name ) );

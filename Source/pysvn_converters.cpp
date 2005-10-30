@@ -223,6 +223,22 @@ void proplistToObject( Py::List &py_path_propmap_list, apr_array_header_t *props
     }
 }
 
+Py::Object revnumListToObject( apr_array_header_t *revs, SvnPool &pool )
+{
+    Py::List py_list;
+
+    for (int j = 0; j < revs->nelts; ++j)
+    {
+        svn_revnum_t revnum = ((svn_revnum_t *)revs->elts)[j];
+
+        Py::Object py_rev( Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, revnum ) ) );
+
+        py_list.append( py_rev );
+    }
+
+    return py_list;
+}
+
 Py::String asUtf8String( Py::Object obj )
 {
     Py::String any( obj );

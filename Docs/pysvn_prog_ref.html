@@ -549,7 +549,9 @@ info2( url_or_path,
        recurse=True )
 
 </pre>
-<p>return information on url_or_path as a list of (path, info_dict) tuples.</p>
+<p>return information on url_or_path as a list of (path, info_dict) tuples.
+To return information about a URL revision must be opt_revision_kind.head or opt_revision_kind.number.
+</p>
 
 <p>The info_dict contains:
 <ul>
@@ -685,13 +687,9 @@ immediate commit.</p>
 <pre>
 move( src_url_or_path,
       dest_url_or_path,
-      src_revision=pysvn.Revision(),
       force=False )
 </pre>
 <p>Move/rename something in working copy or repository.</p>
-<p>The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
-if the src_url_or_path is a URL otherwise to pysvn.Revision( opt_revision_kind.working ).</p>
-
 
 <p>NOTE:  this command is equivalent to a 'copy' and 'delete'.</p>
 

@@ -409,11 +409,19 @@ class SvnCommand:
 
     def cmd_info2( self, args ):
         recurse = args.getBooleanOption( '--recursive', True )
-        revision = args.getOptionalRevision( '--revision', 'unspecified' )
+        revision_url = args.getOptionalRevision( '--revision', 'head' )
+        revision_path = args.getOptionalRevision( '--revision', 'unspecified' )
+
         positional_args = args.getPositionalArgs( 0, 1 )
         if len(positional_args) == 0:
             positional_args.append( '.' )
+
         path = positional_args[0]
+
+        if self.client.is_url( path ):
+            revision = revision_url
+        else:
+            revision = revision_path
 
         all_entries = self.client.info2( path, revision=revision,  recurse=recurse )
 
@@ -810,8 +818,10 @@ class SvnCommand:
         positional_args = args.getPositionalArgs( 0 )
         if len(positional_args) == 0:
             positional_args.append( '.' )
-        rev = self.client.update( positional_args[0], recurse=recurse )
+        rev_list = self.client.update( positional_args[0], recurse=recurse )
         self.printNotifyMessages()
+        if type(rev_list) == type([]):
+            print 'rev_list = %r' % [rev.number for rev in rev_list]
 
         if self.revision_update_complete is not None:
             print 'Updated to revision',self.revision_update_complete.number

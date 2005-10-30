@@ -87,6 +87,10 @@ call :cmd_pysvn update b:\wc1\test
 
 echo Info: Test - status of locked files
 call :cmd_pysvn status --verbose b:\wc1
+
+echo Info: Test - info2 of URL
+call :cmd_pysvn info2 --revision HEAD file:///b:/repos/trunk/test/file1.txt
+
 goto :eof
 endlocal
 

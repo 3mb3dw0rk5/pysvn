@@ -106,4 +106,7 @@ cmd_pysvn update ${TESTROOT}/wc1/test
 echo Info: Test - status of locked files
 cmd_pysvn status --verbose ${TESTROOT}/wc1
 
+echo Info: Test - info2 of URL
+cmd_pysvn info2 --revision HEAD file://${TESTROOT}/repos/trunk/test/file1.txt
+
 true

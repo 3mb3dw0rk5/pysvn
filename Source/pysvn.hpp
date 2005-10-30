@@ -180,6 +180,7 @@ public:
     Py::Object cmd_checkin( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_copy( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_diff( const Py::Tuple& args, const Py::Dict &kws );
+    Py::Object cmd_diff_peg( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_export( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_info( const Py::Tuple& args, const Py::Dict &kws );
 #ifdef PYSVN_HAS_CLIENT_INFO
@@ -192,6 +193,7 @@ public:
 #endif
     Py::Object cmd_ls( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_merge( const Py::Tuple& args, const Py::Dict &kws );
+    Py::Object cmd_merge_peg( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_mkdir( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_move( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_propdel( const Py::Tuple& args, const Py::Dict &kws );
@@ -352,6 +354,8 @@ public:
 
     bool getBoolean( const char *name );
     bool getBoolean( const char *name, bool default_value );
+    int getInteger( const char *name );
+    int getInteger( const char *name, int default_value );
     std::string getUtf8String( const char *name );
     std::string getUtf8String( const char *name, const std::string &default_value );
     std::string getString( const char *name, const std::string &default_value );
@@ -658,6 +662,7 @@ extern Py::Object toObject( svn_client_commit_info_t *commit_info );
 extern Py::Object toObject( const svn_info_t *info );
 #endif
 extern Py::Object propsToObject( apr_hash_t *props, SvnPool &pool );
+extern Py::Object revnumListToObject( apr_array_header_t *revs, SvnPool &pool );
 extern void proplistToObject( Py::List &py_path_propmap_list, apr_array_header_t *props, SvnPool &pool );
 extern Py::String asUtf8String( Py::Object obj );
 extern apr_array_header_t *targetsFromStringOrList( Py::Object arg, SvnPool &pool );
