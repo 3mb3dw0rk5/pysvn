@@ -100,6 +100,8 @@ Py::Object &SvnException::pythonExceptionArg( int style )
 SvnContext::SvnContext( const std::string &config_dir_str )
 : m_pool( NULL )
 {
+    memset( &m_context, 0, sizeof( m_context ) );
+
     apr_pool_create( &m_pool, NULL );
 
     const char *config_dir = NULL;
