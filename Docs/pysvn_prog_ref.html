@@ -729,7 +729,7 @@ propget( prop_name,
          revision=pysvn.Revision(),
          recurse=False )
 </pre>
-<p>Returns a list of tuples (url_or_path, prop_dict). The prop_dict contains the prop_name and its value if set on the url_or_path.</p>
+<p>Returns a dictionary with keys of url_or_path and values of the prop_name.</p>
 <p>The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
 if the url_or_path is a URL otherwise to pysvn.Revision( opt_revision_kind.working ).</p>
 
