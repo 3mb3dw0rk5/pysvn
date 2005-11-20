@@ -59,6 +59,9 @@ public:    // data
     //
     Py::Object m_pyfn_GetLogin;
     Py::Object m_pyfn_Notify;
+#ifdef PYSVN_HAS_CONTEXT_PROGRESS
+    Py::Object m_pyfn_Progress;
+#endif
     Py::Object m_pyfn_Cancel;
     Py::Object m_pyfn_GetLogMessage;
     Py::Object m_pyfn_SslServerPrompt;
@@ -102,6 +105,14 @@ private:// methods
         svn_wc_notify_state_t content_state,
         svn_wc_notify_state_t prop_state,
         svn_revnum_t revision
+        );
+#endif
+
+#ifdef PYSVN_HAS_CONTEXT_PROGRESS
+    void contextProgress
+        (
+        apr_off_t progress,
+        apr_off_t total
         );
 #endif
 
@@ -658,7 +669,7 @@ extern Py::Object path_string_or_none( const char *str, SvnPool &pool );
 extern Py::Object utf8_string_or_none( const std::string &str );
 extern apr_time_t convertStringToTime( const std::string &text, apr_time_t now, SvnPool &pool );
 extern Py::Object toObject( apr_time_t t );
-extern Py::Object toObject( svn_client_commit_info_t *commit_info );
+extern Py::Object toObject( pysvn_commit_info_t *commit_info );
 #ifdef PYSVN_HAS_CLIENT_INFO
 extern Py::Object toObject( const svn_info_t *info );
 #endif

@@ -151,10 +151,19 @@ SvnContext::SvnContext( const std::string &config_dir_str )
     svn_auth_set_parameter( auth_baton, SVN_AUTH_PARAM_CONFIG_DIR, config_dir );
 
     m_context.auth_baton = auth_baton;
+#ifdef PYSVN_HAS_CONTEXT_LOG_MSG2
+    m_context.log_msg_func2 = handlerLogMsg2;
+    m_context.log_msg_baton2 = this;
+    m_context.log_msg_func = NULL;
+    m_context.log_msg_baton = NULL;
+#else
     m_context.log_msg_func = handlerLogMsg;
     m_context.log_msg_baton = this;
+#endif
+
     m_context.cancel_func = handlerCancel;
     m_context.cancel_baton = this;
+
 #ifdef PYSVN_HAS_CONTEXT_NOTIFY2
     m_context.notify_func2 = handlerNotify2;
     m_context.notify_baton2 = this;
@@ -164,6 +173,12 @@ SvnContext::SvnContext( const std::string &config_dir_str )
     m_context.notify_func = handlerNotify;
     m_context.notify_baton = this;
 #endif
+
+#ifdef PYSVN_HAS_CONTEXT_PROGRESS
+    m_context.progress_func = handlerProgress;
+    m_context.progress_baton = this;
+#endif
+
 }
 
 SvnContext::~SvnContext()
@@ -185,6 +200,29 @@ svn_client_ctx_t *SvnContext::ctx()
     return &m_context;
 }
 
+#ifdef PYSVN_HAS_CONTEXT_LOG_MSG2
+svn_error_t *SvnContext::handlerLogMsg2
+    (
+    const char **log_msg,
+    const char **tmp_file,
+    const apr_array_header_t *commit_items,
+    void *baton,
+    apr_pool_t *pool
+    )
+{
+    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+
+    std::string msg;
+
+    if (!context->contextGetLogMessage( msg ) )
+        return svn_error_create( SVN_ERR_CANCELLED, NULL, "" );
+
+    *log_msg = svn_string_ncreate( msg.data(), msg.length(), pool )->data;
+    *tmp_file = NULL;
+
+    return SVN_NO_ERROR;
+}
+#else
 svn_error_t *SvnContext::handlerLogMsg
     (
     const char **log_msg,
@@ -206,6 +244,7 @@ svn_error_t *SvnContext::handlerLogMsg
 
     return SVN_NO_ERROR;
 }
+#endif
 
 #ifdef PYSVN_HAS_CONTEXT_NOTIFY2
 void SvnContext::handlerNotify2
@@ -235,6 +274,21 @@ void SvnContext::handlerNotify
     SvnContext *context = reinterpret_cast<SvnContext *>( baton );
 
     context->contextNotify( path, action, kind, mime_type, content_state, prop_state, revision );
+}
+#endif
+
+#ifdef PYSVN_HAS_CONTEXT_PROGRESS
+void SvnContext::handlerProgress
+    (
+    apr_off_t progress,
+    apr_off_t total,
+    void *baton,
+    apr_pool_t *pool
+    )
+{
+    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+
+    context->contextProgress( progress, total );
 }
 #endif
 

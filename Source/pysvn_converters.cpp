@@ -98,13 +98,23 @@ Py::Object toObject( apr_time_t t )
     return Py::Float( double( t )/1000000 );
 }
 
-Py::Object toObject( svn_client_commit_info_t *commit_info )
+#if defined( PYSVN_HAS_SVN_COMMIT_INFO_T )
+Py::Object toObject( pysvn_commit_info_t *commit_info )
 {
     if( commit_info == NULL || !SVN_IS_VALID_REVNUM( commit_info->revision ) )
         return Py::Nothing();
 
     return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, commit_info->revision ) );
 }
+#else
+Py::Object toObject( pysvn_commit_info_t *commit_info )
+{
+    if( commit_info == NULL || !SVN_IS_VALID_REVNUM( commit_info->revision ) )
+        return Py::Nothing();
+
+    return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, commit_info->revision ) );
+}
+#endif
 
 #ifdef PYSVN_HAS_CLIENT_INFO
 Py::Object toObject( const svn_info_t *info )

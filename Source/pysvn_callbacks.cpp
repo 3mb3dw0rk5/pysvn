@@ -24,6 +24,7 @@ pysvn_context::pysvn_context( const std::string &config_dir )
 : SvnContext( config_dir )
 , m_pyfn_GetLogin()
 , m_pyfn_Notify()
+, m_pyfn_Progress()
 , m_pyfn_GetLogMessage()
 , m_pyfn_SslServerPrompt()
 , m_pyfn_SslServerTrustPrompt()
@@ -137,6 +138,41 @@ bool pysvn_context::contextGetLogin
 
     return false;
 }
+
+#ifdef PYSVN_HAS_CONTEXT_PROGRESS
+void pysvn_context::contextProgress
+    (
+    apr_off_t progress,
+    apr_off_t total
+    )
+{
+    PythonDisallowThreads callback_permission( m_permission );
+
+    // make sure we can call the users object
+    if( !m_pyfn_Progress.isCallable() )
+        return;
+
+    Py::Callable callback( m_pyfn_Progress );
+
+    Py::Tuple args( 2 );
+    args[0] = Py::Int( progress );
+    args[1] = Py::Int( total );
+
+    Py::Object results;
+
+    try
+    {
+        results = callback.apply( args );
+    }
+    catch( Py::Exception &e )
+    {
+        PyErr_Print();
+        e.clear();
+
+        m_error_message = "unhandled exception in callback_progress";
+    }
+}
+#endif
 
 // 
 // this method will be called to notify about

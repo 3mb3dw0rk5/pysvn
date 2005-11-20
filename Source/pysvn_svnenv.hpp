@@ -11,11 +11,14 @@
 #error PyCXX version 5.3.5 is required
 #endif
 
+
 #include <svn_client.h>
 #include <svn_fs.h>
 #include <svn_repos.h>
+#include <apr_xlate.h>
 #include <string>
 
+// SVN 1.1 or later
 #if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 1) || SVN_VER_MAJOR > 1
 #define PYSVN_HAS_CLIENT_ADD2
 #define PYSVN_HAS_CLIENT_DIFF_PEG
@@ -24,10 +27,12 @@
 #define PYSVN_HAS_CLIENT_VERSION
 #endif
 
+// SVN 1.2 or later
 #if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 2) || SVN_VER_MAJOR > 1
 #define PYSVN_HAS_CLIENT_ANNOTATE2
 #define PYSVN_HAS_CLIENT_CAT2
 #define PYSVN_HAS_CLIENT_CHECKOUT2
+#define PYSVN_HAS_CLIENT_COMMIT2
 #define PYSVN_HAS_CLIENT_DIFF_PEG2
 #define PYSVN_HAS_CLIENT_DIFF2
 #define PYSVN_HAS_CLIENT_EXPORT3
@@ -44,10 +49,35 @@
 #define PYSVN_HAS_CONTEXT_NOTIFY2
 #endif
 
+// SVN 1.3 or later
+#if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 3) || SVN_VER_MAJOR > 1
+#define PYSVN_HAS_SVN_CLIENT_COMMIT_ITEM2_T
+#define PYSVN_HAS_SVN_COMMIT_INFO_T
+#define PYSVN_HAS_CONTEXT_LOG_MSG2
+#define PYSVN_HAS_CONTEXT_PROGRESS
+
+#define PYSVN_HAS_CLIENT_ADD3
+#define PYSVN_HAS_CLIENT_COMMIT3
+#define PYSVN_HAS_CLIENT_COPY2
+#define PYSVN_HAS_CLIENT_DELETE2
+#define PYSVN_HAS_CLIENT_DIFF_PEG3
+#define PYSVN_HAS_CLIENT_DIFF3
+#define PYSVN_HAS_CLIENT_IMPORT2
+#define PYSVN_HAS_CLIENT_LS3
+#define PYSVN_HAS_CLIENT_MKDIR2
+#define PYSVN_HAS_CLIENT_MOVE3
+#endif
+
 #ifdef PYSVN_HAS_CLIENT_STATUS2
 typedef svn_wc_status2_t pysvn_wc_status_t;
 #else
 typedef svn_wc_status_t pysvn_wc_status_t;
+#endif
+
+#ifdef PYSVN_HAS_SVN_COMMIT_INFO_T
+typedef svn_commit_info_t pysvn_commit_info_t;
+#else
+typedef svn_client_commit_info_t pysvn_commit_info_t;
 #endif
 
 class SvnPool;
@@ -140,6 +170,15 @@ public:
         ) = 0;
 #endif
 
+
+#ifdef PYSVN_HAS_CONTEXT_PROGRESS
+    virtual void contextProgress
+        (
+        apr_off_t progress,
+        apr_off_t total
+        ) = 0;
+#endif
+
     //
     // this method will be called periodically to allow
     // the app to cancel long running operations
@@ -198,6 +237,16 @@ public:
         ) = 0;
 
 private:
+#ifdef PYSVN_HAS_CONTEXT_LOG_MSG2
+    static svn_error_t *SvnContext::handlerLogMsg2
+        (
+        const char **log_msg,
+        const char **tmp_file,
+        const apr_array_header_t *commit_items,
+        void *baton,
+        apr_pool_t *pool
+        );
+#else
     static svn_error_t *SvnContext::handlerLogMsg
         (
         const char **log_msg,
@@ -206,6 +255,17 @@ private:
         void *baton,
         apr_pool_t *pool
         );
+#endif
+
+#ifdef PYSVN_HAS_CONTEXT_PROGRESS
+    static void SvnContext::handlerProgress
+        (
+        apr_off_t progress,
+        apr_off_t total,
+        void *baton,
+        apr_pool_t *pool
+        );
+#endif
 
 #ifdef PYSVN_HAS_CONTEXT_NOTIFY2
     static void SvnContext::handlerNotify2

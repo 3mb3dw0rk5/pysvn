@@ -165,7 +165,7 @@ Py::Object FunctionArguments::getArg( const char *arg_name )
     if( !hasArg( arg_name ) )
     {
         std::string msg = m_function_name;
-        msg += "() internal error - getArg called twice of with bad arg_name: ";
+        msg += "() internal error - getArg called twice or for option arg that is missing with bad arg_name: ";
         msg += arg_name;
         throw Py::AttributeError( msg );
     }

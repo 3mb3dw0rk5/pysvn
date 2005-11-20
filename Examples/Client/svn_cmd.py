@@ -816,7 +816,7 @@ class SvnCommand:
             positional_args.append( '.' )
         rev_list = self.client.update( positional_args[0], recurse=recurse )
         self.printNotifyMessages()
-        if type(rev_list) == type([]):
+        if type(rev_list) == type([]) and len(rev_list) != 1:
             print 'rev_list = %r' % [rev.number for rev in rev_list]
 
         if self.revision_update_complete is not None:

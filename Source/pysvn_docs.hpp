@@ -48,9 +48,14 @@ return true if path_or_url is a SVN URL\n"
 
 #define PYSVN_ADD_DOC \
 "add( path,\n\
-     recurse=True )\n\
+     recurse=True, \n\
+    force=False, \n\
+    ignore=True )\n\
 \n\
-Schedules the file or directory specfied in path for addition to the repository.  Set recurse to True to recursively add a directory's children.\n\
+Schedules the file or directory specfied in path for addition to the repository.\n\
+Set recurse to True to recursively add a directory's children.\n\
+Set force to True to add new item in a directories that are already under source control.\n\
+Set ignore=False to all file and directories that match ignore patterns.\n\
 Files are added at the next check in.\n"
 #define PYSVN_ANNOTATE_DOC \
 "annotation_list = annotate( url_or_path,\n\
