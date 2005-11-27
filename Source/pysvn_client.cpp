@@ -138,8 +138,10 @@ Py::Object pysvn_client::getattr( const char *_name )
         return m_context.m_pyfn_GetLogin;
     if( name == name_callback_notify )
         return m_context.m_pyfn_Notify;
+#ifdef PYSVN_HAS_CONTEXT_PROGRESS
     if( name == name_callback_progress )
         return m_context.m_pyfn_Progress;
+#endif
     if( name == name_callback_cancel )
         return m_context.m_pyfn_Cancel;
     if( name == name_callback_get_log_message )
@@ -172,8 +174,10 @@ int pysvn_client::setattr( const char *_name, const Py::Object &value )
         set_callable( m_context.m_pyfn_GetLogin, value );
     else if( name == name_callback_notify )
         set_callable( m_context.m_pyfn_Notify, value );
+#ifdef PYSVN_HAS_CONTEXT_PROGRESS
     else if( name == name_callback_progress )
         set_callable( m_context.m_pyfn_Progress, value );
+#endif
     else if( name == name_callback_cancel )
         set_callable( m_context.m_pyfn_Cancel, value );
     else if( name == name_callback_get_log_message )
@@ -2055,7 +2059,8 @@ Py::Object pysvn_client::cmd_mkdir( const Py::Tuple &a_args, const Py::Dict &a_k
             m_context,
             pool
             );
-#else        svn_error_t *error = svn_client_mkdir
+#else
+        svn_error_t *error = svn_client_mkdir
             (
             &commit_info,
             targets,

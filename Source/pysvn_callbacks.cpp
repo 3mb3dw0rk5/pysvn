@@ -24,7 +24,9 @@ pysvn_context::pysvn_context( const std::string &config_dir )
 : SvnContext( config_dir )
 , m_pyfn_GetLogin()
 , m_pyfn_Notify()
+#ifdef PYSVN_HAS_CONTEXT_PROGRESS
 , m_pyfn_Progress()
+#endif
 , m_pyfn_GetLogMessage()
 , m_pyfn_SslServerPrompt()
 , m_pyfn_SslServerTrustPrompt()
