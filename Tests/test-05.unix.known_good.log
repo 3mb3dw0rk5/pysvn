@@ -179,7 +179,6 @@ U /Volumes/Emotional/Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1
 U /Volumes/Emotional/Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test
 U /Volumes/Emotional/Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt
 U /Volumes/Emotional/Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file2.txt
-rev_list = [4]
 Updated to revision 4
 Info: Test - status of locked files
 Info: CWD: /Volumes/Emotional/Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test
