@@ -1,11 +1,12 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; utf-8">
+<meta http-equiv="Content-Type" content="text/html; utf-8" />
 <title>pysvn Programmer's Guide</title>
-<link rev="made" href="mailto:barry@barrys-emacs.org">
+<link rev="made" href="mailto:barry@barrys-emacs.org" />
 <style>
-H1, H2, H3, H4 {color: #000099; background-color: lightskyblue}
+h1, h2, h3, h4 {color: #000099; background-color: lightskyblue}
 pre {color: #0000cc; background-color: #eeeeee; position: relative; left: 40px; margin-right: 80px;
      border-style: solid; border-color: black; border-width: thin}
 code {color: #0000cc; background-color: #eeeeee;}
@@ -13,43 +14,51 @@ code {color: #0000cc; background-color: #eeeeee;}
 </head>
 <body>
 <h1>pysvn Programmer's Guide</h1>
-<p>This guide gives an tutorial introduction to the pysvn module.</p>
+<p>This guide gives an tutorial introduction to the pysvn module.
+</p>
 <p>Complete and detailed infomation on the pysvn API is documented in
-<a href="pysvn_prog_ref.html">pysvn Programmer's Reference</a>.</p>
+<a href="pysvn_prog_ref.html">pysvn Programmer's Reference</a>.
+</p>
 
 <p>The pysvn module is a python interface
 to the Subversion version control system.  This API exposes client
 interfaces for managing a working copy, querying a repository, and
-synchronizing the two.</p>
+synchronizing the two.
+</p>
 <p>This API cannot create new
 repositories; it can only interact with existing repositories.  If
 you need to create a repository, use the svnadmin command from
-Subversion.</p>
+Subversion.
+</p>
 <p>Using the API, you can check out a
 working copy, add, edit, and remove working files, and check in,
 compare, or discard your changes.  Repository properties such as
 keyword expansion, end of line characters, and ignore lists can also
-be examined and manipulated.</p>
+be examined and manipulated.
+</p>
 
 <h2>Subversion model</h2>
 <p>Subversion operates on an
 update-edit-commit model.  A local, working copy is created.  Changes
 are made in the working copy, then committed to the central
-repository (which may be local or remote).</p>
+repository (which may be local or remote).
+</p>
 <p>This model allows and in fact expects
 that multiple people will occasionally edit the same file at the same
 time.  In most cases, Subversion merges these differences without
 intervention.  In the rare case where the differences are ambiguous,
 one of the commits fails, and the user or application will need to
 examine and resolve the differences before attempting to commit
-again.</p>
+again.
+</p>
 
 <h2>Common Tasks</h2>
 <p>This section gives examples of common
 tasks using the pysvn interface.  Operations applied to directories
 are processed recursively.  Add the argument <code>recurse=False</code>
 to prevent this behavior; for example, you may want to add a
-directory without adding its contents.</p>
+directory without adding its contents.
+</p>
 
 <h3>Check out a working copy</h3>
 <pre>import pysvn
@@ -64,7 +73,8 @@ client.checkout('http://localhost/example/trunk',
 </pre><p>
 This example creates a working copy of the example project in the
 directory examples/pysvn.  This project is used in the remaining
-examples.</p>
+examples.
+</p>
 
 <h3>Add a file or directory to the repository</h3>
 <pre>import pysvn
@@ -82,7 +92,8 @@ client.checkin(['./examples/pysvn/foo.txt'], 'Adding a sample file')</pre>
 in the working copy, then adds it to the repository.  Note that the
 <code>Client.import_()</code> command does the addition
 and commit in a single step.  Most applications, however, queue up
-multiple changes and commit them together at a later time.</p>
+multiple changes and commit them together at a later time.
+</p>
 
 <h3>Update the working copy</h3>
 <pre>import pysvn
@@ -91,7 +102,8 @@ client.update('./examples/pysvn')</pre>
 <p>Updating gets any changes other users
 have committed to the repository and applies them to your working
 copy.  Most applications do this on a regular basis to prevent
-conflicts.</p>
+conflicts.
+</p>
 
 <h3>Commit changes to the repository</h3>
 <pre>import pysvn
@@ -106,7 +118,8 @@ client.checkin(['./examples/pysvn'], 'Corrected spelling of python in foo.txt')<
 Either all scheduled changes are successfully committed, or none are.
  Most applications either commit all changes in the working copy, as
 shown in this example, or pass a list of individual files and
-directories that need to be committed as a unit.</p>
+directories that need to be committed as a unit.
+</p>
 
 <h3>Discard changes in the working copy</h3>
 <pre>import pysvn
@@ -119,10 +132,12 @@ client = pysvn.Client()
 client.revert('./examples/pysvn/foo.txt')</pre>
 <p>This discards any uncommitted changes
 in the working copy and restores a file or directory to its unedited
-state.</p>
+state.
+</p>
 <p>Files that are scheduled for addition
 or removal remain unversioned or are restored to the working copy,
-respectively.</p>
+respectively.
+</p>
 
 <h3>Rename or move a file</h3>
 <pre>import pysvn
@@ -135,13 +150,16 @@ client.checkin(['./examples/pysvn/foo.txt', './examples/pysvn/foo2.txt'], 'Foo h
 <p>
 Moving or renaming a file removes the file under the old path or name
 and adds it in the new location while preserving information about
-previous versions.</p>
+previous versions.
+</p>
 <p>In this example, we passed both
 filenames to <code>Client.checkin()</code>.  Passing the parent
-directory would also have been effective.</p>
+directory would also have been effective.
+</p>
 <p>The move and checkin can be done in a
 single step on the server side; see the example in the Respository
-Tasks section.</p>
+Tasks section.
+</p>
 
 <h3>Remove a file or directory from the repository</h3>
 <pre>import pysvn
@@ -154,10 +172,12 @@ client.checkin(['./examples/pysvn/foo2.txt'], 'Removing sample file')</pre>
 <p>Some people confuse removing a file or
 directory from the repository with purging it completely. The file
 still exists in previous versions and can be retrieved by checking
-out or otherwise examining the contents of a previous revision.</p>
+out or otherwise examining the contents of a previous revision.
+</p>
 <p>Files are typically removed from the
 working copy immediately, while directories usually remain in the
-working copy until the removal is committed.</p>
+working copy until the removal is committed.
+</p>
 
 <h3>Determine pending changes</h3>
 <pre>import pysvn
@@ -192,7 +212,8 @@ print 'Url:',info.url
 <p>This section shows examples of tasks
 that manipulate or examine the repository. While the common tasks
 schedule changes through a local working copy, these tasks affect the
-repository directly.</p>
+repository directly.
+</p>
 
 <h2>List the contents of a repository directory</h2>
 <pre>import pysvn
@@ -249,7 +270,8 @@ client.unlock( 'file.txt', force=True )
 
 <h2>Test for a locked file</h2>
 
-<p>Method 1:</p>
+<p>Method 1:
+</p>
 <pre>all_entries = self.client.info2( path, recurse=False )
 for path, info in all_entries:
     if info['lock']:
@@ -257,7 +279,8 @@ for path, info in all_entries:
             print '%s is locked' % path
         print info['lock']['comment']
 </pre>
-<p>Method 2:</p>
+<p>Method 2:
+</p>
 <pre>all_status = self.client.status( path, recurse=False, update=True )
 for status in all_status:
     if status.entry is not None:

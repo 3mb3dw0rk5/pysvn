@@ -61,17 +61,17 @@ pysvn_module::pysvn_module()
     pysvn_enum< svn_node_kind_t >::init_type();
     pysvn_enum_value< svn_node_kind_t >::init_type();
 
-    add_keyword_method("Client", &pysvn_module::new_client, class_client_doc);
-    add_keyword_method("Revision", &pysvn_module::new_revision, class_revision_doc);
-    add_keyword_method("Transaction", &pysvn_module::new_transaction, class_transaction_doc);
+    add_keyword_method("Client", &pysvn_module::new_client, pysvn_client_doc);
+    add_keyword_method("Revision", &pysvn_module::new_revision, pysvn_revision_doc);
+    add_keyword_method("Transaction", &pysvn_module::new_transaction, pysvn_transaction_doc);
 
-    initialize( module_doc );
+    initialize( pysvn_module_doc );
 
     Py::Dict d( moduleDictionary() );
 
     d["ClientError"] = client_error;
 
-    d["copyright"] = Py::String( copyright );
+    d["copyright"] = Py::String( copyright_doc );
     Py::Tuple version(4);
     version[0] = Py::Int( version_major );
     version[1] = Py::Int( version_minor );
@@ -150,7 +150,10 @@ Py::Object pysvn_module::new_transaction( const Py::Tuple &a_args, const Py::Dic
     std::string repos_path = args.getUtf8String( name_repos_path );
     std::string transaction_name = args.getUtf8String( name_transaction_name );
 
-    return Py::asObject( new pysvn_transaction( *this, repos_path, transaction_name ) );
+    pysvn_transaction *t = new pysvn_transaction( *this );
+    Py::Object result( Py::asObject( t ) );
+    t->init( repos_path, transaction_name );
+    return result;
 }
 
 static const char name_kind[] = "kind";

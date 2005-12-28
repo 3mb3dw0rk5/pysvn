@@ -247,10 +247,10 @@ private:
 class pysvn_transaction : public Py::PythonExtension<pysvn_transaction>
 {
 public:
-    pysvn_transaction( pysvn_module &module,
-        const std::string &repos_path,
-        const std::string &transaction_name );
+    pysvn_transaction( pysvn_module &module );
     virtual ~pysvn_transaction();
+    void init( const std::string &repos_path,
+        const std::string &transaction_name );
 
     // override functions from PythonExtension
     virtual Py::Object getattr( const char *name );

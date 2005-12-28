@@ -1,11 +1,12 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; utf-8">
+<meta http-equiv="Content-Type" content="text/html; utf-8" />
 <title>pysvn - Programmer's reference</title>
-<link rev="made" href="mailto:barry@barrys-emacs.org">
+<link rev="made" href="mailto:barry@barrys-emacs.org" />
 <style>
-H1, H2, H3, H4 {color: #000099; background-color: lightskyblue}
+h1, h2, h3, h4 {color: #000099; background-color: lightskyblue}
 pre {color: #0000cc; background-color: #eeeeee; position: relative; left: 40px; margin-right: 80px;
      border-style: solid; border-color: black; border-width: thin}
 table {position: relative; left: 40px; margin-right: 80px;
@@ -15,112 +16,145 @@ table {position: relative; left: 40px; margin-right: 80px;
 <body>
 <h1>pysvn - Programmer's reference </h1>
 
-<p>This programmer's reference gives complete and detailed infomation on the pysvn API.
+<p>This programmer's reference gives complete and detailed infomation on
+the pysvn API.
+</p>
 <p>The <a href="pysvn_prog_guide.html">pysvn Programmer's Guide</a>   
 gives an tutorial introduction to the pysvn module.
 </p>
 
 <h2>pysvn features and feature testing</h2>
 
-<p>This document covers pysvn version 1.3.0. Features offered by pysvn depend on the
-version of SVN that is being used. Full functionality is only available with SVN 1.2.1
-or later.</p>
+<p>This document covers pysvn version 1.3.0. Features offered by pysvn
+depend on the version of SVN that is being used. Full functionality is
+only available with SVN 1.3.0 or later.
+</p>
 
-<p>The recommended way to test for a feature is to use the python hasattr() builtin.
-Working out what is and is not support from the version number information is quite
-complex and unnessesary. For example to test for lock and unlock support:</p>
+<p>The recommended way to test for a feature is to use the python 
+hasattr() builtin. Working out what is and is not support from the
+version number information is quite complex and unnessesary. For
+example to test for lock and unlock support:
+</p>
 <pre>
 client = pysvn.Client()
 if hasattr( client, 'lock' ):
     # use lock
 </pre>
 
-<h2><a name="pysvn">pysvn module</a></h2>
+<h2><a name="pysvn_module">pysvn module</a></h2>
 
-<p>The pysvn module has the following variables:</p>
-
-<ul>
-<li>pysvn.copyright - the pysvn copyright string
-<li>pysvn.version - the pysvn version as a tuple, (major, minor, patch, build)
-<li>pysvn.svn_version - subversion version as a tuple (major, minor, micro, tag)
-</ul>
-
-<p>The pysvn module has three classes:</p>
+<p>The pysvn module has the following variables:
+</p>
 
 <ul>
-<li><a href="#pysvn_client">Client</a> - the subversion client interface
-<li><a href="#pysvn_transaction">Transaction</a> - the subversion transaction interface
-<li><a href="#pysvn_revision">Revision</a> - subversion revision objects
-<li><a href="#pysvn_clienterror">ClientError</a> - Exception class raised by client commands on error
-<li><a href="#pysvn_status">Status</a> - subversion status object
-<li><a href="#pysvn_entry">Entry</a> - subversion entry object
+<li>pysvn.copyright - the pysvn copyright string</li>
+<li>pysvn.version - the pysvn version as a tuple,
+    (major, minor, patch, build)</li>
+<li>pysvn.svn_version - subversion version as a tuple
+    (major, minor, micro, tag)</li>
 </ul>
 
-<p>The following enumerations are provided:</p>
+<p>The pysvn module has three classes:
+</p>
 
 <ul>
-<li>opt_revision_kind - kinds of Revision object
-<li>wc_notify_action - see Client.callback_notify
-<li>wc_status_kind - see Client.status()
-<li>wc_schedule - see Client.status()
-<li>wc_merge_outcome - see Client.Merge()
-<li>wc_notify_state - see Client.callback_notify
-<li>node_kind - see Client.status() and Client.ls()
+<li><a href="#pysvn_client">Client</a> - the subversion client interface</li>
+<li><a href="#pysvn_transaction">Transaction</a> - the subversion transaction interface</li>
+<li><a href="#pysvn_revision">Revision</a> - subversion revision objects</li>
+<li><a href="#pysvn_clienterror">ClientError</a> - Exception class raised by client commands on error</li>
+<li><a href="#pysvn_status">Status</a> - subversion status object</li>
+<li><a href="#pysvn_entry">Entry</a> - subversion entry object</li>
 </ul>
 
-<p>Use python builtin dir() to list all available values in an enumeration:</p>
+<p>The following enumerations are provided:
+</p>
+
+<ul>
+<li>opt_revision_kind - kinds of Revision object</li>
+<li>wc_notify_action - see Client.callback_notify</li>
+<li>wc_status_kind - see Client.status()</li>
+<li>wc_schedule - see Client.status()</li>
+<li>wc_merge_outcome - see Client.Merge()</li>
+<li>wc_notify_state - see Client.callback_notify</li>
+<li>node_kind - see Client.status() and Client.ls()</li>
+</ul>
+
+<p>Use python builtin dir() to list all available values in an enumeration:
+</p>
 
 <pre>
     print dir( pysvn.wc_notify_action )
 </pre>
 
-<h2><a name="pysvn_client"><a href="#pysvn">pysvn</a>.Client - Subversion client interface</a></h2>
+<h2><a name="pysvn_client"><a href="#pysvn_module">pysvn</a>.Client - Subversion client interface</a></h2>
 
-<p>Interface summary:</p>
+<p>Interface summary:
+</p>
 
 <pre>
 client = pysvn.Client()
 client = pysvn.Client( config_dir )
 </pre>
 
-<p>The default subversion configuration directory is used if the config_dir is ommitted or set to ''.</p>
-<p>The configuration directory is automatically created if it is missing.</p>
-<p>A Client object can only be used on one thread at a time. If two threads attempt to call methods of
-Client at the same time one of the threads will get a pysvn.ClientError exception with the value
- 'client in use on another thread'.</p>
+<p>The default subversion configuration directory is used if the
+config_dir is ommitted or set to ''.
+</p>
+<p>The configuration directory is automatically created if it is
+missing.
+</p>
+<p>A Client object can only be used on one thread at a time. If
+two threads attempt to call methods of Client at the same time
+one of the threads will get a pysvn.ClientError exception with
+the value 'client in use on another thread'.
+</p>
 
 <table border="0" cellspacing="0" cellpadding="4" >
 <tr>
 <td><a href="#pysvn_client_variables">Variables</a></td>
 <td bgcolor="#e0e0e0"><a href="#pysvn_client_callbacks">Callbacks</a></td>
 <td><a href="#pysvn_client_methods">Methods</a></td>
+</tr>
 </table>
 
 <h3><a name="pysvn_client_variables">Client variables</a></h3>
 
-<p><a href="#pysvn_client_exception_style">exception_style</a> allows you to control the style of exception raised by pysvn.</p>
+<p><a href="#pysvn_client_exception_style">exception_style</a> allows you to control the style of exception raised by pysvn.
+</p>
 
-<h4><a name="pysvn_client_exception_style"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.exception_style</a></h4>
-<p>exception_style is used to control how pysvn raises <a href="#pysvn_clienterror">ClientError</a> exceptions.
-<p>The default value, 0, makes pysvn raise exceptions as it did prior to pysvn 1.1.2.
-<p>exception_style can be set to 0 or 1, see <a href="#pysvn_clienterror">ClientError</a> for details of effect of
-the style on the exception raised.
+<h4><a name="pysvn_client_exception_style"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.exception_style</a></h4>
+<p>exception_style is used to control how pysvn raises <a href="#pysvn_clienterror">ClientError</a>
+exceptions.
+</p>
+<p>The default value, 0, makes pysvn raise exceptions as it did prior
+to pysvn 1.1.2.
+</p>
+<p>exception_style can be set to 0 or 1, see <a href="#pysvn_clienterror">ClientError</a>
+for details of effect of the style on the exception raised.
+</p>
 
 
 <h3><a name="pysvn_client_callbacks">Client callbacks</a></h3>
 
-<p>pysvn uses callback functions to allow for realtime feedback and credential handling.</p>
-<p><a href="#pysvn_client_callback_cancel">callback_cancel</a> allows you to cancel a long running subversion command.</p>
-<p><a href="#pysvn_client_callback_notify">callback_notify</a> gives feedback as commands runs.</p>
-<p><a href="#pysvn_client_callback_get_log_message">callback_get_log_message</a> is called when a log message is required.</p>
-<p><a href="#pysvn_client_callback_get_login">callback_get_login</a> is called to get a username and password to access a repository.</p>
+<p>pysvn uses callback functions to allow for realtime feedback
+and credential handling.
+</p>
+<p><a href="#pysvn_client_callback_cancel">callback_cancel</a> allows you to cancel a long running subversion command.
+</p>
+<p><a href="#pysvn_client_callback_notify">callback_notify</a> gives feedback as commands runs.
+</p>
+<p><a href="#pysvn_client_callback_get_log_message">callback_get_log_message</a> is called when a log message is required.
+</p>
+<p><a href="#pysvn_client_callback_get_login">callback_get_login</a> is called to get a username and password to access a repository.
+</p>
 <p><a href="#pysvn_client_callback_ssl_server_trust_prompt">callback_ssl_server_trust_prompt</a> is called when using HTTPS to a server whoes certificate needs is trust verifing.
-<p>It is possible to use the Client object without setting up any calls backs. Make sure 
-that all nessesary usernames, passwords and SSL certificate information are stored in
-the subversion configuration directory.</p>
-<p>
+</p>
+<p>It is possible to use the Client object without setting up any
+calls backs. Make sure that all nessesary usernames, passwords and
+SSL certificate information are stored in the subversion
+configuration directory.
+</p>
 
-<h4><a name="pysvn_client_callback_cancel"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.callback_cancel</a></h4>
+<h4><a name="pysvn_client_callback_cancel"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.callback_cancel</a></h4>
 
 <pre>
 import pysvn
@@ -133,10 +167,12 @@ client = pysvn.Client()
 client.callback_cancel = cancel
 </pre>
 
-<p>The callback_cancel function is called frequently during long running commands.
-Return True to cause the command to cancel, return False to allow the command to continue.</p>
+<p>The callback_cancel function is called frequently during long
+running commands. Return True to cause the command to cancel,
+return False to allow the command to continue.
+</p>
 
-<h4><a name="pysvn_client_callback_get_log_message"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.callback_get_log_message</a></h4>
+<h4><a name="pysvn_client_callback_get_log_message"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.callback_get_log_message</a></h4>
 <pre>
 import pysvn
 
@@ -147,13 +183,18 @@ def get_log_message():
 client = pysvn.Client()
 client.callback_get_log_message = get_log_message
 </pre>
-<p>The callback_get_log_message is called when a log message is required to complete the current command.
-Return the True in rc and a log message as a string. Returning False in rc will cause the command
-to be cancelled. An empty log_message is not allowed and may cause the command to be cancelled.</p>
+<p>The callback_get_log_message is called when a log message is
+required to complete the current command. Return the True in rc
+and a log message as a string. Returning False in rc will cause
+the command to be cancelled. An empty log_message is not allowed
+and may cause the command to be cancelled.
+</p>
 
-<p>unicode strings cannot be handled. If you have a unicode string convert to UTF-8.</p>
+<p>unicode strings cannot be handled. If you have a unicode string
+convert to UTF-8.
+</p>
 
-<h4><a name="pysvn_client_callback_get_login"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.callback_get_login</a></h4>
+<h4><a name="pysvn_client_callback_get_login"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.callback_get_login</a></h4>
 <pre>
 import pysvn
 
@@ -164,22 +205,27 @@ client = pysvn.Client()
 client.callback_get_login = get_login
 </pre>
 
-<p>callback_get_login is called each time subversion needs a username and password 
-in the realm to access a repository and has no cached credentials.</p>
-<p>The may_save parameter is true if subversion is willing to save the
-answers returned by the callback_get_login function.</p>
-<p>pysvn expect the callback_get_login to return a tuple of four values
-(retcode, username, password, save).</p>
+<p>callback_get_login is called each time subversion needs a 
+username and password in the realm to access a repository and
+has no cached credentials.
+</p>
+<p>The may_save parameter is true if subversion is willing to
+save the answers returned by the callback_get_login function.
+</p>
+<p>pysvn expect the callback_get_login to return a tuple of
+four values (retcode, username, password, save).
+</p>
 <ul>
-<li>retcode - boolean, False if no username and password are available.
-True if subversion is to use the username and password.
-<li>username - string, the username to use
-<li>password - string, the password to use
-<li>save - boolean, return True if you want subversion to remember the username and
-password in the configuration directory. return False to prevent saving the username and password.
+<li>retcode - boolean, False if no username and password are
+  available. True if subversion is to use the username and password.</li>
+<li>username - string, the username to use</li>
+<li>password - string, the password to use</li>
+<li>save - boolean, return True if you want subversion to remember
+  the username and password in the configuration directory.
+  return False to prevent saving the username and password.</li>
 </ul>
 
-<h4><a name="pysvn_client_callback_notify"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.callback_notify</a></h4>
+<h4><a name="pysvn_client_callback_notify"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.callback_notify</a></h4>
 <pre>
 import pysvn
 
@@ -190,20 +236,24 @@ client = pysvn.Client()
 client.callback_notify = notify
 </pre>
 
-<p>The callback_notify is called as a command runs each time an interesting event occurs.
-The details of the event are passed to the callback_notify function as a dictionary.</p>
-<p>The dictionary contains the following values:</p>
+<p>The callback_notify is called as a command runs each time an
+interesting event occurs. The details of the event are passed to
+the callback_notify function as a dictionary.
+</p>
+<p>The dictionary contains the following values:
+</p>
 <ul>
-<li>path - the path of the action refers to
-<li>action - the events action, one of the pysvn.wc_notify_action values
-<li>kind - the node kind, one of the pysvn.node_kind values
-<li>mime_type - the mime type
-<li>content_state - one of the pysvn.wc_notify_state values
-<li>prop_state - one of the pysvn.wc_notify_state values
-<li>revision - a Revision object
+<li>path - the path of the action refers to</li>
+<li>action - the events action, one of the pysvn.wc_notify_action
+  values</li>
+<li>kind - the node kind, one of the pysvn.node_kind values</li>
+<li>mime_type - the mime type</li>
+<li>content_state - one of the pysvn.wc_notify_state values</li>
+<li>prop_state - one of the pysvn.wc_notify_state values</li>
+<li>revision - a Revision object</li>
 </ul>
 
-<h4><a name="pysvn_client_callback_ssl_client_cert_password_prompt"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.callback_ssl_client_cert_password_prompt</a></h4>
+<h4><a name="pysvn_client_callback_ssl_client_cert_password_prompt"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.callback_ssl_client_cert_password_prompt</a></h4>
 <pre>
 import pysvn
 
@@ -214,21 +264,27 @@ client = pysvn.Client()
 client.callback_ssl_client_cert_password_prompt = ssl_client_cert_password_prompt
 </pre>
 
-<p>callback_ssl_client_cert_password_prompt is called each time subversion needs a password 
-in the realm to use a client certificate and has no cached credentials.</p>
-<p>The may_save parameter is true if subversion is willing to save the
-answers returned by the callback_ssl_client_cert_password_prompt function.</p>
-<p>pysvn expect the callback_ssl_client_cert_password_prompt to return a tuple of three values
-(retcode, password, save).</p>
+<p>callback_ssl_client_cert_password_prompt is called each time
+subversion needs a password in the realm to use a client
+certificate and has no cached credentials.
+</p>
+<p>The may_save parameter is true if subversion is willing to save
+the answers returned by the callback_ssl_client_cert_password_prompt
+function.
+</p>
+<p>pysvn expect the callback_ssl_client_cert_password_prompt to
+return a tuple of three values (retcode, password, save).
+</p>
 <ul>
 <li>retcode - boolean, False if no password is available.
-True if subversion is to use password.
-<li>password - string, the password to use
-<li>save - boolean, return True if you want subversion to remember the
-password in the configuration directory. return False to prevent saving the password.
+True if subversion is to use password.</li>
+<li>password - string, the password to use</li>
+<li>save - boolean, return True if you want subversion to remember
+the password in the configuration directory. return False to
+prevent saving the password.</li>
 </ul>
 
-<h4><a name="pysvn_client_callback_ssl_client_cert_prompt"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.callback_ssl_client_cert_prompt</a></h4>
+<h4><a name="pysvn_client_callback_ssl_client_cert_prompt"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.callback_ssl_client_cert_prompt</a></h4>
 <pre>
 import pysvn
 
@@ -239,16 +295,19 @@ client = pysvn.Client()
 client.callback_ssl_client_cert_prompt = ssl_client_cert_prompt
 </pre>
 
-<p>callback_ssl_client_cert_prompt is called each time subversion needs a client certificate.</p>
-<p>pysvn expect the callback_ssl_client_cert_prompt to return a tuple of two values
-(retcode, certfile).</p>
+<p>callback_ssl_client_cert_prompt is called each time subversion
+needs a client certificate.
+</p>
+<p>pysvn expect the callback_ssl_client_cert_prompt to return a
+tuple of two values (retcode, certfile).
+</p>
 <ul>
 <li>retcode - boolean, False if no certificate is available.
-True if subversion is to use the certificate.
-<li>certfile - string, the certfile to use
+True if subversion is to use the certificate.</li>
+<li>certfile - string, the certfile to use</li>
 </ul>
 
-<h4><a name="pysvn_client_callback_ssl_server_prompt"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.callback_ssl_server_prompt</a></h4>
+<h4><a name="pysvn_client_callback_ssl_server_prompt"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.callback_ssl_server_prompt</a></h4>
 <pre>
 import pysvn
 
@@ -259,9 +318,10 @@ client = pysvn.Client()
 client.callback_ssl_server_prompt = ssl_server_prompt
 </pre>
 
-<p>NOT IMPLEMENTED - what it used for?</p>
+<p>NOT IMPLEMENTED - what it used for?
+</p>
 
-<h4><a name="pysvn_client_callback_ssl_server_trust_prompt"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.callback_ssl_server_trust_prompt</a></h4>
+<h4><a name="pysvn_client_callback_ssl_server_trust_prompt"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.callback_ssl_server_trust_prompt</a></h4>
 <pre>
 import pysvn
 
@@ -272,28 +332,34 @@ client = pysvn.Client()
 client.callback_ssl_server_trust_prompt = ssl_server_trust_prompt
 </pre>
 
-<p>The callback_ssl_server_trust_prompt is called each time an HTTPS server presents a certificate and
-subversion is not sure if it should be trusted. callback_ssl_server_trust_prompt is called with
-information about the certificate in trust dict.</p>
+<p>The callback_ssl_server_trust_prompt is called each time an
+HTTPS server presents a certificate and subversion is not sure
+if it should be trusted. callback_ssl_server_trust_prompt is
+called with information about the certificate in trust dict.
+</p>
 
 <ul>
-<li>failures - int - a bitmask of failures - [What do the bits mean?]
-<li>hostname - string - the hostname the certificate was presented from
-<li>finger_print - string - certificate finger print
-<li>valid_from - string - valid from this ISO8601 date
-<li>valid_until - string - valid util this ISO8601 date
-<li>issuer_dname - stirng - the issued dname
-<li>realm - string - the realm
+<li>failures - int - a bitmask of failures - [What do these
+  bits mean?]</li>
+<li>hostname - string - the hostname the certificate was
+  presented from</li>
+<li>finger_print - string - certificate finger print</li>
+<li>valid_from - string - valid from this ISO8601 date</li>
+<li>valid_until - string - valid util this ISO8601 date</li>
+<li>issuer_dname - stirng - the issued dname</li>
+<li>realm - string - the realm</li>
 </ul>
 
-<p>pysvn expect the callback_ssl_server_trust_prompt to return a tuple of three values
-(retcode, accepted_failures, save).</p>
+<p>pysvn expect the callback_ssl_server_trust_prompt to return
+a tuple of three values (retcode, accepted_failures, save).
+</p>
 <ul>
-<li>retcode - boolean, False if no username and password are available.
-True if subversion is to use the username and password.
-<li>accepted_failures - int, the accepted failures allowed
-<li>save - boolean, return True if you want subversion to remember the certificate
- in the configuration directory. return False to prevent saving the certificate.
+<li>retcode - boolean, False if no username and password are
+  available. True if subversion is to use the username and password.</li>
+<li>accepted_failures - int, the accepted failures allowed</li>
+<li>save - boolean, return True if you want subversion to remember
+  the certificate in the configuration directory. return False
+  to prevent saving the certificate.</li>
 </ul>
 
 <h3><a name="pysvn_client_methods">Client methods</a></h3>
@@ -355,7 +421,7 @@ True if subversion is to use the username and password.
 </tr>
 </table>
 
-<h4><a name="pysvn_client_add"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.add</a></h4>
+<h4><a name="pysvn_client_add"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.add</a></h4>
 <pre>
 add( path,
      recurse=True,
@@ -365,39 +431,44 @@ add( [path,path],
      force=False )
 </pre>
 <p>
-     Schedules all the files or directories specfied in the paths for addition to the repository.
-     Set recurse to True to recursively add a directory's children.
-     Files are added at the next checkin.
-<p>Note: The force parameter is only available for svn 1.1.0 or later</p>
+Schedules all the files or directories specfied in the paths
+for addition to the repository. Set recurse to True to recursively
+add a directory's children. Files are added at the next checkin.
 </p>
-<h4><a name="pysvn_client_annotate"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.annotate</a></h4>
+<p>Note: The force parameter is only available for svn 1.1.0 or later
+</p>
+
+<h4><a name="pysvn_client_annotate"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.annotate</a></h4>
 <pre>
 file_annotation = \
 annotate( url_or_path,
           revision_start=pysvn.Revision( opt_revision_kind.number, 0 ),
           revision_end=pysvn.Revision( opt_revision_kind.head ) )
 </pre>
-<p>Return the annotation for each line in the url_or_path from revision_start to revision_end.
-The file_annotation is a list of dictionaries, one per line. The dictionaries contains:</p>
+<p>Return the annotation for each line in the url_or_path from
+revision_start to revision_end. The file_annotation is a list of
+dictionaries, one per line. The dictionaries contains:
+</p>
 <ul>
-<li>author - string - the name of the author who last wrote the line
-<li>date - string - the date of the last change to the line
-<li>line - string - the text of the line
-<li>number - int - the line number
-<li>revision - pysvn.Revision - the revision that committed the line
+<li>author - string - the name of the author who last wrote the line</li>
+<li>date - string - the date of the last change to the line</li>
+<li>line - string - the text of the line</li>
+<li>number - int - the line number</li>
+<li>revision - pysvn.Revision - the revision that committed the line</li>
 </ul>
 
-<h4><a name="pysvn_client_cat"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.cat</a></h4>
+<h4><a name="pysvn_client_cat"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.cat</a></h4>
 <pre>
 file_text = \
 cat( url_or_path,
      revision=pysvn.Revision( opt_revision_kind.head ) )
 </pre>
 <p>
-Return the contents of url_or_path for the specified revision as a string, file_text.
+Return the contents of url_or_path for the specified revision as
+a string, file_text.
 </p>
 
-<h4><a name="pysvn_client_checkin"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.checkin</a></h4>
+<h4><a name="pysvn_client_checkin"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.checkin</a></h4>
 <pre>
 revision = \
 checkin( path,
@@ -409,12 +480,15 @@ checkin( [path,path],
         recurse=True )
 </pre>
 <p>
-checkin the files in the path_list to the repository with the specifed log_message.  
-Set recurse to True to recursively checkin a directory's children with the same log message.
+checkin the files in the path_list to the repository with the
+specifed log_message. Set recurse to True to recursively checkin
+a directory's children with the same log message.
 </p>
-<p>checkin returns a pysvn.Revision containing the number of the checked in revision.</p>
+<p>checkin returns a pysvn.Revision containing the number of the
+checked in revision.
+</p>
 
-<h4><a name="pysvn_client_checkout"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.checkout</a></h4>
+<h4><a name="pysvn_client_checkout"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.checkout</a></h4>
 <pre>
 revision = \
 checkout( url,
@@ -425,14 +499,19 @@ checkout( url,
 <p>
 checkout the repository at url into the location specified by path.
 Set recurse to True to recursively check out a directory's children.
-Specify a revision to check out a particular version of the source tree.</p>
-<p>checkout returns a pysvn.Revision containing the number of the checked out revision.
-Note: Subversion seems to return 0 rather then the actual revision.
-Use a notify callback and record the revision reported for the <a href="#pysvn">pysvn</a>.wc_notify_action.update_completed event.
+Specify a revision to check out a particular version of the source
+tree.
+</p>
+<p>checkout returns a pysvn.Revision containing the number of the
+checked out revision.
+</p>
+<p>Note: Subversion seems to return 0 rather then the actual revision.
+Use a notify callback and record the revision reported for the 
+<a href="#pysvn_module">pysvn</a>.wc_notify_action.update_completed event.
 This is what the svn command does.
 </p>
 
-<h4><a name="pysvn_client_copy"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.copy</a></h4>
+<h4><a name="pysvn_client_copy"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.copy</a></h4>
 <pre>
 copy( src_url_or_path,
       dest_url_or_path,
@@ -441,28 +520,32 @@ copy( src_url_or_path,
 <p>
 Duplicate something in working copy or repos, remembering history.
 The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
-if the src_path is a URL otherwise to pysvn.Revision( opt_revision_kind.working ).
+if the src_path is a URL otherwise to
+pysvn.Revision( opt_revision_kind.working ).
 </p>
-<p>src_url_or_path and dest_url_or_path can each be either a working copy (WC) path or URL:
+<p>src_url_or_path and dest_url_or_path can each be either a
+working copy (WC) path or URL:
 <ul>
-<li>WC  -> WC:   copy and schedule for addition (with history)
-<li>WC  -> URL:  immediately commit a copy of WC to URL
-<li>URL -> WC:   check out URL into WC, schedule for addition
-<li>URL -> URL:  complete server-side copy;  used to branch & tag
+<li>WC  -> WC:   copy and schedule for addition (with history)</li>
+<li>WC  -> URL:  immediately commit a copy of WC to URL</li>
+<li>URL -> WC:   check out URL into WC, schedule for addition</li>
+<li>URL -> URL:  complete server-side copy; used to branch and tag</li>
 </ul>
 </p>
 <p>If the destination is a URL the <a href="#pysvn_client_callback_get_log_message">client_get_log_message</a>
 callback must be implemented to return a log message.
+</p>
 
-<h4><a name="pysvn_client_cleanup"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.cleanup</a></h4>
+<h4><a name="pysvn_client_cleanup"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.cleanup</a></h4>
 <pre>
 cleanup( path )
 </pre>
 <p>
-Clean up any locks in the working copy at path.  Usually such locks are the result of a failed or interrupted operation.
+Clean up any locks in the working copy at path. Usually such
+locks are the result of a failed or interrupted operation.
 </p>
 
-<h4><a name="pysvn_client_diff"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.diff</a></h4>
+<h4><a name="pysvn_client_diff"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.diff</a></h4>
 <pre>
 
 diff_text = \
@@ -475,11 +558,13 @@ diff( tmp_path,
       diff_deleted=True )
 </pre>
 <p>
-return the differences between two revisions of the path. diff uses tmp_path to create any temporary files needed.
-Set recurse to True to recursively diff a directory's children. diff_text is a string containing the diff.
-</P>
+return the differences between two revisions of the path. diff
+uses tmp_path to create any temporary files needed.
+Set recurse to True to recursively diff a directory's children.
+diff_text is a string containing the diff.
+</p>
 
-<h4><a name="pysvn_client_export"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.export</a></h4>
+<h4><a name="pysvn_client_export"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.export</a></h4>
 <pre>
 revision = \
 export( src_url_or_path,
@@ -488,37 +573,48 @@ export( src_url_or_path,
         revision=pysvn.Revision(),
         native_eol=None )
 </pre>
-<p>Create an unversioned copy of the src_path at revision in dest_path.</p>
+<p>Create an unversioned copy of the src_path at revision in dest_path.
+</p>
 <ol>
 <li>Exports a clean directory tree from the repository specified by
-   URL src_url_or_path, at revision if it is given, otherwise at HEAD, into
-   dest_path.
+  URL src_url_or_path, at revision if it is given, otherwise at
+  HEAD, into dest_path.</li>
 
-<li>Exports a clean directory tree from the working copy specified by
-   src_path into dest_path.  All local changes will be preserved, but files
-   not under revision control will not be copied.
+<li>Exports a clean directory tree from the working copy specified
+  by src_path into dest_path.  All local changes will be preserved,
+  but files not under revision control will not be copied.</li>
 </ol>
-<p>native_eol parameter allows the line ending of files with svn:eol-style propery set to native to be overriden.
-Use None to use the eol-style of the Operating System, use "LF" to use "\n", "CR" to use "\r" and "CRLF" to use "\r\n".
-<p>export returns a pysvn.Revision containing the number of the checked in revision.</p>
 
-<p>Note: The native_eol parameter is only available for svn 1.1.0 or later</p>
+<p>native_eol parameter allows the line ending of files with
+svn:eol-style propery set to native to be overriden.
+Use None to use the eol-style of the Operating System,
+use "LF" to use "\n", "CR" to use "\r" and "CRLF" to use "\r\n".
+</p>
+<p>export returns a pysvn.Revision containing the number of the
+checked in revision.
+</p>
 
-<h4><a name="pysvn_client_get_auth_cache"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.get_auth_cache</a></h4>
+<p>Note: The native_eol parameter is only available for svn 1.1.0
+or later.
+</p>
+
+<h4><a name="pysvn_client_get_auth_cache"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.get_auth_cache</a></h4>
 <pre>
 enabled = get_auth_cache()
 </pre>
-<p>return true if credential caching is enabled, otherwise return false.
+<p>return true if credential caching is enabled, otherwise return
+false.
 </p>
 
-<h4><a name="pysvn_client_get_auto_props"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.get_auto_props</a></h4>
+<h4><a name="pysvn_client_get_auto_props"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.get_auto_props</a></h4>
 <pre>
 enabled = get_auto_props()
 </pre>
 <p>Returns true When svn will automatically set properties
-when adding files otherwise return false.</p>
+when adding files otherwise return false.
+</p>
 
-<h4><a name="pysvn_client_import_"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.import_</a></h4>
+<h4><a name="pysvn_client_import_"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.import_</a></h4>
 <pre>
 revision = \
 import_( path,
@@ -532,15 +628,18 @@ Commit an unversioned file or tree into the repository.
 <p>Recursively commit a copy of PATH to URL.
 Parent directories are created as necessary in the repository.
 </p>
-<p>import_ returns a pysvn.Revision containing the number of the checked in revision.</p>
+<p>import_ returns a pysvn.Revision containing the number of the
+checked in revision.
+</p>
 
-<h4><a name="pysvn_client_info"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.info</a></h4>
+<h4><a name="pysvn_client_info"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.info</a></h4>
 <pre>
 entry = info( path )
 </pre>
-<p>return information on path as a <a href="#entry">Entry</a> object.</p>
+<p>return information on path as a <a href="#entry">Entry</a> object.
+</p>
 
-<h4><a name="pysvn_client_info2"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.info2</a></h4>
+<h4><a name="pysvn_client_info2"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.info2</a></h4>
 <pre>
 entry_list = \
 info2( url_or_path,
@@ -549,63 +648,69 @@ info2( url_or_path,
        recurse=True )
 
 </pre>
-<p>return information on url_or_path as a list of (path, info_dict) tuples.
-To return information about a URL revision must be opt_revision_kind.head or opt_revision_kind.number.
+<p>return information on url_or_path as a list of (path, info_dict)
+tuples. To return information about a URL revision must be
+opt_revision_kind.head or opt_revision_kind.number.
 </p>
 
 <p>The info_dict contains:
 <ul>
-<li>URL - URL or path
-<li>rev - pysvn.<a href="#pysvn_revision">Revision</a> or None
-<li>kind - kind of path
-<li>repos_root_URL - string
-<li>repos_UUID - string
-<li>last_changed_rev - pysvn.<a href="#pysvn_revision">Revision</a> or None
-<li>last_changed_date - time or None
-<li>last_changed_author - string or None
-<li>lock - None or dictionary containing:
+<li>URL - URL or path</li>
+<li>rev - pysvn.<a href="#pysvn_revision">Revision</a> or None</li>
+<li>kind - kind of path</li>
+<li>repos_root_URL - string</li>
+<li>repos_UUID - string</li>
+<li>last_changed_rev - pysvn.<a href="#pysvn_revision">Revision</a> or None</li>
+<li>last_changed_date - time or None</li>
+<li>last_changed_author - string or None</li>
+<li>lock - None or dictionary containing:</li>
 <ul>
-<li>path - string
-<li>token - string or None
-<li>owner - string or None
-<li>comment - string or None
-<li>is_dav_comment - true if is DAV comment
-<li>creation_date - time or None
+<li>path - string</li>
+<li>token - string or None</li>
+<li>owner - string or None</li>
+<li>comment - string or None</li>
+<li>is_dav_comment - true if is DAV comment</li>
+<li>creation_date - time or None</li>
 </ul>
-<li>wc_info - None or dictionary containing:
+<li>wc_info - None or dictionary containing:</li>
 <ul>
-<li>schedule - pysvn.wc_schedule or None
-<li>copyfrom_url - string or None
-<li>copyfrom_rev - pysvn.<a href="#pysvn_revision">Revision</a> or None
-<li>text_time - time or None
-<li>prop_time - time or None
-<li>checksum - string or None
-<li>conflict_old - string or None
-<li>conflict_new - string or None
-<li>conflict_wrk - string or None
-<li>prejfile - string or None
+<li>schedule - pysvn.wc_schedule or None</li>
+<li>copyfrom_url - string or None</li>
+<li>copyfrom_rev - pysvn.<a href="#pysvn_revision">Revision</a> or None</li>
+<li>text_time - time or None</li>
+<li>prop_time - time or None</li>
+<li>checksum - string or None</li>
+<li>conflict_old - string or None</li>
+<li>conflict_new - string or None</li>
+<li>conflict_wrk - string or None</li>
+<li>prejfile - string or None</li>
 </ul>
 </ul>
+</p>
 
-<p>Note: The info2 command is only available with svn 1.2.0 or later</p>
+<p>Note: The info2 command is only available with svn 1.2.0 or later.
+</p>
 
-<h4><a name="pysvn_client_is_url"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.is_url</a></h4>
+<h4><a name="pysvn_client_is_url"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.is_url</a></h4>
 <pre>
 rc = \
 is_url( url )
 </pre>
-<p>return True if the url is a known subversion url.</p>
+<p>return True if the url is a known subversion url.
+</p>
 
-<h4><a name="pysvn_client_lock"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.lock</a></h4>
+<h4><a name="pysvn_client_lock"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.lock</a></h4>
 <pre>
 lock( url_or_path, lock_comment, force=False )
 </pre>
 <p>
-lock the url_or_path with lock_comment. Set force to True to override any lock held by another user.
+lock the url_or_path with lock_comment. Set force to True to
+override any lock held by another user.
 </p>
-<p>Note: The lock command is only available with svn 1.2.0 or later</p>
+<p>Note: The lock command is only available with svn 1.2.0 or later.
+</p>
 
-<h4><a name="pysvn_client_log"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.log</a></h4>
+<h4><a name="pysvn_client_log"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.log</a></h4>
 <pre>
 log_messages = \
 log( url_or_path,
@@ -615,23 +720,26 @@ log( url_or_path,
      strict_node_history=True )
 </pre>
 <p>
-return the log messages for the specifed url_or_path between revisions start and end.
+return the log messages for the specifed url_or_path between
+revisions start and end.
 </p>
-<p>log returns a list of log messges each log messages is a dictionary. The dictionary contains:</p>
+<p>log returns a list of log messges each log messages is a
+dictionary. The dictionary contains:
+</p>
 <ul>
-<li>author - string - the name of the author wrote the log message
-<li>date - string - the date of the log message
-<li>message - string - the text of the log message
-<li>revision - pysvn.<a href="#pysvn_revision">Revision</a> - the revision of the log message
-<li>changed_paths - list of dictionaries. The dictionaries contains:
+<li>author - string - the name of the author wrote the log message</li>
+<li>date - string - the date of the log message</li>
+<li>message - string - the text of the log message</li>
+<li>revision - pysvn.<a href="#pysvn_revision">Revision</a> - the revision of the log message</li>
+<li>changed_paths - list of dictionaries. The dictionaries contains:</li>
 <ul>
-<li>path - string - the path in the repository
-<li>action - string
-<li>copyfrom_path - string - if copied the original path else None
-<li>copyfrom_rec - pysvn.<a href="#pysvn_revision">Revision</a> - if copied the revision of the original else None
+<li>path - string - the path in the repository</li>
+<li>action - string</li>
+<li>copyfrom_path - string - if copied the original path else None</li>
+<li>copyfrom_revision - pysvn.<a href="#pysvn_revision">Revision</a> - if copied the revision of the original else None</li>
 </ul>
 </ul>
-<h4><a name="pysvn_client_ls"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.ls</a></h4>
+<h4><a name="pysvn_client_ls"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.ls</a></h4>
 <pre>
 entries_list = \
 ls( url_or_path,
@@ -639,18 +747,18 @@ ls( url_or_path,
     recurse=True )
 </pre>
 <p>
-Returns a list of dictionaries for each file the given path at the provided revision.
-The dictionary contains:
+Returns a list of dictionaries for each file the given path at
+the provided revision. The dictionary contains:
 </p>
 <ul>
-<li>name - string - name of the file
-<li>kind - node_kind - one of the pysvn.node_kind values
-<li>size - long - size of file
-<li>created_rev - pysvn.<a href="#pysvn_revision">Revision</a> - the revision of the last change
-<li>time - float - the time of the last change
-<li>last_author - the author of the last change
+<li>name - string - name of the file</li>
+<li>kind - node_kind - one of the pysvn.node_kind values</li>
+<li>size - long - size of file</li>
+<li>created_rev - pysvn.<a href="#pysvn_revision">Revision</a> - the revision of the last change</li>
+<li>time - float - the time of the last change</li>
+<li>last_author - the author of the last change</li>
 </ul>
-<h4><a name="pysvn_client_merge"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.merge</a></h4>
+<h4><a name="pysvn_client_merge"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.merge</a></h4>
 <pre>
 merge( url_or_path1,
        revision1,
@@ -662,54 +770,67 @@ merge( url_or_path1,
 </pre>
 <p>Apply the differences between two sources to a working copy path.
 </p>
-<h4><a name="pysvn_client_mkdir"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.mkdir</a></h4>
+<h4><a name="pysvn_client_mkdir"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.mkdir</a></h4>
 <pre>
 mkdir( url_or_path,
        log_message )
 mkdir( [url_or_path,url_or_path],
        log_message )
 </pre>
-<p>Create a new directory under revision control.</p>
+<p>Create a new directory under revision control.
+</p>
 
-<p>Create version controlled directories.</p>
+<p>Create version controlled directories.
+</p>
 
 <p>If url_or_path is a path, each directory is scheduled for
-addition upon the next commit.</p>
+addition upon the next commit.
+</p>
 
-<p>If url_or_path is a URL, the directories are created in the repository via an
-immediate commit.</p>
+<p>If url_or_path is a URL, the directories are created in the
+repository via an immediate commit.
+</p>
 
-<p>url_or_path can be a list of URLs and paths</p>
+<p>url_or_path can be a list of URLs and paths
+</p>
 
-<p>In both cases, all the intermediate directories must already exist.</p>
+<p>In both cases, all the intermediate directories must already
+exist.
+</p>
 
-<h4><a name="pysvn_client_move"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.move</a></h4>
+<h4><a name="pysvn_client_move"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.move</a></h4>
 <pre>
 move( src_url_or_path,
       dest_url_or_path,
       force=False )
 </pre>
-<p>Move/rename something in working copy or repository.</p>
+<p>Move/rename something in working copy or repository.
+</p>
 
-<p>NOTE:  this command is equivalent to a 'copy' and 'delete'.</p>
+<p>NOTE:  this command is equivalent to a 'copy' and 'delete'.
+</p>
 
-<p>src_path and dest_path can both be working copy (WC) paths or URLs:
+<p>src_path and dest_path can both be working copy (WC) paths
+or URLs:
 <ul>
-<li>WC  -> WC:   move and schedule for addition (with history)
-<li>URL -> URL:  complete server-side rename.
+<li>WC  -> WC:   move and schedule for addition (with history)</li>
+<li>URL -> URL:  complete server-side rename.</li>
 </ul>
+</p>
 
 <p>If src_url_or_path is a path, each item is scheduled for deletion
 upon the next commit.  Files, and directories that have not been
 committed, are immediately removed from the working copy.  The
 command will not remove PATHs that are, or contain, unversioned
 or modified items; set force=True to override this
-behaviour.</p>
+behaviour.
+</p>
 
-<p>If src_url_or_path is a URL, the items are deleted from the repository via an
-immediate commit.</p>
+<p>If src_url_or_path is a URL, the items are deleted from the
+repository via an immediate commit.
+</p>
 
-<h4><a name="pysvn_client_propdel"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.propdel</a></h4>
+<h4><a name="pysvn_client_propdel"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.propdel</a></h4>
 <pre>
 rev = \
 propdel( prop_name,
@@ -717,11 +838,14 @@ propdel( prop_name,
          revision=pysvn.Revision(),
          recurse=False )
 </pre>
-<p>delete the property prop_name from url_or_path</p>
-<p>The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
-if the src_path is a URL otherwise to pysvn.Revision( opt_revision_kind.working ).</p>
+<p>delete the property prop_name from url_or_path
+</p>
+<p>The src_revision defaults to
+pysvn.Revision( opt_revision_kind.head ) if the src_path is a
+URL otherwise to pysvn.Revision( opt_revision_kind.working ).
+</p>
 
-<h4><a name="pysvn_client_propget"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.propget</a></h4>
+<h4><a name="pysvn_client_propget"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.propget</a></h4>
 <pre>
 prop_list = \
 propget( prop_name,
@@ -729,22 +853,30 @@ propget( prop_name,
          revision=pysvn.Revision(),
          recurse=False )
 </pre>
-<p>Returns a dictionary with keys of url_or_path and values of the prop_name.</p>
-<p>The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
-if the url_or_path is a URL otherwise to pysvn.Revision( opt_revision_kind.working ).</p>
+<p>Returns a dictionary with keys of url_or_path and values of
+the prop_name.
+</p>
+<p>The src_revision defaults to
+pysvn.Revision( opt_revision_kind.head ) if the url_or_path is a
+URL otherwise to pysvn.Revision( opt_revision_kind.working ).
+</p>
 
-<h4><a name="pysvn_client_proplist"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.proplist</a></h4>
+<h4><a name="pysvn_client_proplist"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.proplist</a></h4>
 <pre>
 prop_list = \
 proplist( url_or_path,
           revision=pysvn.Revision(),
           recurse=False )
 </pre>
-<p>Returns a list of tuples (path, prop_dict). The prop_dict contains the prop_names and their values if set on the path.</p>
-<p>The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
-if the url_or_path is a URL otherwise to pysvn.Revision( opt_revision_kind.working ).</p>
+<p>Returns a list of tuples (path, prop_dict). The prop_dict
+contains the prop_names and their values if set on the path.
+</p>
+<p>The src_revision defaults to
+pysvn.Revision( opt_revision_kind.head ) if the url_or_path is a
+URL otherwise to pysvn.Revision( opt_revision_kind.working ).
+</p>
 
-<h4><a name="pysvn_client_propset"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.propset</a></h4>
+<h4><a name="pysvn_client_propset"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.propset</a></h4>
 <pre>
 rev = \
 propset( prop_name,
@@ -753,20 +885,24 @@ propset( prop_name,
          revision=pysvn.Revision(),
          recurse=False )
 </pre>
-<p>set the property prop_name to prop_value in path</p>
-<p>The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
-if the url_or_path is a URL otherwise to pysvn.Revision( opt_revision_kind.working ).</p>
+<p>set the property prop_name to prop_value in path
+</p>
+<p>The src_revision defaults to
+pysvn.Revision( opt_revision_kind.head ) if the url_or_path is a
+URL otherwise to pysvn.Revision( opt_revision_kind.working ).
+</p>
 
-<h4><a name="pysvn_client_relocate"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.relocate</a></h4>
+<h4><a name="pysvn_client_relocate"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.relocate</a></h4>
 <pre>
 relocate( from_url,
           to_url,
           path,
           recurse=True)
 </pre>
-<p>relocate the working copy from from_url to to_url of path</p>
+<p>relocate the working copy from from_url to to_url of path
+</p>
 
-<h4><a name="pysvn_client_remove"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.remove</a></h4>
+<h4><a name="pysvn_client_remove"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.remove</a></h4>
 <pre>
 remove( url_or_path_list,
         force=False )
@@ -776,19 +912,22 @@ upon the next commit.  Files, and directories that have not been
 committed, are immediately removed from the working copy.  The
 command will not remove paths that are, or contain, unversioned
 or modified items; set force=True to override this
-behaviour.</p>
+behaviour.
+</p>
 
-<p>If url_or_path is a URL, the items are deleted from the repository via an
-immediate commit.</p>
+<p>If url_or_path is a URL, the items are deleted from the
+repository via an immediate commit.
+</p>
 
-<h4><a name="pysvn_client_resolved"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.resolved</a></h4>
+<h4><a name="pysvn_client_resolved"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.resolved</a></h4>
 <pre>
 resolved( path,
           recurse=True )
 </pre>
-<p>Mark the conflicted file at path as resolved.</p>
+<p>Mark the conflicted file at path as resolved.
+</p>
 
-<h4><a name="pysvn_client_revert"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.revert</a></h4>
+<h4><a name="pysvn_client_revert"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.revert</a></h4>
 <pre>
 revert( path,
         recurse=False )
@@ -796,9 +935,10 @@ revert( [path,path],
         recurse=False )
 </pre>
 <p>Discard any changes in the working copy at path.
-Set recurse to True to recursively revert a directory's children.</p
+Set recurse to True to recursively revert a directory's children.
+</p>
 
-<h4><a name="pysvn_client_revpropdel"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.revpropdel</a></h4>
+<h4><a name="pysvn_client_revpropdel"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.revpropdel</a></h4>
 <pre>
 rev = \
 revpropdel( prop_name,
@@ -806,27 +946,32 @@ revpropdel( prop_name,
             revision=pysvn.Revision( opt_revision_kind.head ),
             force=False )
 </pre>
-<p>Delete the revision property prop_name from url</p>
+<p>Delete the revision property prop_name from url
+</p>
 
-<h4><a name="pysvn_client_revpropget"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.revpropget</a></h4>
+<h4><a name="pysvn_client_revpropget"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.revpropget</a></h4>
 <pre>
 rev_prop = \
 revpropget( prop_name,
             url,
             revision=pysvn.Revision( opt_revision_kind.head ) )
 </pre>
-<p>Returns a tuple (rev, prop_val) where the prop_val contains the revision property value</p>
+<p>Returns a tuple (rev, prop_val) where the prop_val contains
+the revision property value.
+</p>
 
-<h4><a name="pysvn_client_revproplist"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.revproplist</a></h4>
+<h4><a name="pysvn_client_revproplist"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.revproplist</a></h4>
 <pre>
 rev_prop_dict = \
 revproplist( url,
              revision=pysvn.Revision( opt_revision_kind.head ) )
 </pre>
-<p>Returns a tuple (revision, prop_dict) where the prop_dict contains the revision properies and their values</p>
+<p>Returns a tuple (revision, prop_dict) where the prop_dict
+contains the revision properies and their values.
+</p>
 
 
-<h4><a name="pysvn_client_revpropset"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.revpropset</a></h4>
+<h4><a name="pysvn_client_revpropset"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.revpropset</a></h4>
 <pre>
 rev = \
 revpropset( prop_name,
@@ -835,23 +980,27 @@ revpropset( prop_name,
             revision=pysvn.Revision( opt_revision_kind.head ),
             force=False )
 </pre>
-<p>set the revision property prop_name to prop_value in path. The revision updated is returned.</p>
+<p>set the revision property prop_name to prop_value in path.
+The revision updated is returned.
+</p>
 
-<h4><a name="pysvn_client_set_auth_cache"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.set_auth_cache</a></h4>
+<h4><a name="pysvn_client_set_auth_cache"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.set_auth_cache</a></h4>
 <pre>
 set_auth_cache( enable )
 </pre>
 <p>When enable is True subversion will remember authentication credentials
-in the configuration directory.</p>
+in the configuration directory.
+</p>
 
-<h4><a name="pysvn_client_set_auto_props"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.set_auto_props</a></h4>
+<h4><a name="pysvn_client_set_auto_props"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.set_auto_props</a></h4>
 <pre>
 set_auto_props( enable )
 </pre>
 <p>When enabled subversion will automatically set properties
-when adding files otherwise when disabled will not.</p>
+when adding files otherwise when disabled will not.
+</p>
 
-<h4><a name="pysvn_client_status"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.status</a></h4>
+<h4><a name="pysvn_client_status"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.status</a></h4>
 <pre>
 status_list = \
 status( path,
@@ -861,91 +1010,108 @@ status( path,
         ignore=False,
         ignore_externals=False )
 </pre>
-<p>If path is a directory status is returned for all files in the directory in status_list.
-If path is a single file status is returned for that single file in status_list.</p>
+<p>If path is a directory status is returned for all files in the
+directory in status_list. If path is a single file status is
+returned for that single file in status_list.
+</p>
 <p>The status_list is a list of <a href="#pysvn_status">status</a> objects. 
+</p>
 
 <p>Options:
 <ul>
-<li>recurse - If recurse is True, recurse fully, else do only immediate children.
+<li>recurse - If recurse is True, recurse fully, else do only
+  immediate children.</li>
 
 <li>get_all - If get_all is True, retrieve all entries; otherwise,
-retrieve only "interesting" entries (local mods and/or out-of-date).
+  retrieve only "interesting" entries (local mods and/or out-of-date).</li>
 
 <li>update - If update is set, contact the repository and augment the
-status structures with information about out-of-dateness.
+  status structures with information about out-of-dateness.</li>
 
 <li>ignore - If ignore is False, the item will be added regardless of
-whether it is ignored.
+  whether it is ignored.</li>
 
 <li>ignore_externals (svn 1.2.0 or later) - 
-If ignore_externals is False, then recurse into externals
-definitions (if any exist) after handling the main target. 
-This calls the client notification function
-with the svn_wc_notify_status_external action before 
-handling each externals definition, and with 
-svn_wc_notify_status_completed after each.
+  If ignore_externals is False, then recurse into externals
+  definitions (if any exist) after handling the main target. 
+  This calls the client notification function
+  with the svn_wc_notify_status_external action before 
+  handling each externals definition, and with 
+  svn_wc_notify_status_completed after each.</li>
 </ul>
-
-<h4><a name="pysvn_client_switch"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.switch</a></h4>
+</p>
+<h4><a name="pysvn_client_switch"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.switch</a></h4>
 <pre>
 switch( path,
         url,
         recurse=True,
         revision=pysvn.Revision( opt_revision_kind.head ) )
 </pre>
-<p>Update the working copy to a different URL.</p>
-
-<ol>
-<li>Update the working copy to mirror a new URL.  This behaviour is a
-   superset of "svn update".
-   Note:  this is the way to move a working copy to a new branch.
-
-<li>Reconnect the working copy when the repository URL has changed.
-</ol>
+<p>Update the working copy to a different URL.
 </p>
 
-<h4><a name="pysvn_client_unlock"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.unlock</a></h4>
+<ol>
+<li>Update the working copy to mirror a new URL. This behaviour is a
+  superset of "svn update".
+  Note:  this is the way to move a working copy to a new branch.</li>
+
+<li>Reconnect the working copy when the repository URL has changed.</li>
+</ol>
+
+<h4><a name="pysvn_client_unlock"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.unlock</a></h4>
 <pre>
 unlock( url_or_path, force=False )
 </pre>
-<p>
-unlock the url_or_path. Set force to True to unlock any lock held by another user.
+<p>unlock the url_or_path. Set force to True to unlock any lock
+held by another user.
 </p>
-<p>Note: The unlock command is only available with svn 1.2.0 or later</p>
+<p>Note: The unlock command is only available with svn 1.2.0 or later.
+</p>
 
-<h4><a name="pysvn_client_update"><a href="#pysvn">pysvn</a>.<a href="#pysvn_client">Client</a>.update</a></h4>
+<h4><a name="pysvn_client_update"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.update</a></h4>
 <pre>
 revision = \
 update( path,
         recurse=True,
         revision=pysvn.Revision( opt_revision_kind.head ) )
 </pre>
-<p>Update the file in the working copy at path to the specified revision.
-Set recurse to True to recursively update a directory's children.</p>
-<p>update returns a pysvn.Revision containing the number of the revision the working copy was updated to.</p>
-<p>This command is typically used to get the latest changes from the repository.
-Note that updating to an older revision does not change the 
-current revision.  To make the current version identical to an older revision, 
-use a merge followed by a commit.</p>
+<p>Update the file in the working copy at path to the specified
+revision. Set recurse to True to recursively update a directory's
+children.
+</p>
+<p>update returns a pysvn.Revision containing the number of the
+revision the working copy was updated to.
+</p>
+<p>This command is typically used to get the latest changes
+from the repository.
+</p>
+<p>Note: updating to an older revision does not change the 
+current revision. To make the current version identical to
+an older revision, use a merge followed by a commit.
+</p>
 
 
-<h2><a name="pysvn_transaction"><a href="#pysvn">pysvn</a>.Transaction - Subversion transaction interface</a></h2>
+<h2><a name="pysvn_transaction"><a href="#pysvn_module">pysvn</a>.Transaction - Subversion transaction interface</a></h2>
 
-<p>Interface summary:</p>
+<p>Interface summary:
+</p>
 
 <pre>
 transaction = pysvn.Transaction()
 transaction = pysvn.Transaction( repos_path, transaction_name )
 </pre>
 
-<p>The Transaction object allows you to implement hook code for the SVN repository.
-The pre-commit and pre-revprop-change hooks are the only hooks that are currently appropiate in SVN.
-See the SVN documentation for details on hook scripts.</p>
+<p>The Transaction object allows you to implement hook code for
+the SVN repository. The pre-commit and pre-revprop-change hooks
+are the only hooks that are currently appropiate in SVN. See 
+the SVN documentation for details on hook scripts.
+</p>
 
-<p>A Transaction object can only be used on one thread at a time. If two threads attempt to call methods of
-Transaction at the same time one of the threads will get a pysvn.TransactionError exception with the value
- 'transaction in use on another thread'.</p>
+<p>A Transaction object can only be used on one thread at a time.
+If two threads attempt to call methods of Transaction at the same
+time one of the threads will get a pysvn.TransactionError exception
+with the value 'transaction in use on another thread'.
+</p>
 
 <h3><a name="pysvn_transaction_methods">Transaction methods</a></h3>
 
@@ -973,7 +1139,7 @@ Transaction at the same time one of the threads will get a pysvn.TransactionErro
 </tr>
 </table>
 
-<h4><a name="pysvn_transaction_cat"><a href="#pysvn">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.cat</a></h4>
+<h4><a name="pysvn_transaction_cat"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.cat</a></h4>
 <pre>
 file_text = \
 cat( path )
@@ -982,95 +1148,115 @@ cat( path )
 Return the contents of path as a string, file_text.
 </p>
 
-<h4><a name="pysvn_transaction_changed"><a href="#pysvn">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.changed</a></h4>
+<h4><a name="pysvn_transaction_changed"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.changed</a></h4>
 <pre>
 file_text = \
 changed()
 </pre>
 <p>
-Return a dict of all changes in the transaction.
-The keys in the dict are the path names and the values are tuples contraining
-action, kind, text_mod, prop_mod.</p>
-<ul>
-<li>action - string - a single letter indicating the action 'A' for add, 'M' for modify, 'D' for delete
-<li>kind - node_kind - one of the pysvn.node_kind values
-<li>text_mod - int - is != 0 if the text in this path has been modified
-<li>prop_mod - int - is != 0 if the properties in this path have been modified
-</ul>
+Return a dict of all changes in the transaction. The keys in
+the dict are the path names and the values are tuples contraining
+action, kind, text_mod, prop_mod.
 </p>
+<ul>
+<li>action - string - a single letter indicating the action
+  'A' for add, 'M' for modify, 'D' for delete</li>
+<li>kind - node_kind - one of the pysvn.node_kind values</li>
+<li>text_mod - int - is != 0 if the text in this path has been
+  modified</li>
+<li>prop_mod - int - is != 0 if the properties in this path
+  have been modified</li>
+</ul>
 
-<h4><a name="pysvn_transaction_propdel"><a href="#pysvn">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.propdel</a></h4>
+<h4><a name="pysvn_transaction_propdel"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.propdel</a></h4>
 <pre>
 propdel( prop_name,
          path )
 </pre>
-<p>Delete the property prop_name from path in the transaction.</p>
+<p>Delete the property prop_name from path in the transaction.
+</p>
 
-<h4><a name="pysvn_transaction_propget"><a href="#pysvn">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.propget</a></h4>
+<h4><a name="pysvn_transaction_propget"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.propget</a></h4>
 <pre>
 prop_value = \
 propget( prop_name,
          path )
 </pre>
-<p>Returns the prop_value as a string or None if the prop_name is not in the transaction.</p>
+<p>Returns the prop_value as a string or None if the prop_name
+is not in the transaction.
+</p>
 
-<h4><a name="pysvn_transaction_proplist"><a href="#pysvn">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.proplist</a></h4>
+<h4><a name="pysvn_transaction_proplist"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.proplist</a></h4>
 <pre>
 prop_dict = \
 proplist( path )
 </pre>
 <p>Returns a prop_dict. 
-The prop_dict contains the prop_names and their values if set on the path in the transaction.</p>
+The prop_dict contains the prop_names and their values if set
+on the path in the transaction.
+</p>
 
-<h4><a name="pysvn_transaction_propset"><a href="#pysvn">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.propset</a></h4>
+<h4><a name="pysvn_transaction_propset"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.propset</a></h4>
 <pre>
 propset( prop_name,
          prop_value,
          path )
 </pre>
-<p>Set the property prop_name to prop_value in path in the transaction.</p>
+<p>Set the property prop_name to prop_value in path in the transaction.
+</p>
 
-<h4><a name="pysvn_transaction_revpropdel"><a href="#pysvn">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.revpropdel</a></h4>
+<h4><a name="pysvn_transaction_revpropdel"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.revpropdel</a></h4>
 <pre>
 revpropdel( prop_name )
 </pre>
-<p>Delete the revision property prop_name in the transaction.</p>
+<p>Delete the revision property prop_name in the transaction.
+</p>
 
-<h4><a name="pysvn_transaction_revpropget"><a href="#pysvn">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.revpropget</a></h4>
+<h4><a name="pysvn_transaction_revpropget"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.revpropget</a></h4>
 <pre>
 prop_val = \
 revpropget( prop_name )
 </pre>
-<p>Returns the prop_val with the revision property value or None if not set in the transaction.</p>
+<p>Returns the prop_val with the revision property value or None if not set in the transaction.
+</p>
 
-<h4><a name="pysvn_transaction_revproplist"><a href="#pysvn">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.revproplist</a></h4>
+<h4><a name="pysvn_transaction_revproplist"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.revproplist</a></h4>
 <pre>
 prop_dict = \
 revproplist()
 </pre>
-<p>Returns a prop_dict where the prop_dict contains the revision properies and their values in the transaction.</p>
+<p>Returns a prop_dict where the prop_dict contains the revision
+properies and their values in the transaction.
+</p>
 
 
-<h4><a name="pysvn_transaction_revpropset"><a href="#pysvn">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.revpropset</a></h4>
+<h4><a name="pysvn_transaction_revpropset"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.revpropset</a></h4>
 <pre>
 rev = \
 revpropset( prop_name,
             prop_value )
 </pre>
-<p>set the revision property prop_name to prop_value in path in the transaction. The revision updated is returned.</p>
+<p>set the revision property prop_name to prop_value in path in
+the transaction. The revision updated is returned.
+</p>
 
 
-<h2><a href="#pysvn">pysvn</a>.<a name="pysvn_revision">Revision - subversion revision</a></h2>
+<h2><a href="#pysvn_module">pysvn</a>.<a name="pysvn_revision">Revision - subversion revision</a></h2>
 
-<p>The Revision object has three member variables:</p>
+<p>The Revision object has three member variables:
+</p>
 
 <ul>
-<li>kind   - the kind of revision, its value is one of the opt_revision_kind enumerations.
-<li>date   - date and time when kind is opt_revision_kind.date, as seconds since the epoch which is compatible with python's time module.
-<li>number - revision number when kind is opt_revision_kind.number
+<li>kind   - the kind of revision, its value is one of the
+  opt_revision_kind enumerations.</li>
+<li>date   - date and time when kind is opt_revision_kind.date,
+  as seconds since the epoch which is compatible with python's
+  time module.</li>
+<li>number - revision number when kind is opt_revision_kind.number</li>
 </ul>
 
-<p>Interface summary:</p>
+<p>Interface summary:
+</p>
 
 <pre>
 import pysvn
@@ -1081,19 +1267,25 @@ revdate = pysvn.Revision( pysvn.opt_revision_kind.date, time.time() )
 revnum = pysvn.Revision( pysvn.opt_revision_kind.number, 4721 )
 </pre>
 
-<h2><a href="#pysvn">pysvn</a>.<a name="pysvn_clienterror">ClientError - Exception class raised by client commands on error</a></h2>
+<h2><a href="#pysvn_module">pysvn</a>.<a name="pysvn_clienterror">ClientError - Exception class raised by client commands on error</a></h2>
 
-<p>ClientError exception is raised when any of the subversion functions called by pysvn return an error.</p>
+<p>ClientError exception is raised when any of the subversion
+functions called by pysvn return an error.
+</p>
 
 <p>The <a href="#pysvn_client">Client</a>.<a href="#pysvn_client_exception_style">exception_style</a>
  variable controls the information stored in the ClientError object.
+</p>
 
 <h3>exception_style = 0</h3>
 
-<p>The arg property is set to a single string parameter containing the whole error message.
-'\n' is used to seperate message parts.</p>
+<p>The arg property is set to a single string parameter containing
+the whole error message. '\n' is used to seperate message parts.
+</p>
 
-<p>Use str() to get the string description of the exception raised by pysvn.</p>
+<p>Use str() to get the string description of the exception raised
+by pysvn.
+</p>
 
 <pre>
 import pysvn
@@ -1112,11 +1304,14 @@ except pysvn.ClientError, e:
 
 <h3>exception_style = 1</h3>
 
-<p>The arg property is set to a tuple contain two values.</p>
-<p>arg[0] is set to a string parameter containing the whole error message.
-'\n' is used to seperate message parts.</p>
-<p>arg[1] is set to a list of tuples containing the message string and the error code.
-The error code values are defined by SVN and APR.</p>
+<p>The arg property is set to a tuple contain two values.
+</p>
+<p>arg[0] is set to a string parameter containing the whole error
+message. '\n' is used to seperate message parts.
+</p>
+<p>arg[1] is set to a list of tuples containing the message string
+and the error code. The error code values are defined by SVN and APR.
+</p>
 
 <pre>
 import pysvn
@@ -1134,47 +1329,54 @@ except pysvn.ClientError, e:
         print 'Code:',code,'Message:',message
 </pre>
 
-<h2><a href="#pysvn">pysvn</a>.<a name="pysvn_status">Status - subversion status object</a></h2>
-<p>Each status object has the following fields:</p>
+<h2><a href="#pysvn_module">pysvn</a>.<a name="pysvn_status">Status - subversion status object</a></h2>
+<p>Each status object has the following fields:
+</p>
 <ul>
-<li>path - string - the path name
-<li>entry - <a href="#pysvn_entry">Entry</a> - entry information
-<li>is_versioned - Boolean - true if the path is versioned
-<li>is_locked - Boolean - true if the path is locked
-<li>is_copied - Boolean - true if the path is copied
-<li>is_switched - Boolean - true if the path has been switched
-<li>prop_status - wc_status_kind - the status of the properties of the path
-<li>text_status - wc_status_kind - the status of the text of the path
-<li>repos_prop_status - wc_status_kind - the repository status of the properties of the path
-<li>repos_text_status - wc_status_kind - the repository status of the text of the path
+<li>path - string - the path name</li>
+<li>entry - <a href="#pysvn_entry">Entry</a> - entry information</li>
+<li>is_versioned - Boolean - true if the path is versioned</li>
+<li>is_locked - Boolean - true if the path is locked</li>
+<li>is_copied - Boolean - true if the path is copied</li>
+<li>is_switched - Boolean - true if the path has been switched</li>
+<li>prop_status - wc_status_kind - the status of the properties
+  of the path</li>
+<li>text_status - wc_status_kind - the status of the text of
+  the path</li>
+<li>repos_prop_status - wc_status_kind - the repository status
+  of the properties of the path</li>
+<li>repos_text_status - wc_status_kind - the repository status
+  of the text of the path</li>
 </ul>
 
-<h2><a href="#pysvn">pysvn</a>.<a name="pysvn_entry">Entry - subversion entry object</a></h2>
+<h2><a href="#pysvn_module">pysvn</a>.<a name="pysvn_entry">Entry - subversion entry object</a></h2>
 
 <ul>
-<li>checksum - string
-<li>commit_author - string
-<li>commit_revision - pysvn.<a href="#pysvn_revision">Revision</a>
-<li>commit_time - time
-<li>conflict_new - string or None - file path
-<li>conflict_old - string of None - file path
-<li>conflict_work - string of None - file path
-<li>copy_from_revision - pysvn.<a href="#pysvn_revision">Revision</a> or None
-<li>copy_from_url - string or None
-<li>is_absent - boolean
-<li>is_copied - boolean
-<li>is_deleted - boolean
-<li>is_valid - boolean
-<li>kind - pysvn.wc_node_kind
-<li>name - string
-<li>properties_time - time
-<li>property_reject_file - string or None
-<li>repos - string
-<li>revision - pysvn.<a href="#pysvn_revision">Revision</a> or None
-<li>schedule - pysvn.wc_schedule or None
-<li>text_time - time
-<li>url - string or None
-<li>uuid - string or None
+<li>checksum - string</li>
+<li>commit_author - string</li>
+<li>commit_revision - pysvn.<a href="#pysvn_revision">Revision</a></li>
+<li>commit_time - time</li>
+<li>conflict_new - string or None - file path</li>
+<li>conflict_old - string of None - file path</li>
+<li>conflict_work - string of None - file path</li>
+<li>copy_from_revision - pysvn.<a href="#pysvn_revision">Revision</a> or None</li>
+<li>copy_from_url - string or None</li>
+<li>is_absent - boolean</li>
+<li>is_copied - boolean</li>
+<li>is_deleted - boolean</li>
+<li>is_valid - boolean</li>
+<li>kind - pysvn.wc_node_kind</li>
+<li>name - string</li>
+<li>properties_time - time</li>
+<li>property_reject_file - string or None</li>
+<li>repos - string</li>
+<li>revision - pysvn.<a href="#pysvn_revision">Revision</a> or None</li>
+<li>schedule - pysvn.wc_schedule or None</li>
+<li>text_time - time</li>
+<li>url - string or None</li>
+<li>uuid - string or None</li>
 </ul>
+
 </body>
+
 </html>

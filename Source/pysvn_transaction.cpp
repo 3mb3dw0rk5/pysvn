@@ -39,17 +39,22 @@ static void convertReposTree
     apr_pool_t *pool
     );
 
-
 //--------------------------------------------------------------------------------
 pysvn_transaction::pysvn_transaction
     (
-    pysvn_module &_module,
-    const std::string &repos_path,
-    const std::string &transaction_name
+    pysvn_module &_module
     )
 : m_module( _module )
 , m_transaction()
 , m_exception_style( 1 )
+{
+}
+
+void pysvn_transaction::init
+    (
+    const std::string &repos_path,
+    const std::string &transaction_name
+    )
 {
     svn_error_t *error = m_transaction.init( repos_path, transaction_name );
     if( error != NULL )
@@ -602,24 +607,24 @@ Py::Object pysvn_transaction::cmd_revpropset( const Py::Tuple &a_args, const Py:
 void pysvn_transaction::init_type()
 {
     behaviors().name("Transaction");
-    behaviors().doc( class_transaction_doc );
+    behaviors().doc( pysvn_transaction_doc );
     behaviors().supportGetattr();
     behaviors().supportSetattr();
 
-    add_keyword_method("cat", &pysvn_transaction::cmd_cat, TXN_CAT_DOC );
-    add_keyword_method("changed", &pysvn_transaction::cmd_changed, TXN_CHANGED_DOC );
+    add_keyword_method("cat", &pysvn_transaction::cmd_cat, pysvn_transaction_cat_doc );
+    add_keyword_method("changed", &pysvn_transaction::cmd_changed, pysvn_transaction_changed_doc );
 #if 0
-    add_keyword_method("diff", &pysvn_transaction::cmd_diff, TXN_DIFF_DOC );
+    add_keyword_method("diff", &pysvn_transaction::cmd_diff, pysvn_transaction_diff_doc );
 #endif
-    add_keyword_method("propdel", &pysvn_transaction::cmd_propdel, TXN_PROPDEL_DOC );
-    add_keyword_method("propget", &pysvn_transaction::cmd_propget, TXN_PROPGET_DOC );
-    add_keyword_method("proplist", &pysvn_transaction::cmd_proplist, TXN_PROPLIST_DOC );
-    add_keyword_method("propset", &pysvn_transaction::cmd_propset, TXN_PROPSET_DOC );
+    add_keyword_method("propdel", &pysvn_transaction::cmd_propdel, pysvn_transaction_propdel_doc );
+    add_keyword_method("propget", &pysvn_transaction::cmd_propget, pysvn_transaction_propget_doc );
+    add_keyword_method("proplist", &pysvn_transaction::cmd_proplist, pysvn_transaction_proplist_doc );
+    add_keyword_method("propset", &pysvn_transaction::cmd_propset, pysvn_transaction_propset_doc );
 
-    add_keyword_method("revpropdel", &pysvn_transaction::cmd_revpropdel, TXN_REVPROPDEL_DOC );
-    add_keyword_method("revpropget", &pysvn_transaction::cmd_revpropget, TXN_REVPROPGET_DOC );
-    add_keyword_method("revproplist", &pysvn_transaction::cmd_revproplist, TXN_REVPROPLIST_DOC );
-    add_keyword_method("revpropset", &pysvn_transaction::cmd_revpropset, TXN_REVPROPSET_DOC );
+    add_keyword_method("revpropdel", &pysvn_transaction::cmd_revpropdel, pysvn_transaction_revpropdel_doc );
+    add_keyword_method("revpropget", &pysvn_transaction::cmd_revpropget, pysvn_transaction_revpropget_doc );
+    add_keyword_method("revproplist", &pysvn_transaction::cmd_revproplist, pysvn_transaction_revproplist_doc );
+    add_keyword_method("revpropset", &pysvn_transaction::cmd_revpropset, pysvn_transaction_revpropset_doc );
 }
 
 

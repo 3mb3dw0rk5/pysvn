@@ -150,7 +150,7 @@ int pysvn_revision::setattr( const char *_name, const Py::Object &value )
 void pysvn_revision::init_type()
 {
     behaviors().name("revision");
-    behaviors().doc( class_revision_doc );
+    behaviors().doc( pysvn_revision_doc );
     behaviors().supportGetattr();
     behaviors().supportRepr();
 }
