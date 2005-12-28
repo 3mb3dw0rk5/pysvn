@@ -1,9 +1,10 @@
+@echo off
 rem figure out where we are
 for %%I in ( %0\..\.. ) do set WORKDIR=%%~fI
 
 set PY_MAJ=2
 if not "%1" == "" set PY_MAJ=%1
-set PY_MIN=3
+set PY_MIN=4
 if not "%2" == "" set PY_MIN=%2
 set BUILD_TYPE=Release
 if not "%3" == "" set BUILD_TYPE=%3
@@ -16,7 +17,7 @@ rem otherwise the builder will have run it already
 set COMPILER=msvc60
 if "%PY_MIN%" == "4" set COMPILER=msvc71
 
-if exist ..\..\ReleaseEngineering\win32-%COMPILER%\software-versions.cmd call ..\..\ReleaseEngineering\win32-%COMPILER%\software-versions.cmd
+if exist ..\..\ReleaseEngineering\win32-%COMPILER%\software-versions.cmd call ..\..\ReleaseEngineering\win32-%COMPILER%\software-versions.cmd off
 
 set PYCXX=%WORKDIR%\Import\pycxx_%PYCXX_VER%
 set OPENSSL=%TARGET%\openssl-%OPENSSL_VER%

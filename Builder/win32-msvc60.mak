@@ -7,6 +7,7 @@ all:
 
 clean:
 	cd ..\Source && msdev /useenv pysvn.dsw /make "pysvn - Win32 $(BUILD_TYPE)" /clean
+	cd ..\Source && del sept
 	cd ..\Tests && $(MAKE) -f win32.mak clean
 	cd ..\kit\Win32 && $(MAKE) clean
 

@@ -7,6 +7,7 @@ all:
 
 clean:
 	cd ..\Source && devenv pysvn.sln /useenv /clean "$(BUILD_TYPE)"  /project "pysvn"
+	cd ..\Source && del sept
 	cd ..\Tests && $(MAKE) -f win32.mak clean
 	cd ..\kit\Win32 && $(MAKE) clean
 
