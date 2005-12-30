@@ -5,7 +5,7 @@
 
 setlocal
 set PYTHONPATH=%WORKDIR%\Source;%WORKDIR%\Examples\Client
-set PYSVN=%PYTHON% %WORKDIR%\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir
+set PYSVN=%PYTHON% %WORKDIR%\Examples\Client\svn_cmd.py --pysvn-testing 01.01.00 --config-dir b:\configdir
 echo Info: PYSVN CMD %PYSVN%
 call :cmd_shell mkdir testroot-01
 call :cmd_shell subst b: %CD%\testroot-01

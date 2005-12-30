@@ -80,6 +80,7 @@ IndirectPythonInterface.o: $(PYCXX)/Src/IndirectPythonInterface.cxx
 
 clean:
 	rm -f pysvn_version.hpp
+	rm -f pysvn_docs.hpp pysvn_docs.cpp
 	rm -f *.o
 	rm -f pysvn/_pysvn.so
 

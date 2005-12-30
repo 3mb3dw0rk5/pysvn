@@ -5,14 +5,11 @@
 
 setlocal
 set PYTHONPATH=%WORKDIR%\Source;%WORKDIR%\Examples\Client
-set PYSVN=%PYTHON% %WORKDIR%\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir
+set PYSVN=%PYTHON% %WORKDIR%\Examples\Client\svn_cmd.py --pysvn-testing 01.03.00 --config-dir b:\configdir
 echo Info: PYSVN CMD %PYSVN%
 call :cmd_shell mkdir testroot-05
 call :cmd_shell subst b: %CD%\testroot-05
 call :cmd_shell cd /d b:\
-
-set PYTHONPATH=%WORKDIR%\Source;%WORKDIR%\Examples\Client
-set PYSVN=%PYTHON% %WORKDIR%\Examples\Client\svn_cmd.py --pysvn-testing --config-dir b:\configdir
 
 call :cmd_shell svnadmin create b:/repos
 

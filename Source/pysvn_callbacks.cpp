@@ -157,8 +157,9 @@ void pysvn_context::contextProgress
     Py::Callable callback( m_pyfn_Progress );
 
     Py::Tuple args( 2 );
-    args[0] = Py::Int( progress );
-    args[1] = Py::Int( total );
+    // on some platforms apr_off_t is int64
+    args[0] = Py::Int( static_cast<long int>( progress ) );
+    args[1] = Py::Int( static_cast<long int>( total ) );
 
     Py::Object results;
 

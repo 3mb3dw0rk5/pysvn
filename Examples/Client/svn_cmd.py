@@ -144,7 +144,7 @@ class SvnCommand:
             self.revision_update_complete = arg_dict['revision']
         elif arg_dict['path'] != '' and wc_notify_action_map[ arg_dict['action'] ] is not None:
             msg = '%s %s' % (wc_notify_action_map[ arg_dict['action'] ], arg_dict['path'])
-            if self.pysvn_testing:
+            if self.pysvn_testing != '99.99.99':
                 self.notify_message_list.append( msg )
             else:
                 print msg
@@ -186,7 +186,7 @@ class SvnCommand:
 
             self.initClient( args.getOptionalValue( '--config-dir', '' ) )
             self.client.set_auth_cache( args.getBooleanOption( '--no-auth-cache', False ) )
-            self.pysvn_testing = args.getBooleanOption( '--pysvn-testing', True )
+            self.pysvn_testing = args.getOptionalValue( '--pysvn-testing', '99.99.99' )
             self.debug_enabled = args.getBooleanOption( '--debug', True )
 
             getattr( self, cmd_name, self.cmd_help )( args )
@@ -362,7 +362,7 @@ class SvnCommand:
             print 'Name:',entry.name
         if entry.url:
             print 'Url:',entry.url
-        if entry.repos:
+        if entry.repos and self.pysvn_testing >= '01.03.00':
             print 'Repository:',entry.repos
         if entry.uuid:
             print 'Repository UUID:',entry.uuid
@@ -878,7 +878,7 @@ long_opt_info = {
     '--show-updates': 0,        # display update information
     '--verbose': 0,             # print extra information
     '--extensions': 1,          # pass ARG as bundled options to GNU diff
-    '--pysvn-testing': 0,       # modify behaviour to assist testing pysvn
+    '--pysvn-testing': 1,       # modify behaviour to assist testing pysvn
     '--debug': 0,               # do debug stuff
 }
 

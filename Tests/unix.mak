@@ -1,5 +1,12 @@
 all: test-01.unix.new.log test-03.unix.new.log test-04.unix.new.log test-05.unix.new.log
 
+help:
+	@echo "make clean         - clean all tests"
+	@echo "make all           - run all tests"
+	@echo "make clean-01      - clean test 01"
+	@echo "make diff-01       - run wb-diff on the outcome of test 01"
+	@echo "make new-01        - use the new log as the known-good log"
+
 clean: clean-01 clean-03 clean-04 clean-05
 
 clean-01:
