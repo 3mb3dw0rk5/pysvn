@@ -429,7 +429,7 @@ class SvnCommand:
                 print 'Url:',info['URL']
             if info['rev']:
                 print 'Revision:',info['rev'].number
-            if info['repos_root_URL']:
+            if info['repos_root_URL'] and self.pysvn_testing >= '01.03.00':
                 print 'Repository root URL:',info['repos_root_URL']
             if info['repos_UUID']:
                 print 'Repository UUID:',info['repos_UUID']

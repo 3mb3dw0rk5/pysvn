@@ -22,7 +22,7 @@ cmd mkdir tmp
 export TMPDIR=${TESTROOT}/tmp
 
 export PYTHONPATH=${WORKDIR}/Source:${WORKDIR}/Examples/Client
-export PYSVN="${PYTHON} ${WORKDIR}/Examples/Client/svn_cmd.py --pysvn-testing --config-dir ${TESTROOT}/configdir"
+export PYSVN="${PYTHON} ${WORKDIR}/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir ${TESTROOT}/configdir"
 
 cmd svnadmin create ${TESTROOT}/repos
 
