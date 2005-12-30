@@ -146,7 +146,7 @@ SOURCE=.\pysvn.rc.template
 !IF  "$(CFG)" == "pysvn - Win32 Debug"
 
 USERDEP__PYSVN="..\Builder\brand_version.py"	"..\Builder\version.info"	
-# Begin Custom Build
+# Begin Custom Build - Brand Version info
 InputPath=.\pysvn.rc.template
 
 ".\pysvn.rc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -157,7 +157,7 @@ InputPath=.\pysvn.rc.template
 
 !ELSEIF  "$(CFG)" == "pysvn - Win32 Release"
 
-# Begin Custom Build
+# Begin Custom Build - Brand Version info
 InputPath=.\pysvn.rc.template
 
 ".\pysvn.rc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -168,7 +168,7 @@ InputPath=.\pysvn.rc.template
 
 !ELSEIF  "$(CFG)" == "pysvn - Win32 Profile"
 
-# Begin Custom Build
+# Begin Custom Build - Brand Version info
 InputPath=.\pysvn.rc.template
 
 ".\pysvn.rc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -194,15 +194,11 @@ SOURCE=pysvn_client.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=pysvn_transaction.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=pysvn_converters.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=pysvn_docs.cpp
+SOURCE=.\pysvn_docs.cpp
 # End Source File
 # Begin Source File
 
@@ -222,6 +218,64 @@ SOURCE=.\pysvn_profile.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\Docs\pysvn_prog_ref.html
+
+!IF  "$(CFG)" == "pysvn - Win32 Debug"
+
+USERDEP__PYSVN_="../Docs/generate_cpp_docs_from_html_docs.py"	
+# Begin Custom Build - Generate pysvn_docs.hpp/.cpp
+ProjDir=.
+InputPath=..\Docs\pysvn_prog_ref.html
+
+BuildCmds= \
+	$(PYTHON) ../Docs/generate_cpp_docs_from_html_docs.py $(InputPath) $(ProjDir)\pysvn_docs.hpp $(ProjDir)\pysvn_docs.cpp
+
+"$(ProjDir)\pysvn_docs.hpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+   $(BuildCmds)
+
+"$(ProjDir)\pysvn_docs.cpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+   $(BuildCmds)
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "pysvn - Win32 Release"
+
+USERDEP__PYSVN_="../Docs/generate_cpp_docs_from_html_docs.py"	
+# Begin Custom Build - Generate pysvn_docs.hpp/.cpp
+ProjDir=.
+InputPath=..\Docs\pysvn_prog_ref.html
+
+BuildCmds= \
+	$(PYTHON) ../Docs/generate_cpp_docs_from_html_docs.py $(InputPath) $(ProjDir)\pysvn_docs.hpp $(ProjDir)\pysvn_docs.cpp
+
+"$(ProjDir)\pysvn_docs.hpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+   $(BuildCmds)
+
+"$(ProjDir)\pysvn_docs.cpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+   $(BuildCmds)
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "pysvn - Win32 Profile"
+
+USERDEP__PYSVN_="../Docs/generate_cpp_docs_from_html_docs.py"	
+# Begin Custom Build - Generate pysvn_docs.hpp/.cpp
+ProjDir=.
+InputPath=..\Docs\pysvn_prog_ref.html
+
+BuildCmds= \
+	$(PYTHON) ../Docs/generate_cpp_docs_from_html_docs.py $(InputPath) $(ProjDir)\pysvn_docs.hpp $(ProjDir)\pysvn_docs.cpp
+
+"$(ProjDir)\pysvn_docs.hpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+   $(BuildCmds)
+
+"$(ProjDir)\pysvn_docs.cpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+   $(BuildCmds)
+# End Custom Build
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
 SOURCE=pysvn_revision.cpp
 # End Source File
 # Begin Source File
@@ -234,12 +288,16 @@ SOURCE=pysvn_svnenv.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=pysvn_transaction.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\pysvn_version.hpp.template
 
 !IF  "$(CFG)" == "pysvn - Win32 Debug"
 
-USERDEP__PYSVN_="..\Builder\brand_version.py"	"..\Builder\version.info"	
-# Begin Custom Build
+USERDEP__PYSVN_V="..\Builder\brand_version.py"	"..\Builder\version.info"	
+# Begin Custom Build - Brand Version info
 InputPath=.\pysvn_version.hpp.template
 
 ".\pysvn_version.hpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -250,7 +308,7 @@ InputPath=.\pysvn_version.hpp.template
 
 !ELSEIF  "$(CFG)" == "pysvn - Win32 Release"
 
-# Begin Custom Build
+# Begin Custom Build - Brand Version info
 InputPath=.\pysvn_version.hpp.template
 
 ".\pysvn_version.hpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -261,7 +319,7 @@ InputPath=.\pysvn_version.hpp.template
 
 !ELSEIF  "$(CFG)" == "pysvn - Win32 Profile"
 
-# Begin Custom Build
+# Begin Custom Build - Brand Version info
 InputPath=.\pysvn_version.hpp.template
 
 ".\pysvn_version.hpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"

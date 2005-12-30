@@ -52,7 +52,10 @@ cmd_pysvn checkin -m "commit added files"
 echo Info: Test - info of path
 cmd_pysvn info file1.txt
 
-echo Info: Test - info of URL
+echo Info: Test - info2 of path
+cmd_pysvn info file1.txt
+
+echo Info: Test - info2 of URL
 cmd_pysvn info --revision HEAD file://${TESTROOT}/repos/trunk/test/file1.txt
 
 echo Info: Test - info2 of URL
