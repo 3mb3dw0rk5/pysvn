@@ -236,7 +236,7 @@ Py::Object pysvn_client::cmd_add( const Py::Tuple &a_args, const Py::Dict &a_kws
     bool force = args.getBoolean( name_force, false );
 #endif
 #ifdef PYSVN_HAS_CLIENT_ADD3
-    bool ignore = args.getBoolean( name_ignore, false );
+    bool ignore = args.getBoolean( name_ignore, true );
 #endif
 
     SvnPool pool( m_context );
@@ -512,6 +512,98 @@ Py::Object pysvn_client::cmd_cat( const Py::Tuple &a_args, const Py::Dict &a_kws
     return Py::String( stringbuf->data, (int)stringbuf->len );
 }
 
+Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_path },
+    { true,  name_log_message },
+    { false, name_recurse },
+#if defined( PYSVN_HAS_CLIENT_COMMIT2 )
+    { false, name_keep_locks },
+#endif
+    { false, NULL }
+    };
+    FunctionArguments args( "checkin", args_desc, a_args, a_kws );
+    args.check();
+
+    SvnPool pool( m_context );
+    pysvn_commit_info_t *commit_info = NULL;
+
+    apr_array_header_t *targets = targetsFromStringOrList( args.getArg( name_path ), pool );
+
+    std::string type_error_message;
+    try
+    {
+        type_error_message = "expecting string for message (arg 2)";
+
+        std::string message( args.getUtf8String( name_log_message ) );
+
+        type_error_message = "expecting boolean for recurse keyword arg";
+        bool recurse = args.getBoolean( name_recurse, true );
+
+#ifdef PYSVN_HAS_CLIENT_COMMIT2
+        type_error_message = "expecting boolean for keep_locks keyword arg";
+        bool keep_locks = args.getBoolean( name_keep_locks, true );
+#endif
+
+        try
+        {
+            checkThreadPermission();
+
+            PythonAllowThreads permission( m_context );
+
+            m_context.setLogMessage( message );
+
+#if defined( PYSVN_HAS_CLIENT_COMMIT3 )
+            svn_error_t *error = svn_client_commit3
+                (
+                &commit_info,   // commit info type changed
+                targets,
+                recurse,
+                keep_locks,
+                m_context,
+                pool
+                );
+#elif defined( PYSVN_HAS_CLIENT_COMMIT2 )
+            svn_error_t *error = svn_client_commit2
+                (
+                &commit_info,
+                targets,
+                recurse,
+                keep_locks,
+                m_context,
+                pool
+                );
+#else
+            svn_error_t *error = svn_client_commit
+                (
+                &commit_info,
+                targets,
+                !recurse,       // non recursive
+                m_context,
+                pool
+                );
+#endif
+            if( error != NULL )
+                throw SvnException( error );
+        }
+        catch( SvnException &e )
+        {
+            // use callback error over ClientException
+            m_context.checkForError( m_module.client_error );
+
+            throw_client_error( e );
+        }
+    }
+    catch( Py::TypeError & )
+    {
+        throw Py::TypeError( type_error_message );
+    }
+
+    return toObject( commit_info );
+}
+
 Py::Object pysvn_client::cmd_checkout( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
     static argument_description args_desc[] =
@@ -623,98 +715,6 @@ Py::Object pysvn_client::cmd_cleanup( const Py::Tuple &a_args, const Py::Dict &a
     }
 
     return Py::Nothing();
-}
-
-Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a_kws )
-{
-    static argument_description args_desc[] =
-    {
-    { true,  name_path },
-    { true,  name_log_message },
-    { false, name_recurse },
-#if defined( PYSVN_HAS_CLIENT_COMMIT2 )
-    { false, name_keep_locks },
-#endif
-    { false, NULL }
-    };
-    FunctionArguments args( "checkin", args_desc, a_args, a_kws );
-    args.check();
-
-    SvnPool pool( m_context );
-    pysvn_commit_info_t *commit_info = NULL;
-
-    apr_array_header_t *targets = targetsFromStringOrList( args.getArg( name_path ), pool );
-
-    std::string type_error_message;
-    try
-    {
-        type_error_message = "expecting string for message (arg 2)";
-
-        std::string message( args.getUtf8String( name_log_message ) );
-
-        type_error_message = "expecting boolean for recurse keyword arg";
-        bool recurse = args.getBoolean( name_recurse, true );
-
-#ifdef PYSVN_HAS_CLIENT_COMMIT2
-        type_error_message = "expecting boolean for keep_locks keyword arg";
-        bool keep_locks = args.getBoolean( name_keep_locks, true );
-#endif
-
-        try
-        {
-            checkThreadPermission();
-
-            PythonAllowThreads permission( m_context );
-
-            m_context.setLogMessage( message );
-
-#if defined( PYSVN_HAS_CLIENT_COMMIT3 )
-            svn_error_t *error = svn_client_commit3
-                (
-                &commit_info,   // commit info type changed
-                targets,
-                recurse,
-                keep_locks,
-                m_context,
-                pool
-                );
-#elif defined( PYSVN_HAS_CLIENT_COMMIT2 )
-            svn_error_t *error = svn_client_commit2
-                (
-                &commit_info,
-                targets,
-                recurse,
-                keep_locks,
-                m_context,
-                pool
-                );
-#else
-            svn_error_t *error = svn_client_commit
-                (
-                &commit_info,
-                targets,
-                !recurse,       // non recursive
-                m_context,
-                pool
-                );
-#endif
-            if( error != NULL )
-                throw SvnException( error );
-        }
-        catch( SvnException &e )
-        {
-            // use callback error over ClientException
-            m_context.checkForError( m_module.client_error );
-
-            throw_client_error( e );
-        }
-    }
-    catch( Py::TypeError & )
-    {
-        throw Py::TypeError( type_error_message );
-    }
-
-    return toObject( commit_info );
 }
 
 Py::Object pysvn_client::cmd_copy( const Py::Tuple &a_args, const Py::Dict &a_kws )
@@ -1028,7 +1028,10 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
     bool ignore_content_type = args.getBoolean( name_ignore_content_type, false );
 #endif
 #if defined( PYSVN_HAS_CLIENT_DIFF_PEG3 )
-    std::string header_encoding = args.getUtf8String( name_header_encoding );
+    std::string header_encoding( args.getUtf8String( name_header_encoding, empty_string ) );
+    const char *header_encoding_ptr = APR_LOCALE_CHARSET;
+    if( !header_encoding.empty() )
+        header_encoding_ptr = header_encoding.c_str();
 #endif
 
     SvnPool pool( m_context );
@@ -1063,7 +1066,7 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
             ignore_ancestry,
             !diff_deleted,
             ignore_content_type,
-            header_encoding.c_str(),
+            header_encoding_ptr,
             output_file.file(),
             error_file.file(),
             m_context,
@@ -1253,6 +1256,127 @@ Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_
 }
 
 
+Py::Object pysvn_client::cmd_import( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_path },
+    { true,  name_url },
+    { true,  name_log_message },
+    { false, name_recurse },
+#ifdef PYSVN_HAS_CLIENT_IMPORT2
+    { false, name_ignore },
+#endif
+    { false, NULL }
+    };
+    FunctionArguments args( "import_", args_desc, a_args, a_kws );
+    args.check();
+
+    std::string path( args.getUtf8String( name_path ) );
+    std::string url( args.getUtf8String( name_url ) );
+    std::string message( args.getUtf8String( name_log_message ) );
+
+    bool recurse = args.getBoolean( name_recurse, true );
+#ifdef PYSVN_HAS_CLIENT_IMPORT2
+    bool ignore = args.getBoolean( name_ignore, false );
+#endif
+
+    SvnPool pool( m_context );
+    pysvn_commit_info_t *commit_info = NULL;
+
+    try
+    {
+        std::string norm_path( svnNormalisedIfPath( path, pool ) );
+
+        checkThreadPermission();
+
+        PythonAllowThreads permission( m_context );
+
+        m_context.setLogMessage( message.c_str() );
+
+#if defined( PYSVN_HAS_CLIENT_IMPORT2 )
+        svn_error_t *error = svn_client_import2
+            (
+            &commit_info,       // changed type
+            norm_path.c_str(),
+            url.c_str(),
+            !recurse,           // non_recursive
+            !ignore,
+            m_context,
+            pool
+            );
+#else
+        svn_error_t *error = svn_client_import
+            (
+            &commit_info,
+            norm_path.c_str(),
+            url.c_str(),
+            !recurse,           // non_recursive
+            m_context,
+            pool
+            );
+#endif
+        if( error != NULL )
+            throw SvnException( error );
+    }
+    catch( SvnException &e )
+    {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
+        throw_client_error( e );
+    }
+
+    return toObject( commit_info );
+}
+
+Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_path },
+    { false, NULL }
+    };
+    FunctionArguments args( "info", args_desc, a_args, a_kws );
+    args.check();
+
+    std::string path( args.getUtf8String( name_path ) );
+
+    SvnPool pool( m_context );
+    try
+    {
+        std::string norm_path( svnNormalisedIfPath( path, pool ) );
+
+        checkThreadPermission();
+
+        PythonAllowThreads permission( m_context );
+
+        svn_wc_adm_access_t *adm_access = NULL;
+
+        svn_error_t *error = svn_wc_adm_probe_open( &adm_access, NULL, norm_path.c_str(), false, false, pool );
+        if( error != NULL )
+            throw SvnException( error );
+
+        const svn_wc_entry_t *entry = NULL;
+        error = svn_wc_entry( &entry, norm_path.c_str(), adm_access, false, pool );
+        if( error != NULL )
+            throw SvnException( error );
+
+        if( entry == NULL )
+            return Py::Nothing();
+
+        return Py::asObject( new pysvn_entry( entry, m_context ) );
+    }
+    catch( SvnException &e )
+    {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
+        throw_client_error( e );
+        return Py::Nothing();       // needed to remove warning about return value missing
+    }
+}
+
 #ifdef PYSVN_HAS_CLIENT_INFO
 class InfoReceiveBaton
 {
@@ -1352,128 +1476,6 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
     }
 }
 #endif
-
-Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kws )
-{
-    static argument_description args_desc[] =
-    {
-    { true,  name_path },
-    { false, NULL }
-    };
-    FunctionArguments args( "info", args_desc, a_args, a_kws );
-    args.check();
-
-    std::string path( args.getUtf8String( name_path ) );
-
-    SvnPool pool( m_context );
-    try
-    {
-        std::string norm_path( svnNormalisedIfPath( path, pool ) );
-
-        checkThreadPermission();
-
-        PythonAllowThreads permission( m_context );
-
-        svn_wc_adm_access_t *adm_access = NULL;
-
-        svn_error_t *error = svn_wc_adm_probe_open( &adm_access, NULL, norm_path.c_str(), false, false, pool );
-        if( error != NULL )
-            throw SvnException( error );
-
-        const svn_wc_entry_t *entry = NULL;
-        error = svn_wc_entry( &entry, norm_path.c_str(), adm_access, false, pool );
-        if( error != NULL )
-            throw SvnException( error );
-
-        if( entry == NULL )
-            return Py::Nothing();
-
-        return Py::asObject( new pysvn_entry( entry, m_context ) );
-    }
-    catch( SvnException &e )
-    {
-        // use callback error over ClientException
-        m_context.checkForError( m_module.client_error );
-
-        throw_client_error( e );
-        return Py::Nothing();       // needed to remove warning about return value missing
-    }
-}
-
-Py::Object pysvn_client::cmd_import( const Py::Tuple &a_args, const Py::Dict &a_kws )
-{
-    static argument_description args_desc[] =
-    {
-    { true,  name_path },
-    { true,  name_url },
-    { true,  name_log_message },
-    { false, name_recurse },
-#ifdef PYSVN_HAS_CLIENT_IMPORT2
-    { false, name_ignore },
-#endif
-    { false, NULL }
-    };
-    FunctionArguments args( "import_", args_desc, a_args, a_kws );
-    args.check();
-
-    std::string path( args.getUtf8String( name_path ) );
-    std::string url( args.getUtf8String( name_url ) );
-    std::string message( args.getUtf8String( name_log_message ) );
-
-    bool recurse = args.getBoolean( name_recurse, true );
-#ifdef PYSVN_HAS_CLIENT_IMPORT2
-    bool ignore = args.getBoolean( name_ignore, false );
-#endif
-
-    SvnPool pool( m_context );
-    pysvn_commit_info_t *commit_info = NULL;
-
-    try
-    {
-        std::string norm_path( svnNormalisedIfPath( path, pool ) );
-
-        checkThreadPermission();
-
-        PythonAllowThreads permission( m_context );
-
-        m_context.setLogMessage( message.c_str() );
-
-#if defined( PYSVN_HAS_CLIENT_IMPORT2 )
-        svn_error_t *error = svn_client_import2
-            (
-            &commit_info,       // changed type
-            norm_path.c_str(),
-            url.c_str(),
-            !recurse,           // non_recursive
-            !ignore,
-            m_context,
-            pool
-            );
-#else
-        svn_error_t *error = svn_client_import
-            (
-            &commit_info,
-            norm_path.c_str(),
-            url.c_str(),
-            !recurse,           // non_recursive
-            m_context,
-            pool
-            );
-#endif
-        if( error != NULL )
-            throw SvnException( error );
-    }
-    catch( SvnException &e )
-    {
-        // use callback error over ClientException
-        m_context.checkForError( m_module.client_error );
-
-        throw_client_error( e );
-    }
-
-    return toObject( commit_info );
-}
-
 
 class LogChangePathInfo
 {
@@ -3214,7 +3216,9 @@ Py::Object pysvn_client::cmd_update( const Py::Tuple &a_args, const Py::Dict &a_
     { true,  name_path },
     { false, name_recurse },
     { false, name_revision },
+#ifdef PYSVN_HAS_CLIENT_UPDATE2
     { false, name_ignore_externals },
+#endif
     { false, NULL }
     };
     FunctionArguments args( "update", args_desc, a_args, a_kws );
@@ -3226,7 +3230,9 @@ Py::Object pysvn_client::cmd_update( const Py::Tuple &a_args, const Py::Dict &a_
 
     svn_opt_revision_t revision = args.getRevision( name_revision, svn_opt_revision_head );
     bool recurse = args.getBoolean( name_recurse, true );
+#ifdef PYSVN_HAS_CLIENT_UPDATE2
     bool ignore_externals = args.getBoolean( name_recurse, false );
+#endif
     apr_array_header_t *result_revs = NULL;
 
     try
@@ -3235,6 +3241,7 @@ Py::Object pysvn_client::cmd_update( const Py::Tuple &a_args, const Py::Dict &a_
 
         PythonAllowThreads permission( m_context );
 
+#ifdef PYSVN_HAS_CLIENT_UPDATE2
         svn_error_t *error = svn_client_update2
             (
             &result_revs,
@@ -3245,6 +3252,17 @@ Py::Object pysvn_client::cmd_update( const Py::Tuple &a_args, const Py::Dict &a_
             m_context,
             pool
             );
+#else
+        svn_error_t *error = svn_client_update
+            (
+            &result_revs,
+            targets,
+            &revision,
+            recurse,
+            m_context,
+            pool
+            );
+#endif
         if( error != NULL )
             throw SvnException( error );
     }
