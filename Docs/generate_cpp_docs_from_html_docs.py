@@ -73,6 +73,7 @@ class XhtmlParser:
     def __init__( self, definition_text ):
         self.dom = None
         self.all_docs = {}
+        self.svn_version = None
 
         try:
             self.dom = xml.dom.minidom.parseString( definition_text )
@@ -163,15 +164,22 @@ class XhtmlParser:
             elif child.nodeType == xml.dom.minidom.Node.ELEMENT_NODE:
                 debug( '__extractText ELEMENT_NODE %r' % child.nodeName )
 
+                include_children = True
                 # check for conditional span and div sections
                 if child.nodeName in ['span','div']:
-                    version_class = node.getAttribute( 'class' )
+                    version_class = child.getAttribute( 'class' )
                     if version_class.startswith( 'svn_' ):
                         encoded_version = int( version_class[len('svn_'):] )
-                        if encoded_version < self.svn_version:
-                            continue
+                        if debug.isEnabled():
+                            docs.addText( '[if %d]' % encoded_version )
+                        if encoded_version > self.svn_version:
+                            debug( 'Skipping %r > %r' % (encoded_version, self.svn_version) )
+                            include_children = False
+                        else:
+                            debug( 'Including %r <= %r' % (encoded_version, self.svn_version) )
 
-                self.__extractText( node, docs, child )
+                if include_children:
+                    self.__extractText( node, docs, child )
 
         if node.nodeName == 'p':
             docs.addText( '\n' )
@@ -197,6 +205,8 @@ class XhtmlParser:
                     patch = int(words[2])
  
         self.svn_version = ((major * 1000) + minor) * 1000 + patch
+        # force to the version to test with
+        #self.svn_version = 1001000
         print 'Info: Building against SVN %d.%d.%d code %d' % (major, minor, patch, self.svn_version)
 
 class Documentation:
