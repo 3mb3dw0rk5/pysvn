@@ -4,18 +4,29 @@ import os
 import xml.dom.minidom
 
 def main( argv ):
+    svn_include = argv[1]
+    html_doc = argv[2]
+    cpp_header_filename = argv[3]
+    cpp_module_filename = argv[4]
+
+    print 'svn_include',svn_include
+    print 'html_doc',html_doc
+    print 'cpp_header_filename',cpp_header_filename
+    print 'cpp_module_filename',cpp_module_filename
+
     debug.enable( '--debug' in argv )
     try:
-        parser = XhtmlParser( file( argv[1] ).read() )
+        parser = XhtmlParser( file( html_doc ).read() )
     except ParseException, e:
         print repr(e)
         print str(e)
         return 1
 
+    parser.setSvnVersion( svn_include )
     parser.htmlToCpp()
 
-    cpp_header = file( argv[2], 'w' )
-    cpp_module = file( argv[3], 'w' )
+    cpp_header = file( cpp_header_filename, 'w' )
+    cpp_module = file( cpp_module_filename, 'w' )
 
     cpp_header.write( '// Created by %s\n\n' % argv[0] )
     cpp_module.write( '// Created by %s\n' % argv[0] )
@@ -104,9 +115,6 @@ class XhtmlParser:
                 cpp_module.write( '   "%s\\n"\n' % line )
             cpp_module.write( ';\n'  )
 
-
-
-
     def docsFromNode( self, node, name ):
         docs = Documentation( name )
         while True:
@@ -133,11 +141,11 @@ class XhtmlParser:
 
             if child.nodeType == xml.dom.minidom.Node.TEXT_NODE:
                 debug( '__extractText TEXT_NODE: %r %r' % (node, child.data) )
-                if node.nodeName in ['p','li']:
+                if node.nodeName in ['p','li','span']:
                     docs.addText( child.data.strip() )
-                if node.nodeName in ['a']:
+                elif node.nodeName in ['a']:
                     docs.addText( '%s ' % child.data.strip() )
-                if node.nodeName in ['pre']:
+                elif node.nodeName in ['pre']:
                     docs.addText( child.data )
 
             elif child.nodeType == xml.dom.minidom.Node.DOCUMENT_TYPE_NODE:
@@ -154,6 +162,15 @@ class XhtmlParser:
 
             elif child.nodeType == xml.dom.minidom.Node.ELEMENT_NODE:
                 debug( '__extractText ELEMENT_NODE %r' % child.nodeName )
+
+                # check for conditional span and div sections
+                if child.nodeName in ['span','div']:
+                    version_class = node.getAttribute( 'class' )
+                    if version_class.startswith( 'svn_' ):
+                        encoded_version = int( version_class[len('svn_'):] )
+                        if encoded_version < self.svn_version:
+                            continue
+
                 self.__extractText( node, docs, child )
 
         if node.nodeName == 'p':
@@ -163,6 +180,24 @@ class XhtmlParser:
 
         debug('__extractText done')
         return
+
+    def setSvnVersion( self, svn_include ):
+        all_svn_version_lines = file( os.path.join( svn_include, 'svn_version.h' ) ).readlines()
+        major = None
+        minor = None
+        patch = None
+        for line in all_svn_version_lines:
+            words = line.strip().split()
+            if len(words) > 2 and words[0] == '#define':
+                if words[1] == 'SVN_VER_MAJOR':
+                    major = int(words[2])
+                elif words[1] == 'SVN_VER_MINOR':
+                    minor = int(words[2])
+                elif words[1] == 'SVN_VER_PATCH':
+                    patch = int(words[2])
+ 
+        self.svn_version = ((major * 1000) + minor) * 1000 + patch
+        print 'Info: Building against SVN %d.%d.%d code %d' % (major, minor, patch, self.svn_version)
 
 class Documentation:
     def __init__( self, name ):

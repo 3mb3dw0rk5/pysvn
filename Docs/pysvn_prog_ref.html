@@ -1,17 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
+<!--
+
+ ====================================================================
+ Copyright (c) 2004-2006 Barry A Scott.  All rights reserved.
+
+ This software is licensed as described in the file LICENSE.txt,
+ which you should have received as part of this distribution.
+
+ ====================================================================
+
+-->
 <head>
 <meta http-equiv="Content-Type" content="text/html; utf-8" />
 <title>pysvn - Programmer's reference</title>
 <link rev="made" href="mailto:barry@barrys-emacs.org" />
-<style>
+<style type="text/css">
 h1, h2, h3, h4 {color: #000099; background-color: lightskyblue}
-pre {color: #0000cc; background-color: #eeeeee; position: relative; left: 40px; margin-right: 80px;
-     border-style: solid; border-color: black; border-width: thin}
-table {position: relative; left: 40px; margin-right: 80px;
-     border-style: solid; border-color: black; border-width: thin}
+pre     {color: #0000cc; background-color: #eeeeee; position: relative; left: 40px; margin-right: 80px;
+        border-style: solid; border-color: black; border-width: thin}
+table   {position: relative; left: 40px; margin-right: 80px;
+        border-style: solid; border-color: black; border-width: thin}
+span.button {border: black 1px solid;background-color: #cccccc; cursor: default; padding: 4px;}
+
 </style>
+
+<style id="example_show_style" text="text/css">
+span.svn_example {display: inline; }
+</style>
+
+<style id="show_style" type="text/css">
+span.svn_1003000 {display: inline; }
+span.svn_1002000 {display: inline; }
+span.svn_1001000 {display: inline; }
+div.svn_1003000 {display: block; }
+div.svn_1002000 {display: block; }
+div.svn_1001000 {display: block; }
+</style>
+
+<script type="text/javascript" src="pysvn_prog_ref.js">
+</script>
 </head>
 <body>
 <h1>pysvn - Programmer's reference </h1>
@@ -25,9 +54,19 @@ gives an tutorial introduction to the pysvn module.
 
 <h2>pysvn features and feature testing</h2>
 
-<p>This document covers pysvn version 1.3.0. Features offered by pysvn
+<p>This document covers pysvn version 1.4.0. Features offered by pysvn
 depend on the version of SVN that is being used. Full functionality is
 only available with SVN 1.3.0 or later.
+</p>
+<p>Click one of the buttons below to show the pysvn API as supported
+by a particular version of the SVN.</p>
+<p>
+<span class="button" onclick='changeDisplay( 1003000 )'>Show SVN 1.3.0 API</span>
+<span class="button" onclick='changeDisplay( 1002000 )'>Show SVN 1.2.0 API</span>
+<span class="button" onclick='changeDisplay( 1001000 )'>Show SVN 1.1.0 API</span>
+</p>
+<p>
+Showing the PySVN API supported by SVN <span id="version_shown">1.3.0</span>
 </p>
 
 <p>The recommended way to test for a feature is to use the python 
@@ -376,47 +415,47 @@ a tuple of three values (retcode, accepted_failures, save).
 </tr>
 <tr bgcolor="#e0e0e0">
 <td><a href="#pysvn_client_diff">diff</a></td>
+<td><span class="svn_1001000"><a href="#pysvn_client_diff_peg">diff_peg</a></span></td>
 <td><a href="#pysvn_client_export">export</a></td>
 <td><a href="#pysvn_client_get_auth_cache">get_auth_cache</a></td>
 <td><a href="#pysvn_client_get_auto_props">get_auto_props</a></td>
 <td><a href="#pysvn_client_import_">import_</a></td>
 <td><a href="#pysvn_client_info">info</a></td>
-<td><a href="#pysvn_client_info">info2</a></td>
 </tr>
 <tr>
+<td><span class="svn_1003000"><a href="#pysvn_client_info2">info2</a></span></td>
 <td><a href="#pysvn_client_is_url">is_url</a></td>
 <td><a href="#pysvn_client_log">log</a></td>
-<td><a href="#pysvn_client_lock">lock</a></td>
+<td><span class="svn_1002000"><a href="#pysvn_client_lock">lock</a></span></td>
 <td><a href="#pysvn_client_ls">ls</a></td>
 <td><a href="#pysvn_client_merge">merge</a></td>
+<td><span class="svn_1001000"><a href="#pysvn_client_merge_peg">merge_peg</a></span></td>
+</tr>
+<tr bgcolor="#e0e0e0">
 <td><a href="#pysvn_client_mkdir">mkdir</a></td>
 <td><a href="#pysvn_client_move">move</a></td>
-</tr>
-<tr bgcolor="#e0e0e0">
-<td><a href="#pysvn_client_proplist">proplist</a></td>
-<td><a href="#pysvn_client_propget">propget</a></td>
-<td><a href="#pysvn_client_propset">propset</a></td>
 <td><a href="#pysvn_client_propdel">propdel</a></td>
+<td><a href="#pysvn_client_propget">propget</a></td>
+<td><a href="#pysvn_client_proplist">proplist</a></td>
+<td><a href="#pysvn_client_propset">propset</a></td>
 <td><a href="#pysvn_client_relocate">relocate</a></td>
-<td><a href="#pysvn_client_remove">remove</a></td>
-<td><a href="#pysvn_client_resolved">resolved</a></td>
 </tr>
 <tr>
+<td><a href="#pysvn_client_remove">remove</a></td>
+<td><a href="#pysvn_client_resolved">resolved</a></td>
 <td><a href="#pysvn_client_revert">revert</a></td>
-<td><a href="#pysvn_client_revproplist">revproplist</a></td>
-<td><a href="#pysvn_client_revpropget">revpropget</a></td>
-<td><a href="#pysvn_client_revpropset">revpropset</a></td>
 <td><a href="#pysvn_client_revpropdel">revpropdel</a></td>
-<td><a href="#pysvn_client_set_auth_cache">set_auth_cache</a></td>
-<td><a href="#pysvn_client_set_auto_props">set_auto_props</a></td>
+<td><a href="#pysvn_client_revpropget">revpropget</a></td>
+<td><a href="#pysvn_client_revproplist">revproplist</a></td>
+<td><a href="#pysvn_client_revpropset">revpropset</a></td>
 </tr>
 <tr bgcolor="#e0e0e0">
+<td><a href="#pysvn_client_set_auth_cache">set_auth_cache</a></td>
+<td><a href="#pysvn_client_set_auto_props">set_auto_props</a></td>
 <td><a href="#pysvn_client_status">status</a></td>
 <td><a href="#pysvn_client_switch">switch</a></td>
-<td><a href="#pysvn_client_unlock">unlock</a></td>
+<td><span class="svn_1002000"><a href="#pysvn_client_unlock">unlock</a></span></td>
 <td><a href="#pysvn_client_update">update</a></td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
 </table>
@@ -424,18 +463,21 @@ a tuple of three values (retcode, accepted_failures, save).
 <h4><a name="pysvn_client_add"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.add</a></h4>
 <pre>
 add( path,
-     recurse=True,
-     force=False )
+     recurse=True<span class="svn_1001000">,
+     force=False</span><span class="svn_1003000">,
+     ignore=False</span> )
 add( [path,path],
-     recurse=True,
-     force=False )
+     recurse=True<span class="svn_1001000">,
+     force=False</span><span class="svn_1003000">,
+     ignore=True</span> )
 </pre>
 <p>
 Schedules all the files or directories specfied in the paths
 for addition to the repository. Set recurse to True to recursively
-add a directory's children. Files are added at the next checkin.
-</p>
-<p>Note: The force parameter is only available for svn 1.1.0 or later
+add a directory's children. <span class="svn_1001000">Set force to True to force
+operation to run.</span> <span class="svn_1003000">Set ignore to False to
+disregard default and svn:ignore property ignores.</span>
+Files are added at the next checkin.
 </p>
 
 <h4><a name="pysvn_client_annotate"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.annotate</a></h4>
@@ -443,11 +485,21 @@ add a directory's children. Files are added at the next checkin.
 file_annotation = \
 annotate( url_or_path,
           revision_start=pysvn.Revision( opt_revision_kind.number, 0 ),
-          revision_end=pysvn.Revision( opt_revision_kind.head ) )
+          revision_end=pysvn.Revision( opt_revision_kind.head )<span class="svn_1002000">,
+          peg_revision=pysvn.Revision( opt_revision_kind.unspecified )</span> )
+ )
 </pre>
 <p>Return the annotation for each line in the url_or_path from
-revision_start to revision_end. The file_annotation is a list of
-dictionaries, one per line. The dictionaries contains:
+revision_start to revision_end.
+</p>
+<p><span class="svn_1002000">peg_revision indicates in
+which revision url_or_path is valid.  If peg_revision.kind
+is opt_revision_kind.unspecified, then it defaults to
+opt_revision_kind.head for URLs or opt_revision_kind.working for
+WC targets.
+</span></p>
+<p>The file_annotation is a list of dictionaries. Each dictionary
+contains:
 </p>
 <ul>
 <li>author - string - the name of the author who last wrote the line</li>
@@ -461,28 +513,39 @@ dictionaries, one per line. The dictionaries contains:
 <pre>
 file_text = \
 cat( url_or_path,
-     revision=pysvn.Revision( opt_revision_kind.head ) )
+     revision=pysvn.Revision( opt_revision_kind.head )<span class="svn_1002000">,
+     peg_revision=pysvn.Revision( opt_revision_kind.unspecified )</span> )
 </pre>
 <p>
 Return the contents of url_or_path for the specified revision as
 a string, file_text.
 </p>
+<p><span class="svn_1002000">peg_revision indicates in
+which revision url_or_path is valid.  If peg_revision.kind
+is opt_revision_kind.unspecified, then it defaults to
+opt_revision_kind.head for URLs or opt_revision_kind.working for
+WC targets.
+</span></p>
+
 
 <h4><a name="pysvn_client_checkin"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.checkin</a></h4>
 <pre>
 revision = \
 checkin( path,
         log_message,
-        recurse=True )
+        recurse=True<span class="svn_1002000">,
+        keep_locks=False</span> )
 revision = \
 checkin( [path,path],
         log_message,
-        recurse=True )
+        recurse=True<span class="svn_1002000">,
+        keep_locks=False</span> )
 </pre>
 <p>
 checkin the files in the path_list to the repository with the
 specifed log_message. Set recurse to True to recursively checkin
-a directory's children with the same log message.
+a directory's children with the same log message. <span class="svn_1002000"> Set
+keep_locks to True to prevent locks in the path being unlocked.</span>
 </p>
 <p>checkin returns a pysvn.Revision containing the number of the
 checked in revision.
@@ -494,14 +557,22 @@ revision = \
 checkout( url,
           path,
           recurse=True,
-          revision=pysvn.Revision( opt_revision_kind.head ) )
+          revision=pysvn.Revision( opt_revision_kind.head )<span class="svn_1002000">,
+          peg_revision=pysvn.Revision( opt_revision_kind.unspecified )</span><span class="svn_1002000">,
+          ignore_externals=False</span> )
 </pre>
 <p>
 checkout the repository at url into the location specified by path.
 Set recurse to True to recursively check out a directory's children.
 Specify a revision to check out a particular version of the source
-tree.
+tree. <span class="svn_1002000">Set ignore_externals to True to ignore externals definitions.</span>
 </p>
+<p><span class="svn_1002000">peg_revision indicates in
+which revision url is valid.  If peg_revision.kind
+is opt_revision_kind.unspecified, then it defaults to
+opt_revision_kind.head for URLs or opt_revision_kind.working for
+WC targets.
+</span></p>
 <p>checkout returns a pysvn.Revision containing the number of the
 checked out revision.
 </p>
@@ -509,6 +580,15 @@ checked out revision.
 Use a notify callback and record the revision reported for the 
 <a href="#pysvn_module">pysvn</a>.wc_notify_action.update_completed event.
 This is what the svn command does.
+</p>
+
+<h4><a name="pysvn_client_cleanup"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.cleanup</a></h4>
+<pre>
+cleanup( path )
+</pre>
+<p>
+Clean up any locks in the working copy at path. Usually such
+locks are the result of a failed or interrupted operation.
 </p>
 
 <h4><a name="pysvn_client_copy"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.copy</a></h4>
@@ -536,15 +616,6 @@ working copy (WC) path or URL:
 callback must be implemented to return a log message.
 </p>
 
-<h4><a name="pysvn_client_cleanup"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.cleanup</a></h4>
-<pre>
-cleanup( path )
-</pre>
-<p>
-Clean up any locks in the working copy at path. Usually such
-locks are the result of a failed or interrupted operation.
-</p>
-
 <h4><a name="pysvn_client_diff"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.diff</a></h4>
 <pre>
 
@@ -555,14 +626,59 @@ diff( tmp_path,
       revision2=pysvn.Revision( opt_revision_kind.working ),
       recurse=True,
       ignore_ancestry=False,
-      diff_deleted=True )
+      diff_deleted=True<span class="svn_1002000">,
+      ignore_content_type=False</span><span class="svn_1003000">,
+      header_encoding=""</span> )
 </pre>
 <p>
-return the differences between two revisions of the path. diff
-uses tmp_path to create any temporary files needed.
+return the differences between two revisions of the url_or_path.
+diff uses tmp_path to create any temporary files needed.
 Set recurse to True to recursively diff a directory's children.
 diff_text is a string containing the diff.
 </p>
+<p><span class="svn_1002000">Diff output will not be generated for binary files, unless
+ignore_content_type is true, in which case diffs will be shown
+regardless of the content types.
+</span>
+</p>
+<p><span class="svn_1003000">Generated headers are encoded using header_encoding.</span>
+</p>
+
+<div class="svn_1001000">
+<h4><a name="pysvn_client_diff_peg"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.diff_peg</a></h4>
+<pre>
+
+diff_text = \
+diff_peg( tmp_path,
+          url_or_path,
+          peg_revision=pysvn.Revision( opt_revision_kind.unspecified ),
+          revision_start=pysvn.Revision( opt_revision_kind.base ),
+          revision_end=pysvn.Revision( opt_revision_kind.working ),
+          recurse=True,
+          ignore_ancestry=False,
+          diff_deleted=True<span class="svn_1002000">,
+          ignore_content_type=False</span><span class="svn_1003000">,
+          header_encoding=""</span> )
+</pre>
+<p>
+return the differences between two revisions of the url_or_path.
+diff uses tmp_path to create any temporary files needed.
+Set recurse to True to recursively diff a directory's children.
+diff_text is a string containing the diff.
+</p>
+<p>peg_revision indicates in which revision url_or_path is valid.
+If peg_revision.kind is opt_revision_kind.unspecified, then it
+defaults to opt_revision_kind.head for URLs or
+opt_revision_kind.working for WC targets.
+</p>
+<p><span class="svn_1002000">Diff output will not be generated for binary files, unless
+ignore_content_type is true, in which case diffs will be shown
+regardless of the content types.
+</span>
+</p>
+<p><span class="svn_1003000">Generated headers are encoded using header_encoding.</span>
+</p>
+</div>
 
 <h4><a name="pysvn_client_export"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.export</a></h4>
 <pre>
@@ -570,11 +686,22 @@ revision = \
 export( src_url_or_path,
         dest_path,
         force=False,
-        revision=pysvn.Revision(),
-        native_eol=None )
+        revision=pysvn.Revision()<span class="svn_1001000">,
+        native_eol=None</span><span class="svn_1003000">,
+        ignore_externals=False,
+        recurse=True,
+        peg_revision=pysvn.Revision( opt_revision_kind.unspecified )</span> )
 </pre>
 <p>Create an unversioned copy of the src_path at revision in dest_path.
+<span class="svn_1003000">Set recurse to False to export a single file. Set ignore_externals to
+True to ignore externals definitions.</span>
 </p>
+<p><span class="svn_1002000">peg_revision indicates in
+which revision src_url_or_path is valid.  If peg_revision.kind
+is opt_revision_kind.unspecified, then it defaults to
+opt_revision_kind.head for URLs or opt_revision_kind.working for
+WC targets.
+</span></p>
 <ol>
 <li>Exports a clean directory tree from the repository specified by
   URL src_url_or_path, at revision if it is given, otherwise at
@@ -585,10 +712,10 @@ export( src_url_or_path,
   but files not under revision control will not be copied.</li>
 </ol>
 
-<p>native_eol parameter allows the line ending of files with
+<p><span class="svn_1001000">native_eol parameter allows the line ending of files with
 svn:eol-style propery set to native to be overriden.
 Use None to use the eol-style of the Operating System,
-use "LF" to use "\n", "CR" to use "\r" and "CRLF" to use "\r\n".
+use "LF" to use "\n", "CR" to use "\r" and "CRLF" to use "\r\n".</span>
 </p>
 <p>export returns a pysvn.Revision containing the number of the
 checked in revision.
@@ -620,13 +747,16 @@ revision = \
 import_( path,
          url,
          log_message,
-         recurse=True )
+         recurse=True<span class="svn_1003000">,
+         ignore=False</span> )
 </pre>
 <p>
 Commit an unversioned file or tree into the repository.
 </p>
 <p>Recursively commit a copy of PATH to URL.
 Parent directories are created as necessary in the repository.
+<span class="svn_1003000">Set ignore to False to
+disregard default and svn:ignore property ignores.</span>
 </p>
 <p>import_ returns a pysvn.Revision containing the number of the
 checked in revision.
@@ -639,6 +769,7 @@ entry = info( path )
 <p>return information on path as a <a href="#entry">Entry</a> object.
 </p>
 
+<div class="svn_1003000">
 <h4><a name="pysvn_client_info2"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.info2</a></h4>
 <pre>
 entry_list = \
@@ -652,6 +783,12 @@ info2( url_or_path,
 tuples. To return information about a URL revision must be
 opt_revision_kind.head or opt_revision_kind.number.
 </p>
+<p><span class="svn_1002000">peg_revision indicates in
+which revision url_or_path is valid.  If peg_revision.kind
+is opt_revision_kind.unspecified, then it defaults to
+opt_revision_kind.head for URLs or opt_revision_kind.working for
+WC targets.
+</span></p>
 
 <p>The info_dict contains:
 <ul>
@@ -690,6 +827,7 @@ opt_revision_kind.head or opt_revision_kind.number.
 
 <p>Note: The info2 command is only available with svn 1.2.0 or later.
 </p>
+</div>
 
 <h4><a name="pysvn_client_is_url"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.is_url</a></h4>
 <pre>
@@ -699,16 +837,18 @@ is_url( url )
 <p>return True if the url is a known subversion url.
 </p>
 
+<div class="svn_1002000">
 <h4><a name="pysvn_client_lock"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.lock</a></h4>
 <pre>
-lock( url_or_path, lock_comment, force=False )
+lock( url_or_path,
+      lock_comment, 
+      force=False )
 </pre>
 <p>
 lock the url_or_path with lock_comment. Set force to True to
 override any lock held by another user.
 </p>
-<p>Note: The lock command is only available with svn 1.2.0 or later.
-</p>
+</div>
 
 <h4><a name="pysvn_client_log"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.log</a></h4>
 <pre>
@@ -717,11 +857,13 @@ log( url_or_path,
      revision_start=pysvn.Revision( opt_revision_kind.head ),
      revision_end=pysvn.Revision( opt_revision_kind.number, 0 ),
      discover_changed_paths=False,
-     strict_node_history=True )
+     strict_node_history=True<span class="svn_1002000">,
+     limit=0</span> )
 </pre>
 <p>
 return the log messages for the specifed url_or_path between
-revisions start and end.
+revisions start and end. <span class="svn_1002000">Set limit to the maximum number
+of log messages to be returned, 0 means return all messages.</span>
 </p>
 <p>log returns a list of log messges each log messages is a
 dictionary. The dictionary contains:
@@ -744,11 +886,20 @@ dictionary. The dictionary contains:
 entries_list = \
 ls( url_or_path,
     revision=pysvn.Revision( opt_revision_kind.head ),
-    recurse=True )
+    recurse=True<span class="svn_1002000">,
+    peg_revision=pysvn.Revision( opt_revision_kind.unspecified )</span> )
 </pre>
 <p>
 Returns a list of dictionaries for each file the given path at
-the provided revision. The dictionary contains:
+the provided revision.
+</p>
+<p><span class="svn_1002000">peg_revision indicates in
+which revision url_or_path is valid.  If peg_revision.kind
+is opt_revision_kind.unspecified, then it defaults to
+opt_revision_kind.head for URLs or opt_revision_kind.working for
+WC targets.
+</span></p>
+<p>The dictionary contains:
 </p>
 <ul>
 <li>name - string - name of the file</li>
@@ -758,6 +909,7 @@ the provided revision. The dictionary contains:
 <li>time - float - the time of the last change</li>
 <li>last_author - the author of the last change</li>
 </ul>
+
 <h4><a name="pysvn_client_merge"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.merge</a></h4>
 <pre>
 merge( url_or_path1,
@@ -770,6 +922,30 @@ merge( url_or_path1,
 </pre>
 <p>Apply the differences between two sources to a working copy path.
 </p>
+
+<div class="svn_1001000">
+<h4><a name="pysvn_client_merge_peg"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.merge_peg</a></h4>
+<pre>
+merge_peg( url_or_path,
+       revision1,
+       revision2,
+       peg_revision,
+       local_path,
+       recurse=True,
+       notice_ancestry,
+       force=False,
+       dry_run=False )
+</pre>
+<p>Apply the differences between two sources to a working copy path.
+</p>
+<p><span class="svn_1002000">peg_revision indicates in
+which revision url_or_path is valid.  If peg_revision.kind
+is opt_revision_kind.unspecified, then it defaults to
+opt_revision_kind.head for URLs or opt_revision_kind.working for
+WC targets.
+</span></p>
+</div>
+
 <h4><a name="pysvn_client_mkdir"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.mkdir</a></h4>
 <pre>
 mkdir( url_or_path,
@@ -804,10 +980,10 @@ move( src_url_or_path,
       dest_url_or_path,
       force=False )
 </pre>
-<p>Move/rename something in working copy or repository.
+<p>Move (rename) something in working copy or HEAD revision of repository.
 </p>
 
-<p>NOTE:  this command is equivalent to a 'copy' and 'delete'.
+<p>NOTE: this command is equivalent to a 'copy' and 'delete'.
 </p>
 
 <p>src_path and dest_path can both be working copy (WC) paths
@@ -836,9 +1012,17 @@ rev = \
 propdel( prop_name,
          url_or_path,
          revision=pysvn.Revision(),
-         recurse=False )
+         recurse=False<span class="svn_1002000">,
+         skip_checks=False</span> )
 </pre>
-<p>delete the property prop_name from url_or_path
+<p>Delete the property prop_name from url_or_path.
+</p>
+<p><span class="svn_1002000">If  skip_checks is true, do no validity checking.  But if 
+skip_checks is false, and  propname is not a valid property for 
+target, return an error, either  SVN_ERR_ILLEGAL_TARGET (if the
+property is not appropriate for  target), or 
+SVN_ERR_BAD_MIME_TYPE (if  propname is "svn:mime-type", but 
+propval is not a valid mime-type).</span>
 </p>
 <p>The src_revision defaults to
 pysvn.Revision( opt_revision_kind.head ) if the src_path is a
@@ -851,30 +1035,44 @@ prop_list = \
 propget( prop_name,
          url_or_path,
          revision=pysvn.Revision(),
-         recurse=False )
+         recurse=False<span class="svn_1002000">,
+         peg_revision=pysvn.Revision( opt_revision_kind.unspecified )</span> )
 </pre>
 <p>Returns a dictionary with keys of url_or_path and values of
 the prop_name.
 </p>
-<p>The src_revision defaults to
-pysvn.Revision( opt_revision_kind.head ) if the url_or_path is a
-URL otherwise to pysvn.Revision( opt_revision_kind.working ).
+<p>The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
+if the url_or_path is a URL otherwise to
+pysvn.Revision( opt_revision_kind.working ).
 </p>
+<p><span class="svn_1002000">peg_revision indicates in
+which revision url_or_path is valid.  If peg_revision.kind
+is opt_revision_kind.unspecified, then it defaults to
+opt_revision_kind.head for URLs or opt_revision_kind.working for
+WC targets.
+</span></p>
 
 <h4><a name="pysvn_client_proplist"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.proplist</a></h4>
 <pre>
 prop_list = \
 proplist( url_or_path,
           revision=pysvn.Revision(),
-          recurse=False )
+          recurse=False<span class="svn_1002000">,
+          peg_revision=pysvn.Revision( opt_revision_kind.unspecified )</span> )
 </pre>
 <p>Returns a list of tuples (path, prop_dict). The prop_dict
 contains the prop_names and their values if set on the path.
 </p>
-<p>The src_revision defaults to
-pysvn.Revision( opt_revision_kind.head ) if the url_or_path is a
-URL otherwise to pysvn.Revision( opt_revision_kind.working ).
+<p>The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
+if the url_or_path is a URL otherwise to
+pysvn.Revision( opt_revision_kind.working ).
 </p>
+<p><span class="svn_1002000">peg_revision indicates in
+which revision url_or_path is valid.  If peg_revision.kind
+is opt_revision_kind.unspecified, then it defaults to
+opt_revision_kind.head for URLs or opt_revision_kind.working for
+WC targets.
+</span></p>
 
 <h4><a name="pysvn_client_propset"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.propset</a></h4>
 <pre>
@@ -883,14 +1081,28 @@ propset( prop_name,
          prop_value,
          url_or_path,
          revision=pysvn.Revision(),
-         recurse=False )
+         recurse=False<span class="svn_1002000">,
+         skip_checks=False</span> )
 </pre>
-<p>set the property prop_name to prop_value in path
+<p>Set the property prop_name to prop_value in path.
 </p>
-<p>The src_revision defaults to
-pysvn.Revision( opt_revision_kind.head ) if the url_or_path is a
-URL otherwise to pysvn.Revision( opt_revision_kind.working ).
+<p><span class="svn_1002000">If  skip_checks is true, do no validity checking.  But if 
+skip_checks is false, and  propname is not a valid property for 
+target, return an error, either  SVN_ERR_ILLEGAL_TARGET (if the
+property is not appropriate for  target), or 
+SVN_ERR_BAD_MIME_TYPE (if  propname is "svn:mime-type", but 
+propval is not a valid mime-type).</span>
 </p>
+<p>The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
+if the url_or_path is a URL otherwise to
+pysvn.Revision( opt_revision_kind.working ).
+</p>
+<p><span class="svn_1002000">peg_revision indicates in
+which revision url_or_path is valid.  If peg_revision.kind
+is opt_revision_kind.unspecified, then it defaults to
+opt_revision_kind.head for URLs or opt_revision_kind.working for
+WC targets.
+</span></p>
 
 <h4><a name="pysvn_client_relocate"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.relocate</a></h4>
 <pre>
@@ -899,7 +1111,7 @@ relocate( from_url,
           path,
           recurse=True)
 </pre>
-<p>relocate the working copy from from_url to to_url of path
+<p>Relocate the working copy from from_url to to_url of path.
 </p>
 
 <h4><a name="pysvn_client_remove"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.remove</a></h4>
@@ -946,7 +1158,7 @@ revpropdel( prop_name,
             revision=pysvn.Revision( opt_revision_kind.head ),
             force=False )
 </pre>
-<p>Delete the revision property prop_name from url
+<p>Delete the revision property prop_name from url.
 </p>
 
 <h4><a name="pysvn_client_revpropget"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.revpropget</a></h4>
@@ -1007,12 +1219,13 @@ status( path,
         recurse=True,
         get_all=True,
         update=False,
-        ignore=False,
-        ignore_externals=False )
+        ignore=False<span class="svn_1002000">,
+        ignore_externals=False</span> )
 </pre>
 <p>If path is a directory status is returned for all files in the
 directory in status_list. If path is a single file status is
 returned for that single file in status_list.
+<span class="svn_1002000">Set ignore_externals to True to ignore externals definitions.</span>
 </p>
 <p>The status_list is a list of <a href="#pysvn_status">status</a> objects. 
 </p>
@@ -1058,26 +1271,28 @@ switch( path,
 <li>Reconnect the working copy when the repository URL has changed.</li>
 </ol>
 
+<div class="svn_1002000">
 <h4><a name="pysvn_client_unlock"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.unlock</a></h4>
 <pre>
-unlock( url_or_path, force=False )
+unlock( url_or_path,
+        force=False )
 </pre>
-<p>unlock the url_or_path. Set force to True to unlock any lock
+<p>Unlock the url_or_path. Set force to True to unlock any lock
 held by another user.
 </p>
-<p>Note: The unlock command is only available with svn 1.2.0 or later.
-</p>
+</div>
 
 <h4><a name="pysvn_client_update"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.update</a></h4>
 <pre>
 revision = \
 update( path,
         recurse=True,
-        revision=pysvn.Revision( opt_revision_kind.head ) )
+        revision=pysvn.Revision( opt_revision_kind.head )<span class="svn_1002000">,
+        ignore_externals=False</span> )
 </pre>
 <p>Update the file in the working copy at path to the specified
 revision. Set recurse to True to recursively update a directory's
-children.
+children. <span class="svn_1002000">Set ignore_externals to True to ignore externals definitions.</span>
 </p>
 <p>update returns a pysvn.Revision containing the number of the
 revision the working copy was updated to.

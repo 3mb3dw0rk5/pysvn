@@ -115,7 +115,8 @@ class MakeFileCreater:
         pycxx_dir = self.find_pycxx( argv )
         include_dir_list.append( pycxx_dir )
         # add SVN include
-        include_dir_list.append( self.find_svn_inc( argv ) )
+        svn_include = self.find_svn_inc( argv )
+        include_dir_list.append( svn_include )
         # add APR include
         include_dir_list.append( self.find_apr_inc( argv ) )
 
@@ -127,6 +128,7 @@ class MakeFileCreater:
             'python_exe':       sys.executable,
 
             # includes
+            'svn_include':      svn_include,
             'includes':         ' '.join( ['-I%s' % include_dir for include_dir in include_dir_list] ),
 
             # add svn lib dir
@@ -165,6 +167,7 @@ class MakeFileCreater:
 #	Created by pysvn Extension/Source/setup.py
 #
 PYTHON=%(python_exe)s
+SVN_INCLUDE=%(svn_include)s
 CCC=g++ -c
 CCCFLAGS=-Wall -fPIC -fexceptions -frtti %(includes)s
 CC=gcc -c
@@ -182,6 +185,7 @@ include pysvn_common.mak
 #	Created by pysvn Extension/Source/setup.py
 #
 PYTHON=%(python_exe)s
+SVN_INCLUDE=%(svn_include)s
 CCC=g++ -c
 CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s
 CC=gcc -c
@@ -203,6 +207,7 @@ include pysvn_common.mak
 #	Created by pysvn Extension/Source/setup.py
 #
 PYTHON=%(python_exe)s
+SVN_INCLUDE=%(svn_include)s
 CCC=g++ -c
 CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s
 CC=gcc -c

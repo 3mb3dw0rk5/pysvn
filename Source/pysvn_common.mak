@@ -25,7 +25,7 @@ pysvn_docs.hpp: pysvn_docs.cpp
 	touch pysvn_docs.hpp
 
 pysvn_docs.cpp: ../Docs/pysvn_prog_ref.html ../Docs/generate_cpp_docs_from_html_docs.py
-	$(PYTHON) ../Docs/generate_cpp_docs_from_html_docs.py ../Docs/pysvn_prog_ref.html pysvn_docs.hpp pysvn_docs.cpp
+	$(PYTHON) ../Docs/generate_cpp_docs_from_html_docs.py $(SVN_INCLUDE) ../Docs/pysvn_prog_ref.html pysvn_docs.hpp pysvn_docs.cpp
 
 pysvn_callbacks.o: pysvn_callbacks.cpp $(PYSVN_INCLUDES)
 	$(CCC) $(CCCFLAGS) -o $@ $<
