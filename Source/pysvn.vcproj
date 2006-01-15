@@ -688,7 +688,7 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Generate pysvn_docs.cpp/.hpp"
-					CommandLine="c:\python24\python $(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py $(InputPath) $(SolutionDir)\pysvn_docs.hpp $(SolutionDir)\pysvn_docs.cpp
+					CommandLine="c:\python24\python $(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py $(SUBVERSION)/subversion/include $(InputPath) $(SolutionDir)\pysvn_docs.hpp $(SolutionDir)\pysvn_docs.cpp
 "
 					AdditionalDependencies="$(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py"
 					Outputs="$(SolutionDir)\pysvn_docs.cpp;$(SolutionDir)\pysvn_docs.hpp"/>
@@ -698,7 +698,7 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Generate pysvn_docs.cpp/.hpp"
-					CommandLine="c:\python24\python $(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py $(InputPath) $(SolutionDir)\pysvn_docs.hpp $(SolutionDir)\pysvn_docs.cpp
+					CommandLine="c:\python24\python $(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py $(SUBVERSION)/subversion/include $(InputPath) $(SolutionDir)\pysvn_docs.hpp $(SolutionDir)\pysvn_docs.cpp
 "
 					AdditionalDependencies="$(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py"
 					Outputs="$(SolutionDir)\pysvn_docs.cpp;$(SolutionDir)\pysvn_docs.hpp"/>
@@ -708,7 +708,7 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Generate pysvn_docs.cpp/.hpp"
-					CommandLine="c:\python24\python $(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py $(InputPath) $(SolutionDir)\pysvn_docs.hpp $(SolutionDir)\pysvn_docs.cpp
+					CommandLine="c:\python24\python $(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py $(SUBVERSION)/subversion/include $(InputPath) $(SolutionDir)\pysvn_docs.hpp $(SolutionDir)\pysvn_docs.cpp
 "
 					AdditionalDependencies="$(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py"
 					Outputs="$(SolutionDir)\pysvn_docs.cpp;$(SolutionDir)\pysvn_docs.hpp"/>

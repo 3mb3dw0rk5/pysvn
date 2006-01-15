@@ -228,7 +228,7 @@ ProjDir=.
 InputPath=..\Docs\pysvn_prog_ref.html
 
 BuildCmds= \
-	$(PYTHON) ../Docs/generate_cpp_docs_from_html_docs.py $(InputPath) $(ProjDir)\pysvn_docs.hpp $(ProjDir)\pysvn_docs.cpp
+	$(PYTHON) ../Docs/generate_cpp_docs_from_html_docs.py $(SUBVERSION)/subversion/include $(InputPath) $(ProjDir)\pysvn_docs.hpp $(ProjDir)\pysvn_docs.cpp
 
 "$(ProjDir)\pysvn_docs.hpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
    $(BuildCmds)
@@ -245,7 +245,7 @@ ProjDir=.
 InputPath=..\Docs\pysvn_prog_ref.html
 
 BuildCmds= \
-	$(PYTHON) ../Docs/generate_cpp_docs_from_html_docs.py $(InputPath) $(ProjDir)\pysvn_docs.hpp $(ProjDir)\pysvn_docs.cpp
+	$(PYTHON) ../Docs/generate_cpp_docs_from_html_docs.py $(SUBVERSION)/subversion/include $(InputPath) $(ProjDir)\pysvn_docs.hpp $(ProjDir)\pysvn_docs.cpp
 
 "$(ProjDir)\pysvn_docs.hpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
    $(BuildCmds)
@@ -262,7 +262,7 @@ ProjDir=.
 InputPath=..\Docs\pysvn_prog_ref.html
 
 BuildCmds= \
-	$(PYTHON) ../Docs/generate_cpp_docs_from_html_docs.py $(InputPath) $(ProjDir)\pysvn_docs.hpp $(ProjDir)\pysvn_docs.cpp
+	$(PYTHON) ../Docs/generate_cpp_docs_from_html_docs.py $(SUBVERSION)/subversion/include $(InputPath) $(ProjDir)\pysvn_docs.hpp $(ProjDir)\pysvn_docs.cpp
 
 "$(ProjDir)\pysvn_docs.hpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
    $(BuildCmds)
