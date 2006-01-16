@@ -65,6 +65,7 @@ class MakeFileCreater:
         self.verbose = False
         self.is_mac_os_x = False
         self.is_mac_os_x_fink = False
+        self.is_mac_os_x_darwin_ports = False
         self.mac_os_x_version = None
 
     def node_text( self, all_nodes ):
@@ -155,6 +156,8 @@ class MakeFileCreater:
                 template_values['frameworks'] = '-framework System -framework Python -framework CoreFoundation'
             if self.is_mac_os_x_fink:
                 makefile.write( self.makefile_template_macosx_fink % template_values )
+            elif self.is_mac_os_x_darwin_ports:
+                makefile.write( self.makefile_template_macosx_darwin_ports % template_values )
             else:
                 makefile.write( self.makefile_template_macosx % template_values )
         else:
@@ -240,6 +243,43 @@ LDLIBS= \
 include pysvn_common.mak
 '''
 
+    makefile_template_macosx_darwin_ports = '''#
+#	Created by pysvn Extension/Source/setup.py
+#
+PYTHON=%(python_exe)s
+SVN_INCLUDE=%(svn_include)s
+CCC=g++ -c
+CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s
+CC=gcc -c
+CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s
+PYCXX=%(pycxx_dir)s
+LDSHARED=g++ -bundle -g -u _PyMac_Error %(frameworks)s
+LDLIBS= \
+%(svn_lib_dir)s/libsvn_client-1.a \
+%(svn_lib_dir)s/libsvn_subr-1.a \
+%(svn_lib_dir)s/libsvn_wc-1.a \
+%(svn_lib_dir)s/libsvn_ra-1.a \
+%(svn_lib_dir)s/libsvn_ra_dav-1.a \
+%(svn_lib_dir)s/libsvn_ra_local-1.a \
+%(svn_lib_dir)s/libsvn_ra_svn-1.a \
+%(svn_lib_dir)s/libsvn_delta-1.a \
+%(svn_lib_dir)s/libsvn_fs-1.a \
+%(svn_lib_dir)s/libsvn_fs_fs-1.a \
+%(svn_lib_dir)s/libsvn_fs_base-1.a \
+%(svn_lib_dir)s/libsvn_repos-1.a \
+%(svn_lib_dir)s/libsvn_diff-1.a \
+%(apr_lib_dir)s/libaprutil-1.a \
+%(svn_lib_dir)s/libneon.a \
+%(svn_lib_dir)s/libssl.a \
+%(svn_lib_dir)s/libcrypto.a \
+%(svn_lib_dir)s/libexpat.a \
+%(svn_lib_dir)s/libiconv.a \
+%(svn_lib_dir)s/libdb-4.3.a \
+-L%(apr_lib_dir)s \
+-lapr-1 -lz
+include pysvn_common.mak
+'''
+
     def find_pycxx( self, argv ):
         return self.find_dir( argv,
                     'PyCXX include',
@@ -252,7 +292,8 @@ include pysvn_common.mak
                     'SVN include',
                     '--svn-inc-dir=',
                     [
-                        '/sw/include/subversion-1',             # Darwin
+                        '/opt/local/include/subversion-1',      # Darwin - darwin ports
+                        '/sw/include/subversion-1',             # Darwin - Fink
                         '/usr/include/subversion-1',            # typical Linux
                         '/usr/local/include/subversion-1',      # typical *BSD
                     ],
@@ -263,7 +304,8 @@ include pysvn_common.mak
                     'SVN library',
                     '--svn-lib-dir=',
                     [
-                        '/sw/lib',                              # Darwin
+                        '/opt/local/lib',                       # Darwin - darwin ports
+                        '/sw/lib',                              # Darwin - Fink
                         '/usr/lib',                             # typical Linux
                         '/usr/lib64',                           # typical 64bit Linux
                         '/usr/local/lib',                       # typical *BSD
@@ -271,6 +313,7 @@ include pysvn_common.mak
                     self.is_mac_os_x and 'libsvn_client-1.dylib' or 'libsvn_client-1.so' )
         # if we are using the Fink SVN then remember this
         self.is_mac_os_x_fink = dir.startswith( '/sw/' )
+        self.is_mac_os_x_darwin_ports = dir.startswith( '/opt/local/' )
         return dir
 
     def find_apr_inc( self, argv ):
@@ -278,7 +321,8 @@ include pysvn_common.mak
                     'APR include',
                     '--apr-inc-dir=',
                     [
-                        '/sw/include/apr-0',                    # Darwin
+                        '/opt/local/include/apr-1',             # Darwin - darwin ports
+                        '/sw/include/apr-0',                    # Darwin - fink
                         '/usr/include/apr-0',                   # typical Linux
                         '/usr/include/apache2',                 # alternate Linux
                         '/usr/include/httpd',                   # alternate Linux
@@ -289,16 +333,25 @@ include pysvn_common.mak
                     'apr.h' )
 
     def find_apr_lib( self, argv ):
-        return self.find_dir( argv,
+        last_exception = None
+        for apr_libname in [self.is_mac_os_x and 'libapr-1.dylib' or 'libapr-1.so',
+                            self.is_mac_os_x and 'libapr-0.dylib' or 'libapr-0.so']:
+            try:
+                return self.find_dir( argv,
                     'APR library',
                     '--apr-lib-dir=',
                     [
-                        '/sw/lib',                              # Darwin
+                        '/opt/local/lib',                       # Darwin - darwin ports
+                        '/sw/lib',                              # Darwin - fink
                         '/usr/lib',                             # typical Linux
                         '/usr/local/lib',                       # typical *BSD
                         '/usr/local/apr/lib',                   # Mac OS X www.metissian.com
                     ],
-                    self.is_mac_os_x and 'libapr-0.dylib' or 'libapr-0.so' )
+                    apr_libname )
+            except SetupError, e:
+                last_exception = e
+        raise e
+
 
     def find_dir( self, argv, name, kw, base_dir_list, check_file=None ):
         dir = self.__find_dir( argv, name, kw, base_dir_list, check_file )
