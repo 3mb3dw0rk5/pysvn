@@ -60,15 +60,24 @@ only available with SVN 1.3.0 or later.
 </p>
 <p>Click one of the buttons below to show the pysvn API as supported
 by a particular version of the SVN.</p>
-<p>
+<div id="buttons_work" style="display: none">
 <span class="button" onclick='changeDisplay( 1003000 )'>Show SVN 1.3.0 API</span>
 <span class="button" onclick='changeDisplay( 1002000 )'>Show SVN 1.2.0 API</span>
 <span class="button" onclick='changeDisplay( 1001000 )'>Show SVN 1.1.0 API</span>
-</p>
+<div style="margin: 4px">
+<form>
+<input name="visual_style" value="hilite" type="radio" checked="checked" onclick='changeVisual( "hilite")'>Hilite unsupported</input>
+<input name="visual_style" value="hide" type="radio" onclick='changeVisual("hide")'>Hide unsupported</input>
+</form>
+</div>
+</div>
+<div id="buttons_broken" style="display: block">
+Sorry you browser does not support the show API buttons. Try viewing this page in FireFox.
+</div>
 <p>
-Showing the PySVN API supported by SVN <span id="version_shown">1.3.0</span>
+Showing the PySVN API supported by SVN <span id="version_shown">1.3.0</span>.
+Unsupported parts of the API are show like: <span class="svn_example">This</span>.
 </p>
-
 <p>The recommended way to test for a feature is to use the python 
 hasattr() builtin. Working out what is and is not support from the
 version number information is quite complex and unnessesary. For
@@ -1593,6 +1602,13 @@ except pysvn.ClientError, e:
 </ul>
 
 <p>Copyright &copy; 2004-2006 Barry A. Scott. All rigths reserved.</p>
+<script type="text/javascript">
+// expect this to fail on IE and other browsers that don't support
+changeDisplay( 1003000 );
+changeVisual( "hilite" );
+// good we can toggle the display turn on the buttons
+document.getElementById( "buttons_work" ).style.display = "block";
+document.getElementById( "buttons_broken" ).style.display = "none";
+</script>
 </body>
-
 </html>

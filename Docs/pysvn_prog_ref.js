@@ -9,13 +9,15 @@
 //
 all_versions = new Array( 1001000, 1002000, 1003000 )
 
-change_style = "background"
+current_version = 1003000;
+change_style = "hilite";
 
 function changeDisplay( version )
 {
+    current_version = version;
     style_string = ""
 
-    if( change_style == "background" )
+    if( change_style == "hilite" )
     {
         span_style = "";
         div_style = "";
@@ -32,7 +34,7 @@ function changeDisplay( version )
     {
         if( version < all_versions[i] )
         {
-            if( change_style == "background" )
+            if( change_style == "hilite" )
             {
                 span_style = "background-color: #ffc0c0;";
                 div_style = "background-color: #ffc0c0;";
@@ -48,8 +50,6 @@ function changeDisplay( version )
         style_string += "div.svn_" + all_versions[i].toString() + " { " + div_style + ";}\n";
     }
 
-    document.getElementById("example_show_style").innerHTML = "span.example_show_style { " + span_style + ";}\n";;
-
     document.getElementById("show_style").innerHTML = style_string;
 
     major = Math.floor( version / 1000000 ); 
@@ -58,4 +58,21 @@ function changeDisplay( version )
     version_shown = "" + major + "." + minor + "." + patch;
 
     document.getElementById("version_shown").innerHTML = version_shown;
+}
+
+function changeVisual( type )
+{
+    change_style = type;
+
+    if( change_style == "hilite" )
+    {
+        span_style = "background-color: #ffc0c0;";
+    }
+    else
+    {
+        span_style = "display: none";
+    }
+    document.getElementById("example_show_style").innerHTML = "span.svn_example { " + span_style + ";}\n";;
+
+    changeDisplay( current_version );
 }
