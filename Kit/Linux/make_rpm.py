@@ -39,8 +39,11 @@ for kit_dir in [
 	os.path.join( tmpdir, 'ROOT/usr/lib/python%(pymaj)d.%(pymin)d' % locals() ),
 	os.path.join( tmpdir, 'ROOT/usr/lib/python%(pymaj)d.%(pymin)d/site-packages' % locals() ),
 	os.path.join( tmpdir, 'ROOT/usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn' % locals() ),
-	os.path.join( tmpdir, 'ROOT/usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/Examples' % locals() ),
-	os.path.join( tmpdir, 'ROOT/usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/Examples/Client' % locals() ),
+	os.path.join( tmpdir, 'ROOT/usr/share' ),
+	os.path.join( tmpdir, 'ROOT/usr/share/doc' ),
+	os.path.join( tmpdir, 'ROOT/usr/share/doc/pysvn' ),
+	os.path.join( tmpdir, 'ROOT/usr/share/doc/pysvn/Examples' ),
+	os.path.join( tmpdir, 'ROOT/usr/share/doc/pysvn/Examples/Client' ),
 	]:
 	if not os.path.exists( kit_dir ):
 		os.makedirs( kit_dir )
@@ -55,15 +58,17 @@ for cp_src, cp_dst_dir_fmt in [
 	('../../LICENSE.txt',
 		'ROOT/usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/LICENSE.txt'),
 	('../../Docs/pysvn.html',
-		'ROOT/usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn'),
+		'ROOT/usr/share/doc/pysvn'),
 	('../../Docs/pysvn_prog_ref.html',
-		'ROOT/usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn'),
+		'ROOT/usr/share/doc/pysvn'),
+	('../../Docs/pysvn_prog_ref.js',
+		'ROOT/usr/share/doc/pysvn'),
 	('../../Docs/pysvn_prog_guide.html',
-		'ROOT/usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn'),
+		'ROOT/usr/share/doc/pysvn'),
 	('../../Examples/Client/svn_cmd.py',
-		'ROOT/usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/Examples/Client'),
+		'ROOT/usr/share/doc/pysvn/Examples/Client'),
 	('../../Examples/Client/parse_datetime.py',
-		'ROOT/usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/Examples/Client'),
+		'ROOT/usr/share/doc/pysvn/Examples/Client'),
 	]:
 	print 'Info:  cp %s' % cp_src
 	os.system( 'cp -f %s tmp/%s' % (cp_src, cp_dst_dir_fmt % locals()) )
