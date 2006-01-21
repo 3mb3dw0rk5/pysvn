@@ -99,16 +99,19 @@ Py::Object &SvnException::pythonExceptionArg( int style )
 //--------------------------------------------------------------------------------
 SvnContext::SvnContext( const std::string &config_dir_str )
 : m_pool( NULL )
+, m_config_dir( NULL )
 {
     memset( &m_context, 0, sizeof( m_context ) );
 
     apr_pool_create( &m_pool, NULL );
 
-    const char *config_dir = NULL;
     if( !config_dir_str.empty() )
-        config_dir = config_dir_str.c_str();
+    {
+        m_config_dir = new char[config_dir_str.size() + 1];
+        strcpy( m_config_dir, config_dir_str.c_str() );
+    }
 
-    svn_config_ensure( config_dir, m_pool );
+    svn_config_ensure( m_config_dir, m_pool );
 
     apr_array_header_t *providers = apr_array_make( m_pool, 8, sizeof( svn_auth_provider_object_t * ) );
 
@@ -145,10 +148,10 @@ SvnContext::SvnContext( const std::string &config_dir_str )
     svn_auth_open( &auth_baton, providers, m_pool );
 
     // get the config based on the config dir passed in
-    svn_config_get_config( &m_context.config, config_dir, m_pool );
+    svn_config_get_config( &m_context.config, m_config_dir, m_pool );
 
     // tell the auth functions where the config dir is
-    svn_auth_set_parameter( auth_baton, SVN_AUTH_PARAM_CONFIG_DIR, config_dir );
+    svn_auth_set_parameter( auth_baton, SVN_AUTH_PARAM_CONFIG_DIR, m_config_dir );
 
     m_context.auth_baton = auth_baton;
 #ifdef PYSVN_HAS_CONTEXT_LOG_MSG2
@@ -183,6 +186,8 @@ SvnContext::SvnContext( const std::string &config_dir_str )
 
 SvnContext::~SvnContext()
 {
+    delete m_config_dir;
+
 // Why isn't the pool release - object life time problems?
 //    if( m_pool )
 //    {
