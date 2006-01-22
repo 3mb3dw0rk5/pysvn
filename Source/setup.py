@@ -1,6 +1,6 @@
 #
 # ====================================================================
-# (c) 2005 Barry A Scott.  All rights reserved.
+# (c) 2005-2006 Barry A Scott.  All rights reserved.
 #
 # This software is licensed as described in the file LICENSE.txt,
 # which you should have received as part of this distribution.
@@ -146,14 +146,18 @@ class MakeFileCreater:
             print 'Info: Creating Makefile'
         makefile = file( 'Makefile', 'w' )
         if self.is_mac_os_x:
+            # need to figure out the framework dir to use otherwise the latest
+            # python framework will be used and not the one matching this python
+            framework_dir = distutils.sysconfig.get_python_inc().split('/Python.framework')[0]
+
             if self.cmp_mac_os_x_version( (10,4) ) >= 0:
                 if self.verbose:
                     print 'Info: Using Mac OS X 10.4 makefile template'
-                template_values['frameworks'] = '-framework System -framework Python -framework CoreFoundation -framework Kerberos'
+                template_values['frameworks'] = '-F%s -framework System -framework Python -framework CoreFoundation -framework Kerberos' % framework_dir
             else:
                 if self.verbose:
                     print 'Info: Using Mac OS X 10.3 makefile template'
-                template_values['frameworks'] = '-framework System -framework Python -framework CoreFoundation'
+                template_values['frameworks'] = '-F%s -framework System -framework Python -framework CoreFoundation' % framework_dir
             if self.is_mac_os_x_fink:
                 makefile.write( self.makefile_template_macosx_fink % template_values )
             elif self.is_mac_os_x_darwin_ports:
