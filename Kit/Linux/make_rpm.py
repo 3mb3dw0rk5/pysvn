@@ -50,26 +50,28 @@ for kit_dir in [
 
 
 print 'Info: Copy files'
-for cp_src, cp_dst_dir_fmt in [
+kit_files_info = [
 	('../../Source/pysvn/__init__.py',
-		'ROOT/usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn'),
+		'ROOT/usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn', '444'),
 	('../../Source/pysvn/_pysvn.so',
-		'ROOT/usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn'),
+		'ROOT/usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn', '444'),
 	('../../LICENSE.txt',
-		'ROOT/usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/LICENSE.txt'),
+		'ROOT/usr/share/doc/pysvn', '444'),
 	('../../Docs/pysvn.html',
-		'ROOT/usr/share/doc/pysvn'),
+		'ROOT/usr/share/doc/pysvn', '444'),
 	('../../Docs/pysvn_prog_ref.html',
-		'ROOT/usr/share/doc/pysvn'),
+		'ROOT/usr/share/doc/pysvn', '444'),
 	('../../Docs/pysvn_prog_ref.js',
-		'ROOT/usr/share/doc/pysvn'),
+		'ROOT/usr/share/doc/pysvn', '444'),
 	('../../Docs/pysvn_prog_guide.html',
-		'ROOT/usr/share/doc/pysvn'),
+		'ROOT/usr/share/doc/pysvn', '444'),
 	('../../Examples/Client/svn_cmd.py',
-		'ROOT/usr/share/doc/pysvn/Examples/Client'),
+		'ROOT/usr/share/doc/pysvn/Examples/Client', '555'),
 	('../../Examples/Client/parse_datetime.py',
-		'ROOT/usr/share/doc/pysvn/Examples/Client'),
-	]:
+		'ROOT/usr/share/doc/pysvn/Examples/Client', '444'),
+	]
+
+for cp_src, cp_dst_dir_fmt, perm in kit_files_info:
 	print 'Info:  cp %s' % cp_src
 	os.system( 'cp -f %s tmp/%s' % (cp_src, cp_dst_dir_fmt % locals()) )
 
@@ -104,16 +106,12 @@ rm -f /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/__init__.pyc
 rm -f /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/__init__.pyo
 %%files
 %%defattr (-,root,root)
-%%attr(444,root,root) /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/__init__.py
-%%attr(555,root,root) /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/_pysvn.so
-%%attr(444,root,root) /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/LICENSE.txt
-%%attr(444,root,root) /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/pysvn.html
-%%attr(444,root,root) /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/pysvn_prog_ref.html
-%%attr(444,root,root) /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/pysvn_prog_guide.html
-%%attr(555,root,root) /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/Examples/Client/svn_cmd.py
-%%attr(444,root,root) /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/Examples/Client/parse_datetime.py
-
 ''' % locals() )
+
+for cp_src, cp_dst_dir_fmt, perm in kit_files_info:
+    kit_filename = os.path.join( cp_dst_dir_fmt[len('ROOT'):] % locals(), os.path.basename( cp_src ) )
+    f.write( '%%attr(%s,root,root) %s\n' % (perm, kit_filename) )
+    
 f.close()
 
 print 'Info: Create rpmrc'
