@@ -40,6 +40,21 @@ print 'Info:',repr(branding)
 f.write( pysvn_iss_text % branding )
 f.close()
 
+print 'Info: Creating msvc71_system_files.iss from pysvn.iss'
+f = file( 'msvc71_system_files.iss', 'r' )
+pysvn_iss_text = f.read()
+f.close()
+
+f = file( 'tmp\\msvc71_system_files.iss', 'w' )
+branding = {
+	'py_maj': sys.version_info[0],
+	'py_min': sys.version_info[1],
+	'pysvn_version_string': pysvn_version_string,
+	}
+print 'Info:',repr(branding)
+f.write( pysvn_iss_text % branding )
+f.close()
+
 print 'Info: Create setup_copy.cmd'
 f = file( 'tmp\\setup_copy.cmd', 'w' )
 f.write( 'copy tmp\\Output\\setup.exe tmp\\Output\\py%d%d-pysvn-svn%s-%s.exe\n' %

@@ -49,7 +49,7 @@ begin
 		end
 		else
 		begin
-			Result := Default
+			Result := 'c:\python%(py_maj)d.%(py_min)d';
 		end;
 	end;
 end;
@@ -59,7 +59,7 @@ end;
 AppName=Python %(py_maj)d.%(py_min)d PySVN
 AppVerName=Python %(py_maj)d.%(py_min)d PySVN %(pysvn_version_string)s 
 AppCopyright=Copyright (C) 2003-2006 Barry A. Scott
-DefaultDirName={code:pythondir|c:\python%(py_maj)d.%(py_min)d}\lib\site-packages\pysvn
+DefaultDirName={code:pythondir}\lib\site-packages\pysvn
 DefaultGroupName=PySVN for Python %(py_maj)d.%(py_min)d
 DisableStartupPrompt=yes
 InfoBeforeFile=info_before.txt
@@ -67,7 +67,7 @@ Compression=bzip/9
 
 [Files]
 
-#include "..\msvc60_system_files.iss"
+#include "msvc_system_files.iss"
 
 Source: "..\..\..\Source\pysvn\__init__.py"; DestDir: "{app}";
 Source: "..\..\..\Source\pysvn\_pysvn.pyd"; DestDir: "{app}";
