@@ -141,6 +141,20 @@ Py::Object pysvn_status::getattr( const char *_name )
     {
         return toEnumValue( m_svn_status->repos_text_status );
     }
+#ifdef PYSVN_HAS_CLIENT_LOCK
+    else if( name == "repos_lock" )
+    {
+        if( m_svn_status->repos_lock == NULL )
+        {
+            return Py::None();
+        }
+        else
+        {
+            return toObject( m_svn_status->repos_lock );
+        }
+    }
+#endif
+
     return getattr_methods( _name );
 }
 

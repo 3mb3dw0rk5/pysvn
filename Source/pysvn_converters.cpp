@@ -154,22 +154,7 @@ Py::Object toObject( const svn_info_t *info )
     }
     else
     {
-        Py::Dict py_lock;
-        py_lock[str_path] = utf8_string_or_none( info->lock->path );
-        py_lock[str_token] = utf8_string_or_none( info->lock->token );
-        py_lock[str_owner] = utf8_string_or_none( info->lock->owner );
-        py_lock[str_comment] = utf8_string_or_none( info->lock->comment );
-        py_lock[str_is_dav_comment] = Py::Int( info->lock->is_dav_comment != 0 );
-        if( info->lock->creation_date == 0 )
-            py_lock[str_creation_date] = Py::None();
-        else
-            py_lock[str_creation_date] = toObject( info->lock->creation_date );
-        if( info->lock->expiration_date == 0 )
-            py_lock[str_expiration_date] = Py::None();
-        else
-            py_lock[str_expiration_date] = toObject( info->lock->expiration_date );
-
-        py_info[str_lock] = py_lock;
+        py_info[str_lock] = toObject( info->lock );
     }
 
     // Whether or not to ignore the next 10 wc-specific fields.
@@ -194,6 +179,27 @@ Py::Object toObject( const svn_info_t *info )
     }
 
     return py_info;
+}
+#endif
+#ifdef PYSVN_HAS_CLIENT_LOCK
+Py::Object toObject( const svn_lock_t *lock )
+{
+    Py::Dict py_lock;
+    py_lock[str_path] = utf8_string_or_none( lock->path );
+    py_lock[str_token] = utf8_string_or_none( lock->token );
+    py_lock[str_owner] = utf8_string_or_none( lock->owner );
+    py_lock[str_comment] = utf8_string_or_none( lock->comment );
+    py_lock[str_is_dav_comment] = Py::Int( lock->is_dav_comment != 0 );
+    if( lock->creation_date == 0 )
+        py_lock[str_creation_date] = Py::None();
+    else
+        py_lock[str_creation_date] = toObject( lock->creation_date );
+    if( lock->expiration_date == 0 )
+        py_lock[str_expiration_date] = Py::None();
+    else
+        py_lock[str_expiration_date] = toObject( lock->expiration_date );
+
+    return py_lock;
 }
 #endif
 

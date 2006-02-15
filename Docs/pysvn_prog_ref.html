@@ -879,7 +879,7 @@ dictionary. The dictionary contains:
 </p>
 <ul>
 <li>author - string - the name of the author wrote the log message</li>
-<li>date - string - the date of the log message</li>
+<li>date - float time - the date of the log message</li>
 <li>message - string - the text of the log message</li>
 <li>revision - pysvn.<a href="#pysvn_revision">Revision</a> - the revision of the log message</li>
 <li>changed_paths - list of dictionaries. The dictionaries contains:</li>
@@ -1571,6 +1571,8 @@ except pysvn.ClientError, e:
   of the properties of the path</li>
 <li>repos_text_status - wc_status_kind - the repository status
   of the text of the path</li>
+<li>repos_lock - dict - the repository lock
+  information</li>
 </ul>
 
 <h2><a href="#pysvn_module">pysvn</a>.<a name="pysvn_entry">Entry - subversion entry object</a></h2>

@@ -673,6 +673,9 @@ extern Py::Object toObject( pysvn_commit_info_t *commit_info );
 #ifdef PYSVN_HAS_CLIENT_INFO
 extern Py::Object toObject( const svn_info_t *info );
 #endif
+#ifdef PYSVN_HAS_CLIENT_LOCK
+extern Py::Object toObject( const svn_lock_t *lock );
+#endif
 extern Py::Object propsToObject( apr_hash_t *props, SvnPool &pool );
 extern Py::Object revnumListToObject( apr_array_header_t *revs, SvnPool &pool );
 extern void proplistToObject( Py::List &py_path_propmap_list, apr_array_header_t *props, SvnPool &pool );

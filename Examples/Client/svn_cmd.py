@@ -13,6 +13,7 @@ import sys
 import os
 import parse_datetime
 import glob
+import locale
 
 class CommandError( Exception ):
     def __init__( self, reason ):
@@ -31,11 +32,37 @@ def main( args ):
     if args[1:2] == ['--pause']:
         del args[1]
         pause = True
+
+    # if the locale is not setup SVN can report errors handling non ascii file names
+    initLocale()
+
     svn_cmd = SvnCommand( progname )
     rc = svn_cmd.dispatch( args[1:] )
     if pause:
         sys.stdin.readline()
     return rc
+
+def initLocale():
+    # init the locale
+    if sys.platform == 'win32':
+        locale.setlocale( locale.LC_ALL, '' )
+
+    else:
+        language_code, encoding = locale.getdefaultlocale()
+        if language_code is None:
+            language_code = 'en_GB'
+
+        if encoding is None:
+            encoding = 'UTF-8'
+        if encoding.lower() == 'utf':
+            encoding = 'UTF-8'
+
+        try:
+            # setlocale fails when params it does not understand are passed
+            locale.setlocale( locale.LC_ALL, '%s.%s' % (language_code, encoding) )
+        except locale.Error:
+            # force a locale that will work
+            locale.setlocale( locale.LC_ALL, 'en_GB.UTF-8' )
 
 def fmtDateTime( t ):
     return time.strftime( '%d-%b-%Y %X', time.localtime( t ) )
@@ -111,7 +138,6 @@ class SvnCommand:
         self.client.callback_ssl_client_cert_prompt = self.callback_ssl_client_cert_prompt
         self.client.callback_ssl_server_prompt = self.callback_ssl_server_prompt
         self.client.callback_ssl_server_trust_prompt = self.callback_ssl_server_trust_prompt
-
 
     def callback_ssl_client_cert_password_prompt( self ):
         print 'callback_ssl_client_cert_password_prompt'
@@ -740,7 +766,6 @@ class SvnCommand:
             if file.text_status == pysvn.wc_status_kind.ignored and ignore:
                 continue
 
-
             state = '%s%s%s%s%s' % (wc_status_kind_map[ file.text_status ],
                     wc_status_kind_map[ file.prop_status ],
                     ' L'[ file.is_locked ],
@@ -758,6 +783,9 @@ class SvnCommand:
             if file.entry is not None and hasattr( file.entry, 'lock_token' ):
                 if file.entry.lock_token is not None:
                     lock_state = 'K'
+
+            if hasattr( file, 'repos_lock' ) and file.repos_lock is not None:
+                lock_state = 'O'
 
             if file.entry is not None and detailed:
                 print '%s%s %s %6d %6d %-14s %s' % (state, lock_state,
