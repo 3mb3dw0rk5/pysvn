@@ -124,6 +124,13 @@ class MakeFileCreater:
         # add source dir
         include_dir_list.append( '.' )
 
+        # get the python CFLAGS
+        py_cflags_list = distutils.sysconfig.get_config_var('CFLAGS').split()
+        try:
+            del py_cflags_list[ py_cflags_list.index( '-Wstrict-prototypes' ) ]
+        except ValueError:
+            pass
+
         template_values = {
             # python executable
             'python_exe':       sys.executable,
@@ -131,6 +138,9 @@ class MakeFileCreater:
             # includes
             'svn_include':      svn_include,
             'includes':         ' '.join( ['-I%s' % include_dir for include_dir in include_dir_list] ),
+
+            # py_cflags
+            'py_cflags':        ' '.join( py_cflags_list ),
 
             # add svn lib dir
             'svn_lib_dir':      self.find_svn_lib( argv ),
@@ -176,7 +186,7 @@ class MakeFileCreater:
 PYTHON=%(python_exe)s
 SVN_INCLUDE=%(svn_include)s
 CCC=g++ -c
-CCCFLAGS=-Wall -fPIC -fexceptions -frtti %(includes)s
+CCCFLAGS=-Wall -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s
 CC=gcc -c
 CCFLAGS=-Wall -fPIC %(includes)s
 PYCXX=%(pycxx_dir)s
@@ -194,7 +204,7 @@ include pysvn_common.mak
 PYTHON=%(python_exe)s
 SVN_INCLUDE=%(svn_include)s
 CCC=g++ -c
-CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s
+CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s
 CC=gcc -c
 CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s
 PYCXX=%(pycxx_dir)s
@@ -216,7 +226,7 @@ include pysvn_common.mak
 PYTHON=%(python_exe)s
 SVN_INCLUDE=%(svn_include)s
 CCC=g++ -c
-CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s
+CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s
 CC=gcc -c
 CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s
 PYCXX=%(pycxx_dir)s
@@ -253,7 +263,7 @@ include pysvn_common.mak
 PYTHON=%(python_exe)s
 SVN_INCLUDE=%(svn_include)s
 CCC=g++ -c
-CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s
+CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s
 CC=gcc -c
 CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s
 PYCXX=%(pycxx_dir)s
