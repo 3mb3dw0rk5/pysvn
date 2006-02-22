@@ -372,7 +372,7 @@ Py::Object pysvn_client::cmd_annotate( const Py::Tuple &a_args, const Py::Dict &
     svn_opt_revision_t revision_start = args.getRevision( name_revision_start, svn_opt_revision_number );
     svn_opt_revision_t revision_end = args.getRevision( name_revision_end, svn_opt_revision_head );
 #ifdef PYSVN_HAS_CLIENT_ANNOTATE2
-    svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, svn_opt_revision_unspecified );
+    svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, revision_end );
 #endif
     SvnPool pool( m_context );
     std::list<AnnotatedLineInfo> all_entries;
@@ -460,7 +460,7 @@ Py::Object pysvn_client::cmd_cat( const Py::Tuple &a_args, const Py::Dict &a_kws
     std::string path( args.getUtf8String( name_url_or_path ) );
     svn_opt_revision_t revision = args.getRevision( name_revision, svn_opt_revision_head );
 #ifdef PYSVN_HAS_CLIENT_CAT2
-    svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, svn_opt_revision_unspecified );
+    svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, revision );
 #endif
 
     SvnPool pool( m_context );
@@ -626,7 +626,7 @@ Py::Object pysvn_client::cmd_checkout( const Py::Tuple &a_args, const Py::Dict &
     bool recurse = args.getBoolean( name_recurse, true );
     svn_opt_revision_t revision = args.getRevision( name_revision, svn_opt_revision_head );
 #ifdef PYSVN_HAS_CLIENT_CHECKOUT2
-    svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, svn_opt_revision_unspecified );
+    svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, revision );
     bool ignore_externals = args.getBoolean( name_ignore_externals, false );
 #endif
     SvnPool pool( m_context );
@@ -1185,7 +1185,7 @@ Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_
 #ifdef PYSVN_HAS_CLIENT_EXPORT3
     bool recurse = args.getBoolean( name_recurse, true );
     bool ignore_externals = args.getBoolean( name_ignore_externals, false );
-    svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, svn_opt_revision_unspecified );
+    svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, revision );
 #endif
 
     svn_revnum_t revnum = 0;
@@ -1791,7 +1791,7 @@ Py::Object pysvn_client::cmd_ls( const Py::Tuple &a_args, const Py::Dict &a_kws 
     apr_hash_t *hash = NULL;
     std::string norm_path( svnNormalisedIfPath( path, pool ) );
 #ifdef PYSVN_HAS_CLIENT_LS2
-    svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, svn_opt_revision_unspecified );
+    svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, revision );
 #endif
 
     try
@@ -2346,7 +2346,6 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
     Py::List path_list( toListOfStrings( args.getArg( name_url_or_path ) ) );
 
     bool recurse = args.getBoolean( name_recurse, false );
-    svn_opt_revision_t revision;
 
     bool is_revision_setup = false;
     bool is_url = false;
@@ -2364,7 +2363,18 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
         revision_file.kind = svn_opt_revision_working;
     }
 #ifdef PYSVN_HAS_CLIENT_PROPLIST2
-    svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, svn_opt_revision_unspecified );
+    svn_opt_revision_t peg_revision_url;
+    svn_opt_revision_t peg_revision_file;
+    if( args.hasArg( name_peg_revision ) )
+    {
+        peg_revision_url = args.getRevision( name_peg_revision );
+        peg_revision_file = peg_revision_url;
+    }
+    else
+    {
+        peg_revision_url = revision_url;
+        peg_revision_file = revision_file;
+    }
 #endif
 
     SvnPool pool( m_context );
@@ -2377,15 +2387,19 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
         std::string path( path_str.as_std_string() );
         std::string norm_path( svnNormalisedIfPath( path, pool ) );
 
+        svn_opt_revision_t revision;
+        svn_opt_revision_t peg_revision;
         if( !is_revision_setup )
             if( is_svn_url( path ) )
             {
                 revision = revision_url;
+                peg_revision = peg_revision_url;
                 is_url = true;
             }
             else
             {
                 revision = revision_file;
+                peg_revision = peg_revision_file;
             }
         else
             if( is_svn_url( path ) && !is_url )

@@ -374,6 +374,7 @@ public:
     std::string getString( const char *name );
     svn_opt_revision_t getRevision( const char *name );
     svn_opt_revision_t getRevision( const char *name, svn_opt_revision_kind default_value );
+    svn_opt_revision_t getRevision( const char *name, svn_opt_revision_t default_value );
 
 private:
     const std::string           m_function_name;

@@ -52,13 +52,23 @@ echo test add file 1 >file1.txt
 echo test add file 2 >file2.txt
 echo test add file 3 >file3.txt
 echo test add file 4 >file4.txt
-echo test add --force file 5 >file5.txt
+echo test add file 5 >file5.txt
+echo test add file 6 >file6.txt
+
 cmd_pysvn add file1.txt
 cmd_pysvn add file2.txt
 cmd_pysvn add file3.txt
 cmd_pysvn add file4.txt
-cmd_pysvn add file5.txt
+cmd_pysvn add --force file5.txt
+cmd_pysvn add file6.txt
+
 cmd_pysvn checkin -m "commit added files"
+
+echo Info: Setup to test access to deleted files
+echo test mod file 6 >>file6.txt
+cmd_pysvn checkin -m "commit mod file"
+cmd_pysvn rm file6.txt
+cmd_pysvn checkin -m "commit delete file"
 
 echo Info: Testing - update - get a new wc that will update
 cmd_pysvn checkout file://${TESTROOT}/repos/trunk ${TESTROOT}/wc2
@@ -74,9 +84,11 @@ echo Info: Testing - the rest in lexical order
 
 echo Info: Testing - annotate
 cmd_pysvn annotate ${TESTROOT}/wc2/test/file1.txt
+cmd_pysvn annotate -r 3:4 file://${TESTROOT}/repos/trunk/test/file6.txt
 
 echo Info: Testing - cat
 cmd_pysvn cat -r head file://${TESTROOT}/repos/trunk/test/file1.txt
+cmd_pysvn cat -r 4 file://${TESTROOT}/repos/trunk/test/file6.txt
 
 echo Info: Testing - cleanup
 
@@ -233,7 +245,7 @@ echo modify merge 2 >>file-merge-2.txt
 
 cmd_pysvn commit -m "change test merge files" .
 
-cmd_pysvn merge --dry-run --revision 14:15 file://${TESTROOT}/root/repos/trunk/test ${TESTROOT}/wc3/test-branch
-cmd_pysvn merge --revision 14:15 file://${TESTROOT}/root/repos/trunk/test ${TESTROOT}/wc3/test-branch
+cmd_pysvn merge --dry-run --revision 16:17 file://${TESTROOT}/root/repos/trunk/test ${TESTROOT}/wc3/test-branch
+cmd_pysvn merge --revision 16:17 file://${TESTROOT}/root/repos/trunk/test ${TESTROOT}/wc3/test-branch
 cmd_pysvn status ${TESTROOT}/wc3/test-branch
 cmd_pysvn diff ${TESTROOT}/wc3/test-branch

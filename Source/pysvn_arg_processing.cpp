@@ -286,3 +286,20 @@ svn_opt_revision_t FunctionArguments::getRevision
         return revision;
     }
 }
+
+svn_opt_revision_t FunctionArguments::getRevision
+    (
+    const char *name,
+    svn_opt_revision_t default_value
+    )
+{
+
+    if( hasArg( name ) )
+    {
+        return getRevision( name );
+    }
+    else
+    {
+        return default_value;
+    }
+}
