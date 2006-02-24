@@ -1020,7 +1020,7 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
     std::string path( args.getUtf8String( name_url_or_path ) );
     svn_opt_revision_t revision_start = args.getRevision( name_revision1, svn_opt_revision_base );
     svn_opt_revision_t revision_end = args.getRevision( name_revision2, svn_opt_revision_working );
-    svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, svn_opt_revision_unspecified );
+    svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, revision_end );
     bool recurse = args.getBoolean( name_recurse, true );
     bool ignore_ancestry = args.getBoolean( name_ignore_ancestry, true );
     bool diff_deleted = args.getBoolean( name_diff_deleted, true );
@@ -1433,7 +1433,7 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
         kind = svn_opt_revision_head;
 
     svn_opt_revision_t revision = args.getRevision( name_revision, kind );
-    svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, svn_opt_revision_unspecified );
+    svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, revision );
 
     bool recurse = args.getBoolean( name_recurse, true );
 
@@ -1962,7 +1962,7 @@ Py::Object pysvn_client::cmd_merge_peg( const Py::Tuple &a_args, const Py::Dict 
     std::string path( args.getUtf8String( name_url_or_path ) );
     svn_opt_revision_t revision1 = args.getRevision( name_revision1, svn_opt_revision_head );
     svn_opt_revision_t revision2 = args.getRevision( name_revision2, svn_opt_revision_head );
-    svn_opt_revision_t peg_revision = args.getRevision( name_revision2, svn_opt_revision_head );
+    svn_opt_revision_t peg_revision = args.getRevision( name_revision2, revision2 );
     std::string local_path( args.getUtf8String( name_local_path ) );
 
     bool force = args.getBoolean( name_force, false );
@@ -2277,7 +2277,7 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
     else
         revision = args.getRevision( name_revision, svn_opt_revision_working );
 #ifdef PYSVN_HAS_CLIENT_PROPGET2
-    svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, svn_opt_revision_unspecified );
+    svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, revision );
 #endif
 
     SvnPool pool( m_context );

@@ -320,8 +320,9 @@ include pysvn_common.mak
                     [
                         '/opt/local/lib',                       # Darwin - darwin ports
                         '/sw/lib',                              # Darwin - Fink
-                        '/usr/lib',                             # typical Linux
                         '/usr/lib64',                           # typical 64bit Linux
+                        '/usr/lib',                             # typical Linux
+                        '/usr/local/lib64',                     # typical 64bit Linux
                         '/usr/local/lib',                       # typical *BSD
                     ],
                     self.is_mac_os_x and 'libsvn_client-1.dylib' or 'libsvn_client-1.so' )
@@ -357,8 +358,9 @@ include pysvn_common.mak
                     [
                         '/opt/local/lib',                       # Darwin - darwin ports
                         '/sw/lib',                              # Darwin - fink
-                        '/usr/lib',                             # typical Linux
                         '/usr/lib64',                           # typical 64bit Linux
+                        '/usr/lib',                             # typical Linux
+                        '/usr/local/lib64',                     # typical 64bit Linux
                         '/usr/local/lib',                       # typical *BSD
                         '/usr/local/apr/lib',                   # Mac OS X www.metissian.com
                     ],
