@@ -65,7 +65,7 @@ def initLocale():
             locale.setlocale( locale.LC_ALL, 'en_GB.UTF-8' )
 
 def fmtDateTime( t ):
-    return time.strftime( '%d-%b-%Y %X', time.localtime( t ) )
+    return time.strftime( '%d-%b-%Y %H:%M:%S', time.localtime( t ) )
 
 wc_status_kind_map = {
 pysvn.wc_status_kind.added: 'A',
