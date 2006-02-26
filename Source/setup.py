@@ -125,11 +125,12 @@ class MakeFileCreater:
         include_dir_list.append( '.' )
 
         # get the python CFLAGS
-        py_cflags_list = distutils.sysconfig.get_config_var('CFLAGS').split()
-        try:
-            del py_cflags_list[ py_cflags_list.index( '-Wstrict-prototypes' ) ]
-        except ValueError:
-            pass
+        py_cflags_python_list = distutils.sysconfig.get_config_var('CFLAGS').split()
+        # we only want the -D flags, other flags have broken pysvn
+        py_cflags_list = []
+        for flag in py_cflags_python_list:
+            if flag.startswith( '-D' ):
+                py_cflags_list.append( flag )
 
         template_values = {
             # python executable
