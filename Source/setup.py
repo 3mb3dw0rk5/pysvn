@@ -56,6 +56,7 @@ def help( argv ):
         --apr-inc-dir=<dir>
         --svn-inc-dir=<dir>
         --svn-lib-dir=<dir>
+        --define=<define-string>
 
 ''' % (basename, basename)
     return 1
@@ -131,6 +132,11 @@ class MakeFileCreater:
         for flag in py_cflags_python_list:
             if flag.startswith( '-D' ):
                 py_cflags_list.append( flag )
+
+        # get user supplied defines
+        for arg in argv:
+            if arg.startswith( '--define=' ):
+                py_cflags_list.append( '-D%s' % arg[len('--define-'):] )
 
         template_values = {
             # python executable
