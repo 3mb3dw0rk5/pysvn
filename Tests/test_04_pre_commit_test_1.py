@@ -5,7 +5,7 @@ print 'Info: pre commit test 1'
 print 'Info: Transaction( %s, %s) ...' % (sys.argv[1], sys.argv[2])
 t = pysvn.Transaction( sys.argv[1], sys.argv[2] )
 
-print 'Info: proplist() ...'
+print 'Info: revproplist() ...'
 all_props = t.revproplist()
 for name, value in all_props.items():
     print '%s: %s' % (name, value)
