@@ -346,6 +346,15 @@ static svn_error_t *annotate_receiver
     apr_pool_t *pool
     )
 {
+    // There are cases when the author has been passed as NULL
+    // protect against NULL passed for any of the strings
+    if( author == NULL )
+        author = "";
+    if( date == NULL )
+        date = "";
+    if( line == NULL )
+        line = "";
+
     std::list<AnnotatedLineInfo> *entries = (std::list<AnnotatedLineInfo> *)baton;
     entries->push_back( AnnotatedLineInfo( line_no, revision, author, date, line ) );
 
