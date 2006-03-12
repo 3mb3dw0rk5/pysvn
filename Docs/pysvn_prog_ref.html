@@ -873,6 +873,9 @@ log( url_or_path,
 return the log messages for the specifed url_or_path between
 revisions start and end. <span class="svn_1002000">Set limit to the maximum number
 of log messages to be returned, 0 means return all messages.</span>
+If discover_changed_paths is set, the changed_paths dictionary
+entry is filled with a list of changed paths.
+If strict_node_history is set, log entries will not cross copies.
 </p>
 <p>log returns a list of log messges each log messages is a
 dictionary. The dictionary contains:
