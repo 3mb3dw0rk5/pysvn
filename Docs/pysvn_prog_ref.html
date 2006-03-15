@@ -102,7 +102,7 @@ if hasattr( client, 'lock' ):
     (major, minor, micro, tag)</li>
 </ul>
 
-<p>The pysvn module has three classes:
+<p>The pysvn module has six classes:
 </p>
 
 <ul>
@@ -118,13 +118,13 @@ if hasattr( client, 'lock' ):
 </p>
 
 <ul>
-<li>opt_revision_kind - kinds of Revision object</li>
-<li>wc_notify_action - see Client.callback_notify</li>
-<li>wc_status_kind - see Client.status()</li>
-<li>wc_schedule - see Client.status()</li>
-<li>wc_merge_outcome - see Client.Merge()</li>
-<li>wc_notify_state - see Client.callback_notify</li>
-<li>node_kind - see Client.status() and Client.ls()</li>
+<li><a href="#pysvn_opt_revision_kind">opt_revision_kind</a> - kinds of Revision object</li>
+<li><a href="#pysvn_wc_notify_action">wc_notify_action</a> - see Client.callback_notify</li>
+<li><a href="#pysvn_wc_status_kind">wc_status_kind</a> - see Client.status()</li>
+<li><a href="#pysvn_wc_schedule">wc_schedule</a> - see Client.status()</li>
+<li><a href="#pysvn_wc_merge_outcome">wc_merge_outcome</a> - see Client.Merge()</li>
+<li><a href="#pysvn_wc_notify_state">wc_notify_state</a> - see Client.callback_notify</li>
+<li><a href="#pysvn_node_kind">node_kind</a> - see Client.status() and Client.ls()</li>
 </ul>
 
 <p>Use python builtin dir() to list all available values in an enumeration:
@@ -145,7 +145,7 @@ client = pysvn.Client( config_dir )
 </pre>
 
 <p>The default subversion configuration directory is used if the
-config_dir is ommitted or set to ''.
+config_dir is omitted or set to ''.
 </p>
 <p>The configuration directory is automatically created if it is
 missing.
@@ -238,8 +238,8 @@ the command to be cancelled. An empty log_message is not allowed
 and may cause the command to be cancelled.
 </p>
 
-<p>unicode strings cannot be handled. If you have a unicode string
-convert to UTF-8.
+<p>Unicode strings cannot be handled. If you have a unicode string,
+convert it to UTF-8.
 </p>
 
 <h4><a name="pysvn_client_callback_get_login"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.callback_get_login</a></h4>
@@ -292,12 +292,12 @@ the callback_notify function as a dictionary.
 </p>
 <ul>
 <li>path - the path of the action refers to</li>
-<li>action - the events action, one of the pysvn.wc_notify_action
+<li>action - the events action, one of the <a href="#pysvn_wc_notify_action">wc_notify_action</a>
   values</li>
-<li>kind - the node kind, one of the pysvn.node_kind values</li>
+<li>kind - the node kind, one of the pysvn.<a href="#pysvn_node_kind">node_kind</a> values</li>
 <li>mime_type - the mime type</li>
-<li>content_state - one of the pysvn.wc_notify_state values</li>
-<li>prop_state - one of the pysvn.wc_notify_state values</li>
+<li>content_state - one of the pysvn.<a href="#pysvn_wc_notify_state">wc_notify_state</a> values</li>
+<li>prop_state - one of the pysvn.<a href="#pysvn_wc_notify_state">wc_notify_state</a> values</li>
 <li>revision - a Revision object</li>
 </ul>
 
@@ -746,8 +746,8 @@ false.
 <pre>
 enabled = get_auto_props()
 </pre>
-<p>Returns true When svn will automatically set properties
-when adding files otherwise return false.
+<p>Returns true if svn will automatically set properties
+when adding files, otherwise returns false.
 </p>
 
 <h4><a name="pysvn_client_import_"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.import_</a></h4>
@@ -818,9 +818,10 @@ WC targets.
 <li>is_dav_comment - true if is DAV comment</li>
 <li>creation_date - time or None</li>
 </ul>
-<li>wc_info - None or dictionary containing:</li>
+<li>wc_info - None if url_or_path is a URL; 
+  otherwise a dictionary containing:</li>
 <ul>
-<li>schedule - pysvn.wc_schedule or None</li>
+<li>schedule - pysvn.<a href="#pysvn_wc_schedule">wc_schedule</a> or None</li>
 <li>copyfrom_url - string or None</li>
 <li>copyfrom_rev - pysvn.<a href="#pysvn_revision">Revision</a> or None</li>
 <li>text_time - time or None</li>
@@ -870,27 +871,28 @@ log( url_or_path,
      limit=0</span> )
 </pre>
 <p>
-return the log messages for the specifed url_or_path between
+Return the log messages for the specified url_or_path between
 revisions start and end. <span class="svn_1002000">Set limit to the maximum number
 of log messages to be returned, 0 means return all messages.</span>
-If discover_changed_paths is set, the changed_paths dictionary
+</p>
+<p>If discover_changed_paths is set, the changed_paths dictionary
 entry is filled with a list of changed paths.
 If strict_node_history is set, log entries will not cross copies.
 </p>
-<p>log returns a list of log messges each log messages is a
+<p>log returns a list of log entries; each log entry is a
 dictionary. The dictionary contains:
 </p>
 <ul>
-<li>author - string - the name of the author wrote the log message</li>
-<li>date - float time - the date of the log message</li>
-<li>message - string - the text of the log message</li>
-<li>revision - pysvn.<a href="#pysvn_revision">Revision</a> - the revision of the log message</li>
-<li>changed_paths - list of dictionaries. The dictionaries contains:</li>
+<li>author - string - the name of the author who committed the revision</li>
+<li>date - float time - the date of the commit</li>
+<li>message - string - the text of the log message for the commit</li>
+<li>revision - pysvn.<a href="#pysvn_revision">Revision</a> - the revision of the commit</li>
+<li>changed_paths - list of dictionaries. Each dictionary contains:</li>
 <ul>
 <li>path - string - the path in the repository</li>
 <li>action - string</li>
-<li>copyfrom_path - string - if copied the original path else None</li>
-<li>copyfrom_revision - pysvn.<a href="#pysvn_revision">Revision</a> - if copied the revision of the original else None</li>
+<li>copyfrom_path - string - if copied, the original path, else None</li>
+<li>copyfrom_revision - pysvn.<a href="#pysvn_revision">Revision</a> - if copied, the revision of the original, else None</li>
 </ul>
 </ul>
 <h4><a name="pysvn_client_ls"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.ls</a></h4>
@@ -915,7 +917,7 @@ WC targets.
 </p>
 <ul>
 <li>name - string - name of the file</li>
-<li>kind - node_kind - one of the pysvn.node_kind values</li>
+<li>kind - node_kind - one of the pysvn.<a href="#pysvn_node_kind">node_kind</a> values</li>
 <li>size - long - size of file</li>
 <li>created_rev - pysvn.<a href="#pysvn_revision">Revision</a> - the revision of the last change</li>
 <li>time - float - the time of the last change</li>
@@ -968,7 +970,7 @@ mkdir( [url_or_path,url_or_path],
 <p>Create a new directory under revision control.
 </p>
 
-<p>Create version controlled directories.
+<p>url_or_path can be a list of URLs and paths
 </p>
 
 <p>If url_or_path is a path, each directory is scheduled for
@@ -977,9 +979,6 @@ addition upon the next commit.
 
 <p>If url_or_path is a URL, the directories are created in the
 repository via an immediate commit.
-</p>
-
-<p>url_or_path can be a list of URLs and paths
 </p>
 
 <p>In both cases, all the intermediate directories must already
@@ -1220,8 +1219,8 @@ in the configuration directory.
 <pre>
 set_auto_props( enable )
 </pre>
-<p>When enabled subversion will automatically set properties
-when adding files otherwise when disabled will not.
+<p>When enabled, subversion will automatically set properties
+when adding files; otherwise when disabled it will not.
 </p>
 
 <h4><a name="pysvn_client_status"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.status</a></h4>
@@ -1330,7 +1329,7 @@ transaction = pysvn.Transaction( repos_path, transaction_name )
 
 <p>The Transaction object allows you to implement hook code for
 the SVN repository. The pre-commit and pre-revprop-change hooks
-are the only hooks that are currently appropiate in SVN. See 
+are the only hooks that are currently appropriate in SVN. See 
 the SVN documentation for details on hook scripts.
 </p>
 
@@ -1388,7 +1387,7 @@ action, kind, text_mod, prop_mod.
 <ul>
 <li>action - string - a single letter indicating the action
   'A' for add, 'M' for modify, 'D' for delete</li>
-<li>kind - node_kind - one of the pysvn.node_kind values</li>
+<li>kind - node_kind - one of the pysvn.<a href="#pysvn_node_kind">node_kind</a> values</li>
 <li>text_mod - int - is != 0 if the text in this path has been
   modified</li>
 <li>prop_mod - int - is != 0 if the properties in this path
@@ -1475,7 +1474,7 @@ the transaction. The revision updated is returned.
 
 <ul>
 <li>kind   - the kind of revision, its value is one of the
-  opt_revision_kind enumerations.</li>
+  <a href="#pysvn_opt_revision_kind">opt_revision_kind</a> enumerations.</li>
 <li>date   - date and time when kind is opt_revision_kind.date,
   as seconds since the epoch which is compatible with python's
   time module.</li>
@@ -1566,13 +1565,13 @@ except pysvn.ClientError, e:
 <li>is_locked - Boolean - true if the path is locked</li>
 <li>is_copied - Boolean - true if the path is copied</li>
 <li>is_switched - Boolean - true if the path has been switched</li>
-<li>prop_status - wc_status_kind - the status of the properties
+<li>prop_status - <a href="#pysvn_wc_status_kind">wc_status_kind</a> - the status of the properties
   of the path</li>
-<li>text_status - wc_status_kind - the status of the text of
+<li>text_status - <a href="#pysvn_wc_status_kind">wc_status_kind</a> - the status of the text of
   the path</li>
-<li>repos_prop_status - wc_status_kind - the repository status
+<li>repos_prop_status - <a href="#pysvn_wc_status_kind">wc_status_kind</a> - the repository status
   of the properties of the path</li>
-<li>repos_text_status - wc_status_kind - the repository status
+<li>repos_text_status - <a href="#pysvn_wc_status_kind">wc_status_kind</a> - the repository status
   of the text of the path</li>
 <li>repos_lock - dict - the repository lock
   information</li>
@@ -1594,17 +1593,125 @@ except pysvn.ClientError, e:
 <li>is_copied - boolean</li>
 <li>is_deleted - boolean</li>
 <li>is_valid - boolean</li>
-<li>kind - pysvn.wc_node_kind</li>
+<li>kind - pysvn.<a href="#pysvn_node_kind">node_kind</a></li>
 <li>name - string</li>
 <li>properties_time - time</li>
 <li>property_reject_file - string or None</li>
 <li>repos - string</li>
 <li>revision - pysvn.<a href="#pysvn_revision">Revision</a> or None</li>
-<li>schedule - pysvn.wc_schedule or None</li>
+<li>schedule - pysvn.<a href="#pysvn_wc_schedule">wc_schedule</a> or None</li>
 <li>text_time - time</li>
 <li>url - string or None</li>
 <li>uuid - string or None</li>
 </ul>
+
+<h2><a href="#pysvn_module">pysvn</a>.<a
+	name="pysvn_opt_revision_kind">opt_revision_kind - subversion
+	revision number kind enumeration</a></h2>
+<ul>
+<li>unspecified - No revision information given.</li>
+<li>number - revision given as number</li>
+<li>date - revision given as date</li>
+<li>committed - rev of most recent change</li>
+<li>previous - (rev of most recent change) - 1</li>
+<li>base - .svn/entries current revision</li>
+<li>working - current, plus local mods</li>
+<li>head - repository youngest</li>
+</ul>
+
+<h2><a href="#pysvn_module">pysvn</a>.<a
+	name="pysvn_wc_notify_action">wc_notify_action - subversion
+	notification callback action enumeration</a></h2>
+<ul>
+<li>add - Adding a path to revision control.</li>
+<li>copy - Copying a versioned path.</li>
+<li>delete - Deleting a versioned path.</li>
+<li>restore - Restoring a missing path from the pristine text-base.</li>
+<li>revert - Reverting a modified path.</li>
+<li>failed_revert - A revert operation has failed.</li>
+<li>resolved - Resolving a conflict.</li>
+<li>skip - Skipping a path.</li>
+<li>update_delete - Got a delete in an update.</li>
+<li>update_add - Got an add in an update.</li>
+<li>update_update - Got any other action in an update.</li>
+<li>update_completed - The last notification in an update (including updates of externals).</li>
+<li>update_external - Updating an external module.</li>
+<li>status_completed - The last notification in a status (including status on externals).</li>
+<li>status_external - Running status on an external module.</li>
+<li>commit_modified - Committing a modification.</li> 
+<li>commit_added - Committing an addition.</li>
+<li>commit_deleted - Committing a deletion.</li>
+<li>commit_replaced - Committing a replacement.</li>
+<li>commit_postfix_txdelta - Transmitting post-fix text-delta data for a file.</li>
+<li>annotate_revision - Processed a single revision's blame.</li>
+<li>locked - Locking a path.</li>
+<li>unlocked - Unlocking a path.</li>
+<li>failed_lock - Failed to lock a path.</li>
+<li>failed_unlock - Failed to unlock a path.</li>
+</ul>
+
+<h2><a href="#pysvn_module">pysvn</a>.<a
+	name="pysvn_wc_status_kind">wc_status_kind - subversion
+	status kind enumeration</a></h2>
+<ul>
+<li>none - does not exist</li>
+<li>unversioned - is not a versioned thing in this wc</li>
+<li>normal - exists, but uninteresting.</li>
+<li>added - is scheduled for addition</li>
+<li>missing - under v.c., but is missing</li>
+<li>deleted - scheduled for deletion</li>
+<li>replaced - was deleted and then re-added</li>
+<li>modified - text or props have been modified</li>
+<li>merged - local mods received repos mods</li>
+<li>conflicted - local mods received conflicting repos mods</li>
+<li>ignored - a resource marked as ignored</li>
+<li>obstructed - an unversioned resource is in the way of the versioned resource</li>
+<li>external - an unversioned path populated by an svn:external property</li>
+<li>incomplete - a directory doesn't contain a complete entries list </li>
+</ul>
+
+<h2><a href="#pysvn_module">pysvn</a>.<a
+	name="pysvn_wc_merge_outcome">wc_merge_outcome - subversion
+	merge outcome enumeration</a></h2>
+<ul>
+<li>unchanged - The working copy is (or would be) unchanged. The changes to be merged were already present in the working copy</li>
+<li>merged - The working copy has been (or would be) changed.</li>
+<li>conflict - The working copy has been (or would be) changed, but there was (or would be) a conflict</li>
+<li>no_merge - No merge was performed, probably because the target file was either absent or not under version control.</li>
+</ul>
+
+<h2><a href="#pysvn_module">pysvn</a>.<a
+	name="pysvn_wc_notify_state">wc_notify_state - subversion
+	notify callback state enumeration</a></h2>
+<ul>
+<li>inapplicable - inapplicable</li>
+<li>unknown - Notifier doesn't know or isn't saying.</li>
+<li>unchanged - The state did not change.</li>
+<li>missing - The item wasn't present.</li>
+<li>obstructed - An unversioned item obstructed work.</li>
+<li>changed - Pristine state was modified.</li>
+<li>merged - Modified state had mods merged in.</li>
+<li>conflicted - Modified state got conflicting mods.</li>
+</ul>
+
+<h2><a href="#pysvn_module">pysvn</a>.<a
+	name="pysvn_wc_schedule">wc_schedule - subversion
+	status schedule enumeration</a></h2>
+<ul>
+<li>normal - Nothing special here</li>
+<li>add - Slated for addition</li>
+<li>delete - Slated for deletion</li>
+<li>replace - Slated for replacement (delete + add)</li>
+</ul>
+
+<h2><a href="#pysvn_module">pysvn</a>.<a
+	name="pysvn_node_kind">node_kind - subversion
+	node kind enumeration</a></h2>
+<ul>
+<li>none - absent</li>
+<li>file - regular file</li>
+<li>dir - directory</li>
+<li>unknown - something's here, but we don't know what</li>
 
 <p>Copyright &copy; 2004-2006 Barry A. Scott. All rigths reserved.</p>
 <script type="text/javascript">
