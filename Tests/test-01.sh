@@ -1,7 +1,6 @@
 #!/bin/sh
 # need to get rid of any symbolic links in the WORKDIR
-cd ${WORKDIR}
-export WORKDIR=$( $PYTHON -c 'import os;print os.getcwd()' )
+export WORKDIR=$( ${PYTHON} -c 'import os;os.chdir("..");print os.getcwd()' )
 
 cd ${WORKDIR}/Tests
 echo WorkDir: ${WORKDIR}
@@ -111,10 +110,10 @@ cmd_pysvn export file://${TESTROOT}/repos/trunk/test ${TESTROOT}/export1.native
 cmd_pysvn export --native-eol CR file://${TESTROOT}/repos/trunk/test ${TESTROOT}/export1.cr
 cmd_pysvn export --native-eol LF file://${TESTROOT}/repos/trunk/test ${TESTROOT}/export1.lf
 cmd_pysvn export --native-eol CRLF file://${TESTROOT}/repos/trunk/test ${TESTROOT}/export1.crlf
-python ${WORKDIR}/Tests/find.py ${TESTROOT}/export1.native
-python ${WORKDIR}/Tests/find.py ${TESTROOT}/export1.cr
-python ${WORKDIR}/Tests/find.py ${TESTROOT}/export1.lf
-python ${WORKDIR}/Tests/find.py ${TESTROOT}/export1.crlf
+${PYTHON} ${WORKDIR}/Tests/find.py ${TESTROOT}/export1.native
+${PYTHON} ${WORKDIR}/Tests/find.py ${TESTROOT}/export1.cr
+${PYTHON} ${WORKDIR}/Tests/find.py ${TESTROOT}/export1.lf
+${PYTHON} ${WORKDIR}/Tests/find.py ${TESTROOT}/export1.crlf
 
 echo Info: Testing - import
 

@@ -1,25 +1,23 @@
 #!/bin/echo Usage: . $0
 
-# TARGET is set by the ReleaseEngineering scripts
-if [ -z "$TARGET" ]
+# default to highest version we can find if no value in $1 and $2
+if [ ! -z "$1" ]
 then
-    # set the ReleaseEngineering symbols in development mode
-    case $(uname -s) in
-    Darwin)
-        . ../../ReleaseEngineering/MacOSX/software-version.inc
-        ;;
-    *)
-        . ../../ReleaseEngineering/unix/software-version.inc\
-        ;;
-    esac
+    PREF_VER=$1.$2
+else
+    PREF_VER=
 fi
-export WORKDIR=$(cd ..;pwd)
+for PY_VER in ${PREF_VER} 2.6 2.5 2.4 2.3 2.2
+do
+    # used in pick python to use in Builder driver makefile
+    export PYTHON=$( which python${PY_VER} )
+    if [ -e "${PYTHON}" ]
+    then
+        break
+    fi
+done
+unset PREF_VER
 
-# default to 2.3 if no value in $1 and $2
-export PY_MAJ=${1:-2}
-export PY_MIN=${2:-3}
-
-export PYTHON=$( which python${PY_MAJ}.${PY_MIN} )
 if [ -e "${PYTHON}" ]
 then
     # prove the python version selected is as expected

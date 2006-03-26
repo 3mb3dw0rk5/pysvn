@@ -536,7 +536,7 @@ bool pysvn_context::contextSslClientCertPwPrompt
 }
 
 // common get a string implementation
-static bool get_string( Py::Object &fn, Py::Tuple &args, std::string & msg )
+static bool get_string( Py::Object &fn, Py::Tuple &args, std::string &msg )
 {
     // make sure we can call the users object
     if( !fn.isCallable() )
@@ -546,11 +546,12 @@ static bool get_string( Py::Object &fn, Py::Tuple &args, std::string & msg )
 
     Py::Tuple results;
     Py::Int retcode;
-    Py::String message;
+    Py::String maybe_unicode_message;
 
     results = callback.apply( args );
     retcode = results[0];
-    message = results[1];
+    maybe_unicode_message = results[1];
+    Py::String message( maybe_unicode_message.encode( "utf-8" ) );
 
     // true returned
     if( long( retcode ) != 0 )

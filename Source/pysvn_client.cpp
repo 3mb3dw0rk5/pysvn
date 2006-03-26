@@ -3057,7 +3057,7 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
         PythonAllowThreads permission( m_context );
 
         svn_revnum_t revnum;
-        svn_opt_revision_t rev = { svn_opt_revision_head, 0 };
+        svn_opt_revision_t rev = { svn_opt_revision_head, {0} };
 
         StatusEntriesBaton baton;
 

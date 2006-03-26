@@ -155,12 +155,14 @@ class MakeFileCreater:
             # add apr lib dir
             'apr_lib_dir':      self.find_apr_lib( argv ),
 
+            'lib_apr':          self.lib_apr,    # set as a side effect of find_apr_lib
+
             # pycxx src dir
             'pycxx_dir':        pycxx_dir
             }
 
-        if self.verbose:
-            print 'Info: Creating Makefile'
+        print 'Info: Creating Makefile for Source'
+
         makefile = file( 'Makefile', 'w' )
         if self.is_mac_os_x:
             # need to figure out the framework dir to use otherwise the latest
@@ -186,6 +188,20 @@ class MakeFileCreater:
                 print 'Info: Using unix makefile template'
             makefile.write( self.makefile_template % template_values )
         makefile.close()
+
+        print 'Info: Creating Makefile for Tests'
+
+        makefile = file( '../Tests/Makefile', 'w' )
+        makefile.write( self.makefile_tests_template % template_values )
+        makefile.close()
+
+
+    makefile_tests_template = '''#
+#	Created by pysvn Extension/Source/setup.py
+#
+PYTHON=%(python_exe)s
+include pysvn_test_common.mak
+'''
 
     makefile_template = '''#
 #	Created by pysvn Extension/Source/setup.py
@@ -223,7 +239,7 @@ LDLIBS=-L%(svn_lib_dir)s \
 -lsvn_wc-1 \
 -lsvn_fs-1 \
 -lsvn_subr-1 \
--lapr-0
+-l%(lib_apr)s
 include pysvn_common.mak
 '''
 
@@ -297,7 +313,7 @@ LDLIBS= \
 %(svn_lib_dir)s/libiconv.a \
 %(svn_lib_dir)s/libdb-4.3.a \
 -L%(apr_lib_dir)s \
--lapr-1 -lz
+-l%(lib_apr)s -lz
 include pysvn_common.mak
 '''
 
@@ -317,6 +333,7 @@ include pysvn_common.mak
                         '/sw/include/subversion-1',             # Darwin - Fink
                         '/usr/include/subversion-1',            # typical Linux
                         '/usr/local/include/subversion-1',      # typical *BSD
+                        '/usr/pkg/include/subversion-1',        # netbsd
                     ],
                     'svn_client.h' )
 
@@ -331,6 +348,7 @@ include pysvn_common.mak
                         '/usr/lib',                             # typical Linux
                         '/usr/local/lib64',                     # typical 64bit Linux
                         '/usr/local/lib',                       # typical *BSD
+                        '/usr/pkg/lib',                         # netbsb
                     ],
                     self.is_mac_os_x and 'libsvn_client-1.dylib' or 'libsvn_client-1.so' )
         # if we are using the Fink SVN then remember this
@@ -339,25 +357,33 @@ include pysvn_common.mak
         return dir
 
     def find_apr_inc( self, argv ):
-        return self.find_dir( argv,
+        last_exception = None
+        for apr_ver in ['apr-1', 'apr-0']:
+            try:
+                return self.find_dir( argv,
                     'APR include',
                     '--apr-inc-dir=',
                     [
-                        '/opt/local/include/apr-1',             # Darwin - darwin ports
-                        '/sw/include/apr-0',                    # Darwin - fink
-                        '/usr/include/apr-0',                   # typical Linux
+                        '/opt/local/include/%s' % apr_ver,      # Darwin - darwin ports
+                        '/sw/include/%s' % apr_ver,             # Darwin - fink
+                        '/usr/include/%s' % apr_ver,            # typical Linux
+                        '/usr/local/apr/include/%s' % apr_ver,  # Mac OS X www.metissian.com
+                        '/usr/pkg/include/%s' % apr_ver,        # netbsd
                         '/usr/include/apache2',                 # alternate Linux
                         '/usr/include/httpd',                   # alternate Linux
                         '/usr/local/include/apr0',              # typical *BSD
                         '/usr/local/include/apache2',           # alternate *BSD
-                        '/usr/local/apr/include/apr-0',         # Mac OS X www.metissian.com
                     ],
                     'apr.h' )
+            except SetupError, e:
+                last_exception = e
+        raise last_exception
 
     def find_apr_lib( self, argv ):
         last_exception = None
-        for apr_libname in [self.is_mac_os_x and 'libapr-1.dylib' or 'libapr-1.so',
-                            self.is_mac_os_x and 'libapr-0.dylib' or 'libapr-0.so']:
+        for apr_libname, self.lib_apr in [
+                            (self.is_mac_os_x and 'libapr-1.dylib' or 'libapr-1.so', 'apr-1'),
+                            (self.is_mac_os_x and 'libapr-0.dylib' or 'libapr-0.so', 'apr-0')]:
             try:
                 return self.find_dir( argv,
                     'APR library',
@@ -370,11 +396,12 @@ include pysvn_common.mak
                         '/usr/local/lib64',                     # typical 64bit Linux
                         '/usr/local/lib',                       # typical *BSD
                         '/usr/local/apr/lib',                   # Mac OS X www.metissian.com
+                        '/usr/pkg/lib',                         # netbsd
                     ],
                     apr_libname )
             except SetupError, e:
                 last_exception = e
-        raise e
+        raise last_exception
 
 
     def find_dir( self, argv, name, kw, base_dir_list, check_file=None ):

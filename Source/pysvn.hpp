@@ -295,7 +295,7 @@ public:
 
     virtual Py::Object getattr( const char *name );
     virtual int setattr( const char *name, const Py::Object &value );
-    virtual Py::Object pysvn_revision::repr();
+    virtual Py::Object repr();
 
     const svn_opt_revision_t &getSvnRevision() const;
 

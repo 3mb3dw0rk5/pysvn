@@ -247,7 +247,7 @@ public:
 
 private:
 #ifdef PYSVN_HAS_CONTEXT_LOG_MSG2
-    static svn_error_t *SvnContext::handlerLogMsg2
+    static svn_error_t *handlerLogMsg2
         (
         const char **log_msg,
         const char **tmp_file,
@@ -256,7 +256,7 @@ private:
         apr_pool_t *pool
         );
 #else
-    static svn_error_t *SvnContext::handlerLogMsg
+    static svn_error_t *handlerLogMsg
         (
         const char **log_msg,
         const char **tmp_file,
@@ -267,7 +267,7 @@ private:
 #endif
 
 #ifdef PYSVN_HAS_CONTEXT_PROGRESS
-    static void SvnContext::handlerProgress
+    static void handlerProgress
         (
         apr_off_t progress,
         apr_off_t total,
@@ -277,14 +277,14 @@ private:
 #endif
 
 #ifdef PYSVN_HAS_CONTEXT_NOTIFY2
-    static void SvnContext::handlerNotify2
+    static void handlerNotify2
         (
         void * baton,
 	const svn_wc_notify_t *notify,
 	apr_pool_t *pool        
         );
 #else
-    static void SvnContext::handlerNotify
+    static void handlerNotify
         (
         void * baton,
         const char *path,
@@ -296,7 +296,7 @@ private:
         svn_revnum_t revision
         );
 #endif
-    static svn_error_t *SvnContext::handlerCancel
+    static svn_error_t *handlerCancel
         (
         void * baton
         );
