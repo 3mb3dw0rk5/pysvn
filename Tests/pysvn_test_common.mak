@@ -83,7 +83,7 @@ new-05: test-05.unix.new.log
 
 test-06.unix.new.log: test-06.sh test-06.unix.known_good.log
 	-rm -rf testroot-06
-	if PYTHONPATH=../Source $(PYTHON) svn_min_version.py 1 3 0; then ./test-06.sh >test-06.unix.new.log 2>&1; fi
+	if PYTHONPATH=../Source $(PYTHON) svn_min_version.py 1 3 0; then PYTHON=$(PYTHON) ./test-06.sh >test-06.unix.new.log 2>&1; fi
 	if PYTHONPATH=../Source $(PYTHON) svn_min_version.py 1 3 0; then $(PYTHON) benchmark_diff.py test-06.unix.known_good.log test-06.unix.new.log; fi
 
 clean-06:
