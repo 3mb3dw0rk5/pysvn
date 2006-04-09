@@ -420,52 +420,69 @@ a tuple of three values (retcode, accepted_failures, save).
 <td><a href="#pysvn_client_checkin">checkin</a></td>
 <td><a href="#pysvn_client_checkout">checkout</a></td>
 <td><a href="#pysvn_client_cleanup">cleanup</a></td>
-<td><a href="#pysvn_client_copy">copy</a></td>
 </tr>
 <tr bgcolor="#e0e0e0">
+<td><a href="#pysvn_client_copy">copy</a></td>
 <td><a href="#pysvn_client_diff">diff</a></td>
 <td><span class="svn_1001000"><a href="#pysvn_client_diff_peg">diff_peg</a></span></td>
 <td><a href="#pysvn_client_export">export</a></td>
 <td><a href="#pysvn_client_get_auth_cache">get_auth_cache</a></td>
 <td><a href="#pysvn_client_get_auto_props">get_auto_props</a></td>
+</tr>
+<tr>
+<td><a href="#pysvn_client_get_default_password">get_default_password</a></td>
+<td><a href="#pysvn_client_get_default_username">get_default_username</a></td>
+<td><a href="#pysvn_client_get_interactive">get_interactive</a></td>
+<td><a href="#pysvn_client_get_store_passwords">get_store_passwords</a></td>
 <td><a href="#pysvn_client_import_">import_</a></td>
 <td><a href="#pysvn_client_info">info</a></td>
 </tr>
-<tr>
+<tr bgcolor="#e0e0e0">
 <td><span class="svn_1003000"><a href="#pysvn_client_info2">info2</a></span></td>
 <td><a href="#pysvn_client_is_url">is_url</a></td>
 <td><a href="#pysvn_client_log">log</a></td>
 <td><span class="svn_1002000"><a href="#pysvn_client_lock">lock</a></span></td>
 <td><a href="#pysvn_client_ls">ls</a></td>
 <td><a href="#pysvn_client_merge">merge</a></td>
-<td><span class="svn_1001000"><a href="#pysvn_client_merge_peg">merge_peg</a></span></td>
 </tr>
-<tr bgcolor="#e0e0e0">
+<tr>
+<td><span class="svn_1001000"><a href="#pysvn_client_merge_peg">merge_peg</a></span></td>
 <td><a href="#pysvn_client_mkdir">mkdir</a></td>
 <td><a href="#pysvn_client_move">move</a></td>
 <td><a href="#pysvn_client_propdel">propdel</a></td>
 <td><a href="#pysvn_client_propget">propget</a></td>
 <td><a href="#pysvn_client_proplist">proplist</a></td>
+</tr>
+<tr bgcolor="#e0e0e0">
 <td><a href="#pysvn_client_propset">propset</a></td>
 <td><a href="#pysvn_client_relocate">relocate</a></td>
-</tr>
-<tr>
 <td><a href="#pysvn_client_remove">remove</a></td>
 <td><a href="#pysvn_client_resolved">resolved</a></td>
 <td><a href="#pysvn_client_revert">revert</a></td>
 <td><a href="#pysvn_client_revpropdel">revpropdel</a></td>
+</tr>
+<tr>
 <td><a href="#pysvn_client_revpropget">revpropget</a></td>
 <td><a href="#pysvn_client_revproplist">revproplist</a></td>
 <td><a href="#pysvn_client_revpropset">revpropset</a></td>
-</tr>
-<tr bgcolor="#e0e0e0">
 <td><a href="#pysvn_client_set_auth_cache">set_auth_cache</a></td>
 <td><a href="#pysvn_client_set_auto_props">set_auto_props</a></td>
+<td><a href="#pysvn_client_set_default_password">set_default_password</a></td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a href="#pysvn_client_set_default_username">set_default_username</a></td>
+<td><a href="#pysvn_client_set_interactive">set_interactive</a></td>
+<td><a href="#pysvn_client_set_store_passwords">set_store_passwords</a></td>
 <td><a href="#pysvn_client_status">status</a></td>
 <td><a href="#pysvn_client_switch">switch</a></td>
 <td><span class="svn_1002000"><a href="#pysvn_client_unlock">unlock</a></span></td>
+</tr>
+<tr>
 <td><a href="#pysvn_client_update">update</a></td>
-<td>&nbsp;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
 </tr>
 </table>
 
@@ -748,6 +765,34 @@ enabled = get_auto_props()
 </pre>
 <p>Returns true if svn will automatically set properties
 when adding files, otherwise returns false.
+</p>
+
+<h4><a name="pysvn_client_get_default_password"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.get_default_password</a></h4>
+<pre>
+password = get_default_password()
+</pre>
+<p>Returns None if no default is set otherwise returns the password as a string.
+</p>
+
+<h4><a name="pysvn_client_get_default_username"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.get_default_username</a></h4>
+<pre>
+username = get_default_username()
+</pre>
+<p>Returns None if no default is set otherwise returns the username as a string.
+</p>
+
+<h4><a name="pysvn_client_get_interactive"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.get_interactive</a></h4>
+<pre>
+enabled = get_interactive()
+</pre>
+<p>Returns true if svn will prompt for missing credential information, otherwise returns false.
+</p>
+
+<h4><a name="pysvn_client_get_store_passwords"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.get_store_passwords</a></h4>
+<pre>
+enabled = get_store_passwords()
+</pre>
+<p>Returns true if svn will store passwords after prompting for them, otherwise returns false.
 </p>
 
 <h4><a name="pysvn_client_import_"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.import_</a></h4>
@@ -1223,6 +1268,35 @@ set_auto_props( enable )
 when adding files; otherwise when disabled it will not.
 </p>
 
+<h4><a name="pysvn_client_set_default_password"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.set_default_password</a></h4>
+<pre>
+set_default_password( password )
+</pre>
+<p>Set the default password to be used if there is no stored password.
+</p>
+
+<h4><a name="pysvn_client_set_default_username"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.set_default_username</a></h4>
+<pre>
+set_default_username( username )
+</pre>
+<p>Set the default username to be used if there is no stored username.
+</p>
+
+<h4><a name="pysvn_client_set_interactive"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.set_interactive</a></h4>
+<pre>
+set_interactive( enable )
+</pre>
+<p>When enable is True subversion will prompt for authentication credentials
+when there are no valid store credentials.
+</p>
+
+<h4><a name="pysvn_client_set_store_passwords"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.set_store_passwords</a></h4>
+<pre>
+set_store_passwords( enable )
+</pre>
+<p>When enable is True subversion will store any passwords that subversion prompted for.
+</p>
+
 <h4><a name="pysvn_client_status"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.status</a></h4>
 <pre>
 status_list = \
@@ -1346,8 +1420,8 @@ with the value 'transaction in use on another thread'.
 
 <td><a href="#pysvn_transaction_cat">cat</a></td>
 <td><a href="#pysvn_transaction_changed">changed</a></td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+<td>&#160;</td>
+<td>&#160;</td>
 </tr>
 
 <tr bgcolor="#e0e0e0">

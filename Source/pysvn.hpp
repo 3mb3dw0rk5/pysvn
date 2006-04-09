@@ -166,10 +166,12 @@ private:// methods
 
 private:// vaiables
 
-    PythonAllowThreads    *m_permission;
-    std::string        m_error_message;
-    std::string        m_log_message;
+    PythonAllowThreads  *m_permission;
+    std::string         m_error_message;
+    std::string         m_log_message;
 };
+
+class FunctionArguments;
 
 class pysvn_client : public Py::PythonExtension<pysvn_client>
 {
@@ -232,6 +234,14 @@ public:
     Py::Object set_auth_cache( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object get_auto_props( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object set_auto_props( const Py::Tuple& args, const Py::Dict &kws );
+    Py::Object get_interactive( const Py::Tuple &a_args, const Py::Dict &a_kws );
+    Py::Object set_interactive( const Py::Tuple &a_args, const Py::Dict &a_kws );
+    Py::Object get_default_username( const Py::Tuple &a_args, const Py::Dict &a_kws );
+    Py::Object set_default_username( const Py::Tuple &a_args, const Py::Dict &a_kws );
+    Py::Object get_default_password( const Py::Tuple &a_args, const Py::Dict &a_kws );
+    Py::Object set_default_password( const Py::Tuple &a_args, const Py::Dict &a_kws );
+    Py::Object get_store_passwords( const Py::Tuple &a_args, const Py::Dict &a_kws );
+    Py::Object set_store_passwords( const Py::Tuple &a_args, const Py::Dict &a_kws );
 
     // check that we are not in use on another thread
     void checkThreadPermission();
@@ -239,6 +249,11 @@ private:
     // helper function that wraps up the logic to throw a client error exception
     void throw_client_error( SvnException & );
 private:
+    Py::Object helper_boolean_auth_set( FunctionArguments &a_args, const char *a_arg_name, const char *a_param_name );
+    Py::Object helper_boolean_auth_get( FunctionArguments &a_args, const char *a_param_name );
+    Py::Object helper_string_auth_set( FunctionArguments &a_args, const char *a_arg_name, const char *a_param_name );
+    Py::Object helper_string_auth_get( FunctionArguments &a_args, const char *a_param_name );
+
     pysvn_module    &m_module;
     pysvn_context   m_context;
     int             m_exception_style;

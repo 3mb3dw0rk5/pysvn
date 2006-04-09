@@ -5,7 +5,13 @@ if [ ! -z "$1" ]
 then
     PREF_VER=$1.$2
 else
-    PREF_VER=
+    if [ "$(uname)" = "Darwin" ]
+    then
+        # default to 2.3 on Mac OS X
+        PREF_VER=2.3
+    else
+        PREF_VER=
+    fi
 fi
 for PY_VER in ${PREF_VER} 2.6 2.5 2.4 2.3 2.2
 do

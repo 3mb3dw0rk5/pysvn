@@ -72,6 +72,7 @@ static const char name_name[] = "name";
 static const char name_notice_ancestry[] = "notice_ancestry";
 static const char name_number[] = "number";
 static const char name_path[] = "path";
+static const char name_password[] = "password";
 static const char name_peg_revision[] = "peg_revision";
 static const char name_prop_name[] = "prop_name";
 static const char name_prop_value[] = "prop_value";
@@ -95,6 +96,7 @@ static const char name_url[] = "url";
 static const char name_url_or_path[] = "url_or_path";
 static const char name_url_or_path1[] = "url_or_path1";
 static const char name_url_or_path2[] = "url_or_path2";
+static const char name_username[] = "username";
 static const char name_utf8[] = "UTF-8";
 
 
@@ -161,7 +163,7 @@ Py::Object pysvn_client::getattr( const char *_name )
 
 static void set_callable( Py::Object &callback, const Py::Object &value )
 {
-    if( value.is( Py::Nothing() ) || value.isCallable() )
+    if( value.is( Py::None() ) || value.isCallable() )
         callback = value;
     else
         throw Py::AttributeError( "expecting None or a callable object" );
@@ -293,7 +295,7 @@ Py::Object pysvn_client::cmd_add( const Py::Tuple &a_args, const Py::Dict &a_kws
         throw_client_error( e );
     }
 
-    return Py::Nothing();
+    return Py::None();
 }
 
 class AnnotatedLineInfo
@@ -723,7 +725,7 @@ Py::Object pysvn_client::cmd_cleanup( const Py::Tuple &a_args, const Py::Dict &a
         throw_client_error( e );
     }
 
-    return Py::Nothing();
+    return Py::None();
 }
 
 Py::Object pysvn_client::cmd_copy( const Py::Tuple &a_args, const Py::Dict &a_kws )
@@ -1372,7 +1374,7 @@ Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kw
             throw SvnException( error );
 
         if( entry == NULL )
-            return Py::Nothing();
+            return Py::None();
 
         return Py::asObject( new pysvn_entry( entry, m_context ) );
     }
@@ -1382,7 +1384,7 @@ Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kw
         m_context.checkForError( m_module.client_error );
 
         throw_client_error( e );
-        return Py::Nothing();       // needed to remove warning about return value missing
+        return Py::None();       // needed to remove warning about return value missing
     }
 }
 
@@ -1758,7 +1760,7 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
             if( SVN_IS_VALID_REVNUM( change_entry.m_copy_from_revision ) )
                 changed_entry_dict[name_copyfrom_revision] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, change_entry.m_copy_from_revision ) );
             else
-                changed_entry_dict[name_copyfrom_revision] = Py::Nothing();
+                changed_entry_dict[name_copyfrom_revision] = Py::None();
 
             changed_paths_list.append( changed_entry_dict );
         }
@@ -1946,7 +1948,7 @@ Py::Object pysvn_client::cmd_merge( const Py::Tuple &a_args, const Py::Dict &a_k
         throw_client_error( e );
     }
 
-    return Py::Nothing();
+    return Py::None();
 }
 
 #ifdef PYSVN_HAS_CLIENT_MERGE_PEG
@@ -2015,7 +2017,7 @@ Py::Object pysvn_client::cmd_merge_peg( const Py::Tuple &a_args, const Py::Dict 
         throw_client_error( e );
     }
 
-    return Py::Nothing();
+    return Py::None();
 }
 #endif
 
@@ -2257,7 +2259,7 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a
         throw_client_error( e );
     }
 
-    return Py::Nothing();
+    return Py::None();
 }
 
 Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a_kws )
@@ -2538,7 +2540,7 @@ Py::Object pysvn_client::cmd_propset( const Py::Tuple &a_args, const Py::Dict &a
         throw_client_error( e );
     }
 
-    return Py::Nothing();
+    return Py::None();
 }
 
 Py::Object pysvn_client::cmd_relocate( const Py::Tuple &a_args, const Py::Dict &a_kws )
@@ -2589,7 +2591,7 @@ Py::Object pysvn_client::cmd_relocate( const Py::Tuple &a_args, const Py::Dict &
         throw_client_error( e );
     }
 
-    return Py::Nothing();
+    return Py::None();
 }
 
 Py::Object pysvn_client::cmd_remove( const Py::Tuple &a_args, const Py::Dict &a_kws )
@@ -2690,7 +2692,7 @@ Py::Object pysvn_client::cmd_resolved( const Py::Tuple &a_args, const Py::Dict &
         throw_client_error( e );
     }
 
-    return Py::Nothing();
+    return Py::None();
 }
 
 Py::Object pysvn_client::cmd_revert( const Py::Tuple &a_args, const Py::Dict &a_kws )
@@ -2742,7 +2744,7 @@ Py::Object pysvn_client::cmd_revert( const Py::Tuple &a_args, const Py::Dict &a_
         throw Py::TypeError( type_error_message );
     }
 
-    return Py::Nothing();
+    return Py::None();
 }
 
 Py::Object pysvn_client::cmd_revpropdel( const Py::Tuple &a_args, const Py::Dict &a_kws )
@@ -2856,7 +2858,7 @@ Py::Object pysvn_client::cmd_revpropget( const Py::Tuple &a_args, const Py::Dict
     // prop_name that is not in this rev returns a NULL value
     if( propval == NULL )
     {
-        result[1] = Py::Nothing();
+        result[1] = Py::None();
     }
     else
     {
@@ -3353,49 +3355,11 @@ Py::Object pysvn_client::cmd_update( const Py::Tuple &a_args, const Py::Dict &a_
 }
 #endif
 
-Py::Object pysvn_client::get_auth_cache( const Py::Tuple &a_args, const Py::Dict &a_kws )
+Py::Object pysvn_client::helper_boolean_auth_set( FunctionArguments &a_args, const char *a_arg_name, const char *a_param_name )
 {
-    static argument_description args_desc[] =
-    {
-    { false, NULL }
-    };
-    FunctionArguments args( "get_auth_cache", args_desc, a_args, a_kws );
-    args.check();
+    a_args.check();
 
-    char *param = NULL;
-    try
-    {
-        param = (char *)svn_auth_get_parameter
-            (
-            m_context.ctx()->auth_baton,
-            SVN_AUTH_PARAM_NO_AUTH_CACHE
-            );
-    }
-    catch( SvnException &e )
-    {
-        // use callback error over ClientException
-        m_context.checkForError( m_module.client_error );
-
-        throw_client_error( e );
-    }
-
-    bool no_auth_cache = (param != NULL && param[0] == '1');
-    if( no_auth_cache )
-        return Py::Int( 0 );
-    return Py::Int( 1 );
-}
-
-Py::Object pysvn_client::set_auth_cache( const Py::Tuple &a_args, const Py::Dict &a_kws )
-{
-    static argument_description args_desc[] =
-    {
-    { true,  name_enable },
-    { false, NULL }
-    };
-    FunctionArguments args( "set_auth_cache", args_desc, a_args, a_kws );
-    args.check();
-
-    bool enable( args.getBoolean( name_enable ) );
+    bool enable( a_args.getBoolean( a_arg_name ) );
     try
     {
         void *param = 0;
@@ -3405,7 +3369,7 @@ Py::Object pysvn_client::set_auth_cache( const Py::Tuple &a_args, const Py::Dict
         svn_auth_set_parameter
             (
             m_context.ctx()->auth_baton,
-            SVN_AUTH_PARAM_NO_AUTH_CACHE,
+            a_param_name,
             param
             );
     }
@@ -3417,7 +3381,208 @@ Py::Object pysvn_client::set_auth_cache( const Py::Tuple &a_args, const Py::Dict
         throw_client_error( e );
     }
 
-    return Py::Nothing();
+    return Py::None();
+}
+
+Py::Object pysvn_client::helper_boolean_auth_get( FunctionArguments &a_args, const char *a_param_name )
+{
+    a_args.check();
+
+    char *param = NULL;
+    try
+    {
+        param = (char *)svn_auth_get_parameter
+            (
+            m_context.ctx()->auth_baton,
+            a_param_name
+            );
+    }
+    catch( SvnException &e )
+    {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
+        throw_client_error( e );
+    }
+
+    bool not_set = param != NULL && param[0] == '1';
+    if( not_set )
+        return Py::Int( 0 );
+    return Py::Int( 1 );
+}
+
+Py::Object pysvn_client::helper_string_auth_set( FunctionArguments &a_args, const char *a_arg_name, const char *a_param_name )
+{
+    a_args.check();
+
+    const char *param = NULL;
+    Py::Object param_obj( a_args.getArg( a_arg_name ) );
+    if( !param_obj.is( Py::None() ) )
+    {
+        Py::String param_str( param_obj );
+        param = param_str.as_std_string().c_str();
+    }
+
+    try
+    {
+        svn_auth_set_parameter
+            (
+            m_context.ctx()->auth_baton,
+            a_param_name,
+            param
+            );
+    }
+    catch( SvnException &e )
+    {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
+        throw_client_error( e );
+    }
+
+    return Py::None();
+}
+
+Py::Object pysvn_client::helper_string_auth_get( FunctionArguments &a_args, const char *a_param_name )
+{
+    a_args.check();
+
+    char *param = NULL;
+    try
+    {
+        param = (char *)svn_auth_get_parameter
+            (
+            m_context.ctx()->auth_baton,
+            a_param_name
+            );
+    }
+    catch( SvnException &e )
+    {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
+        throw_client_error( e );
+    }
+
+    if( param != NULL )
+        return Py::String( param );
+
+    return Py::None();
+}
+
+Py::Object pysvn_client::get_auth_cache( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { false, NULL }
+    };
+    FunctionArguments args( "get_auth_cache", args_desc, a_args, a_kws );
+
+    return helper_boolean_auth_get( args, SVN_AUTH_PARAM_NO_AUTH_CACHE );
+}
+
+Py::Object pysvn_client::get_interactive( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { false, NULL }
+    };
+    FunctionArguments args( "get_interactive", args_desc, a_args, a_kws );
+
+    return helper_boolean_auth_get( args, SVN_AUTH_PARAM_NON_INTERACTIVE );
+}
+
+Py::Object pysvn_client::get_store_passwords( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { false, NULL }
+    };
+    FunctionArguments args( "get_store_passwords", args_desc, a_args, a_kws );
+
+    return helper_boolean_auth_get( args, SVN_AUTH_PARAM_DONT_STORE_PASSWORDS );
+}
+
+Py::Object pysvn_client::get_default_username( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { false, NULL }
+    };
+    FunctionArguments args( "get_default_username", args_desc, a_args, a_kws );
+
+    return helper_string_auth_get( args, SVN_AUTH_PARAM_DEFAULT_USERNAME );
+}
+
+Py::Object pysvn_client::get_default_password( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { false, NULL }
+    };
+    FunctionArguments args( "get_default_password", args_desc, a_args, a_kws );
+
+    return helper_string_auth_get( args, SVN_AUTH_PARAM_DEFAULT_PASSWORD );
+}
+
+Py::Object pysvn_client::set_auth_cache( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_enable },
+    { false, NULL }
+    };
+    FunctionArguments args( "set_auth_cache", args_desc, a_args, a_kws );
+
+    return helper_boolean_auth_set( args, name_enable, SVN_AUTH_PARAM_NO_AUTH_CACHE );
+}
+
+Py::Object pysvn_client::set_interactive( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_enable },
+    { false, NULL }
+    };
+    FunctionArguments args( "set_interactive", args_desc, a_args, a_kws );
+
+    return helper_boolean_auth_set( args, name_enable, SVN_AUTH_PARAM_NON_INTERACTIVE );
+}
+
+Py::Object pysvn_client::set_store_passwords( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_enable },
+    { false, NULL }
+    };
+    FunctionArguments args( "set_store_passwords", args_desc, a_args, a_kws );
+
+    return helper_boolean_auth_set( args, name_enable, SVN_AUTH_PARAM_DONT_STORE_PASSWORDS );
+}
+
+Py::Object pysvn_client::set_default_username( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_username },
+    { false, NULL }
+    };
+    FunctionArguments args( "set_default_username", args_desc, a_args, a_kws );
+
+    return helper_string_auth_set( args, name_username, SVN_AUTH_PARAM_DEFAULT_USERNAME );
+}
+
+Py::Object pysvn_client::set_default_password( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_password },
+    { false, NULL }
+    };
+    FunctionArguments args( "set_default_password", args_desc, a_args, a_kws );
+
+    return helper_string_auth_set( args, name_password, SVN_AUTH_PARAM_DEFAULT_PASSWORD );
 }
 
 Py::Object pysvn_client::get_auto_props( const Py::Tuple &a_args, const Py::Dict &a_kws )
@@ -3495,7 +3660,7 @@ Py::Object pysvn_client::set_auto_props( const Py::Tuple &a_args, const Py::Dict
         throw_client_error( e );
     }
 
-    return Py::Nothing();
+    return Py::None();
 }
 
 Py::Object pysvn_client::is_url( const Py::Tuple &a_args, const Py::Dict &a_kws )
@@ -3548,6 +3713,12 @@ void pysvn_client::init_type()
     add_keyword_method("copy", &pysvn_client::cmd_copy, pysvn_client_copy_doc );
     add_keyword_method("diff", &pysvn_client::cmd_diff, pysvn_client_diff_doc );
     add_keyword_method("export", &pysvn_client::cmd_export, pysvn_client_export_doc );
+    add_keyword_method("get_auth_cache", &pysvn_client::get_auth_cache, pysvn_client_get_auth_cache_doc );
+    add_keyword_method("get_auto_props", &pysvn_client::get_auto_props, pysvn_client_get_auto_props_doc );
+    add_keyword_method("get_default_password", &pysvn_client::get_default_password, pysvn_client_get_default_password_doc );
+    add_keyword_method("get_default_username", &pysvn_client::get_default_username, pysvn_client_get_default_username_doc );
+    add_keyword_method("get_interactive", &pysvn_client::get_interactive, pysvn_client_get_interactive_doc );
+    add_keyword_method("get_store_passwords", &pysvn_client::get_store_passwords, pysvn_client_get_store_passwords_doc );
     add_keyword_method("import_", &pysvn_client::cmd_import, pysvn_client_import__doc );
     add_keyword_method("info", &pysvn_client::cmd_info, pysvn_client_info_doc );
 
@@ -3575,10 +3746,12 @@ void pysvn_client::init_type()
     add_keyword_method("revpropget", &pysvn_client::cmd_revpropget, pysvn_client_revpropget_doc );
     add_keyword_method("revproplist", &pysvn_client::cmd_revproplist, pysvn_client_revproplist_doc );
     add_keyword_method("revpropset", &pysvn_client::cmd_revpropset, pysvn_client_revpropset_doc );
-    add_keyword_method("get_auth_cache", &pysvn_client::get_auth_cache, pysvn_client_get_auth_cache_doc );
     add_keyword_method("set_auth_cache", &pysvn_client::set_auth_cache, pysvn_client_set_auth_cache_doc );
-    add_keyword_method("get_auto_props", &pysvn_client::get_auto_props, pysvn_client_get_auto_props_doc );
     add_keyword_method("set_auto_props", &pysvn_client::set_auto_props, pysvn_client_set_auto_props_doc );
+    add_keyword_method("set_default_password", &pysvn_client::set_default_password, pysvn_client_set_default_password_doc );
+    add_keyword_method("set_default_username", &pysvn_client::set_default_username, pysvn_client_set_default_username_doc );
+    add_keyword_method("set_interactive", &pysvn_client::set_interactive, pysvn_client_set_interactive_doc );
+    add_keyword_method("set_store_passwords", &pysvn_client::set_store_passwords, pysvn_client_set_store_passwords_doc );
     add_keyword_method("status", &pysvn_client::cmd_status, pysvn_client_status_doc );
     add_keyword_method("switch", &pysvn_client::cmd_switch, pysvn_client_switch_doc );
 #ifdef PYSVN_HAS_CLIENT_LOCK

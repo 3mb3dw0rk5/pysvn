@@ -248,3 +248,5 @@ cmd_pysvn merge --dry-run --revision 16:17 file://${TESTROOT}/root/repos/trunk/t
 cmd_pysvn merge --revision 16:17 file://${TESTROOT}/root/repos/trunk/test ${TESTROOT}/wc3/test-branch
 cmd_pysvn status ${TESTROOT}/wc3/test-branch
 cmd_pysvn diff ${TESTROOT}/wc3/test-branch
+
+cmd ${PYTHON} ${WORKDIR}/Tests/test_01_set_get_tests.py
