@@ -52,26 +52,29 @@ public:
 
     void checkForError( Py::ExtensionExceptionType &exception_for_error );
 
-public:    // data
+public:     // data
 
     //
     // Python class that has implements the callback methods
     //
-    Py::Object m_pyfn_GetLogin;
-    Py::Object m_pyfn_Notify;
+    Py::Object  m_pyfn_GetLogin;
+    Py::Object  m_pyfn_Notify;
 #ifdef PYSVN_HAS_CONTEXT_PROGRESS
-    Py::Object m_pyfn_Progress;
+    Py::Object  m_pyfn_Progress;
 #endif
-    Py::Object m_pyfn_Cancel;
-    Py::Object m_pyfn_GetLogMessage;
-    Py::Object m_pyfn_SslServerPrompt;
-    Py::Object m_pyfn_SslServerTrustPrompt;
-    Py::Object m_pyfn_SslClientCertPrompt;
-    Py::Object m_pyfn_SslClientCertPwPrompt;
+    Py::Object  m_pyfn_Cancel;
+    Py::Object  m_pyfn_GetLogMessage;
+    Py::Object  m_pyfn_SslServerPrompt;
+    Py::Object  m_pyfn_SslServerTrustPrompt;
+    Py::Object  m_pyfn_SslClientCertPrompt;
+    Py::Object  m_pyfn_SslClientCertPwPrompt;
+
+    std::string m_default_username;
+    std::string m_default_password;
 
     void setLogMessage( const std::string &message );
 
-private:// methods
+private:    // methods
 
     //
     // this method will be called to retrieve
@@ -169,6 +172,7 @@ private:// vaiables
     PythonAllowThreads  *m_permission;
     std::string         m_error_message;
     std::string         m_log_message;
+
 };
 
 class FunctionArguments;
@@ -251,7 +255,8 @@ private:
 private:
     Py::Object helper_boolean_auth_set( FunctionArguments &a_args, const char *a_arg_name, const char *a_param_name );
     Py::Object helper_boolean_auth_get( FunctionArguments &a_args, const char *a_param_name );
-    Py::Object helper_string_auth_set( FunctionArguments &a_args, const char *a_arg_name, const char *a_param_name );
+    Py::Object helper_string_auth_set( FunctionArguments &a_args,
+                                        const char *a_arg_name, const char *a_param_name, std::string &ctx_str );
     Py::Object helper_string_auth_get( FunctionArguments &a_args, const char *a_param_name );
 
     pysvn_module    &m_module;

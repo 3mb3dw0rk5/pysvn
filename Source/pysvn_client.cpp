@@ -3411,7 +3411,13 @@ Py::Object pysvn_client::helper_boolean_auth_get( FunctionArguments &a_args, con
     return Py::Int( 1 );
 }
 
-Py::Object pysvn_client::helper_string_auth_set( FunctionArguments &a_args, const char *a_arg_name, const char *a_param_name )
+Py::Object pysvn_client::helper_string_auth_set
+    (
+    FunctionArguments &a_args,
+    const char *a_arg_name,
+    const char *a_param_name,
+    std::string &ctx_str
+    )
 {
     a_args.check();
 
@@ -3420,7 +3426,8 @@ Py::Object pysvn_client::helper_string_auth_set( FunctionArguments &a_args, cons
     if( !param_obj.is( Py::None() ) )
     {
         Py::String param_str( param_obj );
-        param = param_str.as_std_string().c_str();
+        ctx_str = param_str.as_std_string();
+        param = ctx_str.c_str();
     }
 
     try
@@ -3570,7 +3577,7 @@ Py::Object pysvn_client::set_default_username( const Py::Tuple &a_args, const Py
     };
     FunctionArguments args( "set_default_username", args_desc, a_args, a_kws );
 
-    return helper_string_auth_set( args, name_username, SVN_AUTH_PARAM_DEFAULT_USERNAME );
+    return helper_string_auth_set( args, name_username, SVN_AUTH_PARAM_DEFAULT_USERNAME, m_context.m_default_username );
 }
 
 Py::Object pysvn_client::set_default_password( const Py::Tuple &a_args, const Py::Dict &a_kws )
@@ -3582,7 +3589,7 @@ Py::Object pysvn_client::set_default_password( const Py::Tuple &a_args, const Py
     };
     FunctionArguments args( "set_default_password", args_desc, a_args, a_kws );
 
-    return helper_string_auth_set( args, name_password, SVN_AUTH_PARAM_DEFAULT_PASSWORD );
+    return helper_string_auth_set( args, name_password, SVN_AUTH_PARAM_DEFAULT_PASSWORD, m_context.m_default_password );
 }
 
 Py::Object pysvn_client::get_auto_props( const Py::Tuple &a_args, const Py::Dict &a_kws )
