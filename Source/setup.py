@@ -311,7 +311,6 @@ LDLIBS= \
 %(svn_lib_dir)s/libcrypto.a \
 %(svn_lib_dir)s/libexpat.a \
 %(svn_lib_dir)s/libiconv.a \
-%(svn_lib_dir)s/libintl.a \
 %(svn_lib_dir)s/libdb-4.3.a \
 -L%(apr_lib_dir)s \
 -l%(lib_apr)s \

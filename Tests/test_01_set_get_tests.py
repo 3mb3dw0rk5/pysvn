@@ -1,6 +1,7 @@
+import sys
 import pysvn
 
-c = pysvn.Client()
+c = pysvn.Client( sys.argv[1] )
 
 print 'Info: Initial values'
 

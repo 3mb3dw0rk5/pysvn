@@ -249,4 +249,4 @@ cmd_pysvn merge --revision 16:17 file://${TESTROOT}/root/repos/trunk/test ${TEST
 cmd_pysvn status ${TESTROOT}/wc3/test-branch
 cmd_pysvn diff ${TESTROOT}/wc3/test-branch
 
-cmd ${PYTHON} ${WORKDIR}/Tests/test_01_set_get_tests.py
+cmd ${PYTHON} ${WORKDIR}/Tests/test_01_set_get_tests.py ${TESTROOT}/configdir
