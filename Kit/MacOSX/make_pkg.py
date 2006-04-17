@@ -23,6 +23,13 @@ build_time_str = time.strftime( '%d-%b-%Y %H:%M', time.localtime( build_time ) )
 year = time.strftime( '%Y', time.localtime( build_time ) )
 tmpdir = os.path.join( os.getcwd(), 'tmp' )
 
+if pymaj == 2 and pymin == 3:
+    install_dir = '/System/Library/Frameworks/Python.framework/Versions/2.3/lib/python2.3/site-packages'
+elif pymaj == 2 and pymin == 4:
+    install_dir = '/Library/Frameworks/Python.framework/Versions/2.4/lib/python2.4/site-packages'
+else:
+    raise RuntimeError( 'Unsupported version of python' )
+
 if os.path.exists( tmpdir ):
     print 'Info: Clean up tmp directory'
     os.system( 'rm -rf tmp' )
@@ -92,9 +99,9 @@ for libpath in dylib_list:
     os.system( 'install_name_tool'
         ' -change'
         ' %s'
-        ' /System/Library/Frameworks/Python.framework/Versions/2.3/lib/python2.3/site-packages/pysvn/%s'
+        ' %s/pysvn/%s'
         ' %s' %
-            (libpath, os.path.basename( libpath ), 'tmp/Contents/pysvn/_pysvn.so') )
+            (libpath, install_dir, os.path.basename( libpath ), 'tmp/Contents/pysvn/_pysvn.so') )
 
 print 'Info: Create tmp/Resources/ReadMe.txt'
 f = file('tmp/Resources/ReadMe.txt','w')
@@ -137,7 +144,7 @@ f.write('''<?xml version="1.0" encoding="UTF-8"?>
     <key>IFPkgFlagAuthorizationAction</key>
     <string>AdminAuthorization</string>
     <key>IFPkgFlagDefaultLocation</key>
-    <string>/System/Library/Frameworks/Python.framework/Versions/%(pymaj)s.%(pymin)s/lib/python%(pymaj)s.%(pymin)s/site-packages</string>
+    <string>%(install_dir)s</string>
     <key>IFPkgFlagInstallFat</key>
     <false/>
     <key>IFPkgFlagIsRequired</key>
@@ -157,6 +164,22 @@ f.write('''<?xml version="1.0" encoding="UTF-8"?>
 ''' % locals() )
 f.close()
 
+print 'Info: Create tmp/Description.plist'
+f = file('tmp/Description.plist','w')
+f.write('''<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IFPkgDescriptionDescription</key>
+	<string>PySVN Extension
+</string>
+	<key>IFPkgDescriptionTitle</key>
+	<string>PySVN Extension</string>
+</dict>
+</plist>
+''' )
+f.close()
+
 print 'Info: PackageMaker'
 cmd = [    '/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker',
     '-build',
@@ -164,6 +187,7 @@ cmd = [    '/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/Pa
     '-f %s' % os.path.abspath( 'tmp/Contents' ),
     '-r %s' % os.path.abspath( 'tmp/Resources' ),
     '-i %s' % os.path.abspath( 'tmp/Info.plist' ),
+    '-d %s' % os.path.abspath( 'tmp/Description.plist' ),
     ]
 os.system( ' '.join( cmd ) )
 
