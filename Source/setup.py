@@ -172,15 +172,23 @@ class MakeFileCreater:
             if self.cmp_mac_os_x_version( (10,4) ) >= 0:
                 if self.verbose:
                     print 'Info: Using Mac OS X 10.4 makefile template'
+
+                # 10.4 needs the libintl.a but 10.3 does not
+                template_values['extra_libs'] = '%(svn_lib_dir)s/libintl.a' % template_values
                 template_values['frameworks'] = '-F%s -framework System -framework Python -framework CoreFoundation -framework Kerberos' % framework_dir
             else:
                 if self.verbose:
                     print 'Info: Using Mac OS X 10.3 makefile template'
+
+                template_values['extra_libs'] = ''
                 template_values['frameworks'] = '-F%s -framework System -framework Python -framework CoreFoundation' % framework_dir
+
             if self.is_mac_os_x_fink:
                 makefile.write( self.makefile_template_macosx_fink % template_values )
+
             elif self.is_mac_os_x_darwin_ports:
                 makefile.write( self.makefile_template_macosx_darwin_ports % template_values )
+
             else:
                 makefile.write( self.makefile_template_macosx % template_values )
         else:
@@ -312,6 +320,7 @@ LDLIBS= \
 %(svn_lib_dir)s/libexpat.a \
 %(svn_lib_dir)s/libiconv.a \
 %(svn_lib_dir)s/libdb-4.3.a \
+%(extra_libs)s \
 -L%(apr_lib_dir)s \
 -l%(lib_apr)s \
 -lz
