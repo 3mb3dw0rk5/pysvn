@@ -54,8 +54,8 @@ rem  test_1.output end ------------------------------------------
 
 rem Delete one file
 
-%PYSVN% rm ${TESTROOT}/wc/a/file1.txt
-%PYSVN% checkin -m "Delete one file" ${TESTROOT}/wc
+%PYSVN% rm b:\wc\a\file1.txt
+%PYSVN% checkin -m "Delete one file" b:\wc
 rem test_1.output start ----------------------------------------
 type b:\test_1.output
 rem test_1.output end ------------------------------------------
