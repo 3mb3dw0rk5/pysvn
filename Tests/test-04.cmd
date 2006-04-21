@@ -38,7 +38,7 @@ echo file1 A >b:\wc\a\file1.txt
 
 %PYSVN% add b:\wc\file1.txt
 %PYSVN% add b:\wc\a\file1.txt
-%PYSVN% ci -m "Add two files" b:\wc
+%PYSVN% checkin -m "Add two files" b:\wc
 rem test_1.output start ----------------------------------------
 type b:\test_1.output
 rem  test_1.output end ------------------------------------------
@@ -47,9 +47,17 @@ rem Mod one file Mod one prop
 
 echo file1 ROOT ln 2 >b:\wc\file1.txt
 %PYSVN% propset svn:eol-style native b:\wc\a\file1.txt
-%PYSVN% ci -m "Mod one file Mod one prop" b:\wc
+%PYSVN% checkin -m "Mod one file Mod one prop" b:\wc
 rem test_1.output start ----------------------------------------
 type b:\test_1.output
 rem  test_1.output end ------------------------------------------
+
+rem Delete one file
+
+%PYSVN% rm ${TESTROOT}/wc/a/file1.txt
+%PYSVN% checkin -m "Delete one file" ${TESTROOT}/wc
+rem test_1.output start ----------------------------------------
+type b:\test_1.output
+rem test_1.output end ------------------------------------------
 
 endlocal

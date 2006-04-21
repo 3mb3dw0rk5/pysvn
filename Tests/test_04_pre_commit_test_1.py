@@ -16,11 +16,12 @@ change_list = changes.items()
 change_list.sort()
 for name, (action, kind, text_mod, prop_mod) in change_list:
     print '%s: action=%r, kind=%r, text_mod=%r, prop_mod=%r' % (name, action, kind, text_mod, prop_mod)
-    all_props = t.proplist( name )
-    for prop_name, prop_value in all_props.items():
-        print '     %s: %s' % (prop_name, prop_value)
-    if kind == pysvn.node_kind.file:
-        print '     contents: %r' % t.cat( name )
+    if action != 'D':
+        all_props = t.proplist( name )
+        for prop_name, prop_value in all_props.items():
+            print '     %s: %s' % (prop_name, prop_value)
+        if kind == pysvn.node_kind.file:
+            print '     contents: %r' % t.cat( name )
 
 
 sys.exit( 0 )

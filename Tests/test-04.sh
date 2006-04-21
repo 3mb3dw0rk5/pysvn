@@ -56,12 +56,19 @@ echo Info: test_1.output start ----------------------------------------
 cat ${TESTROOT}/test_1.output
 echo Info: test_1.output end ------------------------------------------
 
-
 echo Info: Mod one file Mod one prop
 
 echo file1 ROOT ln 2 > ${TESTROOT}/wc/file1.txt
 cmd ${PYSVN} propset svn:eol-style native ${TESTROOT}/wc/a/file1.txt
 cmd ${PYSVN} checkin -m "Mod one file Mod one prop" ${TESTROOT}/wc
+echo Info: test_1.output start ----------------------------------------
+cat ${TESTROOT}/test_1.output
+echo Info: test_1.output end ------------------------------------------
+
+echo Info: Delete one file
+
+cmd ${PYSVN} rm ${TESTROOT}/wc/a/file1.txt
+cmd ${PYSVN} checkin -m "Delete one file" ${TESTROOT}/wc
 echo Info: test_1.output start ----------------------------------------
 cat ${TESTROOT}/test_1.output
 echo Info: test_1.output end ------------------------------------------
