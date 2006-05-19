@@ -195,12 +195,19 @@ class MakeFileCreater:
             if self.verbose:
                 print 'Info: Using unix makefile template'
             makefile.write( self.makefile_template % template_values )
+
+        f = file( 'pysvn_common.mak', 'r' )
+        makefile.write( f.read() )
+        f.close()
         makefile.close()
 
         print 'Info: Creating Makefile for Tests'
 
         makefile = file( '../Tests/Makefile', 'w' )
         makefile.write( self.makefile_tests_template % template_values )
+        f = file( '../Tests/pysvn_test_common.mak', 'r' )
+        makefile.write( f.read() )
+        f.close()
         makefile.close()
 
 
@@ -208,7 +215,8 @@ class MakeFileCreater:
 #	Created by pysvn Extension/Source/setup.py
 #
 PYTHON=%(python_exe)s
-include pysvn_test_common.mak
+
+#include pysvn_test_common.mak
 '''
 
     makefile_template = '''#
@@ -226,7 +234,7 @@ LDLIBS=-L%(svn_lib_dir)s \
 -lsvn_client-1 \
 -lsvn_repos-1
 
-include pysvn_common.mak
+#include pysvn_common.mak
 '''
 
     makefile_template_macosx = '''#
@@ -248,7 +256,7 @@ LDLIBS=-L%(svn_lib_dir)s \
 -lsvn_fs-1 \
 -lsvn_subr-1 \
 -l%(lib_apr)s
-include pysvn_common.mak
+#include pysvn_common.mak
 '''
 
     makefile_template_macosx_fink = '''#
@@ -285,7 +293,8 @@ LDLIBS= \
 %(svn_lib_dir)s/libxml2.a \
 %(svn_lib_dir)s/libdb-4.3.a \
  -lintl.3 -liconv.2 -lz
-include pysvn_common.mak
+
+#include pysvn_common.mak
 '''
 
     makefile_template_macosx_darwin_ports = '''#
@@ -324,7 +333,8 @@ LDLIBS= \
 -L%(apr_lib_dir)s \
 -l%(lib_apr)s \
 -lz
-include pysvn_common.mak
+
+#include pysvn_common.mak
 '''
 
     def find_pycxx( self, argv ):
