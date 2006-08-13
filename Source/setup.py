@@ -213,6 +213,7 @@ class MakeFileCreater:
 
     makefile_tests_template = '''#
 #	Created by pysvn Extension/Source/setup.py
+#       -- makefile_tests_template --
 #
 PYTHON=%(python_exe)s
 
@@ -221,6 +222,7 @@ PYTHON=%(python_exe)s
 
     makefile_template = '''#
 #	Created by pysvn Extension/Source/setup.py
+#       -- makefile_template --
 #
 PYTHON=%(python_exe)s
 SVN_INCLUDE=%(svn_include)s
@@ -232,6 +234,7 @@ PYCXX=%(pycxx_dir)s
 LDSHARED=g++ -shared
 LDLIBS=-L%(svn_lib_dir)s \
 -lsvn_client-1 \
+-lsvn_diff-1 \
 -lsvn_repos-1
 
 #include pysvn_common.mak
@@ -239,6 +242,7 @@ LDLIBS=-L%(svn_lib_dir)s \
 
     makefile_template_macosx = '''#
 #	Created by pysvn Extension/Source/setup.py
+#       -- makefile_template_macosx --
 #
 PYTHON=%(python_exe)s
 SVN_INCLUDE=%(svn_include)s
@@ -255,12 +259,14 @@ LDLIBS=-L%(svn_lib_dir)s \
 -lsvn_wc-1 \
 -lsvn_fs-1 \
 -lsvn_subr-1 \
+-lsvn_diff-1 \
 -l%(lib_apr)s
 #include pysvn_common.mak
 '''
 
     makefile_template_macosx_fink = '''#
 #	Created by pysvn Extension/Source/setup.py
+#       -- makefile_template_macosx_fink --
 #
 PYTHON=%(python_exe)s
 SVN_INCLUDE=%(svn_include)s
@@ -299,6 +305,7 @@ LDLIBS= \
 
     makefile_template_macosx_darwin_ports = '''#
 #	Created by pysvn Extension/Source/setup.py
+#       -- makefile_template_macosx_darwin_ports --
 #
 PYTHON=%(python_exe)s
 SVN_INCLUDE=%(svn_include)s

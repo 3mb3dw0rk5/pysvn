@@ -46,6 +46,7 @@ static const char name_date[] = "date";
 static const char name_dest_path[] = "dest_path";
 static const char name_dest_url_or_path[] = "dest_url_or_path";
 static const char name_diff_deleted[] = "diff_deleted";
+static const char name_diff_options[] = "diff_options";
 static const char name_discover_changed_paths[] = "discover_changed_paths";
 static const char name_dry_run[] = "dry_run";
 static const char name_enable[] = "enable";
@@ -58,7 +59,10 @@ static const char name_header_encoding[] = "header_encoding";
 static const char name_ignore[] = "ignore";
 static const char name_ignore_ancestry[] = "ignore_ancestry";
 static const char name_ignore_content_type[] = "ignore_content_type";
+static const char name_ignore_eol_style[] = "ignore_eol_style";
 static const char name_ignore_externals[] = "ignore_externals";
+static const char name_ignore_mime_type[] = "ignore_mime_type";
+static const char name_ignore_space[] = "ignore_space";
 static const char name_keep_locks[] = "keep_locks";
 static const char name_kind[] = "kind";
 static const char name_last_author[] = "last_author";
@@ -68,6 +72,7 @@ static const char name_line[] = "line";
 static const char name_local_path[] = "local_path";
 static const char name_log_message[] = "log_message";
 static const char name_message[] = "message";
+static const char name_merge_options[] = "merge_options";
 static const char name_name[] = "name";
 static const char name_notice_ancestry[] = "notice_ancestry";
 static const char name_number[] = "number";
@@ -371,8 +376,12 @@ Py::Object pysvn_client::cmd_annotate( const Py::Tuple &a_args, const Py::Dict &
     { true,  name_url_or_path },
     { false, name_revision_start },
     { false, name_revision_end },
-#ifdef PYSVN_HAS_CLIENT_ANNOTATE2
+#if defined( PYSVN_HAS_CLIENT_ANNOTATE2 )
     { false, name_peg_revision },
+#endif
+#if defined( PYSVN_HAS_CLIENT_ANNOTATE3 )
+    { false, name_ignore_space },
+    { false, name_ignore_mime_type },
 #endif
     { false, NULL }
     };
@@ -382,10 +391,28 @@ Py::Object pysvn_client::cmd_annotate( const Py::Tuple &a_args, const Py::Dict &
     std::string path( args.getUtf8String( name_url_or_path, empty_string ) );
     svn_opt_revision_t revision_start = args.getRevision( name_revision_start, svn_opt_revision_number );
     svn_opt_revision_t revision_end = args.getRevision( name_revision_end, svn_opt_revision_head );
-#ifdef PYSVN_HAS_CLIENT_ANNOTATE2
+#if defined( PYSVN_HAS_CLIENT_ANNOTATE2 )
     svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, revision_end );
 #endif
+#if defined( PYSVN_HAS_CLIENT_ANNOTATE3 )
+    svn_diff_file_ignore_space_t ignore_space = svn_diff_file_ignore_space_none;
+    if( args.hasArg( name_ignore_space ) )
+    {
+        Py::ExtensionObject< pysvn_enum_value<svn_diff_file_ignore_space_t> > py_ignore_space( args.getArg( name_ignore_space ) );
+        ignore_space = svn_diff_file_ignore_space_t( py_ignore_space.extensionObject()->m_value );
+    }
+
+    svn_boolean_t ignore_eol_style = args.getBoolean( name_ignore_eol_style, false );
+    svn_boolean_t ignore_mime_type = args.getBoolean( name_ignore_mime_type, false );
+#endif
     SvnPool pool( m_context );
+
+#if defined( PYSVN_HAS_CLIENT_ANNOTATE3 )
+    svn_diff_file_options_t *diff_options = svn_diff_file_options_create( pool );
+    diff_options->ignore_space = ignore_space;
+    diff_options->ignore_eol_style = ignore_eol_style;
+#endif
+
     std::list<AnnotatedLineInfo> all_entries;
 
     try
@@ -396,7 +423,21 @@ Py::Object pysvn_client::cmd_annotate( const Py::Tuple &a_args, const Py::Dict &
 
         PythonAllowThreads permission( m_context );
 
-#ifdef PYSVN_HAS_CLIENT_ANNOTATE2
+#if defined( PYSVN_HAS_CLIENT_ANNOTATE3 )
+        svn_error_t *error = svn_client_blame3
+            (
+            norm_path.c_str(),
+            &peg_revision,
+            &revision_start,
+            &revision_end,
+            diff_options,
+            ignore_mime_type,
+            annotate_receiver,
+            &all_entries,
+            m_context,
+            pool
+            );
+#elif defined( PYSVN_HAS_CLIENT_ANNOTATE2 )
         svn_error_t *error = svn_client_blame2
             (
             norm_path.c_str(),
@@ -764,7 +805,18 @@ Py::Object pysvn_client::cmd_copy( const Py::Tuple &a_args, const Py::Dict &a_kw
 
             PythonAllowThreads permission( m_context );
 
-#if defined( PYSVN_HAS_CLIENT_COPY2 )
+#if defined( PYSVN_HAS_CLIENT_COPY3 )
+            // behavior changed
+            svn_error_t *error = svn_client_copy3
+                (
+                &commit_info,
+                norm_src_path.c_str(),
+                &revision,
+                norm_dest_path.c_str(),
+                m_context,
+                pool
+                );
+#elif defined( PYSVN_HAS_CLIENT_COPY2 )
             svn_error_t *error = svn_client_copy2
                 (
                 &commit_info,       // commit info type changed
@@ -1666,8 +1718,11 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
     { false, name_revision_end },
     { false, name_discover_changed_paths },
     { false, name_strict_node_history },
-#ifdef PYSVN_HAS_CLIENT_LOG2
+#if defined( PYSVN_HAS_CLIENT_LOG2 ) || defined( PYSVN_HAS_CLIENT_LOG3 )
     { false, name_limit },
+#endif
+#ifdef PYSVN_HAS_CLIENT_LOG3
+    { false, name_peg_revision },
 #endif
     { false, NULL }
     };
@@ -1679,6 +1734,9 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
     bool discover_changed_paths = args.getBoolean( name_discover_changed_paths, false );
     bool strict_node_history = args.getBoolean( name_strict_node_history, true );
     int limit = args.getInteger( name_limit, 0 );
+#ifdef PYSVN_HAS_CLIENT_LOG3
+    svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, svn_opt_revision_unspecified );
+#endif
     SvnPool pool( m_context );
     std::list<LogEntryInfo> all_entries;
 
@@ -1690,7 +1748,22 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
 
         PythonAllowThreads permission( m_context );
 
-#ifdef PYSVN_HAS_CLIENT_LOG2
+#if defined( PYSVN_HAS_CLIENT_LOG3 )
+        svn_error_t *error = svn_client_log3
+            (
+            targets,
+            &peg_revision,
+            &revision_start,
+            &revision_end,
+            limit,
+            discover_changed_paths,
+            strict_node_history,
+            logReceiver,
+            &all_entries,
+            m_context,
+            pool
+            );
+#elif defined( PYSVN_HAS_CLIENT_LOG2 )
         svn_error_t *error = svn_client_log2
             (
             targets,
@@ -1895,6 +1968,9 @@ Py::Object pysvn_client::cmd_merge( const Py::Tuple &a_args, const Py::Dict &a_k
     { false, name_recurse },
     { false, name_notice_ancestry },
     { false, name_dry_run },
+#if defined( PYSVN_HAS_CLIENT_MERGE2 )
+    { false, name_merge_options },
+#endif
     { false, NULL }
     };
     FunctionArguments args( "merge", args_desc, a_args, a_kws );
@@ -1911,7 +1987,34 @@ Py::Object pysvn_client::cmd_merge( const Py::Tuple &a_args, const Py::Dict &a_k
     bool notice_ancestry = args.getBoolean( name_notice_ancestry, false );
     bool dry_run = args.getBoolean( name_dry_run, false );
 
+#if defined( PYSVN_HAS_CLIENT_MERGE2 )
+    Py::List merge_options_list;
+    if( args.hasArg( name_merge_options ) )
+    {
+        merge_options_list = args.getArg( name_merge_options );
+        for( size_t i=0; i<merge_options_list.length(); i++ )
+        {
+            Py::String check_is_string( merge_options_list[i] );
+        }
+    }
+#endif
+
     SvnPool pool( m_context );
+
+#if defined( PYSVN_HAS_CLIENT_MERGE2 )
+    apr_array_header_t *merge_options = NULL;
+    if( merge_options_list.length() > 0 )
+    {
+        merge_options = apr_array_make( pool, merge_options_list.length(), sizeof( const char * ) );
+        for( size_t i=0; i<merge_options_list.length(); i++ )
+        {
+            Py::String py_option( merge_options_list[i] );
+            std::string option( py_option.as_std_string() );
+            
+            *((const char **) apr_array_push(merge_options)) = apr_pstrdup( pool, option.c_str() );
+        }
+    }
+#endif
 
     try
     {
@@ -1923,6 +2026,23 @@ Py::Object pysvn_client::cmd_merge( const Py::Tuple &a_args, const Py::Dict &a_k
 
         PythonAllowThreads permission( m_context );
 
+#if defined( PYSVN_HAS_CLIENT_MERGE2 )
+        svn_error_t *error = svn_client_merge2
+            (
+            norm_path1.c_str(),
+            &revision1,
+            norm_path2.c_str(),
+            &revision2,
+            norm_local_path.c_str(),
+            recurse,
+            !notice_ancestry,
+            force,
+            dry_run,
+            merge_options,
+            m_context,
+            pool
+            );
+#else
         svn_error_t *error = svn_client_merge
             (
             norm_path1.c_str(),
@@ -1937,6 +2057,7 @@ Py::Object pysvn_client::cmd_merge( const Py::Tuple &a_args, const Py::Dict &a_k
             m_context,
             pool
             );
+#endif
         if( error != 0 )
             throw SvnException( error );
     }
@@ -1965,6 +2086,9 @@ Py::Object pysvn_client::cmd_merge_peg( const Py::Tuple &a_args, const Py::Dict 
     { false, name_notice_ancestry },
     { false, name_force },
     { false, name_dry_run },
+#if defined( PYSVN_HAS_CLIENT_MERGE_PEG2 )
+    { false, name_merge_options },
+#endif
     { false, NULL }
     };
     FunctionArguments args( "merge", args_desc, a_args, a_kws );
@@ -1981,7 +2105,34 @@ Py::Object pysvn_client::cmd_merge_peg( const Py::Tuple &a_args, const Py::Dict 
     bool notice_ancestry = args.getBoolean( name_notice_ancestry, false );
     bool dry_run = args.getBoolean( name_dry_run, false );
 
+#if defined( PYSVN_HAS_CLIENT_MERGE_PEG2 )
+    Py::List merge_options_list;
+    if( args.hasArg( name_merge_options ) )
+    {
+        merge_options_list = args.getArg( name_merge_options );
+        for( size_t i=0; i<merge_options_list.length(); i++ )
+        {
+            Py::String check_is_string( merge_options_list[i] );
+        }
+    }
+#endif
+
     SvnPool pool( m_context );
+
+#if defined( PYSVN_HAS_CLIENT_MERGE_PEG2 )
+    apr_array_header_t *merge_options = NULL;
+    if( merge_options_list.length() > 0 )
+    {
+        merge_options = apr_array_make( pool, merge_options_list.length(), sizeof( const char * ) );
+        for( size_t i=0; i<merge_options_list.length(); i++ )
+        {
+            Py::String py_option( merge_options_list[i] );
+            std::string option( py_option.as_std_string() );
+            
+            *((const char **) apr_array_push(merge_options)) = apr_pstrdup( pool, option.c_str() );
+        }
+    }
+#endif
 
     try
     {
@@ -1992,6 +2143,23 @@ Py::Object pysvn_client::cmd_merge_peg( const Py::Tuple &a_args, const Py::Dict 
 
         PythonAllowThreads permission( m_context );
 
+#if defined( PYSVN_HAS_CLIENT_MERGE_PEG2 )
+        svn_error_t *error = svn_client_merge_peg2
+            (
+            norm_path.c_str(),
+            &revision1,
+            &revision2,
+            &peg_revision,
+            norm_local_path.c_str(),
+            recurse,
+            !notice_ancestry,
+            force,
+            dry_run,
+            merge_options,
+            m_context,
+            pool
+            );
+#else
         svn_error_t *error = svn_client_merge_peg
             (
             norm_path.c_str(),
@@ -2006,6 +2174,7 @@ Py::Object pysvn_client::cmd_merge_peg( const Py::Tuple &a_args, const Py::Dict 
             m_context,
             pool
             );
+#endif
         if( error != 0 )
             throw SvnException( error );
     }
@@ -2136,7 +2305,18 @@ Py::Object pysvn_client::cmd_move( const Py::Tuple &a_args, const Py::Dict &a_kw
 
             PythonAllowThreads permission( m_context );
 
-#if defined( PYSVN_HAS_CLIENT_MOVE3 )
+#if defined( PYSVN_HAS_CLIENT_MOVE4 )
+            // behavior changed
+            svn_error_t *error = svn_client_move4
+                (
+                &commit_info,
+                norm_src_path.c_str(),
+                norm_dest_path.c_str(),
+                force,
+                m_context,
+                pool
+                );
+#elif defined( PYSVN_HAS_CLIENT_MOVE3 )
             svn_error_t *error = svn_client_move3
                 (
                 &commit_info,               // changed type
@@ -3886,3 +4066,22 @@ template <> void pysvn_enum_value< svn_node_kind_t >::init_type(void)
     behaviors().supportStr();
     behaviors().supportHash();
 }
+
+#if defined( PYSVN_HAS_DIFF_FILE_IGNORE_SPACE )
+template <> void pysvn_enum< svn_diff_file_ignore_space_t >::init_type(void)
+{
+    behaviors().name("diff_file_ignore_space");
+    behaviors().doc("diff_file_ignore_space enumeration");
+    behaviors().supportGetattr();
+}
+
+template <> void pysvn_enum_value< svn_diff_file_ignore_space_t >::init_type(void)
+{
+    behaviors().name("diff_file_ignore_space");
+    behaviors().doc("diff_file_ignore_space value");
+    behaviors().supportCompare();
+    behaviors().supportRepr();
+    behaviors().supportStr();
+    behaviors().supportHash();
+}
+#endif

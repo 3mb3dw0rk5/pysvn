@@ -113,6 +113,47 @@ SvnContext::SvnContext( const std::string &config_dir_str )
 
     svn_config_ensure( m_config_dir, m_pool );
 
+#ifdef PYSVN_HAS_SVN_AUTH_PROVIDERS
+    apr_array_header_t *providers = apr_array_make( m_pool, 11, sizeof( svn_auth_provider_object_t * ) );
+
+    // simple providers
+    svn_auth_provider_object_t *provider = NULL;
+#ifdef WIN32
+    svn_auth_get_windows_simple_provider(&provider, pool);
+    *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
+#endif
+#ifdef SVN_HAVE_KEYCHAIN_SERVICES
+    svn_auth_get_keychain_simple_provider(&provider, pool);
+    *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
+#endif
+    svn_auth_get_simple_provider( &provider, m_pool );
+    *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
+
+    svn_auth_get_username_provider( &provider, m_pool );
+    *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
+
+    svn_auth_get_simple_prompt_provider( &provider, handlerSimplePrompt, this, 1000000, m_pool );
+    *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
+
+    // ssl providers
+
+    // order is important - file first then prompt providers
+    svn_auth_get_ssl_server_trust_file_provider( &provider, m_pool );
+    *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
+
+    svn_auth_get_ssl_client_cert_file_provider( &provider, m_pool );
+    *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
+
+    svn_auth_get_ssl_client_cert_pw_file_provider( &provider, m_pool );
+    *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
+
+    svn_auth_get_ssl_server_trust_prompt_provider( &provider, handlerSslServerTrustPrompt, this, m_pool );
+    *(svn_auth_provider_object_t **)apr_array_push (providers) = provider;
+
+    svn_auth_get_ssl_client_cert_pw_prompt_provider( &provider, handlerSslClientCertPwPrompt, this, 3, m_pool );
+    *(svn_auth_provider_object_t **)apr_array_push (providers) = provider;
+#else
+    // Pre 1.4.0 version
     apr_array_header_t *providers = apr_array_make( m_pool, 8, sizeof( svn_auth_provider_object_t * ) );
 
     // simple providers
@@ -123,7 +164,7 @@ SvnContext::SvnContext( const std::string &config_dir_str )
     svn_client_get_username_provider( &provider, m_pool );
     *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
 
-    svn_client_get_simple_prompt_provider( &provider, handlerSimplePrompt, this, 1000000, m_pool );
+    svn_client_get_simple_prompt_provider( &provider, handlerSimplePrompt, this, 3, m_pool );
     *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
 
     // ssl providers
@@ -143,6 +184,7 @@ SvnContext::SvnContext( const std::string &config_dir_str )
 
     svn_client_get_ssl_client_cert_pw_prompt_provider( &provider, handlerSslClientCertPwPrompt, this, 3, m_pool );
     *(svn_auth_provider_object_t **)apr_array_push (providers) = provider;
+#endif
 
     svn_auth_baton_t *auth_baton = NULL;
     svn_auth_open( &auth_baton, providers, m_pool );

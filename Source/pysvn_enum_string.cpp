@@ -249,3 +249,13 @@ template <> EnumString< svn_node_kind_t >::EnumString()
     // something's here, but we don't know what
     add( svn_node_unknown, "unknown" );
 }
+
+#if defined( PYSVN_HAS_DIFF_FILE_IGNORE_SPACE )
+template <> EnumString< svn_diff_file_ignore_space_t >::EnumString()
+: m_type_name( "diff_file_ignore_space" )
+{
+    add( svn_diff_file_ignore_space_none, "none" );
+    add( svn_diff_file_ignore_space_change, "change" );
+    add( svn_diff_file_ignore_space_all, "all" );
+}
+#endif
