@@ -247,6 +247,13 @@ svn_client_ctx_t *SvnContext::ctx()
     return &m_context;
 }
 
+// only use this pool for data that has a life time
+// that matches the life time of the context
+apr_pool_t *SvnContext::getContextPool()
+{
+    return m_pool;
+}
+
 #ifdef PYSVN_HAS_CONTEXT_LOG_MSG2
 svn_error_t *SvnContext::handlerLogMsg2
     (

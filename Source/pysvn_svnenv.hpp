@@ -65,6 +65,8 @@
 #define PYSVN_HAS_CONTEXT_LOG_MSG2
 #define PYSVN_HAS_CONTEXT_PROGRESS
 
+#define PYSVN_HAS_WC_ADM_DIR
+
 #define PYSVN_HAS_CLIENT_ADD3
 #define PYSVN_HAS_CLIENT_COMMIT3
 #define PYSVN_HAS_CLIENT_COPY2
@@ -153,6 +155,10 @@ public:
 
     operator svn_client_ctx_t *();
     svn_client_ctx_t *ctx();
+
+    // only use this pool for data that has a life time
+    // that matches the life time of the context
+    apr_pool_t          *getContextPool();
 
     //
     // this method will be called to retrieve
@@ -352,7 +358,6 @@ private:
         svn_boolean_t maySave,
         apr_pool_t *pool
         );
-
 
 private:
     apr_pool_t          *m_pool;

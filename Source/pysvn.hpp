@@ -247,6 +247,12 @@ public:
     Py::Object get_store_passwords( const Py::Tuple &a_args, const Py::Dict &a_kws );
     Py::Object set_store_passwords( const Py::Tuple &a_args, const Py::Dict &a_kws );
 
+#if defined( PYSVN_HAS_WC_ADM_DIR )
+    Py::Object is_adm_dir( const Py::Tuple& args, const Py::Dict &kws );
+    Py::Object get_adm_dir( const Py::Tuple& args, const Py::Dict &kws );
+    Py::Object set_adm_dir( const Py::Tuple& args, const Py::Dict &kws );
+#endif
+
     // check that we are not in use on another thread
     void checkThreadPermission();
 private:

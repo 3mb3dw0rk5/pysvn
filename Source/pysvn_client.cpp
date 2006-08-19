@@ -3657,6 +3657,37 @@ Py::Object pysvn_client::helper_string_auth_get( FunctionArguments &a_args, cons
     return Py::None();
 }
 
+#if defined( PYSVN_HAS_WC_ADM_DIR )
+Py::Object pysvn_client::get_adm_dir( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { false, NULL }
+    };
+    FunctionArguments args( "get_adm_dir", args_desc, a_args, a_kws );
+    args.check();
+
+    const char *name = NULL;
+
+    try
+    {
+        name = svn_wc_get_adm_dir
+            (
+            m_context.getContextPool()
+            );
+    }
+    catch( SvnException &e )
+    {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
+        throw_client_error( e );
+    }
+
+    return Py::String( name );
+}
+#endif
+
 Py::Object pysvn_client::get_auth_cache( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
     static argument_description args_desc[] =
@@ -3711,6 +3742,40 @@ Py::Object pysvn_client::get_default_password( const Py::Tuple &a_args, const Py
 
     return helper_string_auth_get( args, SVN_AUTH_PARAM_DEFAULT_PASSWORD );
 }
+
+#if defined( PYSVN_HAS_WC_ADM_DIR )
+Py::Object pysvn_client::set_adm_dir( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_name },
+    { false, NULL }
+    };
+    FunctionArguments args( "set_adm_dir", args_desc, a_args, a_kws );
+
+    args.check();
+
+    std::string name( args.getString( name_name ) );
+
+    try
+    {
+        svn_wc_set_adm_dir
+            (
+            name.c_str(),
+            m_context.getContextPool()
+            );
+    }
+    catch( SvnException &e )
+    {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
+        throw_client_error( e );
+    }
+
+    return Py::None();
+}
+#endif
 
 Py::Object pysvn_client::set_auth_cache( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
@@ -3850,6 +3915,41 @@ Py::Object pysvn_client::set_auto_props( const Py::Tuple &a_args, const Py::Dict
     return Py::None();
 }
 
+#if defined( PYSVN_HAS_WC_ADM_DIR )
+Py::Object pysvn_client::is_adm_dir( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_name },
+    { false, NULL }
+    };
+    FunctionArguments args( "is_adm_dir", args_desc, a_args, a_kws );
+
+    args.check();
+
+    std::string name( args.getString( name_name ) );
+
+    svn_boolean_t name_is_adm_dir = 0;
+    try
+    {
+        name_is_adm_dir = svn_wc_is_adm_dir
+            (
+            name.c_str(),
+            m_context.getContextPool()
+            );
+    }
+    catch( SvnException &e )
+    {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
+        throw_client_error( e );
+    }
+
+    return Py::Int( name_is_adm_dir );
+}
+#endif
+
 Py::Object pysvn_client::is_url( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
     static argument_description args_desc[] =
@@ -3900,6 +4000,9 @@ void pysvn_client::init_type()
     add_keyword_method("copy", &pysvn_client::cmd_copy, pysvn_client_copy_doc );
     add_keyword_method("diff", &pysvn_client::cmd_diff, pysvn_client_diff_doc );
     add_keyword_method("export", &pysvn_client::cmd_export, pysvn_client_export_doc );
+#if defined( PYSVN_HAS_WC_ADM_DIR )
+    add_keyword_method("get_adm_dir", &pysvn_client::get_adm_dir, pysvn_client_get_adm_dir_doc );
+#endif
     add_keyword_method("get_auth_cache", &pysvn_client::get_auth_cache, pysvn_client_get_auth_cache_doc );
     add_keyword_method("get_auto_props", &pysvn_client::get_auto_props, pysvn_client_get_auto_props_doc );
     add_keyword_method("get_default_password", &pysvn_client::get_default_password, pysvn_client_get_default_password_doc );
@@ -3911,6 +4014,9 @@ void pysvn_client::init_type()
 
 #ifdef PYSVN_HAS_CLIENT_INFO
     add_keyword_method("info2", &pysvn_client::cmd_info2, pysvn_client_info2_doc );
+#endif
+#if defined( PYSVN_HAS_WC_ADM_DIR )
+    add_keyword_method("is_adm_dir", &pysvn_client::is_adm_dir, pysvn_client_is_adm_dir_doc );
 #endif
     add_keyword_method("is_url", &pysvn_client::is_url, pysvn_client_is_url_doc );
 #ifdef PYSVN_HAS_CLIENT_LOCK
@@ -3933,6 +4039,9 @@ void pysvn_client::init_type()
     add_keyword_method("revpropget", &pysvn_client::cmd_revpropget, pysvn_client_revpropget_doc );
     add_keyword_method("revproplist", &pysvn_client::cmd_revproplist, pysvn_client_revproplist_doc );
     add_keyword_method("revpropset", &pysvn_client::cmd_revpropset, pysvn_client_revpropset_doc );
+#if defined( PYSVN_HAS_WC_ADM_DIR )
+    add_keyword_method("set_adm_dir", &pysvn_client::set_adm_dir, pysvn_client_set_adm_dir_doc );
+#endif
     add_keyword_method("set_auth_cache", &pysvn_client::set_auth_cache, pysvn_client_set_auth_cache_doc );
     add_keyword_method("set_auto_props", &pysvn_client::set_auto_props, pysvn_client_set_auto_props_doc );
     add_keyword_method("set_default_password", &pysvn_client::set_default_password, pysvn_client_set_default_password_doc );

@@ -426,61 +426,62 @@ a tuple of three values (retcode, accepted_failures, save).
 <td><a href="#pysvn_client_diff">diff</a></td>
 <td><span class="svn_1001000"><a href="#pysvn_client_diff_peg">diff_peg</a></span></td>
 <td><a href="#pysvn_client_export">export</a></td>
+<td><span class="svn_1003000"><a href="#pysvn_client_get_adm_dir">get_adm_dir</a></span></td>
 <td><a href="#pysvn_client_get_auth_cache">get_auth_cache</a></td>
-<td><a href="#pysvn_client_get_auto_props">get_auto_props</a></td>
 </tr>
 <tr>
+<td><a href="#pysvn_client_get_auto_props">get_auto_props</a></td>
 <td><a href="#pysvn_client_get_default_password">get_default_password</a></td>
 <td><a href="#pysvn_client_get_default_username">get_default_username</a></td>
 <td><a href="#pysvn_client_get_interactive">get_interactive</a></td>
 <td><a href="#pysvn_client_get_store_passwords">get_store_passwords</a></td>
 <td><a href="#pysvn_client_import_">import_</a></td>
-<td><a href="#pysvn_client_info">info</a></td>
 </tr>
 <tr bgcolor="#e0e0e0">
+<td><a href="#pysvn_client_info">info</a></td>
 <td><span class="svn_1003000"><a href="#pysvn_client_info2">info2</a></span></td>
+<td><span class="svn_1003000"><a href="#pysvn_client_is_adm_dir">is_adm_dir</a></span></td>
 <td><a href="#pysvn_client_is_url">is_url</a></td>
 <td><a href="#pysvn_client_log">log</a></td>
 <td><span class="svn_1002000"><a href="#pysvn_client_lock">lock</a></span></td>
-<td><a href="#pysvn_client_ls">ls</a></td>
-<td><a href="#pysvn_client_merge">merge</a></td>
 </tr>
 <tr>
+<td><a href="#pysvn_client_ls">ls</a></td>
+<td><a href="#pysvn_client_merge">merge</a></td>
 <td><span class="svn_1001000"><a href="#pysvn_client_merge_peg">merge_peg</a></span></td>
 <td><a href="#pysvn_client_mkdir">mkdir</a></td>
 <td><a href="#pysvn_client_move">move</a></td>
 <td><a href="#pysvn_client_propdel">propdel</a></td>
-<td><a href="#pysvn_client_propget">propget</a></td>
-<td><a href="#pysvn_client_proplist">proplist</a></td>
 </tr>
 <tr bgcolor="#e0e0e0">
+<td><a href="#pysvn_client_propget">propget</a></td>
+<td><a href="#pysvn_client_proplist">proplist</a></td>
 <td><a href="#pysvn_client_propset">propset</a></td>
 <td><a href="#pysvn_client_relocate">relocate</a></td>
 <td><a href="#pysvn_client_remove">remove</a></td>
 <td><a href="#pysvn_client_resolved">resolved</a></td>
-<td><a href="#pysvn_client_revert">revert</a></td>
-<td><a href="#pysvn_client_revpropdel">revpropdel</a></td>
 </tr>
 <tr>
+<td><a href="#pysvn_client_revert">revert</a></td>
+<td><a href="#pysvn_client_revpropdel">revpropdel</a></td>
 <td><a href="#pysvn_client_revpropget">revpropget</a></td>
 <td><a href="#pysvn_client_revproplist">revproplist</a></td>
 <td><a href="#pysvn_client_revpropset">revpropset</a></td>
+<td><span class="svn_1003000"><a href="#pysvn_client_set_adm_dir">set_adm_dir</a></span></td>
+</tr>
+<tr bgcolor="#e0e0e0">
 <td><a href="#pysvn_client_set_auth_cache">set_auth_cache</a></td>
 <td><a href="#pysvn_client_set_auto_props">set_auto_props</a></td>
 <td><a href="#pysvn_client_set_default_password">set_default_password</a></td>
-</tr>
-<tr bgcolor="#e0e0e0">
 <td><a href="#pysvn_client_set_default_username">set_default_username</a></td>
 <td><a href="#pysvn_client_set_interactive">set_interactive</a></td>
 <td><a href="#pysvn_client_set_store_passwords">set_store_passwords</a></td>
+</tr>
+<tr>
 <td><a href="#pysvn_client_status">status</a></td>
 <td><a href="#pysvn_client_switch">switch</a></td>
 <td><span class="svn_1002000"><a href="#pysvn_client_unlock">unlock</a></span></td>
-</tr>
-<tr>
 <td><a href="#pysvn_client_update">update</a></td>
-<td>&#160;</td>
-<td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
@@ -759,6 +760,15 @@ enabled = get_auth_cache()
 false.
 </p>
 
+<div class="svn_1003000">
+<h4><a name="pysvn_client_get_adm_dir"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.get_adm_dir</a></h4>
+<pre>
+name = get_adm_dir()
+</pre>
+<p>Returns the name of the subverion admin directory.
+</p>
+</div>
+
 <h4><a name="pysvn_client_get_auto_props"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.get_auto_props</a></h4>
 <pre>
 enabled = get_auto_props()
@@ -881,6 +891,16 @@ WC targets.
 </p>
 
 <p>Note: The info2 command is only available with svn 1.2.0 or later.
+</p>
+</div>
+
+<div class="svn_1003000">
+<h4><a name="pysvn_client_is_adm_dir"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.is_adm_dir</a></h4>
+<pre>
+rc = \
+is_adm_dir( name )
+</pre>
+<p>Return True is the name is an subversion admin directory.
 </p>
 </div>
 
@@ -1251,6 +1271,15 @@ revpropset( prop_name,
 <p>set the revision property prop_name to prop_value in path.
 The revision updated is returned.
 </p>
+
+<div class="svn_1003000">
+<h4><a name="pysvn_client_set_adm_dir"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.set_adm_dir</a></h4>
+<pre>
+set_adm_dir( name )
+</pre>
+<p>Set the name of the subverion admin directory. ".svn" is the normal admin dir use and "_svn" is used on Windows to work around problems with .NET.
+</p>
+</div>
 
 <h4><a name="pysvn_client_set_auth_cache"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.set_auth_cache</a></h4>
 <pre>
