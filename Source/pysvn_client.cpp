@@ -47,14 +47,16 @@ static const char name_dest_path[] = "dest_path";
 static const char name_dest_url_or_path[] = "dest_url_or_path";
 static const char name_diff_deleted[] = "diff_deleted";
 static const char name_diff_options[] = "diff_options";
+static const char name_dirent_fields[] = "dirent_fields";
 static const char name_discover_changed_paths[] = "discover_changed_paths";
 static const char name_dry_run[] = "dry_run";
 static const char name_enable[] = "enable";
 static const char name_exception_style[] = "exception_style";
-static const char name_native_eol[] = "native_eol";
+static const char name_fetch_locks[] = "fetch_locks";
 static const char name_force[] = "force";
 static const char name_from_url[] = "from_url";
 static const char name_get_all[] = "get_all";
+static const char name_has_props[] = "has_props";
 static const char name_header_encoding[] = "header_encoding";
 static const char name_ignore[] = "ignore";
 static const char name_ignore_ancestry[] = "ignore_ancestry";
@@ -66,27 +68,29 @@ static const char name_ignore_space[] = "ignore_space";
 static const char name_keep_locks[] = "keep_locks";
 static const char name_kind[] = "kind";
 static const char name_last_author[] = "last_author";
-static const char name_lock[] = "lock";
 static const char name_limit[] = "limit";
 static const char name_line[] = "line";
 static const char name_local_path[] = "local_path";
+static const char name_lock[] = "lock";
 static const char name_log_message[] = "log_message";
-static const char name_message[] = "message";
 static const char name_merge_options[] = "merge_options";
+static const char name_message[] = "message";
 static const char name_name[] = "name";
+static const char name_native_eol[] = "native_eol";
 static const char name_notice_ancestry[] = "notice_ancestry";
 static const char name_number[] = "number";
-static const char name_path[] = "path";
 static const char name_password[] = "password";
+static const char name_path[] = "path";
 static const char name_peg_revision[] = "peg_revision";
 static const char name_prop_name[] = "prop_name";
 static const char name_prop_value[] = "prop_value";
 static const char name_recurse[] = "recurse";
+static const char name_repos_path[] = "repos_path";
+static const char name_revision1[] = "revision1";
+static const char name_revision2[] = "revision2";
 static const char name_revision[] = "revision";
 static const char name_revision_end[] = "revision_end";
 static const char name_revision_start[] = "revision_start";
-static const char name_revision1[] = "revision1";
-static const char name_revision2[] = "revision2";
 static const char name_size[] = "size";
 static const char name_skip_checks[] = "skip_checks";
 static const char name_src_revision[] = "src_revision";
@@ -98,11 +102,62 @@ static const char name_to_url[] = "to_url";
 static const char name_unlock[] = "unlock";
 static const char name_update[] = "update";
 static const char name_url[] = "url";
-static const char name_url_or_path[] = "url_or_path";
 static const char name_url_or_path1[] = "url_or_path1";
 static const char name_url_or_path2[] = "url_or_path2";
+static const char name_url_or_path[] = "url_or_path";
 static const char name_username[] = "username";
 static const char name_utf8[] = "UTF-8";
+
+
+static Py::String *py_name_name = NULL;
+static Py::String *py_name_path = NULL;
+static Py::String *py_name_repos_path = NULL;
+static Py::String *py_name_kind;
+static Py::String *py_name_size;
+static Py::String *py_name_created_rev;
+static Py::String *py_name_time;
+static Py::String *py_name_has_props;
+static Py::String *py_name_last_author;
+static Py::String *py_name_callback_get_login;
+static Py::String *py_name_callback_notify;
+static Py::String *py_name_callback_cancel;
+static Py::String *py_name_callback_get_log_message;
+static Py::String *py_name_callback_ssl_server_prompt;
+static Py::String *py_name_callback_ssl_server_trust_prompt;
+static Py::String *py_name_callback_ssl_client_cert_prompt;
+static Py::String *py_name_callback_ssl_client_cert_password_prompt;
+static Py::String *py_name_exception_style;
+
+static void init_py_names()
+{
+    static bool init_done = false;
+    if( init_done )
+    {
+        return;
+    }
+
+    py_name_name = new Py::String( name_name );
+    py_name_path = new Py::String( name_path );
+    py_name_repos_path = new Py::String( name_repos_path );
+    py_name_kind = new Py::String( name_kind );
+    py_name_size = new Py::String( name_size );
+    py_name_created_rev = new Py::String( name_created_rev );
+    py_name_time = new Py::String( name_time );
+    py_name_has_props = new Py::String( name_header_encoding );
+    py_name_last_author = new Py::String( name_last_author );
+    py_name_callback_get_login = new Py::String( name_callback_get_login );
+    py_name_callback_notify = new Py::String( name_callback_notify );
+    py_name_callback_cancel = new Py::String( name_callback_cancel );
+    py_name_callback_get_log_message = new Py::String( name_callback_get_log_message );
+    py_name_callback_ssl_server_prompt = new Py::String( name_callback_ssl_server_prompt );
+    py_name_callback_ssl_server_trust_prompt = new Py::String( name_callback_ssl_server_trust_prompt );
+    py_name_callback_ssl_client_cert_prompt = new Py::String( name_callback_ssl_client_cert_prompt );
+    py_name_callback_ssl_client_cert_password_prompt = new Py::String( name_callback_ssl_client_cert_password_prompt );
+    py_name_exception_style = new Py::String( name_exception_style );
+
+    init_done = true;
+}
+
 
 
 //--------------------------------------------------------------------------------
@@ -111,6 +166,7 @@ pysvn_client::pysvn_client( pysvn_module &_module, const std::string &config_dir
 , m_context( config_dir )
 , m_exception_style( 0 )
 {
+    init_py_names();
 }
 
 pysvn_client::~pysvn_client()
@@ -127,16 +183,16 @@ Py::Object pysvn_client::getattr( const char *_name )
     {
         Py::List members;
 
-        members.append( Py::String( name_callback_get_login ) );
-        members.append( Py::String( name_callback_notify ) );
-        members.append( Py::String( name_callback_cancel ) );
-        members.append( Py::String( name_callback_get_log_message ) );
-        members.append( Py::String( name_callback_ssl_server_prompt ) );
-        members.append( Py::String( name_callback_ssl_server_trust_prompt ) );
-        members.append( Py::String( name_callback_ssl_client_cert_prompt ) );
-        members.append( Py::String( name_callback_ssl_client_cert_password_prompt ) );
+        members.append( *py_name_callback_get_login );
+        members.append( *py_name_callback_notify );
+        members.append( *py_name_callback_cancel );
+        members.append( *py_name_callback_get_log_message );
+        members.append( *py_name_callback_ssl_server_prompt );
+        members.append( *py_name_callback_ssl_server_trust_prompt );
+        members.append( *py_name_callback_ssl_client_cert_prompt );
+        members.append( *py_name_callback_ssl_client_cert_password_prompt );
 
-        members.append( Py::String( name_exception_style ) );
+        members.append( *py_name_exception_style );
 
         return members;
     }
@@ -1520,7 +1576,7 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
                 info_receiver_c,
                 reinterpret_cast<void *>( &info_baton ),
                 recurse,
-                m_context.ctx(),
+                m_context,
                 pool
                 );
 
@@ -1846,11 +1902,178 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
     return entries_list;
 }
 
+#if defined( PYSVN_HAS_CLIENT_LIST )
+class ListReceiveBaton
+{
+public:
+    ListReceiveBaton( PythonAllowThreads *permission)
+        : m_permission( permission )
+        , m_list_list()
+        {}
+    ~ListReceiveBaton()
+        {}
+
+    PythonAllowThreads  *m_permission;
+
+    apr_uint32_t        m_dirent_fields;
+    bool                m_fetch_locks;
+    bool                m_is_url;
+    std::string         m_url_or_path;
+
+    Py::List            m_list_list;
+};
+
+extern "C"
+{
+svn_error_t *list_receiver_c
+    (
+    void *baton_,
+    const char *path,
+    const svn_dirent_t *dirent,
+    const svn_lock_t *lock,
+    const char *abs_path,
+    apr_pool_t *pool
+    )
+{
+    ListReceiveBaton *baton = reinterpret_cast<ListReceiveBaton *>( baton_ );
+
+    PythonDisallowThreads callback_permission( baton->m_permission );
+
+    std::string full_path( baton->m_url_or_path );
+    std::string full_repos_path( abs_path );
+    if( strlen( path ) != 0 )
+    {
+        full_path += "/";
+        full_path += path;
+
+        full_repos_path += "/";
+        full_repos_path += path;
+    }
+
+    Py::Tuple py_tuple( 3 );
+    py_tuple[0] = Py::String( full_path, name_utf8 );
+
+    Py::Dict entry_dict;
+    entry_dict[ *py_name_repos_path ] = Py::String( full_repos_path, name_utf8 );
+
+    if( dirent != NULL )
+    {
+        if( baton->m_dirent_fields&SVN_DIRENT_KIND )
+        {
+            entry_dict[ *py_name_kind ] = toEnumValue( dirent->kind );
+        }
+        if( baton->m_dirent_fields&SVN_DIRENT_SIZE )
+        {
+            entry_dict[ *py_name_size ] = Py::Long( Py::Float( double( static_cast<signed_int64>( dirent->size ) ) ) );
+        }
+        if( baton->m_dirent_fields&SVN_DIRENT_CREATED_REV )
+        {
+            entry_dict[ *py_name_created_rev ] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, dirent->created_rev ) );
+        }
+        if( baton->m_dirent_fields&SVN_DIRENT_TIME )
+        {
+            entry_dict[ *py_name_time ] = toObject( dirent->time );
+        }
+        if( baton->m_dirent_fields&SVN_DIRENT_HAS_PROPS )
+        {
+            entry_dict[ *py_name_has_props ] = Py::Int( dirent->has_props );
+        }
+        if( baton->m_dirent_fields&SVN_DIRENT_LAST_AUTHOR )
+        {
+            entry_dict[ *py_name_last_author ] = utf8_string_or_none( dirent->last_author );
+        }
+    }
+    py_tuple[1] = entry_dict;
+
+    if( lock == NULL )
+    {
+        py_tuple[2] = Py::None();
+    }
+    else
+    {
+        py_tuple[2] = toObject( lock );
+    }
+    baton->m_list_list.append( py_tuple );
+
+    return SVN_NO_ERROR;
+}
+}
+
+Py::Object pysvn_client::cmd_list( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_url_or_path },
+    { false, name_peg_revision },
+    { false, name_revision },
+    { false, name_recurse },
+    { false, name_dirent_fields },
+    { false, name_fetch_locks },
+    { false, NULL }
+    };
+    FunctionArguments args( "list", args_desc, a_args, a_kws );
+    args.check();
+
+    std::string path( args.getUtf8String( name_url_or_path ) );
+    svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, svn_opt_revision_unspecified );
+    bool is_url = is_svn_url( path );
+    svn_opt_revision_t revision;
+    if( is_url )
+         revision = args.getRevision( name_revision, svn_opt_revision_head );
+    else
+         revision = args.getRevision( name_revision, svn_opt_revision_working );
+    bool recurse = args.getBoolean( name_recurse, false );
+    apr_uint32_t dirent_fields = args.getInteger( name_dirent_fields, SVN_DIRENT_ALL );
+    bool fetch_locks = args.getBoolean( name_fetch_locks, false );
+
+    SvnPool pool( m_context );
+    std::string norm_path( svnNormalisedIfPath( path, pool ) );
+
+    try
+    {
+        checkThreadPermission();
+
+        PythonAllowThreads permission( m_context );
+
+        ListReceiveBaton list_baton( &permission );
+        list_baton.m_dirent_fields = dirent_fields;
+        list_baton.m_is_url = is_url;
+        list_baton.m_fetch_locks = fetch_locks;
+        list_baton.m_url_or_path = norm_path;
+
+        svn_error_t *error = svn_client_list
+            (
+            norm_path.c_str(),
+            &peg_revision,
+            &revision,
+            recurse,
+            dirent_fields,
+            fetch_locks,
+            list_receiver_c,
+            reinterpret_cast<void *>( &list_baton ),
+            m_context,
+            pool
+            );
+        if( error != 0 )
+            throw SvnException( error );
+
+        return list_baton.m_list_list;
+    }
+    catch( SvnException &e )
+    {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
+        throw_client_error( e );
+        return Py::None();          // needed to remove warning about return value missing
+    }
+}
+#endif
+
 static int compare_items_as_paths( const svn_sort__item_t *a, const svn_sort__item_t *b)
 {
     return svn_path_compare_paths ((const char *)a->key, (const char *)b->key);
 }
-
 
 Py::Object pysvn_client::cmd_ls( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
@@ -1942,12 +2165,13 @@ Py::Object pysvn_client::cmd_ls( const Py::Tuple &a_args, const Py::Dict &a_kws 
         full_name += utf8_entryname;
 
         Py::Dict entry_dict;
-        entry_dict[name_name] = Py::String( full_name, name_utf8 );
-        entry_dict[name_kind] = toEnumValue( dirent->kind );
-        entry_dict[name_size] = Py::Long( Py::Float( double( static_cast<signed_int64>( dirent->size ) ) ) );
-        entry_dict[name_created_rev] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, dirent->created_rev ) );
-        entry_dict[name_time] = toObject( dirent->time );
-        entry_dict[name_last_author] = utf8_string_or_none( dirent->last_author );
+        entry_dict[ *py_name_name ] = Py::String( full_name, name_utf8 );
+        entry_dict[ *py_name_kind ] = toEnumValue( dirent->kind );
+        entry_dict[ *py_name_has_props ] = Py::Int( dirent->has_props );
+        entry_dict[ *py_name_size ] = Py::Long( Py::Float( double( static_cast<signed_int64>( dirent->size ) ) ) );
+        entry_dict[ *py_name_created_rev ] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, dirent->created_rev ) );
+        entry_dict[ *py_name_time ] = toObject( dirent->time );
+        entry_dict[ *py_name_last_author ] = utf8_string_or_none( dirent->last_author );
 
         entries_list.append( entry_dict );
     }
@@ -4023,6 +4247,9 @@ void pysvn_client::init_type()
     add_keyword_method("lock", &pysvn_client::cmd_lock, pysvn_client_lock_doc );
 #endif
     add_keyword_method("log", &pysvn_client::cmd_log, pysvn_client_log_doc );
+#if defined( PYSVN_HAS_CLIENT_LIST )
+    add_keyword_method("list", &pysvn_client::cmd_list, pysvn_client_list_doc );
+#endif
     add_keyword_method("ls", &pysvn_client::cmd_ls, pysvn_client_ls_doc );
     add_keyword_method("merge", &pysvn_client::cmd_merge, pysvn_client_merge_doc );
     add_keyword_method("mkdir", &pysvn_client::cmd_mkdir, pysvn_client_mkdir_doc );

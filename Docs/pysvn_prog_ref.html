@@ -425,65 +425,65 @@ a tuple of three values (retcode, accepted_failures, save).
 <td><a href="#pysvn_client_copy">copy</a></td>
 <td><a href="#pysvn_client_diff">diff</a></td>
 <td><span class="svn_1001000"><a href="#pysvn_client_diff_peg">diff_peg</a></span></td>
+<td><span class="svn_1004000"><a href="#pysvn_client_diff_summarize">diff_summarize</a></span></td>
 <td><a href="#pysvn_client_export">export</a></td>
 <td><span class="svn_1003000"><a href="#pysvn_client_get_adm_dir">get_adm_dir</a></span></td>
-<td><a href="#pysvn_client_get_auth_cache">get_auth_cache</a></td>
 </tr>
 <tr>
+<td><a href="#pysvn_client_get_auth_cache">get_auth_cache</a></td>
 <td><a href="#pysvn_client_get_auto_props">get_auto_props</a></td>
 <td><a href="#pysvn_client_get_default_password">get_default_password</a></td>
 <td><a href="#pysvn_client_get_default_username">get_default_username</a></td>
 <td><a href="#pysvn_client_get_interactive">get_interactive</a></td>
 <td><a href="#pysvn_client_get_store_passwords">get_store_passwords</a></td>
-<td><a href="#pysvn_client_import_">import_</a></td>
 </tr>
 <tr bgcolor="#e0e0e0">
+<td><a href="#pysvn_client_import_">import_</a></td>
 <td><a href="#pysvn_client_info">info</a></td>
 <td><span class="svn_1003000"><a href="#pysvn_client_info2">info2</a></span></td>
 <td><span class="svn_1003000"><a href="#pysvn_client_is_adm_dir">is_adm_dir</a></span></td>
 <td><a href="#pysvn_client_is_url">is_url</a></td>
-<td><a href="#pysvn_client_log">log</a></td>
-<td><span class="svn_1002000"><a href="#pysvn_client_lock">lock</a></span></td>
+<td><span class="svn_1004000"><a href="#pysvn_client_list">list</a></span></td>
 </tr>
 <tr>
+<td><a href="#pysvn_client_log">log</a></td>
+<td><span class="svn_1002000"><a href="#pysvn_client_lock">lock</a></span></td>
 <td><a href="#pysvn_client_ls">ls</a></td>
 <td><a href="#pysvn_client_merge">merge</a></td>
 <td><span class="svn_1001000"><a href="#pysvn_client_merge_peg">merge_peg</a></span></td>
 <td><a href="#pysvn_client_mkdir">mkdir</a></td>
-<td><a href="#pysvn_client_move">move</a></td>
-<td><a href="#pysvn_client_propdel">propdel</a></td>
 </tr>
 <tr bgcolor="#e0e0e0">
+<td><a href="#pysvn_client_move">move</a></td>
+<td><a href="#pysvn_client_propdel">propdel</a></td>
 <td><a href="#pysvn_client_propget">propget</a></td>
 <td><a href="#pysvn_client_proplist">proplist</a></td>
 <td><a href="#pysvn_client_propset">propset</a></td>
 <td><a href="#pysvn_client_relocate">relocate</a></td>
-<td><a href="#pysvn_client_remove">remove</a></td>
-<td><a href="#pysvn_client_resolved">resolved</a></td>
 </tr>
 <tr>
+<td><a href="#pysvn_client_remove">remove</a></td>
+<td><a href="#pysvn_client_resolved">resolved</a></td>
 <td><a href="#pysvn_client_revert">revert</a></td>
 <td><a href="#pysvn_client_revpropdel">revpropdel</a></td>
 <td><a href="#pysvn_client_revpropget">revpropget</a></td>
 <td><a href="#pysvn_client_revproplist">revproplist</a></td>
-<td><a href="#pysvn_client_revpropset">revpropset</a></td>
-<td><span class="svn_1003000"><a href="#pysvn_client_set_adm_dir">set_adm_dir</a></span></td>
 </tr>
 <tr bgcolor="#e0e0e0">
+<td><a href="#pysvn_client_revpropset">revpropset</a></td>
+<td><span class="svn_1003000"><a href="#pysvn_client_set_adm_dir">set_adm_dir</a></span></td>
 <td><a href="#pysvn_client_set_auth_cache">set_auth_cache</a></td>
 <td><a href="#pysvn_client_set_auto_props">set_auto_props</a></td>
 <td><a href="#pysvn_client_set_default_password">set_default_password</a></td>
 <td><a href="#pysvn_client_set_default_username">set_default_username</a></td>
-<td><a href="#pysvn_client_set_interactive">set_interactive</a></td>
-<td><a href="#pysvn_client_set_store_passwords">set_store_passwords</a></td>
 </tr>
 <tr>
+<td><a href="#pysvn_client_set_interactive">set_interactive</a></td>
+<td><a href="#pysvn_client_set_store_passwords">set_store_passwords</a></td>
 <td><a href="#pysvn_client_status">status</a></td>
 <td><a href="#pysvn_client_switch">switch</a></td>
 <td><span class="svn_1002000"><a href="#pysvn_client_unlock">unlock</a></span></td>
 <td><a href="#pysvn_client_update">update</a></td>
-<td>&#160;</td>
-<td>&#160;</td>
 </tr>
 </table>
 
@@ -707,6 +707,17 @@ regardless of the content types.
 </p>
 </div>
 
+<div class="svn_1004000">
+<h4><a name="pysvn_client_diff_summarize"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.diff_summarize</a></h4>
+<pre>
+
+diff_text = \
+diff_summarize(  )
+</pre>
+<p>TBD
+</p>
+</div>
+
 <h4><a name="pysvn_client_export"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.export</a></h4>
 <pre>
 revision = \
@@ -912,6 +923,64 @@ is_url( url )
 <p>return True if the url is a known subversion url.
 </p>
 
+<div class="svn_1004000">
+<h4><a name="pysvn_client_list"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.list</a></h4>
+<pre>
+entries_list = \
+list( url_or_path,
+      peg_revision=pysvn.Revision( opt_revision_kind.unspecified ) )
+      revision=pysvn.Revision( opt_revision_kind.head ),
+      recurse=True,
+      dirent_fields=pysvn.SVN_DIRENT_ALL,
+      fetch_locks=False )
+</pre>
+
+<p>
+Returns a list with a tuple of information for each file in the given
+path at the provided revision.
+</p>
+
+<p>peg_revision indicates in which revision url_or_path is valid.
+If peg_revision.kind is opt_revision_kind.unspecified, then it
+defaults to opt_revision_kind.head for URLs or
+opt_revision_kind.working for WC targets.
+</p>
+
+<p>dirent_fields controls which dirent fields will return.
+Use pysvn.SVN_DIRENT_ALL to return all fields. Bit-wise or
+one of these values to return only the selected fields:
+</p>
+
+<ul>
+<li>SVN_DIRENT_KIND - return kind field</li>
+<li>SVN_DIRENT_SIZE - return size field</li>
+<li>SVN_DIRENT_HAS_PROPS - return has_props field</li>
+<li>SVN_DIRENT_CREATED_REV - return created_rev field</li>
+<li>SVN_DIRENT_TIME - return time field</li>
+<li>SVN_DIRENT_LAST_AUTHOR - return last_author field</li>
+</ul>
+
+<p>The tuple contains:
+</p>
+<ul>
+<li>0 - full path or url of file</li>
+<li>1 - dictionary of dirent information</li>
+<li>2 - dictionary of lock information or None</li>
+</ul>
+
+<p>The dirent dictionary contains the requested fields:
+</p>
+<ul>
+<li>created_rev - pysvn.<a href="#pysvn_revision">Revision</a> - the revision of the last change</li>
+<li>has_props - bool - True if the node has properties</li>
+<li>kind - node_kind - one of the pysvn.<a href="#pysvn_node_kind">node_kind</a> values</li>
+<li>last_author - string - the author of the last change</li>
+<li>repos_path - string - (always present) absolute path of file in the repository</li>
+<li>size - long - size of file</li>
+<li>time - float - the time of the last change</li>
+</ul>
+</div>
+
 <div class="svn_1002000">
 <h4><a name="pysvn_client_lock"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.lock</a></h4>
 <pre>
@@ -960,6 +1029,7 @@ dictionary. The dictionary contains:
 <li>copyfrom_revision - pysvn.<a href="#pysvn_revision">Revision</a> - if copied, the revision of the original, else None</li>
 </ul>
 </ul>
+
 <h4><a name="pysvn_client_ls"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.ls</a></h4>
 <pre>
 entries_list = \
@@ -968,6 +1038,9 @@ ls( url_or_path,
     recurse=True<span class="svn_1002000">,
     peg_revision=pysvn.Revision( opt_revision_kind.unspecified )</span> )
 </pre>
+<p><span class="svn_1004000">Use the <a href="#pysvn_client_list">list</a> method in new code
+as it fixes performance and ambiguity problems with the ls method.</span>
+</p>
 <p>
 Returns a list of dictionaries for each file the given path at
 the provided revision.
@@ -981,12 +1054,13 @@ WC targets.
 <p>The dictionary contains:
 </p>
 <ul>
-<li>name - string - name of the file</li>
-<li>kind - node_kind - one of the pysvn.<a href="#pysvn_node_kind">node_kind</a> values</li>
-<li>size - long - size of file</li>
 <li>created_rev - pysvn.<a href="#pysvn_revision">Revision</a> - the revision of the last change</li>
-<li>time - float - the time of the last change</li>
+<li>has_props - bool - True if the node has properties</li>
+<li>kind - node_kind - one of the pysvn.<a href="#pysvn_node_kind">node_kind</a> values</li>
 <li>last_author - the author of the last change</li>
+<li>name - string - name of the file</li>
+<li>size - long - size of file</li>
+<li>time - float - the time of the last change</li>
 </ul>
 
 <h4><a name="pysvn_client_merge"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.merge</a></h4>

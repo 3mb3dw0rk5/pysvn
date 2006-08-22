@@ -39,22 +39,7 @@ pysvn_status::pysvn_status( const char *path, pysvn_wc_status_t *svn_status, Svn
     }
     else
     {
-        Py::Dict py_lock;
-        py_lock["path"] = utf8_string_or_none( svn_status->repos_lock->path );
-        py_lock["token"] = utf8_string_or_none( svn_status->repos_lock->token );
-        py_lock["owner"] = utf8_string_or_none( svn_status->repos_lock->owner );
-        py_lock["comment"] = utf8_string_or_none( svn_status->repos_lock->comment );
-        py_lock["is_dav_comment"] = Py::Int( svn_status->repos_lock->is_dav_comment != 0 );
-        if( svn_status->repos_lock->creation_date == 0 )
-            py_lock["creation_date"] = Py::None();
-        else
-            py_lock["creation_date"] = toObject( svn_status->repos_lock->creation_date );
-        if( svn_status->repos_lock->expiration_date == 0 )
-            py_lock["expiration_date"] = Py::None();
-        else
-            py_lock["expiration_date"] = toObject( svn_status->repos_lock->expiration_date );
-
-        m_repos_lock = py_lock;
+        m_repos_lock = toObject( svn_status->repos_lock );
     }
 #endif
 }

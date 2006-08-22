@@ -208,6 +208,9 @@ public:
 #ifdef PYSVN_HAS_CLIENT_LOCK
     Py::Object cmd_lock( const Py::Tuple& args, const Py::Dict &kws );
 #endif
+#if defined( PYSVN_HAS_CLIENT_LIST )
+    Py::Object cmd_list( const Py::Tuple& args, const Py::Dict &kws );
+#endif
     Py::Object cmd_ls( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_merge( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_merge_peg( const Py::Tuple& args, const Py::Dict &kws );
