@@ -650,6 +650,7 @@ diff_text = \
 diff( tmp_path,
       url_or_path,
       revision1=pysvn.Revision( opt_revision_kind.base ),
+      url_or_path2=url_or_path,
       revision2=pysvn.Revision( opt_revision_kind.working ),
       recurse=True,
       ignore_ancestry=False,
@@ -658,10 +659,13 @@ diff( tmp_path,
       header_encoding=""</span> )
 </pre>
 <p>
-return the differences between two revisions of the url_or_path.
+Return the differences between revision1 of url_or_path
+and revision2 of url_or_path2. diff_text is a string
+containing the diff output.
+</p>
+<p>
 diff uses tmp_path to create any temporary files needed.
 Set recurse to True to recursively diff a directory's children.
-diff_text is a string containing the diff.
 </p>
 <p><span class="svn_1002000">Diff output will not be generated for binary files, unless
 ignore_content_type is true, in which case diffs will be shown
