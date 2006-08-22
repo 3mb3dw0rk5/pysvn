@@ -957,9 +957,14 @@ public:
 
     void close()
     {
-        // must ensure that m_apr_file is NULL to prevent
-        // closing a second time in the d'tor
+        // only close if we have an open file
+        if( m_apr_file == NULL )
+        {
+            return;
+        }
         apr_file_t *apr_file = m_apr_file;
+
+        // prevent closing the file twice
         m_apr_file = NULL;
 
         apr_status_t status = apr_file_close( apr_file );
@@ -998,6 +1003,7 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
 #endif
 #if defined( PYSVN_HAS_CLIENT_DIFF3 )
     { false, name_header_encoding },
+    { false, name_diff_options },
 #endif
     { false, NULL }
     };
@@ -1015,14 +1021,25 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
 #ifdef PYSVN_HAS_CLIENT_DIFF2
     bool ignore_content_type = args.getBoolean( name_ignore_content_type, false );
 #endif
+
+    SvnPool pool( m_context );
+
 #if defined( PYSVN_HAS_CLIENT_DIFF3 )
     std::string header_encoding( args.getUtf8String( name_header_encoding, empty_string ) );
     const char *header_encoding_ptr = APR_LOCALE_CHARSET;
     if( !header_encoding.empty() )
         header_encoding_ptr = header_encoding.c_str();
-#endif
 
-    SvnPool pool( m_context );
+    apr_array_header_t *options = NULL;
+    if( args.hasArg( name_diff_options ) )
+    {
+        options = arrayOfStringsFromListOfStrings( args.getArg( name_diff_options ), pool );
+    }
+    else
+    {
+        options = apr_array_make( pool, 0, sizeof( const char * ) );
+    }
+#endif
 
     svn_stringbuf_t *stringbuf = NULL;
 
@@ -1040,8 +1057,6 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
 
         output_file.open_unique_file( norm_tmp_path );
         error_file.open_unique_file( norm_tmp_path );
-
-        apr_array_header_t *options = apr_array_make( pool, 0, 0 );
 
 #if defined( PYSVN_HAS_CLIENT_DIFF3 )
         svn_error_t *error = svn_client_diff3
@@ -1129,6 +1144,7 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
 #endif
 #if defined( PYSVN_HAS_CLIENT_DIFF_PEG3 )
     { false, name_header_encoding },
+    { false, name_diff_options },
 #endif
     { false, NULL }
     };
@@ -1146,14 +1162,25 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
 #ifdef PYSVN_HAS_CLIENT_DIFF_PEG2
     bool ignore_content_type = args.getBoolean( name_ignore_content_type, false );
 #endif
+
+    SvnPool pool( m_context );
+
 #if defined( PYSVN_HAS_CLIENT_DIFF_PEG3 )
     std::string header_encoding( args.getUtf8String( name_header_encoding, empty_string ) );
     const char *header_encoding_ptr = APR_LOCALE_CHARSET;
     if( !header_encoding.empty() )
         header_encoding_ptr = header_encoding.c_str();
-#endif
 
-    SvnPool pool( m_context );
+    apr_array_header_t *options = NULL;
+    if( args.hasArg( name_diff_options ) )
+    {
+        options = arrayOfStringsFromListOfStrings( args.getArg( name_diff_options ), pool );
+    }
+    else
+    {
+        options = apr_array_make( pool, 0, sizeof( const char * ) );
+    }
+#endif
 
     svn_stringbuf_t *stringbuf = NULL;
 
@@ -1170,8 +1197,6 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
 
         output_file.open_unique_file( norm_tmp_path );
         error_file.open_unique_file( norm_tmp_path );
-
-        apr_array_header_t *options = apr_array_make( pool, 0, 0 );
 
 #if defined( PYSVN_HAS_CLIENT_DIFF_PEG3 )
         svn_error_t *error = svn_client_diff_peg3

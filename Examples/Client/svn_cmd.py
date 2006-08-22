@@ -358,7 +358,9 @@ class SvnCommand:
 
         tmpdir = os.path.join( tmpdir, 'svn_tmp' )
         self.debug( 'cmd_diff %r, %r, %r, %r, %r' % (tmpdir, positional_args[0], recurse, revision1, revision2) )
-        diff_text = self.client.diff( tmpdir, positional_args[0], recurse=recurse, revision1=revision1, revision2=revision2 )
+        diff_text = self.client.diff( tmpdir, positional_args[0], recurse=recurse,
+                                            revision1=revision1, revision2=revision2,
+                                            diff_options=['-u','-b'] )
         print diff_text
 
     def cmd_export( self, args ):

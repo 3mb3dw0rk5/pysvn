@@ -712,4 +712,5 @@ extern void proplistToObject( Py::List &py_path_propmap_list, apr_array_header_t
 extern Py::String asUtf8String( Py::Object obj );
 extern apr_array_header_t *targetsFromStringOrList( Py::Object arg, SvnPool &pool );
 extern Py::List toListOfStrings( Py::Object obj );
+extern apr_array_header_t *arrayOfStringsFromListOfStrings( Py::Object arg, SvnPool &pool );
 //--------------------------------------------------------------------------------

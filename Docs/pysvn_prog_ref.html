@@ -54,13 +54,14 @@ gives an tutorial introduction to the pysvn module.
 
 <h2>pysvn features and feature testing</h2>
 
-<p>This document covers pysvn version 1.4.0. Features offered by pysvn
+<p>This document covers pysvn version 1.5.0. Features offered by pysvn
 depend on the version of SVN that is being used. Full functionality is
-only available with SVN 1.3.0 or later.
+only available with SVN 1.4.0 or later.
 </p>
 <p>Click one of the buttons below to show the pysvn API as supported
 by a particular version of the SVN.</p>
 <div id="buttons_work" style="display: none">
+<span class="button" onclick='changeDisplay( 1004000 )'>Show SVN 1.4.0 API</span>
 <span class="button" onclick='changeDisplay( 1003000 )'>Show SVN 1.3.0 API</span>
 <span class="button" onclick='changeDisplay( 1002000 )'>Show SVN 1.2.0 API</span>
 <span class="button" onclick='changeDisplay( 1001000 )'>Show SVN 1.1.0 API</span>
@@ -75,7 +76,7 @@ by a particular version of the SVN.</p>
 Sorry you browser does not support the show API buttons. Try viewing this page in FireFox.
 </div>
 <p>
-Showing the PySVN API supported by SVN <span id="version_shown">1.3.0</span>.
+Showing the PySVN API supported by SVN <span id="version_shown">1.4.0</span>.
 Unsupported parts of the API are show like: <span class="svn_example">This</span>.
 </p>
 <p>The recommended way to test for a feature is to use the python 
@@ -656,7 +657,8 @@ diff( tmp_path,
       ignore_ancestry=False,
       diff_deleted=True<span class="svn_1002000">,
       ignore_content_type=False</span><span class="svn_1003000">,
-      header_encoding=""</span> )
+      header_encoding="",
+      diff_options=[]</span> )
 </pre>
 <p>
 Return the differences between revision1 of url_or_path
@@ -674,6 +676,9 @@ regardless of the content types.
 </p>
 <p><span class="svn_1003000">Generated headers are encoded using header_encoding.</span>
 </p>
+<p><span class="svn_1003000">The list of diff_options are passed to the external
+diff program that subversion uses.</span>
+</p>
 
 <div class="svn_1001000">
 <h4><a name="pysvn_client_diff_peg"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.diff_peg</a></h4>
@@ -689,7 +694,8 @@ diff_peg( tmp_path,
           ignore_ancestry=False,
           diff_deleted=True<span class="svn_1002000">,
           ignore_content_type=False</span><span class="svn_1003000">,
-          header_encoding=""</span> )
+          header_encoding="",
+          diff_options=[]</span> )
 </pre>
 <p>
 return the differences between two revisions of the url_or_path.
@@ -708,6 +714,9 @@ regardless of the content types.
 </span>
 </p>
 <p><span class="svn_1003000">Generated headers are encoded using header_encoding.</span>
+</p>
+<p><span class="svn_1003000">The list of diff_options are passed to the
+diff that subversion uses.</span>
 </p>
 </div>
 

@@ -309,6 +309,34 @@ apr_array_header_t *targetsFromStringOrList( Py::Object arg, SvnPool &pool )
     return targets;
 }
 
+apr_array_header_t *arrayOfStringsFromListOfStrings( Py::Object arg, SvnPool &pool )
+{
+    Py::List paths( arg );
+    int num_targets = paths.length();
+
+    apr_array_header_t *array = apr_array_make( pool, num_targets, sizeof( const char * ) );
+
+    std::string type_error_message;
+    try
+    {
+        Py::List path_list( arg );
+
+        for( Py::List::size_type i=0; i<path_list.length(); i++ )
+        {
+            type_error_message = "expecting list members to be strings";
+
+            Py::String str( asUtf8String( path_list[i] ) );
+            *(char **)apr_array_push( array ) = apr_pstrdup( pool, str.as_std_string().c_str() );
+        }
+    }
+    catch( Py::TypeError & )
+    {
+        throw Py::TypeError( type_error_message );
+    }
+
+    return array;
+}
+
 Py::List toListOfStrings( Py::Object obj )
 {
     Py::List list;
