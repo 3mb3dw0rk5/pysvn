@@ -9,7 +9,14 @@
 '''
 
 # At the moment this package is only a kitting convenience
-from _pysvn import *
+try:
+    from _pysvn import *
+except ImportError, e:
+    # check for common installation errors that show up as ImportError
+    if ': undefined symbol:' in str(e):
+        raise ImportError, 'pysvn was built against newer (svn, apr, etc.) libraries then the ones installed on this system. %s' % str(e)
+    else:
+        raise
 
 # An indication that you are interested in the @c kind field
 SVN_DIRENT_KIND        = 0x00001
@@ -30,4 +37,4 @@ SVN_DIRENT_TIME        = 0x00010
 SVN_DIRENT_LAST_AUTHOR = 0x00020
 
 # A combination of all the dirent fields
-SVN_DIRENT_ALL         = 0xffffffff
+SVN_DIRENT_ALL         = 0xffffffffl
