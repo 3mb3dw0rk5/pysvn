@@ -52,6 +52,7 @@ def help( argv ):
 
     where <options> is one or more of:
         --verbose
+        --enable-debug
         --pycxx-dir=<dir>
         --apr-inc-dir=<dir>
         --svn-inc-dir=<dir>
@@ -99,11 +100,14 @@ class MakeFileCreater:
 
     def createMakefile( self, argv ):
         self.verbose = '--verbose' in argv
-
         self.detectMacVersion()
 
         if self.verbose:
             print 'Info: Creating makefile for python %r' % (sys.version_info,)
+
+        debug_cflags_list = []
+        if '--enable-debug' in argv:
+            debug_cflags_list.append( '-g' )
 
         include_dir_list = []
 
@@ -146,6 +150,9 @@ class MakeFileCreater:
             'svn_include':      svn_include,
             'includes':         ' '.join( ['-I%s' % include_dir for include_dir in include_dir_list] ),
 
+            # debug_cflags
+            'debug_cflags':     ' '.join( debug_cflags_list ),
+            
             # py_cflags
             'py_cflags':        ' '.join( py_cflags_list ),
 
@@ -227,11 +234,11 @@ PYTHON=%(python_exe)s
 PYTHON=%(python_exe)s
 SVN_INCLUDE=%(svn_include)s
 CCC=g++ -c
-CCCFLAGS=-Wall -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s
+CCCFLAGS=-Wall -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s
 CC=gcc -c
-CCFLAGS=-Wall -fPIC %(includes)s
+CCFLAGS=-Wall -fPIC %(includes)s %(debug_cflags)s
 PYCXX=%(pycxx_dir)s
-LDSHARED=g++ -shared
+LDSHARED=g++ -shared %(debug_cflags)s
 LDLIBS=-L%(svn_lib_dir)s \
 -lsvn_client-1 \
 -lsvn_diff-1 \
@@ -247,11 +254,11 @@ LDLIBS=-L%(svn_lib_dir)s \
 PYTHON=%(python_exe)s
 SVN_INCLUDE=%(svn_include)s
 CCC=g++ -c
-CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s
+CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s
 CC=gcc -c
-CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s
+CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s %(debug_cflags)s
 PYCXX=%(pycxx_dir)s
-LDSHARED=g++ -bundle -g -u _PyMac_Error %(frameworks)s
+LDSHARED=g++ -bundle %(debug_cflags)s -u _PyMac_Error %(frameworks)s
 LDLIBS=-L%(svn_lib_dir)s \
 -L%(apr_lib_dir)s \
 -lsvn_client-1 \
@@ -271,11 +278,11 @@ LDLIBS=-L%(svn_lib_dir)s \
 PYTHON=%(python_exe)s
 SVN_INCLUDE=%(svn_include)s
 CCC=g++ -c
-CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s
+CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s
 CC=gcc -c
-CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s
+CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s %(debug_cflags)s
 PYCXX=%(pycxx_dir)s
-LDSHARED=g++ -bundle -g -u _PyMac_Error %(frameworks)s
+LDSHARED=g++ -bundle %(debug_cflags)s -u _PyMac_Error %(frameworks)s
 LDLIBS= \
 %(svn_lib_dir)s/libsvn_client-1.a \
 %(svn_lib_dir)s/libsvn_subr-1.a \
@@ -310,11 +317,11 @@ LDLIBS= \
 PYTHON=%(python_exe)s
 SVN_INCLUDE=%(svn_include)s
 CCC=g++ -c
-CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s
+CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s
 CC=gcc -c
-CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s
+CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s %(debug_cflags)s
 PYCXX=%(pycxx_dir)s
-LDSHARED=g++ -bundle -g -u _PyMac_Error %(frameworks)s
+LDSHARED=g++ -bundle %(debug_cflags)s -u _PyMac_Error %(frameworks)s
 LDLIBS= \
 %(svn_lib_dir)s/libsvn_client-1.a \
 %(svn_lib_dir)s/libsvn_subr-1.a \
@@ -431,17 +438,18 @@ LDLIBS= \
         raise last_exception
 
 
-    def find_dir( self, argv, name, kw, base_dir_list, check_file=None ):
+    def find_dir( self, argv, name, kw, base_dir_list, check_file ):
         dir = self.__find_dir( argv, name, kw, base_dir_list, check_file )
         print 'Info: Found %14.14s in %s' % (name, dir)
         return dir
 
-    def __find_dir( self, argv, name, kw, base_dir_list, check_file=None ):
+    def __find_dir( self, argv, name, kw, base_dir_list, check_file ):
+        # override the base_dir_list from the command line kw
         for arg in argv[2:]:
             if arg[0:len(kw)] == kw:
-                return arg[len(kw):]
+                base_dir_list = [arg[len(kw):]]
 
-        # expect to find the pycxx in this source tree
+        # expect to find check_file in one of the dir
         for dir in base_dir_list:
             full_check_file = os.path.join( dir, check_file )
             if self.verbose:
@@ -449,7 +457,7 @@ LDLIBS= \
             if os.path.exists( full_check_file ):
                 return os.path.abspath( dir )
 
-        raise SetupError, 'cannot find %s - use %s' % (name, kw)
+        raise SetupError, 'cannot find %s %s - use %s' % (name, check_file, kw)
 
 if __name__ == '__main__':
     sys.exit( main( sys.argv ) )
