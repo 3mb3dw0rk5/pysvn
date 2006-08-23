@@ -666,8 +666,10 @@ and revision2 of url_or_path2. diff_text is a string
 containing the diff output.
 </p>
 <p>
-diff uses tmp_path to create any temporary files needed.
-Set recurse to True to recursively diff a directory's children.
+diff uses tmp_path to form the filename when creating any temporary
+files needed. The names are formed using tmp_path + unique_string + ".tmp".
+For example tmp_path=/tmp/diff_prefix will create files like
+/tmp/diff_prefix.tmp and /tmp/diff_prefix1.tmp.
 </p>
 <p><span class="svn_1002000">Diff output will not be generated for binary files, unless
 ignore_content_type is true, in which case diffs will be shown
@@ -676,8 +678,11 @@ regardless of the content types.
 </p>
 <p><span class="svn_1003000">Generated headers are encoded using header_encoding.</span>
 </p>
-<p><span class="svn_1003000">The list of diff_options are passed to the external
-diff program that subversion uses.</span>
+<p><span class="svn_1003000">The list of diff_options strings are passed to the external
+diff program that subversion uses. Typical options are
+-b (ignore space changes) and -w (ignore all white space).
+The exact options that work depend on the version of subversion used
+and its configuration.</span>
 </p>
 
 <div class="svn_1001000">
@@ -699,7 +704,15 @@ diff_peg( tmp_path,
 </pre>
 <p>
 return the differences between two revisions of the url_or_path.
-diff uses tmp_path to create any temporary files needed.
+diff_text is a string containing the diff output.
+</p>
+<p>
+diff uses tmp_path to form the filename when creating any temporary
+files needed. The names are formed using tmp_path + unique_string + ".tmp".
+For example tmp_path=/tmp/diff_prefix will create files like
+/tmp/diff_prefix.tmp and /tmp/diff_prefix1.tmp.
+</p>
+<p>
 Set recurse to True to recursively diff a directory's children.
 diff_text is a string containing the diff.
 </p>
@@ -715,8 +728,11 @@ regardless of the content types.
 </p>
 <p><span class="svn_1003000">Generated headers are encoded using header_encoding.</span>
 </p>
-<p><span class="svn_1003000">The list of diff_options are passed to the
-diff that subversion uses.</span>
+<p><span class="svn_1003000">The list of diff_options strings are passed to the external
+diff program that subversion uses. Typical options are
+-b (ignore space changes) and -w (ignore all white space).
+The exact options that work depend on the version of subversion used
+and its configuration.</span>
 </p>
 </div>
 
