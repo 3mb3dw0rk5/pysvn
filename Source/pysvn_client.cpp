@@ -1039,6 +1039,8 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
     {
         options = apr_array_make( pool, 0, sizeof( const char * ) );
     }
+#else
+    apr_array_header_t *options = apr_array_make( pool, 0, sizeof( const char * ) );
 #endif
 
     svn_stringbuf_t *stringbuf = NULL;
@@ -1180,6 +1182,8 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
     {
         options = apr_array_make( pool, 0, sizeof( const char * ) );
     }
+#else
+    apr_array_header_t *options = apr_array_make( pool, 0, sizeof( const char * ) );
 #endif
 
     svn_stringbuf_t *stringbuf = NULL;
