@@ -198,6 +198,22 @@ class MakeFileCreater:
 
             else:
                 makefile.write( self.makefile_template_macosx % template_values )
+        elif sys.platform.startswith('aix'):
+            if self.verbose:
+                print 'Info: Using AIX makefile template'
+            for path in sys.path:
+                python_exp = os.path.join(path, 'config', 'python.exp')
+                if os.path.exists(python_exp):
+                    template_values['python_exp'] = python_exp
+                    break
+            else:
+                python_exp = os.path.abspath(os.path.join(sys.executable, os.path.pardir, os.path.pardir, 
+                                                          'lib', 'python2.4', 'config', 'python.exp'))
+                if os.path.exists(python_exp):
+                    template_values['python_exp'] = python_exp
+                else:
+                    template_values['python_exp'] = 'python.exp'
+            makefile.write( self.makefile_template_aix % template_values )
         else:
             if self.verbose:
                 print 'Info: Using unix makefile template'
@@ -243,6 +259,44 @@ LDLIBS=-L%(svn_lib_dir)s \
 -lsvn_client-1 \
 -lsvn_diff-1 \
 -lsvn_repos-1
+
+#include pysvn_common.mak
+'''
+
+    makefile_template_aix = '''#
+#	Created by pysvn Extension/Source/setup.py
+#       -- makefile_template_aix --
+#
+PYTHON=%(python_exe)s
+SVN_INCLUDE=%(svn_include)s
+CCC=g++ -c
+CCCFLAGS=-Wall -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s
+CC=gcc -c
+CCFLAGS=-Wall -fPIC %(includes)s %(debug_cflags)s
+PYCXX=%(pycxx_dir)s
+LDSHARED=g++ -shared %(debug_cflags)s
+LDLIBS=-L%(svn_lib_dir)s \
+-lsvn_client-1   \
+-lsvn_repos-1    \
+-lsvn_subr-1     \
+-lsvn_delta-1    \
+-lsvn_fs_fs-1    \
+-lsvn_fs-1       \
+-lsvn_ra_svn-1   \
+-lsvn_repos-1    \
+-lsvn_ra_local-1 \
+-lsvn_ra_dav-1   \
+-lsvn_diff-1     \
+-lsvn_ra-1       \
+-lsvn_wc-1       \
+-lapr-0          \
+-lneon           \
+-laprutil-0      \
+-liconv          \
+-lexpat          \
+-lintl           \
+-lpthread        \
+-Wl,-bI:%(python_exp)s
 
 #include pysvn_common.mak
 '''
