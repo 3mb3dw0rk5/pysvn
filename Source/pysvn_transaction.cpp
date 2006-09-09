@@ -42,7 +42,8 @@ static void convertReposTree
 //--------------------------------------------------------------------------------
 pysvn_transaction::pysvn_transaction
     (
-    pysvn_module &_module
+    pysvn_module &_module,
+    Py::Dict result_wrappers
     )
 : m_module( _module )
 , m_transaction()

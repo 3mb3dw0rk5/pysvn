@@ -37,8 +37,6 @@ pysvn_module::pysvn_module()
     pysvn_client::init_type();
     pysvn_transaction::init_type();
     pysvn_revision::init_type();
-    pysvn_status::init_type();
-    pysvn_entry::init_type();
 
     pysvn_enum< svn_opt_revision_kind >::init_type();
     pysvn_enum_value< svn_opt_revision_kind >::init_type();
@@ -66,9 +64,9 @@ pysvn_module::pysvn_module()
     pysvn_enum_value< svn_diff_file_ignore_space_t >::init_type();
 #endif
 
-    add_keyword_method("Client", &pysvn_module::new_client, pysvn_client_doc);
+    add_keyword_method("_Client", &pysvn_module::new_client, pysvn_client_doc);
     add_keyword_method("Revision", &pysvn_module::new_revision, pysvn_revision_doc);
-    add_keyword_method("Transaction", &pysvn_module::new_transaction, pysvn_transaction_doc);
+    add_keyword_method("_Transaction", &pysvn_module::new_transaction, pysvn_transaction_doc);
 
     initialize( pysvn_module_doc );
 
@@ -119,12 +117,14 @@ pysvn_module::~pysvn_module()
 }
 
 static const char name_config_dir[] = "config_dir";
+static const char name_result_wrappers[] = "result_wrappers";
 
 Py::Object pysvn_module::new_client( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
     static argument_description args_desc[] =
     {
     { false, name_config_dir },
+    { false, name_result_wrappers },
     { false, NULL }
     };
 
@@ -133,7 +133,11 @@ Py::Object pysvn_module::new_client( const Py::Tuple &a_args, const Py::Dict &a_
 
     std::string config_dir = args.getUtf8String( name_config_dir, "" );
 
-    return Py::asObject( new pysvn_client( *this, config_dir ) );
+    Py::Dict result_wrappers_dict;
+    if( args.hasArg( name_result_wrappers ) )
+        result_wrappers_dict = args.getArg( name_result_wrappers );
+
+    return Py::asObject( new pysvn_client( *this, config_dir, result_wrappers_dict ) );
 }
 
 static const char name_repos_path[] = "repos_path";
@@ -146,6 +150,7 @@ Py::Object pysvn_module::new_transaction( const Py::Tuple &a_args, const Py::Dic
     {
     { true, name_repos_path },
     { true, name_transaction_name },
+    { false, name_result_wrappers },
     { false, NULL }
     };
 
@@ -155,7 +160,11 @@ Py::Object pysvn_module::new_transaction( const Py::Tuple &a_args, const Py::Dic
     std::string repos_path = args.getUtf8String( name_repos_path );
     std::string transaction_name = args.getUtf8String( name_transaction_name );
 
-    pysvn_transaction *t = new pysvn_transaction( *this );
+    Py::Dict result_wrappers_dict;
+    if( args.hasArg( name_result_wrappers ) )
+        result_wrappers_dict = args.getArg( name_result_wrappers );
+
+    pysvn_transaction *t = new pysvn_transaction( *this, result_wrappers_dict );
     Py::Object result( Py::asObject( t ) );
     t->init( repos_path, transaction_name );
     return result;

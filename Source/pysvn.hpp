@@ -175,12 +175,26 @@ private:// vaiables
 
 };
 
+class DictWrapper
+{
+public:
+    DictWrapper( Py::Dict result_wrappers, const std::string &wrapper_name );
+    ~DictWrapper();
+
+    Py::Object wrapDict( Py::Dict result ) const;
+
+private:
+    const std::string m_wrapper_name;
+    bool m_have_wrapper;
+    Py::Callable m_wrapper;
+};
+
 class FunctionArguments;
 
 class pysvn_client : public Py::PythonExtension<pysvn_client>
 {
 public:
-    pysvn_client( pysvn_module &module, const std::string &config_dir );
+    pysvn_client( pysvn_module &module, const std::string &config_dir, Py::Dict result_wrappers );
     virtual ~pysvn_client();
 
     // override functions from PythonExtension
@@ -268,15 +282,23 @@ private:
                                         const char *a_arg_name, const char *a_param_name, std::string &ctx_str );
     Py::Object helper_string_auth_get( FunctionArguments &a_args, const char *a_param_name );
 
-    pysvn_module    &m_module;
-    pysvn_context   m_context;
-    int             m_exception_style;
+    pysvn_module        &m_module;
+    Py::Dict            m_result_wrappers;
+    pysvn_context       m_context;
+    int                 m_exception_style;
+
+    DictWrapper         m_wrapper_status;
+    DictWrapper         m_wrapper_entry;
+    DictWrapper         m_wrapper_info;
+    DictWrapper         m_wrapper_lock;
+    DictWrapper         m_wrapper_dirent;
+    DictWrapper         m_wrapper_wc_info;
 };
 
 class pysvn_transaction : public Py::PythonExtension<pysvn_transaction>
 {
 public:
-    pysvn_transaction( pysvn_module &module );
+    pysvn_transaction( pysvn_module &module, Py::Dict result_wrappers );
     virtual ~pysvn_transaction();
     void init( const std::string &repos_path,
         const std::string &transaction_name );
@@ -310,9 +332,10 @@ private:
     // helper function that wraps up the logic to throw a client error exception
     void throw_client_error( SvnException & );
 private:
-    pysvn_module            &m_module;
-    SvnTransaction          m_transaction;
-    int                     m_exception_style;
+    pysvn_module        &m_module;
+    Py::Dict            m_result_wrappers;
+    SvnTransaction      m_transaction;
+    int                 m_exception_style;
 };
 
 class pysvn_revision : public Py::PythonExtension<pysvn_revision>
@@ -333,41 +356,6 @@ public:
 private:
     pysvn_revision();    // not defined
     svn_opt_revision_t m_svn_revision;
-};
-
-class pysvn_status : public Py::PythonExtension<pysvn_status>
-{
-public:
-    pysvn_status( const char *path, pysvn_wc_status_t *svn_status, SvnContext &context );
-
-    virtual ~pysvn_status();
-
-    virtual Py::Object getattr( const char *name );
-
-    static void init_type(void);
-private:
-    SvnContext              &m_context;
-    SvnPool                 m_pool;
-    std::string             m_path;
-    const pysvn_wc_status_t *m_svn_status;
-#ifdef PYSVN_HAS_CLIENT_STATUS2
-    Py::Object              m_repos_lock;
-#endif
-};
-
-class pysvn_entry : public Py::PythonExtension<pysvn_entry>
-{
-public:
-    pysvn_entry( const svn_wc_entry_t *svn_entry, SvnContext &context );
-
-    virtual ~pysvn_entry();
-
-    virtual Py::Object getattr( const char *name );
-
-    static void init_type(void);
-private:
-    SvnPool m_pool;
-    const svn_wc_entry_t *m_svn_entry;
 };
 
 // help functions to check the arguments pass and throw AttributeError
@@ -415,8 +403,6 @@ private:
     Py::Tuple::size_type        m_min_args;
     Py::Tuple::size_type        m_max_args;
 };
-
-extern Py::Object toObject( apr_time_t time );
 
 //------------------------------------------------------------
 template<TEMPLATE_TYPENAME T>
@@ -698,14 +684,7 @@ extern Py::Object utf8_string_or_none( const char *str );
 extern Py::Object path_string_or_none( const char *str, SvnPool &pool );
 extern Py::Object utf8_string_or_none( const std::string &str );
 extern apr_time_t convertStringToTime( const std::string &text, apr_time_t now, SvnPool &pool );
-extern Py::Object toObject( apr_time_t t );
-extern Py::Object toObject( pysvn_commit_info_t *commit_info );
-#ifdef PYSVN_HAS_CLIENT_INFO
-extern Py::Object toObject( const svn_info_t *info );
-#endif
-#ifdef PYSVN_HAS_CLIENT_LOCK
-extern Py::Object toObject( const svn_lock_t *lock );
-#endif
+
 extern Py::Object propsToObject( apr_hash_t *props, SvnPool &pool );
 extern Py::Object revnumListToObject( apr_array_header_t *revs, SvnPool &pool );
 extern void proplistToObject( Py::List &py_path_propmap_list, apr_array_header_t *props, SvnPool &pool );
@@ -713,4 +692,39 @@ extern Py::String asUtf8String( Py::Object obj );
 extern apr_array_header_t *targetsFromStringOrList( Py::Object arg, SvnPool &pool );
 extern Py::List toListOfStrings( Py::Object obj );
 extern apr_array_header_t *arrayOfStringsFromListOfStrings( Py::Object arg, SvnPool &pool );
+
+Py::Object toObject( apr_time_t t );
+Py::Object toObject( pysvn_commit_info_t *commit_info );
+
+extern Py::Object toObject
+    (
+    Py::String path,
+    pysvn_wc_status_t &svn_status,
+    SvnPool &pool,
+    const DictWrapper &wrapper_status,
+    const DictWrapper &wrapper_entry,
+    const DictWrapper &wrapper_lock
+    );
+extern Py::Object toObject
+    (
+    const svn_wc_entry_t &svn_entry,
+    SvnPool &pool,
+    const DictWrapper &wrapper_entry
+    );
+#ifdef PYSVN_HAS_CLIENT_INFO
+extern Py::Object toObject
+    (
+    const svn_info_t &info,
+    const DictWrapper &wrapper_info,
+    const DictWrapper &wrapper_lock,
+    const DictWrapper &wrapper_wc_info
+    );
+#endif
+#ifdef PYSVN_HAS_CLIENT_LOCK
+extern Py::Object toObject
+    (
+    const svn_lock_t &lock,
+    const DictWrapper &wrapper_lock
+    );
+#endif
 //--------------------------------------------------------------------------------

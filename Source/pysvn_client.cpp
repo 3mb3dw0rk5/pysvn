@@ -158,13 +158,30 @@ static void init_py_names()
     init_done = true;
 }
 
-
-
 //--------------------------------------------------------------------------------
-pysvn_client::pysvn_client( pysvn_module &_module, const std::string &config_dir )
+std::string name_wrapper_status("PysvnStatus");
+std::string name_wrapper_entry("PysvnEntry");
+std::string name_wrapper_info("PysvnInfo");
+std::string name_wrapper_lock("PysvnLock");
+std::string name_wrapper_dirent("PysvnDirent");
+std::string name_wrapper_wc_info("PysvnWcInfo");
+
+pysvn_client::pysvn_client
+    (
+    pysvn_module &_module,
+    const std::string &config_dir,
+    Py::Dict result_wrappers
+    )
 : m_module( _module )
+, m_result_wrappers( result_wrappers )
 , m_context( config_dir )
 , m_exception_style( 0 )
+, m_wrapper_status( result_wrappers, name_wrapper_status )
+, m_wrapper_entry( result_wrappers, name_wrapper_entry )
+, m_wrapper_info( result_wrappers, name_wrapper_info )
+, m_wrapper_lock( result_wrappers, name_wrapper_lock )
+, m_wrapper_dirent( result_wrappers, name_wrapper_dirent )
+, m_wrapper_wc_info( result_wrappers, name_wrapper_wc_info )
 {
     init_py_names();
 }
@@ -1491,6 +1508,9 @@ Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kw
     std::string path( args.getUtf8String( name_path ) );
 
     SvnPool pool( m_context );
+
+    const svn_wc_entry_t *entry = NULL;
+
     try
     {
         std::string norm_path( svnNormalisedIfPath( path, pool ) );
@@ -1505,15 +1525,10 @@ Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kw
         if( error != NULL )
             throw SvnException( error );
 
-        const svn_wc_entry_t *entry = NULL;
         error = svn_wc_entry( &entry, norm_path.c_str(), adm_access, false, pool );
         if( error != NULL )
             throw SvnException( error );
-
-        if( entry == NULL )
-            return Py::None();
-
-        return Py::asObject( new pysvn_entry( entry, m_context ) );
+        
     }
     catch( SvnException &e )
     {
@@ -1523,21 +1538,38 @@ Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kw
         throw_client_error( e );
         return Py::None();       // needed to remove warning about return value missing
     }
+
+    if( entry == NULL )
+        return Py::None();
+
+    return toObject( *entry, pool, m_wrapper_entry );
 }
 
 #ifdef PYSVN_HAS_CLIENT_INFO
 class InfoReceiveBaton
 {
 public:
-    InfoReceiveBaton( PythonAllowThreads *permission)
-        : m_permission( permission )
-        , m_info_list()
-        {}
+    InfoReceiveBaton
+        (
+        PythonAllowThreads *permission,
+        const DictWrapper &wrapper_info,
+        const DictWrapper &wrapper_lock,
+        const DictWrapper &wrapper_wc_info
+        )
+    : m_permission( permission )
+    , m_info_list()
+    , m_wrapper_info( wrapper_info )
+    , m_wrapper_lock( wrapper_lock )
+    , m_wrapper_wc_info( wrapper_wc_info )
+    {}
     ~InfoReceiveBaton()
-        {}
+    {}
 
     PythonAllowThreads  *m_permission;
     Py::List            m_info_list;
+    const DictWrapper   &m_wrapper_info;
+    const DictWrapper   &m_wrapper_lock;
+    const DictWrapper   &m_wrapper_wc_info;
 };
 
 extern "C"
@@ -1550,10 +1582,21 @@ static svn_error_t *info_receiver_c( void *baton_, const char *path, const svn_i
 
     if( path != NULL )
     {
-        Py::String py_path( path );
+        std::string std_path( path );
+        if( std_path.empty() )
+        {
+            std_path = ".";
+        }
+        Py::String py_path( std_path );
+
         Py::Tuple py_pair( 2 );
         py_pair[0] = py_path;
-        py_pair[1] = toObject( info );
+        py_pair[1] = toObject(
+                    *info,
+                    baton->m_wrapper_info,
+                    baton->m_wrapper_lock,
+                    baton->m_wrapper_wc_info );
+
         baton->m_info_list.append( py_pair );
     }
 
@@ -1594,7 +1637,7 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
 
         PythonAllowThreads permission( m_context );
 
-        InfoReceiveBaton info_baton( &permission );
+        InfoReceiveBaton info_baton( &permission, m_wrapper_info, m_wrapper_lock, m_wrapper_wc_info );
 
         svn_error_t *error = 
             svn_client_info
@@ -2202,7 +2245,7 @@ Py::Object pysvn_client::cmd_ls( const Py::Tuple &a_args, const Py::Dict &a_kws 
         entry_dict[ *py_name_time ] = toObject( dirent->time );
         entry_dict[ *py_name_last_author ] = utf8_string_or_none( dirent->last_author );
 
-        entries_list.append( entry_dict );
+        entries_list.append( m_wrapper_dirent.wrapDict( entry_dict ) );
     }
 
     return entries_list;
@@ -3453,6 +3496,14 @@ static void StatusEntriesFunc
 }
 #endif
 
+
+//qqq
+extern Py::Object toObject(
+    const char *path, pysvn_wc_status_t &svn_status,
+    const DictWrapper &wrapper_status,
+    const DictWrapper &wrapper_lock
+    );
+
 Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
     static argument_description args_desc[] =
@@ -3496,7 +3547,7 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
 
         StatusEntriesBaton baton;
 
-        status_hash = apr_hash_make (pool);
+        status_hash = apr_hash_make( pool );
         baton.hash = status_hash;
         baton.pool = pool;
 
@@ -3552,7 +3603,16 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
         const svn_sort__item_t *item = &APR_ARRAY_IDX( statusarray, i, const svn_sort__item_t );
         pysvn_wc_status_t *status = (pysvn_wc_status_t *)item->value;
 
-        entries_list.append( Py::asObject( new pysvn_status( (const char *)item->key, status, m_context ) ) );
+//        entries_list.append( Py::asObject(
+//            new pysvn_status( (const char *)item->key, status, m_context,
+//                m_wrapper_lock ) ) );
+        entries_list.append( toObject(
+                Py::String( osNormalisedPath( (const char *)item->key, pool ), "UTF-8" ),
+                *status,
+                pool,
+                m_wrapper_status,
+                m_wrapper_entry,
+                m_wrapper_lock ) );
     }
 
     return entries_list;

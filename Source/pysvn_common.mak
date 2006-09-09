@@ -5,8 +5,8 @@
 #
 
 CXX_OBJECTS=cxxsupport.o cxx_extensions.o cxxextensions.o IndirectPythonInterface.o
-PYSVN_OBJECTS=pysvn.o pysvn_callbacks.o pysvn_client.o pysvn_entry.o pysvn_enum_string.o \
-	pysvn_transaction.o pysvn_revision.o pysvn_status.o pysvn_docs.o pysvn_path.o \
+PYSVN_OBJECTS=pysvn.o pysvn_callbacks.o pysvn_client.o pysvn_enum_string.o \
+	pysvn_transaction.o pysvn_revision.o pysvn_docs.o pysvn_path.o \
 	pysvn_arg_processing.o pysvn_converters.o pysvn_svnenv.o pysvn_profile.o
 PYSVN_INCLUDES=pysvn.hpp pysvn_docs.hpp pysvn_svnenv.hpp
 
@@ -36,9 +36,6 @@ pysvn_client.o: pysvn_client.cpp $(PYSVN_INCLUDES)
 pysvn_transaction.o: pysvn_transaction.cpp $(PYSVN_INCLUDES)
 	$(CCC) $(CCCFLAGS) -o $@ $<
 
-pysvn_entry.o: pysvn_entry.cpp $(PYSVN_INCLUDES)
-	$(CCC) $(CCCFLAGS) -o $@ $<
-
 pysvn_enum_string.o: pysvn_enum_string.cpp $(PYSVN_INCLUDES)
 	$(CCC) $(CCCFLAGS) -o $@ $<
 
@@ -49,9 +46,6 @@ pysvn_path.o: pysvn_path.cpp $(PYSVN_INCLUDES)
 	$(CCC) $(CCCFLAGS) -o $@ $<
 
 pysvn_revision.o: pysvn_revision.cpp $(PYSVN_INCLUDES)
-	$(CCC) $(CCCFLAGS) -o $@ $<
-
-pysvn_status.o: pysvn_status.cpp $(PYSVN_INCLUDES)
 	$(CCC) $(CCCFLAGS) -o $@ $<
 
 pysvn_arg_processing.o: pysvn_arg_processing.cpp $(PYSVN_INCLUDES)
