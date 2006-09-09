@@ -164,6 +164,9 @@ class XhtmlParser:
             elif child.nodeType == xml.dom.minidom.Node.ELEMENT_NODE:
                 debug( '__extractText ELEMENT_NODE %r' % child.nodeName )
 
+                if child.nodeName in ['h1','h2','h3','h4']:
+                    break
+
                 include_children = True
                 # check for conditional span and div sections
                 if child.nodeName in ['span','div']:
