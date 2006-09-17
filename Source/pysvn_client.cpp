@@ -1991,6 +1991,7 @@ public:
     bool                m_fetch_locks;
     bool                m_is_url;
     std::string         m_url_or_path;
+    DictWrapper         *m_wrapper_lock;
 
     Py::List            m_list_list;
 };
@@ -2063,7 +2064,7 @@ svn_error_t *list_receiver_c
     }
     else
     {
-        py_tuple[2] = toObject( lock );
+        py_tuple[2] = toObject( *lock, *baton->m_wrapper_lock );
     }
     baton->m_list_list.append( py_tuple );
 
@@ -2112,6 +2113,7 @@ Py::Object pysvn_client::cmd_list( const Py::Tuple &a_args, const Py::Dict &a_kw
         list_baton.m_is_url = is_url;
         list_baton.m_fetch_locks = fetch_locks;
         list_baton.m_url_or_path = norm_path;
+        list_baton.m_wrapper_lock = &m_wrapper_lock;
 
         svn_error_t *error = svn_client_list
             (

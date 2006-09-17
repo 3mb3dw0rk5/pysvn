@@ -202,10 +202,6 @@ SOURCE=.\pysvn_docs.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=pysvn_entry.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=pysvn_enum_string.cpp
 # End Source File
 # Begin Source File
@@ -277,10 +273,6 @@ BuildCmds= \
 # Begin Source File
 
 SOURCE=pysvn_revision.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=pysvn_status.cpp
 # End Source File
 # Begin Source File
 

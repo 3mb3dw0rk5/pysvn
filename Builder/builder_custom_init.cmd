@@ -16,6 +16,7 @@ rem in development the version info can be found
 rem otherwise the builder will have run it already
 set COMPILER=msvc60
 if "%PY_MIN%" == "4" set COMPILER=msvc71
+if "%PY_MIN%" == "5" set COMPILER=msvc71
 
 if exist ..\..\ReleaseEngineering\win32-%COMPILER%\software-versions.cmd call ..\..\ReleaseEngineering\win32-%COMPILER%\software-versions.cmd off
 

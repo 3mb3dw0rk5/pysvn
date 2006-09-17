@@ -119,11 +119,11 @@ SvnContext::SvnContext( const std::string &config_dir_str )
     // simple providers
     svn_auth_provider_object_t *provider = NULL;
 #ifdef WIN32
-    svn_auth_get_windows_simple_provider(&provider, pool);
+    svn_auth_get_windows_simple_provider(&provider, m_pool);
     *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
 #endif
 #ifdef SVN_HAVE_KEYCHAIN_SERVICES
-    svn_auth_get_keychain_simple_provider(&provider, pool);
+    svn_auth_get_keychain_simple_provider(&provider, m_pool);
     *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
 #endif
     svn_auth_get_simple_provider( &provider, m_pool );
