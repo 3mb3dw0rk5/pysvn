@@ -18,7 +18,7 @@
 <link rev="made" href="mailto:barry@barrys-emacs.org" />
 <style type="text/css">
 h1, h2, h3, h4 {color: #000099; background-color: lightskyblue}
-pre     {color: #0000cc; background-color: #eeeeee; position: relative; left: 40px; margin-right: 80px;
+pre     {color: #0000cc; background-color: #dddddd; position: relative; left: 40px; margin-right: 80px;
         border-style: solid; border-color: black; border-width: thin}
 table   {position: relative; left: 40px; margin-right: 80px;
         border-style: solid; border-color: black; border-width: thin}
@@ -427,64 +427,72 @@ a tuple of three values (retcode, accepted_failures, save).
 <td><a href="#pysvn_client_diff">diff</a></td>
 <td><span class="svn_1001000"><a href="#pysvn_client_diff_peg">diff_peg</a></span></td>
 <td><span class="svn_1004000"><a href="#pysvn_client_diff_summarize">diff_summarize</a></span></td>
+<td><span class="svn_1004000"><a href="#pysvn_client_diff_summarize_peg">diff_summarize_peg</a></span></td>
 <td><a href="#pysvn_client_export">export</a></td>
-<td><span class="svn_1003000"><a href="#pysvn_client_get_adm_dir">get_adm_dir</a></span></td>
 </tr>
 <tr>
+<td><span class="svn_1003000"><a href="#pysvn_client_get_adm_dir">get_adm_dir</a></span></td>
 <td><a href="#pysvn_client_get_auth_cache">get_auth_cache</a></td>
 <td><a href="#pysvn_client_get_auto_props">get_auto_props</a></td>
 <td><a href="#pysvn_client_get_default_password">get_default_password</a></td>
 <td><a href="#pysvn_client_get_default_username">get_default_username</a></td>
 <td><a href="#pysvn_client_get_interactive">get_interactive</a></td>
-<td><a href="#pysvn_client_get_store_passwords">get_store_passwords</a></td>
 </tr>
 <tr bgcolor="#e0e0e0">
+<td><a href="#pysvn_client_get_store_passwords">get_store_passwords</a></td>
 <td><a href="#pysvn_client_import_">import_</a></td>
 <td><a href="#pysvn_client_info">info</a></td>
 <td><span class="svn_1003000"><a href="#pysvn_client_info2">info2</a></span></td>
 <td><span class="svn_1003000"><a href="#pysvn_client_is_adm_dir">is_adm_dir</a></span></td>
 <td><a href="#pysvn_client_is_url">is_url</a></td>
-<td><span class="svn_1004000"><a href="#pysvn_client_list">list</a></span></td>
 </tr>
 <tr>
+<td><span class="svn_1004000"><a href="#pysvn_client_list">list</a></span></td>
 <td><a href="#pysvn_client_log">log</a></td>
 <td><span class="svn_1002000"><a href="#pysvn_client_lock">lock</a></span></td>
 <td><a href="#pysvn_client_ls">ls</a></td>
 <td><a href="#pysvn_client_merge">merge</a></td>
 <td><span class="svn_1001000"><a href="#pysvn_client_merge_peg">merge_peg</a></span></td>
-<td><a href="#pysvn_client_mkdir">mkdir</a></td>
 </tr>
 <tr bgcolor="#e0e0e0">
+<td><a href="#pysvn_client_mkdir">mkdir</a></td>
 <td><a href="#pysvn_client_move">move</a></td>
 <td><a href="#pysvn_client_propdel">propdel</a></td>
 <td><a href="#pysvn_client_propget">propget</a></td>
 <td><a href="#pysvn_client_proplist">proplist</a></td>
 <td><a href="#pysvn_client_propset">propset</a></td>
-<td><a href="#pysvn_client_relocate">relocate</a></td>
 </tr>
 <tr>
+<td><a href="#pysvn_client_relocate">relocate</a></td>
 <td><a href="#pysvn_client_remove">remove</a></td>
 <td><a href="#pysvn_client_resolved">resolved</a></td>
 <td><a href="#pysvn_client_revert">revert</a></td>
 <td><a href="#pysvn_client_revpropdel">revpropdel</a></td>
 <td><a href="#pysvn_client_revpropget">revpropget</a></td>
-<td><a href="#pysvn_client_revproplist">revproplist</a></td>
 </tr>
 <tr bgcolor="#e0e0e0">
+<td><a href="#pysvn_client_revproplist">revproplist</a></td>
 <td><a href="#pysvn_client_revpropset">revpropset</a></td>
 <td><span class="svn_1003000"><a href="#pysvn_client_set_adm_dir">set_adm_dir</a></span></td>
 <td><a href="#pysvn_client_set_auth_cache">set_auth_cache</a></td>
 <td><a href="#pysvn_client_set_auto_props">set_auto_props</a></td>
 <td><a href="#pysvn_client_set_default_password">set_default_password</a></td>
-<td><a href="#pysvn_client_set_default_username">set_default_username</a></td>
 </tr>
 <tr>
+<td><a href="#pysvn_client_set_default_username">set_default_username</a></td>
 <td><a href="#pysvn_client_set_interactive">set_interactive</a></td>
 <td><a href="#pysvn_client_set_store_passwords">set_store_passwords</a></td>
 <td><a href="#pysvn_client_status">status</a></td>
 <td><a href="#pysvn_client_switch">switch</a></td>
 <td><span class="svn_1002000"><a href="#pysvn_client_unlock">unlock</a></span></td>
+</tr>
+<tr>
 <td><a href="#pysvn_client_update">update</a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
 </tr>
 </table>
 
@@ -737,10 +745,51 @@ and its configuration.</span>
 <div class="svn_1004000">
 <h4><a name="pysvn_client_diff_summarize"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.diff_summarize</a></h4>
 <pre>
-diff_text = \
-diff_summarize(  )
+summary = \
+diff_summarize( url_or_path1,
+                revision1=pysvn.Revision( opt_revision_kind.base ),
+                url_or_path2=url_or_path,
+                revision2=pysvn.Revision( opt_revision_kind.working ),
+                recurse=True,
+                ignore_ancestry=False )
 </pre>
-<p>TBD
+<p>
+<p>Produce a diff summary which lists the changed items between
+url_or_path1 revision1 and url_or_path2 revision2 without creating text
+deltas. url_or_path1 and url_or_path2 can be either working-copy paths or URLs.
+</p>
+<p>
+The function may report false positives if ignore_ancestry is False,
+since a file might have been modified between two revisions, but still
+have the same contents.
+</p>
+</div>
+
+<div class="svn_1004000">
+<h4><a name="pysvn_client_diff_summarize_peg"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.diff_summarize_peg</a></h4>
+<pre>
+diff_text = \
+diff_summarize_peg( url_or_path,
+                    peg_revision=pysvn.Revision( opt_revision_kind.unspecified ),
+                    revision_start=pysvn.Revision( opt_revision_kind.base ),
+                    revision_end=pysvn.Revision( opt_revision_kind.working ),
+                    recurse=True,
+                    ignore_ancestry=False )
+</pre>
+<p>
+Produce a diff summary which lists the changed items between the
+filesystem object url_or_path in peg revision peg_revision, as it
+changed between revision_start and revision_end.  url_or_path can
+be either a working-copy path or URL.
+</p>
+<p>
+If peg_revision is opt_revision_unspecified, behave
+identically to svn_client_diff_summarize(), using path for both
+of that function's url_or_path1 and url_or_path2 argments.
+</p>
+<p>
+The function may report false positives if ignore_ancestry is False,
+as described in the documentation for diff_summarize().
 </p>
 </div>
 
@@ -1877,10 +1926,13 @@ except pysvn.ClientError, e:
 	name="pysvn_wc_merge_outcome">wc_merge_outcome - subversion
 	merge outcome enumeration</a></h2>
 <ul>
-<li>unchanged - The working copy is (or would be) unchanged. The changes to be merged were already present in the working copy</li>
+<li>unchanged - The working copy is (or would be) unchanged.
+The changes to be merged were already present in the working copy</li>
 <li>merged - The working copy has been (or would be) changed.</li>
-<li>conflict - The working copy has been (or would be) changed, but there was (or would be) a conflict</li>
-<li>no_merge - No merge was performed, probably because the target file was either absent or not under version control.</li>
+<li>conflict - The working copy has been (or would be) changed,
+but there was (or would be) a conflict</li>
+<li>no_merge - No merge was performed, probably because the target
+file was either absent or not under version control.</li>
 </ul>
 
 <h2><a href="#pysvn_module">pysvn</a>.<a
@@ -1898,8 +1950,7 @@ except pysvn.ClientError, e:
 </ul>
 
 <h2><a href="#pysvn_module">pysvn</a>.<a
-	name="pysvn_wc_schedule">wc_schedule - subversion
-	status schedule enumeration</a></h2>
+	name="pysvn_wc_schedule">wc_schedule - subversion status schedule enumeration</a></h2>
 <ul>
 <li>normal - Nothing special here</li>
 <li>add - Slated for addition</li>
@@ -1908,8 +1959,7 @@ except pysvn.ClientError, e:
 </ul>
 
 <h2><a href="#pysvn_module">pysvn</a>.<a
-	name="pysvn_node_kind">node_kind - subversion
-	node kind enumeration</a></h2>
+	name="pysvn_node_kind">node_kind - subversion node kind enumeration</a></h2>
 <ul>
 <li>none - absent</li>
 <li>file - regular file</li>

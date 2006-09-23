@@ -64,6 +64,11 @@ pysvn_module::pysvn_module()
     pysvn_enum_value< svn_diff_file_ignore_space_t >::init_type();
 #endif
 
+#if defined( PYSVN_HAS_CLIENT_DIFF_SUMMARIZE )
+    pysvn_enum< svn_client_diff_summarize_kind_t >::init_type();
+    pysvn_enum_value< svn_client_diff_summarize_kind_t >::init_type();
+#endif
+
     add_keyword_method("_Client", &pysvn_module::new_client, pysvn_client_doc);
     add_keyword_method("Revision", &pysvn_module::new_revision, pysvn_revision_doc);
     add_keyword_method("_Transaction", &pysvn_module::new_transaction, pysvn_transaction_doc);
@@ -110,6 +115,9 @@ pysvn_module::pysvn_module()
     d["wc_merge_outcome"] = Py::asObject( new pysvn_enum< svn_wc_merge_outcome_t >() );
     d["wc_notify_state"] = Py::asObject( new pysvn_enum< svn_wc_notify_state_t >() );
     d["node_kind"] = Py::asObject( new pysvn_enum< svn_node_kind_t >() );
+#if defined( PYSVN_HAS_CLIENT_DIFF_SUMMARIZE )
+    d["diff_summarize_kind"] = Py::asObject( new pysvn_enum< svn_client_diff_summarize_kind_t >() );
+#endif
 }
 
 pysvn_module::~pysvn_module()

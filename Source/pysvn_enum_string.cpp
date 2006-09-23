@@ -259,3 +259,21 @@ template <> EnumString< svn_diff_file_ignore_space_t >::EnumString()
     add( svn_diff_file_ignore_space_all, "all" );
 }
 #endif
+
+#if defined( PYSVN_HAS_CLIENT_DIFF_SUMMARIZE )
+template <> EnumString< svn_client_diff_summarize_kind_t >::EnumString()
+: m_type_name( "diff_summarize" )
+{
+  /** An item with no text modifications */
+  add( svn_client_diff_summarize_kind_normal, "normal" );
+
+  /** An added item */
+  add( svn_client_diff_summarize_kind_added, "added" );
+
+  /** An item with text modifications */
+  add( svn_client_diff_summarize_kind_modified, "modified" );
+
+  /** A deleted item */
+  add( svn_client_diff_summarize_kind_deleted, "delete" );
+}
+#endif

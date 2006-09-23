@@ -212,6 +212,10 @@ public:
     Py::Object cmd_copy( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_diff( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_diff_peg( const Py::Tuple& args, const Py::Dict &kws );
+#if defined( PYSVN_HAS_CLIENT_DIFF_SUMMARIZE )
+    Py::Object cmd_diff_summarize( const Py::Tuple& args, const Py::Dict &kws );
+    Py::Object cmd_diff_summarize_peg( const Py::Tuple& args, const Py::Dict &kws );
+#endif
     Py::Object cmd_export( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_info( const Py::Tuple& args, const Py::Dict &kws );
 #ifdef PYSVN_HAS_CLIENT_INFO
@@ -293,6 +297,7 @@ private:
     DictWrapper         m_wrapper_lock;
     DictWrapper         m_wrapper_dirent;
     DictWrapper         m_wrapper_wc_info;
+    DictWrapper         m_wrapper_diff_summary;
 };
 
 class pysvn_transaction : public Py::PythonExtension<pysvn_transaction>
@@ -311,10 +316,6 @@ public:
     // SVN Transaction commands
     Py::Object cmd_cat( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_changed( const Py::Tuple& args, const Py::Dict &kws );
-
-#if 0
-    Py::Object cmd_diff( const Py::Tuple& args, const Py::Dict &kws );
-#endif
 
     Py::Object cmd_propdel( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_propget( const Py::Tuple& args, const Py::Dict &kws );

@@ -77,11 +77,13 @@ static const char name_merge_options[] = "merge_options";
 static const char name_message[] = "message";
 static const char name_name[] = "name";
 static const char name_native_eol[] = "native_eol";
+static const char name_node_kind[] = "node_kind";
 static const char name_notice_ancestry[] = "notice_ancestry";
 static const char name_number[] = "number";
 static const char name_password[] = "password";
 static const char name_path[] = "path";
 static const char name_peg_revision[] = "peg_revision";
+static const char name_prop_changed[] = "prop_changed";
 static const char name_prop_name[] = "prop_name";
 static const char name_prop_value[] = "prop_value";
 static const char name_recurse[] = "recurse";
@@ -96,6 +98,7 @@ static const char name_skip_checks[] = "skip_checks";
 static const char name_src_revision[] = "src_revision";
 static const char name_src_url_or_path[] = "src_url_or_path";
 static const char name_strict_node_history[] = "strict_node_history";
+static const char name_summarize_kind[] = "summarize_kind";
 static const char name_time[] = "time";
 static const char name_tmp_path[] = "tmp_path";
 static const char name_to_url[] = "to_url";
@@ -109,24 +112,28 @@ static const char name_username[] = "username";
 static const char name_utf8[] = "UTF-8";
 
 
-static Py::String *py_name_name = NULL;
-static Py::String *py_name_path = NULL;
-static Py::String *py_name_repos_path = NULL;
-static Py::String *py_name_kind;
-static Py::String *py_name_size;
-static Py::String *py_name_created_rev;
-static Py::String *py_name_time;
-static Py::String *py_name_has_props;
-static Py::String *py_name_last_author;
-static Py::String *py_name_callback_get_login;
-static Py::String *py_name_callback_notify;
 static Py::String *py_name_callback_cancel;
 static Py::String *py_name_callback_get_log_message;
+static Py::String *py_name_callback_get_login;
+static Py::String *py_name_callback_notify;
+static Py::String *py_name_callback_ssl_client_cert_password_prompt;
+static Py::String *py_name_callback_ssl_client_cert_prompt;
 static Py::String *py_name_callback_ssl_server_prompt;
 static Py::String *py_name_callback_ssl_server_trust_prompt;
-static Py::String *py_name_callback_ssl_client_cert_prompt;
-static Py::String *py_name_callback_ssl_client_cert_password_prompt;
+static Py::String *py_name_created_rev;
 static Py::String *py_name_exception_style;
+static Py::String *py_name_has_props;
+static Py::String *py_name_kind;
+static Py::String *py_name_last_author;
+static Py::String *py_name_name = NULL;
+static Py::String *py_name_node_kind;
+static Py::String *py_name_path = NULL;
+static Py::String *py_name_prop_changed;
+static Py::String *py_name_repos_path = NULL;
+static Py::String *py_name_size;
+static Py::String *py_name_summarize_kind;
+static Py::String *py_name_time;
+
 
 static void init_py_names()
 {
@@ -136,24 +143,27 @@ static void init_py_names()
         return;
     }
 
-    py_name_name = new Py::String( name_name );
-    py_name_path = new Py::String( name_path );
-    py_name_repos_path = new Py::String( name_repos_path );
-    py_name_kind = new Py::String( name_kind );
-    py_name_size = new Py::String( name_size );
-    py_name_created_rev = new Py::String( name_created_rev );
-    py_name_time = new Py::String( name_time );
-    py_name_has_props = new Py::String( name_header_encoding );
-    py_name_last_author = new Py::String( name_last_author );
-    py_name_callback_get_login = new Py::String( name_callback_get_login );
-    py_name_callback_notify = new Py::String( name_callback_notify );
     py_name_callback_cancel = new Py::String( name_callback_cancel );
     py_name_callback_get_log_message = new Py::String( name_callback_get_log_message );
+    py_name_callback_get_login = new Py::String( name_callback_get_login );
+    py_name_callback_notify = new Py::String( name_callback_notify );
+    py_name_callback_ssl_client_cert_password_prompt = new Py::String( name_callback_ssl_client_cert_password_prompt );
+    py_name_callback_ssl_client_cert_prompt = new Py::String( name_callback_ssl_client_cert_prompt );
     py_name_callback_ssl_server_prompt = new Py::String( name_callback_ssl_server_prompt );
     py_name_callback_ssl_server_trust_prompt = new Py::String( name_callback_ssl_server_trust_prompt );
-    py_name_callback_ssl_client_cert_prompt = new Py::String( name_callback_ssl_client_cert_prompt );
-    py_name_callback_ssl_client_cert_password_prompt = new Py::String( name_callback_ssl_client_cert_password_prompt );
+    py_name_created_rev = new Py::String( name_created_rev );
     py_name_exception_style = new Py::String( name_exception_style );
+    py_name_has_props = new Py::String( name_header_encoding );
+    py_name_kind = new Py::String( name_kind );
+    py_name_last_author = new Py::String( name_last_author );
+    py_name_name = new Py::String( name_name );
+    py_name_node_kind = new Py::String( name_node_kind );
+    py_name_path = new Py::String( name_path );
+    py_name_prop_changed = new Py::String( name_prop_changed );
+    py_name_repos_path = new Py::String( name_repos_path );
+    py_name_size = new Py::String( name_size );
+    py_name_summarize_kind = new Py::String( name_summarize_kind );
+    py_name_time = new Py::String( name_time );
 
     init_done = true;
 }
@@ -165,6 +175,7 @@ std::string name_wrapper_info("PysvnInfo");
 std::string name_wrapper_lock("PysvnLock");
 std::string name_wrapper_dirent("PysvnDirent");
 std::string name_wrapper_wc_info("PysvnWcInfo");
+std::string name_wrapper_diff_summary("PysvnDiffSummary");
 
 pysvn_client::pysvn_client
     (
@@ -182,6 +193,7 @@ pysvn_client::pysvn_client
 , m_wrapper_lock( result_wrappers, name_wrapper_lock )
 , m_wrapper_dirent( result_wrappers, name_wrapper_dirent )
 , m_wrapper_wc_info( result_wrappers, name_wrapper_wc_info )
+, m_wrapper_diff_summary( result_wrappers, name_wrapper_diff_summary )
 {
     init_py_names();
 }
@@ -1291,6 +1303,184 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
 
     // cannot convert to Unicode as we have no idea of the encoding of the bytes
     return Py::String( stringbuf->data, (int)stringbuf->len );
+}
+#endif
+
+#if defined( PYSVN_HAS_CLIENT_DIFF_SUMMARIZE )
+class DiffSummarizeBaton
+{
+public:
+    DiffSummarizeBaton( PythonAllowThreads *permission)
+        : m_permission( permission )
+        , m_diff_list()
+        {}
+    ~DiffSummarizeBaton()
+        {}
+
+    PythonAllowThreads  *m_permission;
+
+    DictWrapper         *m_wrapper_diff_summary;
+    Py::List            m_diff_list;
+};
+
+extern "C"
+{
+svn_error_t *diff_summarize_c
+    (
+    const svn_client_diff_summarize_t *diff,
+    void *baton_,
+    apr_pool_t *pool
+    )
+{
+    DiffSummarizeBaton *baton = reinterpret_cast<DiffSummarizeBaton *>( baton_ );
+
+    PythonDisallowThreads callback_permission( baton->m_permission );
+
+    Py::Dict diff_dict;
+
+    diff_dict[ *py_name_path ] = Py::String( diff->path, name_utf8 );
+    diff_dict[ *py_name_summarize_kind ] = toEnumValue( diff->summarize_kind );
+    diff_dict[ *py_name_prop_changed ] = Py::Int( diff->prop_changed != 0 );
+    diff_dict[ *py_name_node_kind ] = toEnumValue( diff->node_kind );
+
+    baton->m_diff_list.append( baton->m_wrapper_diff_summary->wrapDict( diff_dict ) );
+
+    return SVN_NO_ERROR;
+}
+}
+
+Py::Object pysvn_client::cmd_diff_summarize( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_url_or_path1 },
+    { false, name_revision1 },
+    { false, name_url_or_path2 },
+    { false, name_revision2 },
+    { false, name_recurse },
+    { false, name_ignore_ancestry },
+    { false, NULL }
+    };
+    FunctionArguments args( "diff_summarize", args_desc, a_args, a_kws );
+    args.check();
+
+    std::string path1( args.getUtf8String( name_url_or_path1 ) );
+    svn_opt_revision_t revision1 = args.getRevision( name_revision1, svn_opt_revision_base );
+    std::string path2( args.getUtf8String( name_url_or_path2, path1 ) );
+    svn_opt_revision_t revision2 = args.getRevision( name_revision2, svn_opt_revision_working );
+    bool recurse = args.getBoolean( name_recurse, true );
+    bool ignore_ancestry = args.getBoolean( name_ignore_ancestry, true );
+
+    SvnPool pool( m_context );
+
+    try
+    {
+        std::string norm_path1( svnNormalisedIfPath( path1, pool ) );
+        std::string norm_path2( svnNormalisedIfPath( path2, pool ) );
+
+        checkThreadPermission();
+
+        PythonAllowThreads permission( m_context );
+
+        DiffSummarizeBaton diff_baton( &permission );
+        diff_baton.m_wrapper_diff_summary = &m_wrapper_diff_summary;
+
+        svn_error_t *error = svn_client_diff_summarize
+            (
+            path1.c_str(),
+            &revision1,
+            path2.c_str(),
+            &revision2,
+            recurse,
+            ignore_ancestry,
+            diff_summarize_c,
+            reinterpret_cast<void *>( &diff_baton ),
+            m_context,
+            pool
+            );
+        if( error != NULL )
+            throw SvnException( error );
+
+        return diff_baton.m_diff_list;
+    }
+    catch( SvnException &e )
+    {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
+        throw_client_error( e );
+    }
+
+    // cannot convert to Unicode as we have no idea of the encoding of the bytes
+    return Py::None();
+}
+
+Py::Object pysvn_client::cmd_diff_summarize_peg( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_tmp_path },
+    { true,  name_url_or_path },
+    { false, name_peg_revision },
+    { false, name_revision_start },
+    { false, name_revision_end },
+    { false, name_recurse },
+    { false, name_ignore_ancestry },
+    { false, NULL }
+    };
+    FunctionArguments args( "diff", args_desc, a_args, a_kws );
+    args.check();
+
+    std::string tmp_path( args.getUtf8String( name_tmp_path ) );
+    std::string path( args.getUtf8String( name_url_or_path ) );
+    svn_opt_revision_t revision_start = args.getRevision( name_revision1, svn_opt_revision_base );
+    svn_opt_revision_t revision_end = args.getRevision( name_revision2, svn_opt_revision_working );
+    svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, revision_end );
+    bool recurse = args.getBoolean( name_recurse, true );
+    bool ignore_ancestry = args.getBoolean( name_ignore_ancestry, true );
+
+    SvnPool pool( m_context );
+
+    try
+    {
+        std::string norm_tmp_path( svnNormalisedIfPath( tmp_path, pool ) );
+        std::string norm_path( svnNormalisedIfPath( path, pool ) );
+
+        checkThreadPermission();
+
+        PythonAllowThreads permission( m_context );
+
+        DiffSummarizeBaton diff_baton( &permission );
+        diff_baton.m_wrapper_diff_summary = &m_wrapper_diff_summary;
+
+        svn_error_t *error = svn_client_diff_summarize_peg
+            (
+            path.c_str(),
+            &peg_revision,
+            &revision_start,
+            &revision_end,
+            recurse,
+            ignore_ancestry,
+            diff_summarize_c,
+            reinterpret_cast<void *>( &diff_baton ),
+            m_context,
+            pool
+            );
+        if( error != NULL )
+            throw SvnException( error );
+
+        return diff_baton.m_diff_list;
+    }
+    catch( SvnException &e )
+    {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
+        throw_client_error( e );
+    }
+
+    // cannot convert to Unicode as we have no idea of the encoding of the bytes
+    return Py::None();
 }
 #endif
 
@@ -4314,6 +4504,13 @@ void pysvn_client::init_type()
     add_keyword_method("cleanup", &pysvn_client::cmd_cleanup, pysvn_client_cleanup_doc );
     add_keyword_method("copy", &pysvn_client::cmd_copy, pysvn_client_copy_doc );
     add_keyword_method("diff", &pysvn_client::cmd_diff, pysvn_client_diff_doc );
+#ifdef PYSVN_HAS_CLIENT_DIFF_PEG
+    add_keyword_method("diff_peg", &pysvn_client::cmd_diff_peg, pysvn_client_diff_peg_doc );
+#endif
+#if defined( PYSVN_HAS_CLIENT_DIFF_SUMMARIZE )
+    add_keyword_method("diff_summarize", &pysvn_client::cmd_diff_summarize, pysvn_client_diff_summarize_doc );
+    add_keyword_method("diff_summarize_peg", &pysvn_client::cmd_diff_summarize_peg, pysvn_client_diff_summarize_peg_doc );
+#endif
     add_keyword_method("export", &pysvn_client::cmd_export, pysvn_client_export_doc );
 #if defined( PYSVN_HAS_WC_ADM_DIR )
     add_keyword_method("get_adm_dir", &pysvn_client::get_adm_dir, pysvn_client_get_adm_dir_doc );
@@ -4506,6 +4703,25 @@ template <> void pysvn_enum_value< svn_diff_file_ignore_space_t >::init_type(voi
 {
     behaviors().name("diff_file_ignore_space");
     behaviors().doc("diff_file_ignore_space value");
+    behaviors().supportCompare();
+    behaviors().supportRepr();
+    behaviors().supportStr();
+    behaviors().supportHash();
+}
+#endif
+
+#if defined( PYSVN_HAS_CLIENT_DIFF_SUMMARIZE )
+template <> void pysvn_enum< svn_client_diff_summarize_kind_t >::init_type(void)
+{
+    behaviors().name("client_diff_summarize_kind");
+    behaviors().doc("client_diff_summarize_kind enumeration");
+    behaviors().supportGetattr();
+}
+
+template <> void pysvn_enum_value< svn_client_diff_summarize_kind_t >::init_type(void)
+{
+    behaviors().name("client_diff_summarize_kind");
+    behaviors().doc("client_diff_summarize_kind value");
     behaviors().supportCompare();
     behaviors().supportRepr();
     behaviors().supportStr();

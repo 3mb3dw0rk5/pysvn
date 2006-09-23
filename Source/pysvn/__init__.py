@@ -50,6 +50,10 @@ class PysvnStatus(PysvnDictBase):
     def __init__( self, value_dict ):
         PysvnDictBase.__init__( self, value_dict, value_dict.get( 'path', None ) )
 
+class PysvnDiffSummary(PysvnDictBase):
+    def __init__( self, value_dict ):
+        PysvnDictBase.__init__( self, value_dict, value_dict.get( 'path', None ) )
+
 # An indication that you are interested in the @c kind field
 SVN_DIRENT_KIND        = 0x00001
 
