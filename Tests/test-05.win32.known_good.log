@@ -59,13 +59,13 @@ Path: b:/wc1/test/file1.txt
 Url: file:///b:/repos/trunk/test/file1.txt
 Revision: 3
 Repository root URL: file:///b:/repos
-Repository UUID: 598c03c7-320c-c649-a8f9-39a8a2dc5679
+Repository UUID: cc4484c8-542a-2742-be80-984bdf6d37c5
 Last changed author: barry
-Last Changed Date: 30-Dec-2005 20:24:27
+Last Changed Date: 23-Sep-2006 16:21:22
 Last changed revision: 3
 Node kind: file
 Schedule: normal
-Text Last Updated: 30-Dec-2005 20:24:27
+Text Last Updated: 23-Sep-2006 16:21:21
 Checksum: 1e41522fd7b6b6325667c8554893a6db
 Info: Test - lock unlocked file
 
@@ -86,18 +86,17 @@ Path: b:/wc1/test/file1.txt
 Url: file:///b:/repos/trunk/test/file1.txt
 Revision: 3
 Repository root URL: file:///b:/repos
-Repository UUID: 598c03c7-320c-c649-a8f9-39a8a2dc5679
+Repository UUID: cc4484c8-542a-2742-be80-984bdf6d37c5
 Last changed author: barry
-Last Changed Date: 30-Dec-2005 20:24:27
+Last Changed Date: 23-Sep-2006 16:21:22
 Last changed revision: 3
 Node kind: file
 Lock Owner: barry
-Lock Creation Date: 30-Dec-2005 20:24:30
-Lock Token: opaquelocktoken:9b391b43-b8f1-9c4e-b534-5c787471bafd
+Lock Creation Date: 23-Sep-2006 16:21:24
+Lock Token: opaquelocktoken:01ee0e7b-022a-8b4d-8cd4-82d52a2125a2
 Lock Comment:
-
 Schedule: normal
-Text Last Updated: 30-Dec-2005 20:24:27
+Text Last Updated: 23-Sep-2006 16:21:21
 Checksum: 1e41522fd7b6b6325667c8554893a6db
 Info: Test - attempt to checkin over a locked file
 
@@ -126,19 +125,18 @@ Path: b:/wc2/test/file1.txt
 Url: file:///b:/repos/trunk/test/file1.txt
 Revision: 3
 Repository root URL: file:///b:/repos
-Repository UUID: 598c03c7-320c-c649-a8f9-39a8a2dc5679
+Repository UUID: cc4484c8-542a-2742-be80-984bdf6d37c5
 Last changed author: barry
-Last Changed Date: 30-Dec-2005 20:24:27
+Last Changed Date: 23-Sep-2006 16:21:22
 Last changed revision: 3
 Node kind: file
 Lock Owner: barry
-Lock Creation Date: 30-Dec-2005 20:24:32
-Lock Token: opaquelocktoken:35448a59-b736-1f45-85c4-bf92ca918732
+Lock Creation Date: 23-Sep-2006 16:21:26
+Lock Token: opaquelocktoken:a24fb0d6-0286-0040-9fa4-2feb7c02c4fa
 Lock Comment:
 Stealing lock
 Schedule: normal
-Text Last Updated: 30-Dec-2005 20:24:29
-Properties Last Updated: 30-Dec-2005 20:24:29
+Text Last Updated: 23-Sep-2006 16:21:23
 Checksum: 1e41522fd7b6b6325667c8554893a6db
 Info: Test - status of locked files
 
@@ -201,8 +199,8 @@ Path: file1.txt
 Url: file:///b:/repos/trunk/test/file1.txt
 Revision: 4
 Repository root URL: file:///b:/repos
-Repository UUID: 598c03c7-320c-c649-a8f9-39a8a2dc5679
+Repository UUID: cc4484c8-542a-2742-be80-984bdf6d37c5
 Last changed author: barry
-Last Changed Date: 30-Dec-2005 20:24:33
+Last Changed Date: 23-Sep-2006 16:21:27
 Last changed revision: 4
 Node kind: file

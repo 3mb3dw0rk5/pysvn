@@ -11,11 +11,12 @@ all_files = []
 
 def walk( dirname, all_files ):
     for filename in os.listdir( dirname ):
-        filename = os.path.join( dirname, filename )
-        if os.path.isdir( filename ):    
-            walk( filename, all_files )
-        else:
-            all_files.append( filename )
+        if filename not in ['wcprops', 'empty-file', 'README.txt']:
+            filename = os.path.join( dirname, filename )
+            if os.path.isdir( filename ):    
+                walk( filename, all_files )
+            else:
+                all_files.append( filename )
 
 walk( sys.argv[1], all_files )
 

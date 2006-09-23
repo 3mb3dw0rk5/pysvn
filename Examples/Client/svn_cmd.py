@@ -426,7 +426,7 @@ class SvnCommand:
             print 'Last Changed Date:', fmtDateTime( entry.commit_time )
         if entry.text_time:
             print 'Text Last Updated:', fmtDateTime( entry.text_time )
-        if entry.properties_time:
+        if entry.properties_time and self.pysvn_testing == '99.99.99':
             print 'Properties Last Updated:', fmtDateTime( entry.properties_time )
         if entry.checksum:
             print 'Checksum:', entry.checksum
@@ -453,55 +453,56 @@ class SvnCommand:
             print
             print 'Path:',path
 
-            if info['URL']:
-                print 'Url:',info['URL']
-            if info['rev']:
-                print 'Revision:',info['rev'].number
-            if info['repos_root_URL'] and self.pysvn_testing >= '01.03.00':
-                print 'Repository root URL:',info['repos_root_URL']
-            if info['repos_UUID']:
-                print 'Repository UUID:',info['repos_UUID']
-            if info['last_changed_author']:
-                print 'Last changed author:',info['last_changed_author']
-            if info['last_changed_date']:
-                print 'Last Changed Date:', fmtDateTime( info['last_changed_date'] )
-            if info['last_changed_rev'].kind == pysvn.opt_revision_kind.number:
-                print 'Last changed revision:',info['last_changed_rev'].number
-            if info['kind'] == pysvn.node_kind.file:
+            if info.URL:
+                print 'Url:',info.URL
+            if info.rev:
+                print 'Revision:',info.rev.number
+            if info.repos_root_URL and self.pysvn_testing >= '01.03.00':
+                print 'Repository root URL:',info.repos_root_URL
+            if info.repos_UUID:
+                print 'Repository UUID:',info.repos_UUID
+            if info.last_changed_author:
+                print 'Last changed author:',info.last_changed_author
+            if info.last_changed_date:
+                print 'Last Changed Date:', fmtDateTime( info.last_changed_date )
+            if info.last_changed_rev.kind == pysvn.opt_revision_kind.number:
+                print 'Last changed revision:',info.last_changed_rev.number
+            if info.kind == pysvn.node_kind.file:
                 print 'Node kind: file'
-            elif info['kind'] == pysvn.node_kind.dir:
+            elif info.kind == pysvn.node_kind.dir:
                 print 'Node kind: directory'
-            elif info['kind'] == pysvn.node_kind.none:
+            elif info.kind == pysvn.node_kind.none:
                 print 'Node kind: none'
             else:
                 print 'Node kind: unknown'
-            if info['lock']:
-                print 'Lock Owner:',info['lock']['owner']
-                print 'Lock Creation Date:',fmtDateTime( info['lock']['creation_date'] )
-                if info['lock']['expiration_date'] is not None:
-                    print 'Lock Expiration Date:',fmtDateTime( info['lock']['expiration_date'] )
-                print 'Lock Token:',info['lock']['token']
+            if info.lock:
+                print 'Lock Owner:',info.lock.owner
+                print 'Lock Creation Date:',fmtDateTime( info.lock.creation_date )
+                if info.lock.expiration_date is not None:
+                    print 'Lock Expiration Date:',fmtDateTime( info.lock.expiration_date )
+                print 'Lock Token:',info.lock.token
                 print 'Lock Comment:'
-                print info['lock']['comment']
-            if info['wc_info']:
-                wc_info = info['wc_info']
-                if wc_info['schedule'] == pysvn.wc_schedule.normal:
+                if info.lock.comment is not None:
+                    print info.lock.comment
+            if info.wc_info:
+                wc_info = info.wc_info
+                if wc_info.schedule == pysvn.wc_schedule.normal:
                     print "Schedule: normal"
-                elif wc_info['schedule'] == pysvn.wc_schedule.add:
+                elif wc_info.schedule == pysvn.wc_schedule.add:
                     print "Schedule: add"
-                elif wc_info['schedule'] == pysvn.wc_schedule.delete:
+                elif wc_info.schedule == pysvn.wc_schedule.delete:
                     print "Schedule: delete"
-                elif wc_info['schedule'] == pysvn.wc_schedule.replace:
+                elif wc_info.schedule == pysvn.wc_schedule.replace:
                     print "Schedule: replace"
-                if wc_info['copyfrom_url']:
-                    print 'Copied From URL:', wc_info['copyfrom_url']
-                    print 'Copied From Rev:', wc_info['copyfrom_rev'].number
-                if wc_info['text_time']:
-                    print 'Text Last Updated:', fmtDateTime( wc_info['text_time'] )
-                if wc_info['prop_time']:
-                    print 'Properties Last Updated:', fmtDateTime( wc_info['prop_time'] )
-                if wc_info['checksum']:
-                    print 'Checksum:', wc_info['checksum']
+                if wc_info.copyfrom_url:
+                    print 'Copied From URL:', wc_info.copyfrom_url
+                    print 'Copied From Rev:', wc_info.copyfrom_rev.number
+                if wc_info.text_time:
+                    print 'Text Last Updated:', fmtDateTime( wc_info.text_time )
+                if wc_info.prop_time:
+                    print 'Properties Last Updated:', fmtDateTime( wc_info.prop_time )
+                if wc_info.checksum:
+                    print 'Checksum:', wc_info.checksum
 
 
     def cmd_import( self, args ):
@@ -528,20 +529,20 @@ class SvnCommand:
         for log in all_logs:
             print '-'*60
             print 'rev %d: %s | %s | %d lines' % \
-                (log['revision'].number, log['author'], fmtDateTime( log['date'] ),
-                len(log['message'].split('\n')))
+                (log.revision.number, log.author, fmtDateTime( log.date ),
+                len(log.message.split('\n')))
 
-            if len(log['changed_paths']) > 0:
+            if len(log.changed_paths) > 0:
                 print 'Changed paths:'
-                for change_info in log['changed_paths']:
-                    if change_info['copyfrom_path'] is None:
-                        print '  %s %s' % (change_info['action'], change_info['path'])
+                for change_info in log.changed_paths:
+                    if change_info.copyfrom_path is None:
+                        print '  %s %s' % (change_info.action, change_info.path)
                     else:
                         print '  %s %s (from %s:%d)' % \
-                            (change_info['action'], change_info['path'],
-                            change_info['copyfrom_path'], change_info['copyfrom_revision'].number)
+                            (change_info.action, change_info.path,
+                            change_info.copyfrom_path, change_info.copyfrom_revision.number)
 
-            print log['message']
+            print log.message
 
         print '-'*60
 
@@ -557,8 +558,8 @@ class SvnCommand:
             all_files = self.client.ls( arg, revision=revision, recurse=recurse )
             if verbose:
                 for file in all_files:
-                    file['time_str'] = fmtDateTime( file['time'] )
-                    file['created_rev_num'] = file['created_rev'].number
+                    file.time_str = fmtDateTime( file.time )
+                    file.created_rev_num = file.created_rev.number
                     print '%(created_rev_num)7d %(last_author)-10s %(size)6d %(time_str)s %(name)s' % file
             else:
                 for file in all_files:
