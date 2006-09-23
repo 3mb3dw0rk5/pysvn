@@ -550,39 +550,6 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="pysvn_entry.cpp">
-			<FileConfiguration
-				Name="Profile|Win32">
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="0"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
-					BrowseInformation="1"
-					CompileAs="2"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32">
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="0"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
-					BrowseInformation="1"
-					CompileAs="2"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Release|Win32">
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="0"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
-					BrowseInformation="1"
-					CompileAs="2"/>
-			</FileConfiguration>
-		</File>
-		<File
 			RelativePath="pysvn_enum_string.cpp">
 			<FileConfiguration
 				Name="Profile|Win32">
@@ -716,39 +683,6 @@
 		</File>
 		<File
 			RelativePath="pysvn_revision.cpp">
-			<FileConfiguration
-				Name="Profile|Win32">
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="0"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
-					BrowseInformation="1"
-					CompileAs="2"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32">
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="0"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
-					BrowseInformation="1"
-					CompileAs="2"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Release|Win32">
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="0"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
-					BrowseInformation="1"
-					CompileAs="2"/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath="pysvn_status.cpp">
 			<FileConfiguration
 				Name="Profile|Win32">
 				<Tool
