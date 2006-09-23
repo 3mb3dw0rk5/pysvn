@@ -558,9 +558,11 @@ class SvnCommand:
             all_files = self.client.ls( arg, revision=revision, recurse=recurse )
             if verbose:
                 for file in all_files:
-                    file.time_str = fmtDateTime( file.time )
-                    file.created_rev_num = file.created_rev.number
-                    print '%(created_rev_num)7d %(last_author)-10s %(size)6d %(time_str)s %(name)s' % file
+                    args = {}
+                    args.update( file )
+                    args['time_str'] = fmtDateTime( file.time )
+                    args['created_rev_num'] = file.created_rev.number
+                    print '%(created_rev_num)7d %(last_author)-10s %(size)6d %(time_str)s %(name)s' % args
             else:
                 for file in all_files:
                     print '%(name)s' % file

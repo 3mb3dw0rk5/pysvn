@@ -173,6 +173,8 @@ std::string name_wrapper_status("PysvnStatus");
 std::string name_wrapper_entry("PysvnEntry");
 std::string name_wrapper_info("PysvnInfo");
 std::string name_wrapper_lock("PysvnLock");
+std::string name_wrapper_log("PysvnLog");
+std::string name_wrapper_log_changed_path("PysvnLogChangedPath");
 std::string name_wrapper_dirent("PysvnDirent");
 std::string name_wrapper_wc_info("PysvnWcInfo");
 std::string name_wrapper_diff_summary("PysvnDiffSummary");
@@ -191,6 +193,8 @@ pysvn_client::pysvn_client
 , m_wrapper_entry( result_wrappers, name_wrapper_entry )
 , m_wrapper_info( result_wrappers, name_wrapper_info )
 , m_wrapper_lock( result_wrappers, name_wrapper_lock )
+, m_wrapper_log( result_wrappers, name_wrapper_log )
+, m_wrapper_log_changed_path( result_wrappers, name_wrapper_log_changed_path )
 , m_wrapper_dirent( result_wrappers, name_wrapper_dirent )
 , m_wrapper_wc_info( result_wrappers, name_wrapper_wc_info )
 , m_wrapper_diff_summary( result_wrappers, name_wrapper_diff_summary )
@@ -2153,12 +2157,12 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
             else
                 changed_entry_dict[name_copyfrom_revision] = Py::None();
 
-            changed_paths_list.append( changed_entry_dict );
+            changed_paths_list.append( m_wrapper_log_changed_path.wrapDict( changed_entry_dict ) );
         }
 
         entry_dict[name_changed_paths] = changed_paths_list;
 
-        entries_list.append( entry_dict );
+        entries_list.append( m_wrapper_log.wrapDict( entry_dict ) );
     }
 
     return entries_list;

@@ -42,6 +42,14 @@ class PysvnLock(PysvnDictBase):
     def __init__( self, value_dict ):
         PysvnDictBase.__init__( self, value_dict )
 
+class PysvnLog(PysvnDictBase):
+    def __init__( self, value_dict ):
+        PysvnDictBase.__init__( self, value_dict )
+
+class PysvnLogChangedPath(PysvnDictBase):
+    def __init__( self, value_dict ):
+        PysvnDictBase.__init__( self, value_dict )
+
 class PysvnWcInfo(PysvnDictBase):
     def __init__( self, value_dict ):
         PysvnDictBase.__init__( self, value_dict )
