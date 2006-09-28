@@ -258,7 +258,8 @@ LDSHARED=g++ -shared %(debug_cflags)s
 LDLIBS=-L%(svn_lib_dir)s \
 -lsvn_client-1 \
 -lsvn_diff-1 \
--lsvn_repos-1
+-lsvn_repos-1 \
+ -lgssapi_krb5 -lkrb5 -lk5crypto -lkrb5support -lcom_err -lresolv -lexpat
 
 #include pysvn_common.mak
 '''
