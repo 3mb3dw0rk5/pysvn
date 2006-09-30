@@ -472,6 +472,7 @@ Py::Object pysvn_client::cmd_annotate( const Py::Tuple &a_args, const Py::Dict &
 #endif
 #if defined( PYSVN_HAS_CLIENT_ANNOTATE3 )
     { false, name_ignore_space },
+    { false, name_ignore_eol_style },
     { false, name_ignore_mime_type },
 #endif
     { false, NULL }
@@ -1190,8 +1191,8 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
 
     std::string tmp_path( args.getUtf8String( name_tmp_path ) );
     std::string path( args.getUtf8String( name_url_or_path ) );
-    svn_opt_revision_t revision_start = args.getRevision( name_revision1, svn_opt_revision_base );
-    svn_opt_revision_t revision_end = args.getRevision( name_revision2, svn_opt_revision_working );
+    svn_opt_revision_t revision_start = args.getRevision( name_revision_start, svn_opt_revision_base );
+    svn_opt_revision_t revision_end = args.getRevision( name_revision_end, svn_opt_revision_working );
     svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, revision_end );
     bool recurse = args.getBoolean( name_recurse, true );
     bool ignore_ancestry = args.getBoolean( name_ignore_ancestry, true );
@@ -1236,6 +1237,10 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
 
         output_file.open_unique_file( norm_tmp_path );
         error_file.open_unique_file( norm_tmp_path );
+
+        std::cout << "peg_revision "    << peg_revision.kind    << " " << peg_revision.value.number     << std::endl;
+        std::cout << "revision_start "  << revision_start.kind  << " " << revision_start.value.number   << std::endl;
+        std::cout << "revision_end "    << revision_end.kind    << " " << revision_end.value.number     << std::endl;
 
 #if defined( PYSVN_HAS_CLIENT_DIFF_PEG3 )
         svn_error_t *error = svn_client_diff_peg3

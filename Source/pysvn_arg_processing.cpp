@@ -157,6 +157,29 @@ void FunctionArguments::check()
 
 bool FunctionArguments::hasArg( const char *arg_name )
 {
+    std::string std_arg_name( arg_name );
+
+    bool found_arg_name = false;
+
+    Py::Tuple::size_type t_i;
+    // place all the positional args in the checked args dict
+    for( t_i=0; t_i < m_max_args; t_i++ )
+    {
+        if( std_arg_name == m_arg_desc[t_i].m_arg_name )
+        {
+            found_arg_name = true;
+            break;
+        }
+    }
+    if( !found_arg_name )
+    {
+        std::string msg = m_function_name;
+        msg += "() coding error: function does not have a arg called '";
+        msg += std_arg_name;
+        msg += "'";
+        throw Py::RuntimeError( msg );
+    }
+
     return m_checked_args.hasKey( arg_name );
 }
 
@@ -272,7 +295,6 @@ svn_opt_revision_t FunctionArguments::getRevision
     svn_opt_revision_kind default_value
     )
 {
-
     if( hasArg( name ) )
     {
         return getRevision( name );
