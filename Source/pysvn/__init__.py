@@ -30,6 +30,10 @@ class PysvnDirent(PysvnDictBase):
     def __init__( self, value_dict ):
         PysvnDictBase.__init__( self, value_dict, value_dict.get( 'name', None ) )
 
+class PysvnList(PysvnDictBase):
+    def __init__( self, value_dict ):
+        PysvnDictBase.__init__( self, value_dict, value_dict.get( 'path', None ) )
+
 class PysvnEntry(PysvnDictBase):
     def __init__( self, value_dict ):
         PysvnDictBase.__init__( self, value_dict, value_dict.get( 'name', None ) )

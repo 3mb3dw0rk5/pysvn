@@ -295,6 +295,7 @@ private:
     DictWrapper         m_wrapper_entry;
     DictWrapper         m_wrapper_info;
     DictWrapper         m_wrapper_lock;
+    DictWrapper         m_wrapper_list;
     DictWrapper         m_wrapper_log;
     DictWrapper         m_wrapper_log_changed_path;
     DictWrapper         m_wrapper_dirent;

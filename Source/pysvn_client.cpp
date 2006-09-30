@@ -173,6 +173,7 @@ std::string name_wrapper_status("PysvnStatus");
 std::string name_wrapper_entry("PysvnEntry");
 std::string name_wrapper_info("PysvnInfo");
 std::string name_wrapper_lock("PysvnLock");
+std::string name_wrapper_list("PysvnList");
 std::string name_wrapper_log("PysvnLog");
 std::string name_wrapper_log_changed_path("PysvnLogChangedPath");
 std::string name_wrapper_dirent("PysvnDirent");
@@ -193,6 +194,7 @@ pysvn_client::pysvn_client
 , m_wrapper_entry( result_wrappers, name_wrapper_entry )
 , m_wrapper_info( result_wrappers, name_wrapper_info )
 , m_wrapper_lock( result_wrappers, name_wrapper_lock )
+, m_wrapper_list( result_wrappers, name_wrapper_list )
 , m_wrapper_log( result_wrappers, name_wrapper_log )
 , m_wrapper_log_changed_path( result_wrappers, name_wrapper_log_changed_path )
 , m_wrapper_dirent( result_wrappers, name_wrapper_dirent )
@@ -2186,6 +2188,7 @@ public:
     bool                m_is_url;
     std::string         m_url_or_path;
     DictWrapper         *m_wrapper_lock;
+    DictWrapper         *m_wrapper_list;
 
     Py::List            m_list_list;
 };
@@ -2217,10 +2220,10 @@ svn_error_t *list_receiver_c
         full_repos_path += path;
     }
 
-    Py::Tuple py_tuple( 3 );
-    py_tuple[0] = Py::String( full_path, name_utf8 );
+    Py::Tuple py_tuple( 2 );
 
     Py::Dict entry_dict;
+    entry_dict[ *py_name_path ] = Py::String( full_path, name_utf8 );
     entry_dict[ *py_name_repos_path ] = Py::String( full_repos_path, name_utf8 );
 
     if( dirent != NULL )
@@ -2250,15 +2253,15 @@ svn_error_t *list_receiver_c
             entry_dict[ *py_name_last_author ] = utf8_string_or_none( dirent->last_author );
         }
     }
-    py_tuple[1] = entry_dict;
+    py_tuple[0] = baton->m_wrapper_list->wrapDict( entry_dict );
 
     if( lock == NULL )
     {
-        py_tuple[2] = Py::None();
+        py_tuple[1] = Py::None();
     }
     else
     {
-        py_tuple[2] = toObject( *lock, *baton->m_wrapper_lock );
+        py_tuple[1] = toObject( *lock, *baton->m_wrapper_lock );
     }
     baton->m_list_list.append( py_tuple );
 
@@ -2308,6 +2311,7 @@ Py::Object pysvn_client::cmd_list( const Py::Tuple &a_args, const Py::Dict &a_kw
         list_baton.m_fetch_locks = fetch_locks;
         list_baton.m_url_or_path = norm_path;
         list_baton.m_wrapper_lock = &m_wrapper_lock;
+        list_baton.m_wrapper_list = &m_wrapper_list;
 
         svn_error_t *error = svn_client_list
             (
