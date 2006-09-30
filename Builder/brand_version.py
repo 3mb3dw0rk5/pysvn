@@ -19,7 +19,11 @@ for line in file( version_details ):
     key, value = [s.strip() for s in line.split('=',1)]
     branding_info[ key ] = value
 
-build_revision = os.popen( 'svnversion -c "%s" 2>&1' % os.environ.get( 'PYSVN_EXPORTED_FROM', '..' ), 'r' ).read().strip()
+svnversion_image = os.environ.get( 'PYSVN_SVNVERSION', 'svnversion' )
+build_revision = os.popen( '"%s" -c "%s" 2>&1' %
+    (svnversion_image
+    ,os.environ.get( 'PYSVN_EXPORTED_FROM', '..' ))
+    , 'r' ).read().strip()
 # build_revision is either a range nnn:mmm or mmm
 # we only want the mmm
 build_revision = build_revision.split(':')[-1]
