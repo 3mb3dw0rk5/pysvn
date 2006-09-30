@@ -499,7 +499,7 @@ class SvnCommand:
                     print 'Copied From Rev:', wc_info.copyfrom_rev.number
                 if wc_info.text_time:
                     print 'Text Last Updated:', fmtDateTime( wc_info.text_time )
-                if wc_info.prop_time:
+                if wc_info.prop_time and self.pysvn_testing == '99.99.99':
                     print 'Properties Last Updated:', fmtDateTime( wc_info.prop_time )
                 if wc_info.checksum:
                     print 'Checksum:', wc_info.checksum
