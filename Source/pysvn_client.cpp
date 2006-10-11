@@ -24,6 +24,14 @@
 #include "svn_config.h"
 #include "svn_sorts.h"
 
+static void revisionKindCompatibleCheck
+    (
+    bool is_url,
+    const svn_opt_revision_t &revision,
+    const char *revision_name,
+    const char *url_or_path_name
+    );
+
 static const char empty_string[] = "";
 static const char name___members__[] = "__members__";
 static const char name_action[] = "action";
@@ -505,6 +513,13 @@ Py::Object pysvn_client::cmd_annotate( const Py::Tuple &a_args, const Py::Dict &
     diff_options->ignore_eol_style = ignore_eol_style;
 #endif
 
+    bool is_url = is_svn_url( path );
+#if defined( PYSVN_HAS_CLIENT_ANNOTATE2 )
+    revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
+#endif
+    revisionKindCompatibleCheck( is_url, revision_start, name_revision_start, name_url_or_path );
+    revisionKindCompatibleCheck( is_url, revision_end, name_revision_end, name_url_or_path );
+
     std::list<AnnotatedLineInfo> all_entries;
 
     try
@@ -605,7 +620,13 @@ Py::Object pysvn_client::cmd_cat( const Py::Tuple &a_args, const Py::Dict &a_kws
     svn_opt_revision_t revision = args.getRevision( name_revision, svn_opt_revision_head );
 #ifdef PYSVN_HAS_CLIENT_CAT2
     svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, revision );
+
 #endif
+    bool is_url = is_svn_url( path );
+#if defined( PYSVN_HAS_CLIENT_CAT2 )
+    revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
+#endif
+    revisionKindCompatibleCheck( is_url, revision, name_revision, name_url_or_path );
 
     SvnPool pool( m_context );
 
@@ -774,6 +795,12 @@ Py::Object pysvn_client::cmd_checkout( const Py::Tuple &a_args, const Py::Dict &
     bool ignore_externals = args.getBoolean( name_ignore_externals, false );
 #endif
     SvnPool pool( m_context );
+
+    bool is_url = is_svn_url( path );
+#if defined( PYSVN_HAS_CLIENT_CHECKOUT2 )
+    revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
+#endif
+    revisionKindCompatibleCheck( is_url, revision, name_revision, name_url_or_path );
 
     svn_revnum_t revnum = 0;
     try
@@ -1222,6 +1249,11 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
     apr_array_header_t *options = apr_array_make( pool, 0, sizeof( const char * ) );
 #endif
 
+    bool is_url = is_svn_url( path );
+    revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
+    revisionKindCompatibleCheck( is_url, revision_start, name_revision_start, name_url_or_path );
+    revisionKindCompatibleCheck( is_url, revision_end, name_revision_end, name_url_or_path );
+
     svn_stringbuf_t *stringbuf = NULL;
 
     try
@@ -1238,9 +1270,9 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
         output_file.open_unique_file( norm_tmp_path );
         error_file.open_unique_file( norm_tmp_path );
 
-        std::cout << "peg_revision "    << peg_revision.kind    << " " << peg_revision.value.number     << std::endl;
-        std::cout << "revision_start "  << revision_start.kind  << " " << revision_start.value.number   << std::endl;
-        std::cout << "revision_end "    << revision_end.kind    << " " << revision_end.value.number     << std::endl;
+        // std::cout << "peg_revision "    << peg_revision.kind    << " " << peg_revision.value.number     << std::endl;
+        // std::cout << "revision_start "  << revision_start.kind  << " " << revision_start.value.number   << std::endl;
+        // std::cout << "revision_end "    << revision_end.kind    << " " << revision_end.value.number     << std::endl;
 
 #if defined( PYSVN_HAS_CLIENT_DIFF_PEG3 )
         svn_error_t *error = svn_client_diff_peg3
@@ -1450,6 +1482,11 @@ Py::Object pysvn_client::cmd_diff_summarize_peg( const Py::Tuple &a_args, const 
     bool recurse = args.getBoolean( name_recurse, true );
     bool ignore_ancestry = args.getBoolean( name_ignore_ancestry, true );
 
+    bool is_url = is_svn_url( path );
+    revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
+    revisionKindCompatibleCheck( is_url, revision_start, name_revision_start, name_url_or_path );
+    revisionKindCompatibleCheck( is_url, revision_end, name_revision_end, name_url_or_path );
+
     SvnPool pool( m_context );
 
     try
@@ -1527,7 +1564,6 @@ Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_
     else
          revision = args.getRevision( name_revision, svn_opt_revision_working );
 
-
 #ifdef PYSVN_HAS_CLIENT_EXPORT2
     char *native_eol = NULL;
     if( args.hasArg( name_native_eol ) )
@@ -1552,7 +1588,12 @@ Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_
     bool recurse = args.getBoolean( name_recurse, true );
     bool ignore_externals = args.getBoolean( name_ignore_externals, false );
     svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, revision );
+
+    revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
 #endif
+
+    revisionKindCompatibleCheck( is_url, revision, name_revision, name_url_or_path );
+
 
     svn_revnum_t revnum = 0;
 
@@ -1829,6 +1870,10 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
 
     bool recurse = args.getBoolean( name_recurse, true );
 
+    bool is_url = is_svn_url( path );
+    revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
+    revisionKindCompatibleCheck( is_url, revision, name_revision, name_url_or_path );
+
     SvnPool pool( m_context );
     try
     {
@@ -2066,10 +2111,37 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
 #ifdef PYSVN_HAS_CLIENT_LOG3
     svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, svn_opt_revision_unspecified );
 #endif
+
+    Py::Object url_or_path_obj = args.getArg( name_url_or_path );
+    Py::List url_or_path_list;
+    if( url_or_path_obj.isList() )
+    {
+        url_or_path_list = url_or_path_obj;
+    }
+    else
+    {
+        Py::List py_list;
+        py_list.append( url_or_path_obj );
+        url_or_path_list = py_list;
+    }
+
+    for( size_t i=0; i<url_or_path_list.size(); i++ )
+    {
+        Py::String py_path( url_or_path_list[ i ] );
+        std::string path( py_path.as_std_string() );
+        bool is_url = is_svn_url( path );
+#ifdef PYSVN_HAS_CLIENT_LOG3
+        revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
+#endif
+        revisionKindCompatibleCheck( is_url, revision_start, name_revision_start, name_url_or_path );
+        revisionKindCompatibleCheck( is_url, revision_end, name_revision_end, name_url_or_path );
+    }
+
     SvnPool pool( m_context );
     std::list<LogEntryInfo> all_entries;
 
-    apr_array_header_t *targets = targetsFromStringOrList( args.getArg( name_url_or_path ), pool );
+    apr_array_header_t *targets = targetsFromStringOrList( url_or_path_list, pool );
+
 
     try
     {
@@ -2301,6 +2373,9 @@ Py::Object pysvn_client::cmd_list( const Py::Tuple &a_args, const Py::Dict &a_kw
     apr_uint32_t dirent_fields = args.getInteger( name_dirent_fields, SVN_DIRENT_ALL );
     bool fetch_locks = args.getBoolean( name_fetch_locks, false );
 
+    revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
+    revisionKindCompatibleCheck( is_url, revision, name_revision, name_url_or_path );
+
     SvnPool pool( m_context );
     std::string norm_path( svnNormalisedIfPath( path, pool ) );
 
@@ -2377,6 +2452,12 @@ Py::Object pysvn_client::cmd_ls( const Py::Tuple &a_args, const Py::Dict &a_kws 
 #ifdef PYSVN_HAS_CLIENT_LS2
     svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, revision );
 #endif
+
+    bool is_url = is_svn_url( path );
+#ifdef PYSVN_HAS_CLIENT_LS2
+    revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
+#endif
+    revisionKindCompatibleCheck( is_url, revision, name_revision, name_url_or_path );
 
     try
     {
@@ -2617,6 +2698,11 @@ Py::Object pysvn_client::cmd_merge_peg( const Py::Tuple &a_args, const Py::Dict 
         }
     }
 #endif
+
+    bool is_url = is_svn_url( path );
+    revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
+    revisionKindCompatibleCheck( is_url, revision1, name_revision1, name_url_or_path );
+    revisionKindCompatibleCheck( is_url, revision2, name_revision2, name_url_or_path );
 
     SvnPool pool( m_context );
 
@@ -2971,6 +3057,12 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
 #ifdef PYSVN_HAS_CLIENT_PROPGET2
     svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, revision );
 #endif
+
+    bool is_url = is_svn_url( path );
+#ifdef PYSVN_HAS_CLIENT_PROPGET2
+    revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
+#endif
+    revisionKindCompatibleCheck( is_url, revision, name_revision, name_url_or_path );
 
     SvnPool pool( m_context );
     apr_hash_t *props = NULL;
@@ -4500,6 +4592,61 @@ void pysvn_client::throw_client_error( SvnException &e )
     throw Py::Exception(
         m_module.client_error,
         e.pythonExceptionArg( m_exception_style ) );
+}
+
+static void revisionKindCompatibleCheck
+    (
+    bool is_url,
+    const svn_opt_revision_t &revision,
+    const char *revision_name,
+    const char *url_or_path_name
+    )
+{
+    std::string message;
+    if( is_url )
+    {
+        // URL compatibility
+        switch( revision.kind )
+        {
+        case svn_opt_revision_number:
+        case svn_opt_revision_date:
+        case svn_opt_revision_committed:
+        case svn_opt_revision_previous:
+        case svn_opt_revision_head:
+            return;
+
+        case svn_opt_revision_working:
+        case svn_opt_revision_unspecified:
+        case svn_opt_revision_base:
+        default:
+            message += revision_name;
+            message += " is not compatible with URL ";
+            message += url_or_path_name;
+            return;
+        }
+    }
+    else
+    {
+        // PATH compatibility
+        switch( revision.kind )
+        {
+        case svn_opt_revision_working:
+        case svn_opt_revision_base:
+            return;
+
+        case svn_opt_revision_number:
+        case svn_opt_revision_date:
+        case svn_opt_revision_committed:
+        case svn_opt_revision_previous:
+        case svn_opt_revision_head:
+        case svn_opt_revision_unspecified:
+        default:
+            message += revision_name;
+            message += " is not compatible with path ";
+            message += url_or_path_name;
+            return;
+        }
+    }
 }
 
 void pysvn_client::init_type()
