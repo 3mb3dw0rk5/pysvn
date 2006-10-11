@@ -482,7 +482,7 @@ class SvnCommand:
                     print 'Lock Expiration Date:',fmtDateTime( info.lock.expiration_date )
                 print 'Lock Token:',info.lock.token
                 print 'Lock Comment:'
-                if info.lock.comment is not None:
+                if info.lock.comment not in ['', None]:
                     print info.lock.comment
             if info.wc_info:
                 wc_info = info.wc_info
