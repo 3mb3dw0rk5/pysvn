@@ -9,7 +9,7 @@ clean:	../Source/Makefile
 	rm -rf ../Kit/Linux/tmp
 
 ../Source/Makefile: ../Source/setup.py
-	cd ../Source && $(PYTHON) setup.py configure
+	cd ../Source && $(PYTHON) setup.py configure $(CONFIG_ARGS)
 	
 
 kit:

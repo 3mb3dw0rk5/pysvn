@@ -55,6 +55,7 @@ def help( argv ):
         --enable-debug
         --pycxx-dir=<dir>
         --apr-inc-dir=<dir>
+        --svn-root-dir=<dir>
         --svn-inc-dir=<dir>
         --svn-lib-dir=<dir>
         --define=<define-string>
@@ -259,7 +260,7 @@ LDLIBS=-L%(svn_lib_dir)s \
 -lsvn_client-1 \
 -lsvn_diff-1 \
 -lsvn_repos-1 \
- -lgssapi_krb5 -lkrb5 -lk5crypto -lkrb5support -lcom_err -lresolv -lexpat
+ -lgssapi_krb5 -lkrb5 -lk5crypto -lkrb5support -lcom_err -lresolv -lexpat -lneon
 
 #include pysvn_common.mak
 '''
@@ -410,6 +411,7 @@ LDLIBS= \
         return self.find_dir( argv,
                     'PyCXX include',
                     '--pycxx-dir=',
+                    None,
                     [   '../Import/pycxx_5_3_5'],
                     'CXX/Version.hxx' )
 
@@ -417,6 +419,7 @@ LDLIBS= \
         return self.find_dir( argv,
                     'SVN include',
                     '--svn-inc-dir=',
+                    'include/subversion-1',
                     [
                         '/opt/local/include/subversion-1',      # Darwin - darwin ports
                         '/sw/include/subversion-1',             # Darwin - Fink
@@ -430,6 +433,7 @@ LDLIBS= \
         dir = self.find_dir( argv,
                     'SVN library',
                     '--svn-lib-dir=',
+                    'lib',
                     [
                         '/opt/local/lib',                       # Darwin - darwin ports
                         '/sw/lib',                              # Darwin - Fink
@@ -452,6 +456,7 @@ LDLIBS= \
                 return self.find_dir( argv,
                     'APR include',
                     '--apr-inc-dir=',
+                    None,
                     [
                         '/opt/local/include/%s' % apr_ver,      # Darwin - darwin ports
                         '/sw/include/%s' % apr_ver,             # Darwin - fink
@@ -477,6 +482,7 @@ LDLIBS= \
                 return self.find_dir( argv,
                     'APR library',
                     '--apr-lib-dir=',
+                    None,
                     [
                         '/opt/local/lib',                       # Darwin - darwin ports
                         '/sw/lib',                              # Darwin - fink
@@ -493,16 +499,28 @@ LDLIBS= \
         raise last_exception
 
 
-    def find_dir( self, argv, name, kw, base_dir_list, check_file ):
-        dir = self.__find_dir( argv, name, kw, base_dir_list, check_file )
-        print 'Info: Found %14.14s in %s' % (name, dir)
-        return dir
+    def find_dir( self, argv, name, kw, svn_root_suffix, base_dir_list, check_file ):
+        print 'Q argv %r' % argv
+        print 'Q name %r' % name
+        print 'Q kw %r' % kw
+        print 'Q svn_root_suffix %r' % svn_root_suffix
+        print 'Q base_dir_list %r' % base_dir_list
+        print 'Q check_file %r' % check_file
+        dirname = self.__find_dir( argv, name, kw, svn_root_suffix, base_dir_list, check_file )
+        print 'Info: Found %14.14s in %s' % (name, dirname)
+        return dirname
 
-    def __find_dir( self, argv, name, kw, base_dir_list, check_file ):
+    def __find_dir( self, argv, name, kw, svn_root_suffix, base_dir_list, check_file ):
         # override the base_dir_list from the command line kw
+        svn_root_dir = None
         for arg in argv[2:]:
             if arg[0:len(kw)] == kw:
                 base_dir_list = [arg[len(kw):]]
+                print 'Q %s base_dir_list %r' % (kw, base_dir_list)
+            elif( arg[0:len('--svn-root-dir=')] == '--svn-root-dir='
+            and svn_root_suffix is not None ):
+                base_dir_list = ['%s/%s' % (arg[len('--svn-root-dir='):], svn_root_suffix)]
+                print 'Q %s base_dir_list %r' % (svn_root_suffix, base_dir_list)
 
         # expect to find check_file in one of the dir
         for dir in base_dir_list:
