@@ -8,7 +8,7 @@ clean:	../Source/Makefile
 	cd ../Tests && $(MAKE)  clean
 
 ../Source/Makefile: ../Source/setup.py
-	cd ../Source && $(PYTHON) setup.py configure
+	cd ../Source && $(PYTHON) setup.py configure $(CONFIG_ARGS)
 
 kit:
 	cd ../Kit/MacOSX && $(PYTHON) make_pkg.py

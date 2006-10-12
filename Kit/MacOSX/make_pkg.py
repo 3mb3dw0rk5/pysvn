@@ -8,15 +8,20 @@ import sys
 sys.path.insert( 0, '../../Source')
 import pysvn
 import time
+import popen2
+
+so, si = popen2.popen2( 'uname -p' )
+processor = so.read().strip()
 
 pymaj, pymin, pypat, _, _ = sys.version_info
 python_version_string = '%d.%d.%d' % (pymaj, pymin, pypat)
 pysvnmaj, pysvnmin, pysvnpat, _ = pysvn.version
 pysvn_version_string = '%d.%d.%d-%d' % (pysvn.version[0], pysvn.version[1], pysvn.version[2], pysvn.version[3])
+pysvn_short_version_string = '%d.%d.%d' % (pysvn.version[0], pysvn.version[1], pysvn.version[2])
 svn_version_package_string = '%d%d%d' % (pysvn.svn_version[0], pysvn.svn_version[1], pysvn.svn_version[2])
 svn_version_string = '%d.%d.%d' % (pysvn.svn_version[0], pysvn.svn_version[1], pysvn.svn_version[2])
 
-pkg_filename = 'py%s%s_pysvn_svn%s-%s' % (pymaj, pymin, svn_version_package_string, pysvn_version_string)
+pkg_filename = 'py%s%s_pysvn_svn%s-%s-%s' % (pymaj, pymin, svn_version_package_string, pysvn_version_string, processor)
 print 'Info: Packageing %s' % pkg_filename
 build_time  = time.time()
 build_time_str = time.strftime( '%d-%b-%Y %H:%M', time.localtime( build_time ) )
@@ -27,6 +32,8 @@ if pymaj == 2 and pymin == 3:
     install_dir = '/System/Library/Frameworks/Python.framework/Versions/2.3/lib/python2.3/site-packages'
 elif pymaj == 2 and pymin == 4:
     install_dir = '/Library/Frameworks/Python.framework/Versions/2.4/lib/python2.4/site-packages'
+elif pymaj == 2 and pymin == 5:
+    install_dir = '/Library/Frameworks/Python.framework/Versions/2.5/lib/python2.5/site-packages'
 else:
     raise RuntimeError( 'Unsupported version of python' )
 
@@ -91,8 +98,9 @@ for libpath in dylib_list:
     cp_list.append( (libpath, 'Contents/pysvn') )
 
 for cp_src, cp_dst_dir_fmt in cp_list:
-    print 'Info:  cp %s' % cp_src
-    os.system( 'cp -f %s tmp/%s' % (cp_src, cp_dst_dir_fmt % locals()) )
+    cmd = 'cp -f "%s" "tmp/%s"' % (cp_src, cp_dst_dir_fmt % locals())
+    print 'Info:  %r' % cmd
+    os.system( cmd )
 
 print 'Info: Fix the install paths for the dylib files'
 for libpath in dylib_list:
@@ -134,7 +142,7 @@ f.write('''<?xml version="1.0" encoding="UTF-8"?>
     <key>CFBundleName</key>
     <string>pysvn Extension</string>
     <key>CFBundleShortVersionString</key>
-    <string>%(pysvn_version_string)s</string>
+    <string>%(pysvn_short_version_string)s</string>
     <key>IFMajorVersion</key>
     <integer>%(pysvnmaj)s</integer>
     <key>IFMinorVersion</key>
