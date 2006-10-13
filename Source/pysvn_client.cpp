@@ -2131,9 +2131,9 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
         std::string path( py_path.as_std_string() );
         bool is_url = is_svn_url( path );
 
-        std::cout << "peg_revision "    << peg_revision.kind    << " " << peg_revision.value.number     << std::endl;
-        std::cout << "revision_start "  << revision_start.kind  << " " << revision_start.value.number   << std::endl;
-        std::cout << "revision_end "    << revision_end.kind    << " " << revision_end.value.number     << std::endl;
+        // std::cout << "peg_revision "    << peg_revision.kind    << " " << peg_revision.value.number     << std::endl;
+        // std::cout << "revision_start "  << revision_start.kind  << " " << revision_start.value.number   << std::endl;
+        // std::cout << "revision_end "    << revision_end.kind    << " " << revision_end.value.number     << std::endl;
 
 #ifdef PYSVN_HAS_CLIENT_LOG3
         revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
