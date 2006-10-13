@@ -2130,6 +2130,11 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
         Py::String py_path( url_or_path_list[ i ] );
         std::string path( py_path.as_std_string() );
         bool is_url = is_svn_url( path );
+
+        std::cout << "peg_revision "    << peg_revision.kind    << " " << peg_revision.value.number     << std::endl;
+        std::cout << "revision_start "  << revision_start.kind  << " " << revision_start.value.number   << std::endl;
+        std::cout << "revision_end "    << revision_end.kind    << " " << revision_end.value.number     << std::endl;
+
 #ifdef PYSVN_HAS_CLIENT_LOG3
         revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
 #endif
@@ -4613,18 +4618,19 @@ static void revisionKindCompatibleCheck
         case svn_opt_revision_committed:
         case svn_opt_revision_previous:
         case svn_opt_revision_head:
-            return;
+        case svn_opt_revision_unspecified:
+            break;
 
         case svn_opt_revision_working:
-        case svn_opt_revision_unspecified:
         case svn_opt_revision_base:
         default:
             message += revision_name;
             message += " is not compatible with URL ";
             message += url_or_path_name;
-            return;
+            throw Py::AttributeError( message );
         }
     }
+#ifdef there_are_any_checks_for_path
     else
     {
         // PATH compatibility
@@ -4632,21 +4638,22 @@ static void revisionKindCompatibleCheck
         {
         case svn_opt_revision_working:
         case svn_opt_revision_base:
-            return;
+        case svn_opt_revision_unspecified:
+            break;
 
         case svn_opt_revision_number:
         case svn_opt_revision_date:
         case svn_opt_revision_committed:
         case svn_opt_revision_previous:
         case svn_opt_revision_head:
-        case svn_opt_revision_unspecified:
         default:
             message += revision_name;
             message += " is not compatible with path ";
             message += url_or_path_name;
-            return;
+            throw Py::AttributeError( message );
         }
     }
+#endif
 }
 
 void pysvn_client::init_type()
