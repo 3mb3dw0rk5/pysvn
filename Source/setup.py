@@ -412,7 +412,7 @@ LDLIBS= \
                     'PyCXX include',
                     '--pycxx-dir=',
                     None,
-                    [   '../Import/pycxx_5_3_5'],
+                    [   '../Import/pycxx-5.3.6'],
                     'CXX/Version.hxx' )
 
     def find_svn_inc( self, argv ):
@@ -500,12 +500,6 @@ LDLIBS= \
 
 
     def find_dir( self, argv, name, kw, svn_root_suffix, base_dir_list, check_file ):
-        print 'Q argv %r' % argv
-        print 'Q name %r' % name
-        print 'Q kw %r' % kw
-        print 'Q svn_root_suffix %r' % svn_root_suffix
-        print 'Q base_dir_list %r' % base_dir_list
-        print 'Q check_file %r' % check_file
         dirname = self.__find_dir( argv, name, kw, svn_root_suffix, base_dir_list, check_file )
         print 'Info: Found %14.14s in %s' % (name, dirname)
         return dirname
@@ -516,11 +510,9 @@ LDLIBS= \
         for arg in argv[2:]:
             if arg[0:len(kw)] == kw:
                 base_dir_list = [arg[len(kw):]]
-                print 'Q %s base_dir_list %r' % (kw, base_dir_list)
             elif( arg[0:len('--svn-root-dir=')] == '--svn-root-dir='
             and svn_root_suffix is not None ):
                 base_dir_list = ['%s/%s' % (arg[len('--svn-root-dir='):], svn_root_suffix)]
-                print 'Q %s base_dir_list %r' % (svn_root_suffix, base_dir_list)
 
         # expect to find check_file in one of the dir
         for dir in base_dir_list:

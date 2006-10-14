@@ -63,7 +63,7 @@ os.system( 'otool -L ../../Source/pysvn/_pysvn.so >/tmp/pysvn_otool.tmp' )
 for line in file( '/tmp/pysvn_otool.tmp' ).readlines():
     line = line.strip()
     if( line.startswith( '/' )
-    and not line.startswith( '/usr' )
+    and not line.startswith( '/usr/lib' )
     and not line.startswith( '/System' ) ):
         libpath = line.split()[0]
         print 'Info: Need lib',libpath
