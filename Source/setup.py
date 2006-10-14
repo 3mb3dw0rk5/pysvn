@@ -227,7 +227,7 @@ class MakeFileCreater:
 
         print 'Info: Creating Makefile for Tests'
 
-        if is_mac_os_x:
+        if self.is_mac_os_x:
             template_values['extra_lib_var_name'] = 'DYLD_LIBRARY_PATH'
         else:
             template_values['extra_lib_var_name'] = 'LD_LIBRARY_PATH'
