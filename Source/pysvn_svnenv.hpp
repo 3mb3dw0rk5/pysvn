@@ -267,8 +267,9 @@ public:
         ) = 0;
 
 private:
+#if 0
 #ifdef PYSVN_HAS_CONTEXT_LOG_MSG2
-    static svn_error_t *handlerLogMsg2
+    extern "C" static svn_error_t *handlerLogMsg2
         (
         const char **log_msg,
         const char **tmp_file,
@@ -277,7 +278,7 @@ private:
         apr_pool_t *pool
         );
 #else
-    static svn_error_t *handlerLogMsg
+    extern "C" static svn_error_t *handlerLogMsg
         (
         const char **log_msg,
         const char **tmp_file,
@@ -288,7 +289,7 @@ private:
 #endif
 
 #ifdef PYSVN_HAS_CONTEXT_PROGRESS
-    static void handlerProgress
+    extern "C" static void handlerProgress
         (
         apr_off_t progress,
         apr_off_t total,
@@ -298,14 +299,14 @@ private:
 #endif
 
 #ifdef PYSVN_HAS_CONTEXT_NOTIFY2
-    static void handlerNotify2
+    extern "C" static void handlerNotify2
         (
         void * baton,
 	const svn_wc_notify_t *notify,
 	apr_pool_t *pool        
         );
 #else
-    static void handlerNotify
+    extern "C" static void handlerNotify
         (
         void * baton,
         const char *path,
@@ -317,12 +318,12 @@ private:
         svn_revnum_t revision
         );
 #endif
-    static svn_error_t *handlerCancel
+    extern "C" static svn_error_t *handlerCancel
         (
         void * baton
         );
 
-    static svn_error_t *handlerSimplePrompt
+    extern "C" static svn_error_t *handlerSimplePrompt
         (
         svn_auth_cred_simple_t **cred,
         void *baton,
@@ -332,7 +333,7 @@ private:
         apr_pool_t *pool
         );
 
-    static svn_error_t *handlerSslServerTrustPrompt 
+    extern "C" static svn_error_t *handlerSslServerTrustPrompt 
         (
         svn_auth_cred_ssl_server_trust_t **cred, 
         void *baton,
@@ -343,14 +344,14 @@ private:
         apr_pool_t *pool
         );
 
-    static svn_error_t *handlerSslClientCertPrompt 
+    extern "C" static svn_error_t *handlerSslClientCertPrompt 
         (
         svn_auth_cred_ssl_client_cert_t **cred, 
         void *baton, 
         apr_pool_t *pool
         );
 
-    static svn_error_t *handlerSslClientCertPwPrompt
+    extern "C" static svn_error_t *handlerSslClientCertPwPrompt
         (
         svn_auth_cred_ssl_client_cert_pw_t **cred, 
         void *baton, 
@@ -358,7 +359,7 @@ private:
         svn_boolean_t maySave,
         apr_pool_t *pool
         );
-
+#endif
 private:
     apr_pool_t          *m_pool;
     svn_client_ctx_t    m_context;

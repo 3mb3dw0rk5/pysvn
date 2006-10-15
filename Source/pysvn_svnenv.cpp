@@ -13,6 +13,7 @@
 #include "CXX/Objects.hxx"
 
 static const char *toHex( unsigned int num );
+
 //--------------------------------------------------------------------------------
 //
 //        SvnException
@@ -97,6 +98,243 @@ Py::Object &SvnException::pythonExceptionArg( int style )
 //        SvnContext
 //
 //--------------------------------------------------------------------------------
+#ifdef PYSVN_HAS_CONTEXT_LOG_MSG2
+extern "C" svn_error_t *handlerLogMsg2
+    (
+    const char **log_msg,
+    const char **tmp_file,
+    const apr_array_header_t *commit_items,
+    void *baton,
+    apr_pool_t *pool
+    )
+{
+    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+
+    std::string msg;
+
+    if (!context->contextGetLogMessage( msg ) )
+        return svn_error_create( SVN_ERR_CANCELLED, NULL, "" );
+
+    *log_msg = svn_string_ncreate( msg.data(), msg.length(), pool )->data;
+    *tmp_file = NULL;
+
+    return SVN_NO_ERROR;
+}
+#else
+extern "C" svn_error_t *handlerLogMsg
+    (
+    const char **log_msg,
+    const char **tmp_file,
+    apr_array_header_t *commit_items,
+    void *baton,
+    apr_pool_t *pool
+    )
+{
+    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+
+    std::string msg;
+
+    if (!context->contextGetLogMessage( msg ) )
+        return svn_error_create( SVN_ERR_CANCELLED, NULL, "" );
+
+    *log_msg = svn_string_ncreate( msg.data(), msg.length(), pool )->data;
+    *tmp_file = NULL;
+
+    return SVN_NO_ERROR;
+}
+#endif
+
+#ifdef PYSVN_HAS_CONTEXT_NOTIFY2
+extern "C" void handlerNotify2
+    (
+    void *baton,
+    const svn_wc_notify_t *notify,
+    apr_pool_t *pool
+    )
+{
+    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+
+    context->contextNotify2( notify, pool );
+}
+#else
+extern "C" void handlerNotify
+    (
+    void * baton,
+    const char *path,
+    svn_wc_notify_action_t action,
+    svn_node_kind_t kind,
+    const char *mime_type,
+    svn_wc_notify_state_t content_state,
+    svn_wc_notify_state_t prop_state,
+    svn_revnum_t revision
+    )
+{
+    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+
+    context->contextNotify( path, action, kind, mime_type, content_state, prop_state, revision );
+}
+#endif
+
+#ifdef PYSVN_HAS_CONTEXT_PROGRESS
+extern "C" void handlerProgress
+    (
+    apr_off_t progress,
+    apr_off_t total,
+    void *baton,
+    apr_pool_t *pool
+    )
+{
+    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+
+    context->contextProgress( progress, total );
+}
+#endif
+
+extern "C" svn_error_t *handlerCancel
+    (
+    void * baton
+    )
+{
+    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+
+    if( context->contextCancel() )
+        return svn_error_create( SVN_ERR_CANCELLED, NULL, "cancelled by user" );
+    else
+        return SVN_NO_ERROR;
+}
+
+extern "C" svn_error_t *handlerSimplePrompt
+    (
+    svn_auth_cred_simple_t **cred,
+    void *baton,
+    const char *a_realm,
+    const char *a_username, 
+    svn_boolean_t a_may_save,
+    apr_pool_t *pool
+    )
+{
+    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+
+    bool may_save = a_may_save != 0;
+
+    if( a_realm == NULL )
+        a_realm = "";
+    if( a_username == NULL )
+        a_username = "";
+    std::string realm( a_realm );
+    std::string username( a_username );
+    std::string password;
+
+    if( !context->contextGetLogin( realm, username, password, may_save ) )
+        return svn_error_create( SVN_ERR_CANCELLED, NULL, "" );
+
+    svn_auth_cred_simple_t *lcred = (svn_auth_cred_simple_t *)apr_palloc( pool, sizeof( svn_auth_cred_simple_t ) );
+    lcred->username = svn_string_ncreate( username.data(), username.length(), pool )->data;
+    lcred->password = svn_string_ncreate( password.data(), password.length(), pool )->data;
+
+    // tell svn if the credentials need to be saved
+    lcred->may_save = may_save;
+    *cred = lcred;
+
+    return SVN_NO_ERROR;
+}
+
+extern "C" svn_error_t *handlerSslServerTrustPrompt 
+    (
+    svn_auth_cred_ssl_server_trust_t **cred, 
+    void *baton,
+    const char *a_realm,
+    apr_uint32_t failures,
+    const svn_auth_ssl_server_cert_info_t *info,
+    svn_boolean_t may_save,
+    apr_pool_t *pool
+    )
+{
+    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+
+    apr_uint32_t accepted_failures = failures;
+    bool accept_permanently = true;
+
+    if( a_realm == NULL )
+        a_realm = "";
+    std::string realm( a_realm );
+    if( !context->contextSslServerTrustPrompt( *info, realm, accepted_failures, accept_permanently ) )
+    {
+        *cred = NULL;
+
+        return SVN_NO_ERROR;
+    }
+
+    svn_auth_cred_ssl_server_trust_t *new_cred = (svn_auth_cred_ssl_server_trust_t *)
+            apr_palloc( pool, sizeof (svn_auth_cred_ssl_server_trust_t) );
+
+    if( accept_permanently )
+    {
+        new_cred->may_save = 1;
+        new_cred->accepted_failures = accepted_failures;
+    }
+
+    *cred = new_cred;
+
+    return SVN_NO_ERROR;
+}
+
+extern "C" svn_error_t *handlerSslClientCertPrompt 
+    (
+    svn_auth_cred_ssl_client_cert_t **cred, 
+    void *baton, 
+    apr_pool_t *pool
+    )
+{
+    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+
+    std::string cert_file;
+    if( !context->contextSslClientCertPrompt( cert_file ) )
+        return svn_error_create (SVN_ERR_CANCELLED, NULL, "");
+
+    svn_auth_cred_ssl_client_cert_t *new_cred = (svn_auth_cred_ssl_client_cert_t*)
+        apr_palloc (pool, sizeof (svn_auth_cred_ssl_client_cert_t));
+
+    new_cred->cert_file = svn_string_ncreate( cert_file.data(), cert_file.length(), pool )->data;
+
+    *cred = new_cred;
+
+    return SVN_NO_ERROR;
+}
+
+extern "C" svn_error_t *handlerSslClientCertPwPrompt
+    (
+    svn_auth_cred_ssl_client_cert_pw_t **cred, 
+    void *baton, 
+    const char *a_realm,
+    svn_boolean_t maySave,
+    apr_pool_t *pool
+    )
+{
+    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+
+    if( a_realm == NULL )
+        a_realm = "";
+    std::string realm( a_realm );
+
+    std::string password;
+    bool may_save = maySave != 0;
+    if( !context->contextSslClientCertPwPrompt( password, realm, may_save ) )
+        return svn_error_create( SVN_ERR_CANCELLED, NULL, "" );
+
+    svn_auth_cred_ssl_client_cert_pw_t *new_cred = (svn_auth_cred_ssl_client_cert_pw_t *)
+        apr_palloc (pool, sizeof (svn_auth_cred_ssl_client_cert_pw_t));
+
+    new_cred->password = svn_string_ncreate( password.data(), password.length(), pool )->data;
+
+    new_cred->may_save = may_save;
+    *cred = new_cred;
+
+    return SVN_NO_ERROR;
+}
+
+
+
 SvnContext::SvnContext( const std::string &config_dir_str )
 : m_pool( NULL )
 , m_config_dir( NULL )
@@ -252,241 +490,6 @@ svn_client_ctx_t *SvnContext::ctx()
 apr_pool_t *SvnContext::getContextPool()
 {
     return m_pool;
-}
-
-#ifdef PYSVN_HAS_CONTEXT_LOG_MSG2
-svn_error_t *SvnContext::handlerLogMsg2
-    (
-    const char **log_msg,
-    const char **tmp_file,
-    const apr_array_header_t *commit_items,
-    void *baton,
-    apr_pool_t *pool
-    )
-{
-    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
-
-    std::string msg;
-
-    if (!context->contextGetLogMessage( msg ) )
-        return svn_error_create( SVN_ERR_CANCELLED, NULL, "" );
-
-    *log_msg = svn_string_ncreate( msg.data(), msg.length(), pool )->data;
-    *tmp_file = NULL;
-
-    return SVN_NO_ERROR;
-}
-#else
-svn_error_t *SvnContext::handlerLogMsg
-    (
-    const char **log_msg,
-    const char **tmp_file,
-    apr_array_header_t *commit_items,
-    void *baton,
-    apr_pool_t *pool
-    )
-{
-    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
-
-    std::string msg;
-
-    if (!context->contextGetLogMessage( msg ) )
-        return svn_error_create( SVN_ERR_CANCELLED, NULL, "" );
-
-    *log_msg = svn_string_ncreate( msg.data(), msg.length(), pool )->data;
-    *tmp_file = NULL;
-
-    return SVN_NO_ERROR;
-}
-#endif
-
-#ifdef PYSVN_HAS_CONTEXT_NOTIFY2
-void SvnContext::handlerNotify2
-    (
-    void *baton,
-    const svn_wc_notify_t *notify,
-    apr_pool_t *pool
-    )
-{
-    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
-
-    context->contextNotify2( notify, pool );
-}
-#else
-void SvnContext::handlerNotify
-    (
-    void * baton,
-    const char *path,
-    svn_wc_notify_action_t action,
-    svn_node_kind_t kind,
-    const char *mime_type,
-    svn_wc_notify_state_t content_state,
-    svn_wc_notify_state_t prop_state,
-    svn_revnum_t revision
-    )
-{
-    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
-
-    context->contextNotify( path, action, kind, mime_type, content_state, prop_state, revision );
-}
-#endif
-
-#ifdef PYSVN_HAS_CONTEXT_PROGRESS
-void SvnContext::handlerProgress
-    (
-    apr_off_t progress,
-    apr_off_t total,
-    void *baton,
-    apr_pool_t *pool
-    )
-{
-    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
-
-    context->contextProgress( progress, total );
-}
-#endif
-
-svn_error_t *SvnContext::handlerCancel
-    (
-    void * baton
-    )
-{
-    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
-
-    if( context->contextCancel() )
-        return svn_error_create( SVN_ERR_CANCELLED, NULL, "cancelled by user" );
-    else
-        return SVN_NO_ERROR;
-}
-
-svn_error_t *SvnContext::handlerSimplePrompt
-    (
-    svn_auth_cred_simple_t **cred,
-    void *baton,
-    const char *a_realm,
-    const char *a_username, 
-    svn_boolean_t a_may_save,
-    apr_pool_t *pool
-    )
-{
-    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
-
-    bool may_save = a_may_save != 0;
-
-    if( a_realm == NULL )
-        a_realm = "";
-    if( a_username == NULL )
-        a_username = "";
-    std::string realm( a_realm );
-    std::string username( a_username );
-    std::string password;
-
-    if( !context->contextGetLogin( realm, username, password, may_save ) )
-        return svn_error_create( SVN_ERR_CANCELLED, NULL, "" );
-
-    svn_auth_cred_simple_t *lcred = (svn_auth_cred_simple_t *)apr_palloc( pool, sizeof( svn_auth_cred_simple_t ) );
-    lcred->username = svn_string_ncreate( username.data(), username.length(), pool )->data;
-    lcred->password = svn_string_ncreate( password.data(), password.length(), pool )->data;
-
-    // tell svn if the credentials need to be saved
-    lcred->may_save = may_save;
-    *cred = lcred;
-
-    return SVN_NO_ERROR;
-}
-
-svn_error_t *SvnContext::handlerSslServerTrustPrompt 
-    (
-    svn_auth_cred_ssl_server_trust_t **cred, 
-    void *baton,
-    const char *a_realm,
-    apr_uint32_t failures,
-    const svn_auth_ssl_server_cert_info_t *info,
-    svn_boolean_t may_save,
-    apr_pool_t *pool
-    )
-{
-    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
-
-    apr_uint32_t accepted_failures = failures;
-    bool accept_permanently = true;
-
-    if( a_realm == NULL )
-        a_realm = "";
-    std::string realm( a_realm );
-    if( !context->contextSslServerTrustPrompt( *info, realm, accepted_failures, accept_permanently ) )
-    {
-        *cred = NULL;
-
-        return SVN_NO_ERROR;
-    }
-
-    svn_auth_cred_ssl_server_trust_t *new_cred = (svn_auth_cred_ssl_server_trust_t *)
-            apr_palloc( pool, sizeof (svn_auth_cred_ssl_server_trust_t) );
-
-    if( accept_permanently )
-    {
-        new_cred->may_save = 1;
-        new_cred->accepted_failures = accepted_failures;
-    }
-
-    *cred = new_cred;
-
-    return SVN_NO_ERROR;
-}
-
-svn_error_t *SvnContext::handlerSslClientCertPrompt 
-    (
-    svn_auth_cred_ssl_client_cert_t **cred, 
-    void *baton, 
-    apr_pool_t *pool
-    )
-{
-    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
-
-    std::string cert_file;
-    if( !context->contextSslClientCertPrompt( cert_file ) )
-        return svn_error_create (SVN_ERR_CANCELLED, NULL, "");
-
-    svn_auth_cred_ssl_client_cert_t *new_cred = (svn_auth_cred_ssl_client_cert_t*)
-        apr_palloc (pool, sizeof (svn_auth_cred_ssl_client_cert_t));
-
-    new_cred->cert_file = svn_string_ncreate( cert_file.data(), cert_file.length(), pool )->data;
-
-    *cred = new_cred;
-
-    return SVN_NO_ERROR;
-}
-
-svn_error_t *SvnContext::handlerSslClientCertPwPrompt
-    (
-    svn_auth_cred_ssl_client_cert_pw_t **cred, 
-    void *baton, 
-    const char *a_realm,
-    svn_boolean_t maySave,
-    apr_pool_t *pool
-    )
-{
-    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
-
-    if( a_realm == NULL )
-        a_realm = "";
-    std::string realm( a_realm );
-
-    std::string password;
-    bool may_save = maySave != 0;
-    if( !context->contextSslClientCertPwPrompt( password, realm, may_save ) )
-        return svn_error_create( SVN_ERR_CANCELLED, NULL, "" );
-
-    svn_auth_cred_ssl_client_cert_pw_t *new_cred = (svn_auth_cred_ssl_client_cert_pw_t *)
-        apr_palloc (pool, sizeof (svn_auth_cred_ssl_client_cert_pw_t));
-
-    new_cred->password = svn_string_ncreate( password.data(), password.length(), pool )->data;
-
-    new_cred->may_save = may_save;
-    *cred = new_cred;
-
-    return SVN_NO_ERROR;
 }
 
 //--------------------------------------------------------------------------------
