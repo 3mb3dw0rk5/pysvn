@@ -227,11 +227,6 @@ class MakeFileCreater:
 
         print 'Info: Creating Makefile for Tests'
 
-        if self.is_mac_os_x:
-            template_values['extra_lib_var_name'] = 'DYLD_LIBRARY_PATH'
-        else:
-            template_values['extra_lib_var_name'] = 'LD_LIBRARY_PATH'
-
         makefile = file( '../Tests/Makefile', 'w' )
         makefile.write( self.makefile_tests_template % template_values )
         f = file( '../Tests/pysvn_test_common.mak', 'r' )
@@ -245,8 +240,6 @@ class MakeFileCreater:
 #       -- makefile_tests_template --
 #
 PYTHON=%(python_exe)s
-EXTRA_LIB_VAR_NAME=%(extra_lib_var_name)s
-EXTRA_LIB=%(svn_lib_dir)s
 
 #include pysvn_test_common.mak
 '''
@@ -263,7 +256,7 @@ CC=gcc -c
 CCFLAGS=-Wall -fPIC %(includes)s %(debug_cflags)s
 PYCXX=%(pycxx_dir)s
 LDSHARED=g++ -shared %(debug_cflags)s
-LDLIBS=-L%(svn_lib_dir)s \
+LDLIBS=-L%(svn_lib_dir)s -rpath %(svn_lib_dir)s \
 -lsvn_client-1 \
 -lsvn_diff-1 \
 -lsvn_repos-1 \
