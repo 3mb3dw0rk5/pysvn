@@ -29,7 +29,7 @@ build_revision = os.popen( '"%s" -c "%s" 2>&1' %
 build_revision = build_revision.split(':')[-1]
 print 'Info: revision %s' % build_revision
 
-if build_revision.find( 'exported' ) >= 0:
+if build_revision[0] not in '0123456789':
     branding_info['BUILD'] = '0'
 else:
     revision, modifiers = re.compile( '(\d+)(.*)' ).search( build_revision ).groups()
