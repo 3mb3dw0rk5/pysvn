@@ -175,7 +175,9 @@ class MakeFileCreater:
         if self.is_mac_os_x:
             # need to figure out the framework dir to use otherwise the latest
             # python framework will be used and not the one matching this python
-            framework_dir = distutils.sysconfig.get_python_inc().split('/Python.framework')[0]
+            var_prefix = distutils.sysconfig.get_config_var('prefix')
+            var_ldlibrary = distutils.sysconfig.get_config_var('LDLIBRARY')
+            framework_lib = os.path.join( var_prefix, os.path.basename( var_ldlibrary ) )
 
             if self.cmp_mac_os_x_version( (10,4) ) >= 0:
                 if self.verbose:
@@ -183,13 +185,13 @@ class MakeFileCreater:
 
                 # 10.4 needs the libintl.a but 10.3 does not
                 template_values['extra_libs'] = '%(svn_lib_dir)s/libintl.a' % template_values
-                template_values['frameworks'] = '-F%s -framework System -framework Python -framework CoreFoundation -framework Kerberos' % framework_dir
+                template_values['frameworks'] = '-framework System %s -framework CoreFoundation -framework Kerberos' % framework_lib
             else:
                 if self.verbose:
                     print 'Info: Using Mac OS X 10.3 makefile template'
 
                 template_values['extra_libs'] = ''
-                template_values['frameworks'] = '-F%s -framework System -framework Python -framework CoreFoundation' % framework_dir
+                template_values['frameworks'] = '-framework System %s -framework CoreFoundation' % framework_lib
 
             if self.is_mac_os_x_fink:
                 makefile.write( self.makefile_template_macosx_fink % template_values )
