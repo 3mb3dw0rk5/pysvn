@@ -20,10 +20,18 @@ for line in file( version_details ):
     branding_info[ key ] = value
 
 svnversion_image = os.environ.get( 'PYSVN_SVNVERSION', 'svnversion' )
-build_revision = os.popen( '"%s" -c "%s" 2>&1' %
-    (svnversion_image
-    ,os.environ.get( 'PYSVN_EXPORTED_FROM', '..' ))
-    , 'r' ).read().strip()
+if ' ' in svnversion_image:
+    cmd = ('"%s" -c "%s" 2>&1' %
+        (svnversion_image
+        ,os.environ.get( 'PYSVN_EXPORTED_FROM', '..' )))
+else:
+    cmd = ('%s -c "%s" 2>&1' %
+        (svnversion_image
+        ,os.environ.get( 'PYSVN_EXPORTED_FROM', '..' )))
+
+print 'Info: Running %s' % cmd
+build_revision = os.popen( cmd, 'r' ).read().strip()
+
 # build_revision is either a range nnn:mmm or mmm
 # we only want the mmm
 build_revision = build_revision.split(':')[-1]

@@ -20,7 +20,7 @@ if "%PY_MIN%" == "5" set COMPILER=msvc71
 
 if exist ..\..\ReleaseEngineering\win32-%COMPILER%\software-versions.cmd call ..\..\ReleaseEngineering\win32-%COMPILER%\software-versions.cmd off
 
-set PYCXX=%WORKDIR%\Import\pycxx_%PYCXX_VER%
+set PYCXX=%WORKDIR%\Import\pycxx-%PYCXX_VER%
 set OPENSSL=%TARGET%\openssl-%OPENSSL_VER%
 set SUBVERSION=%TARGET%\subversion-%SVN_VER%
 set APR=%SUBVERSION%
