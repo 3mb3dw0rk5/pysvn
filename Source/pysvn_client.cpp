@@ -2127,7 +2127,7 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
 
     for( size_t i=0; i<url_or_path_list.size(); i++ )
     {
-        Py::String py_path( url_or_path_list[ i ] );
+        Py::String py_path( asUtf8String( url_or_path_list[ i ] ) );
         std::string path( py_path.as_std_string() );
         bool is_url = is_svn_url( path );
 
