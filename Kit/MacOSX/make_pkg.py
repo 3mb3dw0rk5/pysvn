@@ -58,17 +58,27 @@ for kit_dir in [
 
 
 print 'Info: Finding dylibs used by pysvn'
-dylib_list = []
-os.system( 'otool -L ../../Source/pysvn/_pysvn.so >/tmp/pysvn_otool.tmp' )
-for line in file( '/tmp/pysvn_otool.tmp' ).readlines():
-    line = line.strip()
-    if( line.startswith( '/' )
-    and not line.startswith( '/usr/lib' )
-    and not line.startswith( '/System' ) ):
-        libpath = line.split()[0]
-        print 'Info: Need lib',libpath
-        dylib_list.append( libpath )
+
+def findDylibs( image, dylib_list, depth=0 ):
+    cmd = 'otool -L "%s" >/tmp/pysvn_otool.tmp' % image
+    #print 'Debug: cmd %r' % cmd
+    os.system( cmd )
+    # always skip the first line that lists the image being dumped
+    for line in file( '/tmp/pysvn_otool.tmp' ).readlines()[1:]:
+        line = line.strip()
+        #print 'Debug: line %r' % line
+        if( line.startswith( '/' )
+        and not line.startswith( '/usr/lib' )
+        and not line.startswith( '/System' ) ):
+            libpath = line.split()[0]
+            if libpath not in dylib_list:
+                print 'Info: ',depth,' Need lib',libpath,'for',image
+                dylib_list.append( libpath )
+                findDylibs( libpath, dylib_list, depth+1 )
         
+dylib_list = []
+findDylibs( '../../Source/pysvn/_pysvn.so', dylib_list )
+
 print 'Info: Copy files'
 
 cp_list = [
@@ -103,13 +113,22 @@ for cp_src, cp_dst_dir_fmt in cp_list:
     os.system( cmd )
 
 print 'Info: Fix the install paths for the dylib files'
+
+fixup_path_list = ['tmp/Contents/pysvn/_pysvn.so']
 for libpath in dylib_list:
-    os.system( 'install_name_tool'
-        ' -change'
-        ' %s'
-        ' %s/pysvn/%s'
-        ' %s' %
-            (libpath, install_dir, os.path.basename( libpath ), 'tmp/Contents/pysvn/_pysvn.so') )
+    fixup_path_list.append( 'tmp/Contents/pysvn/' + os.path.basename( libpath ) )
+
+for fixup_path in fixup_path_list:
+    for libpath in dylib_list:
+        if libpath != fixup_path:
+            cmd = ( 'install_name_tool'
+                ' -change'
+                ' %s'
+                ' %s/pysvn/%s'
+                ' %s' %
+                    (libpath, install_dir, os.path.basename( libpath ), fixup_path) )
+            #print 'Debug: cmd %r' % cmd
+            os.system( cmd )
 
 print 'Info: Create tmp/Resources/ReadMe.txt'
 f = file('tmp/Resources/ReadMe.txt','w')
