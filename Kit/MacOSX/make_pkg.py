@@ -66,11 +66,12 @@ def findDylibs( image, dylib_list, depth=0 ):
     # always skip the first line that lists the image being dumped
     for line in file( '/tmp/pysvn_otool.tmp' ).readlines()[1:]:
         line = line.strip()
-        #print 'Debug: line %r' % line
-        if( line.startswith( '/' )
-        and not line.startswith( '/usr/lib' )
-        and not line.startswith( '/System' ) ):
-            libpath = line.split()[0]
+        libpath = line.split()[0]
+        print 'Debug: line %r' % line
+        if( libpath.startswith( '/' )
+        and not libpath.startswith( '/usr/lib' )
+        and not libpath.startswith( '/System' )
+        and not libpath.endswith( '/Python' ) ):
             if libpath not in dylib_list:
                 print 'Info: ',depth,' Need lib',libpath,'for',image
                 dylib_list.append( libpath )
