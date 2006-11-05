@@ -138,6 +138,10 @@ class MakeFileCreater:
             if flag.startswith( '-D' ):
                 py_cflags_list.append( flag )
 
+        # add platform specific defines
+        if self.is_mac_os_x:
+            py_cflags_list.append( '-DDARWIN' )
+
         # get user supplied defines
         for arg in argv:
             if arg.startswith( '--define=' ):
@@ -458,6 +462,18 @@ LDLIBS= \
                 return self.find_dir( argv,
                     'APR include',
                     '--apr-inc-dir=',
+                    'include/%s' % apr_ver,
+                    [
+                    ],
+                    'apr.h' )
+            except SetupError:
+                pass
+
+        for apr_ver in ['apr-1', 'apr-0']:
+            try:
+                return self.find_dir( argv,
+                    'APR include',
+                    '--apr-inc-dir=',
                     None,
                     [
                         '/opt/local/include/%s' % apr_ver,      # Darwin - darwin ports
@@ -477,6 +493,19 @@ LDLIBS= \
 
     def find_apr_lib( self, argv ):
         last_exception = None
+        for apr_libname, self.lib_apr in [
+                            (self.is_mac_os_x and 'libapr-1.dylib' or 'libapr-1.so', 'apr-1'),
+                            (self.is_mac_os_x and 'libapr-0.dylib' or 'libapr-0.so', 'apr-0')]:
+            try:
+                return self.find_dir( argv,
+                    'APR library',
+                    '--apr-lib-dir=',
+                    'lib',
+                    [],
+                    apr_libname )
+            except SetupError:
+                pass
+
         for apr_libname, self.lib_apr in [
                             (self.is_mac_os_x and 'libapr-1.dylib' or 'libapr-1.so', 'apr-1'),
                             (self.is_mac_os_x and 'libapr-0.dylib' or 'libapr-0.so', 'apr-0')]:

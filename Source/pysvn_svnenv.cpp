@@ -360,7 +360,7 @@ SvnContext::SvnContext( const std::string &config_dir_str )
     svn_auth_get_windows_simple_provider(&provider, m_pool);
     *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
 #endif
-#ifdef SVN_HAVE_KEYCHAIN_SERVICES
+#ifdef DARWIN
     svn_auth_get_keychain_simple_provider(&provider, m_pool);
     *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
 #endif
