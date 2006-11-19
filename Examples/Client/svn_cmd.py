@@ -361,7 +361,7 @@ class SvnCommand:
         diff_text = self.client.diff( tmpdir, positional_args[0], recurse=recurse,
                                             revision1=revision1, revision2=revision2,
                                             diff_options=['-u'] )
-        print diff_text
+        print diff_text.encode('utf-8')
 
     def cmd_export( self, args ):
         force = args.getBooleanOption( '--force', False )
@@ -387,9 +387,9 @@ class SvnCommand:
 
         print 'Path:',path
         if entry.name and entry.name != 'svn:this_dir':
-            print 'Name:',entry.name
+            print 'Name:',entry.name.encode('utf-8')
         if entry.url:
-            print 'Url:',entry.url
+            print 'Url:',entry.url.encode('utf-8')
         if entry.repos and self.pysvn_testing >= '01.03.00':
             print 'Repository:',entry.repos
         if entry.uuid:
@@ -415,11 +415,11 @@ class SvnCommand:
             print "Schedule: replace"
         if entry.is_copied:
             if entry.copyfrom_url:
-                print 'Copied From URL:', entry.copyfrom_url
+                print 'Copied From URL:', entry.copyfrom_url.encode('utf-8')
             if entry.copyfrom_rev.number:
                 print 'Copied From Rev:', entry.copyfrom_rev.number
         if entry.commit_author:
-            print 'Last Changed Author:', entry.commit_author
+            print 'Last Changed Author:', entry.commit_author.encode('utf-8')
         if entry.commit_revision.number:
             print 'Last Changed Rev:', entry.commit_revision.number
         if entry.commit_time:
@@ -451,10 +451,10 @@ class SvnCommand:
 
         for path, info in all_entries:
             print
-            print 'Path:',path
+            print 'Path:',path.encode('utf-8')
 
             if info.URL:
-                print 'Url:',info.URL
+                print 'Url:',info.URL.encode('utf-8')
             if info.rev:
                 print 'Revision:',info.rev.number
             if info.repos_root_URL and self.pysvn_testing >= '01.03.00':
@@ -462,7 +462,7 @@ class SvnCommand:
             if info.repos_UUID:
                 print 'Repository UUID:',info.repos_UUID
             if info.last_changed_author:
-                print 'Last changed author:',info.last_changed_author
+                print 'Last changed author:',info.last_changed_author.encode('utf-8')
             if info.last_changed_date:
                 print 'Last Changed Date:', fmtDateTime( info.last_changed_date )
             if info.last_changed_rev.kind == pysvn.opt_revision_kind.number:
@@ -476,7 +476,7 @@ class SvnCommand:
             else:
                 print 'Node kind: unknown'
             if info.lock:
-                print 'Lock Owner:',info.lock.owner
+                print 'Lock Owner:',info.lock.owner.encode('utf-8')
                 print 'Lock Creation Date:',fmtDateTime( info.lock.creation_date )
                 if info.lock.expiration_date is not None:
                     print 'Lock Expiration Date:',fmtDateTime( info.lock.expiration_date )
@@ -495,7 +495,7 @@ class SvnCommand:
                 elif wc_info.schedule == pysvn.wc_schedule.replace:
                     print "Schedule: replace"
                 if wc_info.copyfrom_url:
-                    print 'Copied From URL:', wc_info.copyfrom_url
+                    print 'Copied From URL:', wc_info.copyfrom_url.encode('utf-8')
                     print 'Copied From Rev:', wc_info.copyfrom_rev.number
                 if wc_info.text_time:
                     print 'Text Last Updated:', fmtDateTime( wc_info.text_time )
@@ -560,6 +560,8 @@ class SvnCommand:
                 for file in all_files:
                     args = {}
                     args.update( file )
+                    args['name'] = args['name'].encode('utf-8')  
+                    args['last_author'] = args['last_author'].encode('utf-8')  
                     args['time_str'] = fmtDateTime( file.time )
                     args['created_rev_num'] = file.created_rev.number
                     print '%(created_rev_num)7d %(last_author)-10s %(size)6d %(time_str)s %(name)s' % args
@@ -797,25 +799,27 @@ class SvnCommand:
                     odd_status,
                     file.entry.revision.number,
                     file.entry.commit_revision.number,
-                    file.entry.commit_author,
-                    file.path)
+                    file.entry.commit_author.encode('utf-8'),
+                    file.path.encode('utf-8'))
+
             elif detailed:
                 print '%s%s %s %6s %6s %-14s %s' % (state, lock_state,
                     odd_status,
                     '',
                     '',
                     '',
-                    file.path)
+                    file.path.encode('utf-8'))
+
             elif update:
                 print '%s%s %s %s' % (state, lock_state,
                     odd_status,
-                    file.path)
+                    file.path.encode('utf-8'))
 
             else:
                 if( file.text_status != pysvn.wc_status_kind.normal
                 or file.prop_status != pysvn.wc_status_kind.normal
                 or lock_state.strip() != ''):
-                    print '%s%s %s' % (state, lock_state, file.path)
+                    print '%s%s %s' % (state, lock_state, file.path.encode('utf-8'))
 
     cmd_st = cmd_status
     cmd_stat = cmd_status
