@@ -33,14 +33,14 @@ def main( argv ):
             creater = MakeFileCreater()
             return creater.createMakefile( argv )
         elif argv[1:2] == ['help']:
-            return help( argv )
+            return setup_help( argv )
         else:
-            return help( argv )
+            return setup_help( argv )
     except SetupError, e:
         print 'Error:',str(e)
         return 1
 
-def help( argv ):
+def setup_help( argv ):
     basename = os.path.basename( argv[0] )
     print '''
 
@@ -304,6 +304,7 @@ LDLIBS=-L%(svn_lib_dir)s \
 -lexpat          \
 -lintl           \
 -lpthread        \
+-lz              \
 -Wl,-bI:%(python_exp)s
 
 #include pysvn_common.mak
