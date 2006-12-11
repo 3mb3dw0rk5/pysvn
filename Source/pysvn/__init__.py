@@ -23,7 +23,7 @@ class PysvnDictBase(UserDict.IterableUserDict):
         raise AttributeError( "%s instance has no attribute '%s'" % (self.__class__.__name__, name) )
 
     def __repr__( self ):
-        return '<%s %s>' % (self.__class__.__name__, self.__name)
+        return '<%s %s>' % (self.__class__.__name__, repr(self.__name))
 
 
 class PysvnDirent(PysvnDictBase):

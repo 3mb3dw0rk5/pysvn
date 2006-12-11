@@ -3,7 +3,7 @@
 #
 #	include this mak file after defining the variables it needs
 #
-all: test-01.unix.new.log test-03.unix.new.log test-04.unix.new.log test-05.unix.new.log test-06.unix.new.log
+all: test-01.unix.new.log test-04.unix.new.log test-05.unix.new.log test-06.unix.new.log
 
 help:
 	@echo "make clean         - clean all tests"
@@ -35,8 +35,8 @@ new-01: test-01.unix.new.log
 
 test-03.unix.new.log: test-03.sh test-03.unix.known_good.log
 	-rm -rf testroot-03
-	if [ "$$(id -u -n)" = "barry" ]; then PYTHON=$(PYTHON) ./test-03.sh >test-03.unix.new.log 2>&1;fi
-	if [ "$$(id -u -n)" = "barry" ]; then $(PYTHON) benchmark_diff.py test-03.unix.known_good.log test-03.unix.new.log; fi
+	PYTHON=$(PYTHON) ./test-03.sh >test-03.unix.new.log 2>&1;fi
+	$(PYTHON) benchmark_diff.py test-03.unix.known_good.log test-03.unix.new.log; fi
 
 clean-03:
 	-rm -f test-03.unix.new.log
