@@ -67,13 +67,13 @@ def findDylibs( image, dylib_list, depth=0 ):
     for line in file( '/tmp/pysvn_otool.tmp' ).readlines()[1:]:
         line = line.strip()
         libpath = line.split()[0]
-        print 'Debug: line %r' % line
+        #print 'Debug: line %r' % line
         if( libpath.startswith( '/' )               # lines with libs on them
         and not libpath.startswith( '/usr/lib' )    # ignore libs shipped by Apple
         and not libpath.startswith( '/System' )     # ignore libs shipped by Apple
         and not libpath.endswith( '/Python' ) ):    # do not need to ignore python
             if libpath not in dylib_list:
-                print 'Info: ',depth,' Need lib',libpath,'for',image
+                #print 'Info: ',depth,' Need lib',libpath,'for',image
                 dylib_list.append( libpath )
                 findDylibs( libpath, dylib_list, depth+1 )
         
