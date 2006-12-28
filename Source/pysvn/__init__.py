@@ -88,7 +88,11 @@ SVN_DIRENT_LAST_AUTHOR = 0x00020
 SVN_DIRENT_ALL         = 0xffffffffl
 
 try:
-    from _pysvn import *
+    _pysvn = __import__( '_pysvn_%d_%d' % sys.version_info[:2], globals(), locals(), ('*',) )
+    for key, value in _pysvn.__dict__.items():
+        if not key.startswith( '__' ):
+            globals()[ key ] = value
+
 
 except ImportError, e:
     # check for common installation errors that show up as ImportError

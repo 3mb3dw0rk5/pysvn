@@ -147,7 +147,16 @@ class MakeFileCreater:
             if arg.startswith( '--define=' ):
                 py_cflags_list.append( '-D%s' % arg[len('--define-'):] )
 
+        # name of the module including the python version to help
+        # ensure that only a matching _pysvn.so for the version of
+        # python is imported
+        py_cflags_list.append( '-Dinit_pysvn=init_pysvn_%d_%d' % sys.version_info[:2] )
+        py_cflags_list.append( '-Dinit_pysvn_d=init_pysvn_%d_%d_d' % sys.version_info[:2] )
+
         template_values = {
+            'pysvn_module_name': '_pysvn_%d_%d' % sys.version_info[:2],
+#            'pysvn_module_name': '_pysvn',
+
             # python executable
             'python_exe':       sys.executable,
 
@@ -221,13 +230,17 @@ class MakeFileCreater:
                 else:
                     template_values['python_exp'] = 'python.exp'
             makefile.write( self.makefile_template_aix % template_values )
+        elif sys.platform.startswith('linux'):
+            if self.verbose:
+                print 'Info: Using Linux makefile template'
+            makefile.write( self.makefile_template_linux % template_values )
         else:
             if self.verbose:
                 print 'Info: Using unix makefile template'
             makefile.write( self.makefile_template % template_values )
 
         f = file( 'pysvn_common.mak', 'r' )
-        makefile.write( f.read() )
+        makefile.write( f.read() % template_values )
         f.close()
         makefile.close()
 
@@ -253,6 +266,27 @@ PYTHON=%(python_exe)s
     makefile_template = '''#
 #	Created by pysvn Extension/Source/setup.py
 #       -- makefile_template --
+#
+PYTHON=%(python_exe)s
+SVN_INCLUDE=%(svn_include)s
+CCC=g++ -c
+CCCFLAGS=-Wall -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s
+CC=gcc -c
+CCFLAGS=-Wall -fPIC %(includes)s %(debug_cflags)s
+PYCXX=%(pycxx_dir)s
+LDSHARED=g++ -shared %(debug_cflags)s
+LDLIBS=-L%(svn_lib_dir)s -Wl,--rpath -Wl,%(svn_lib_dir)s \
+-lsvn_client-1 \
+-lsvn_diff-1 \
+-lsvn_repos-1 \
+ -lcom_err -lresolv -lexpat -lneon
+
+#include pysvn_common.mak
+'''
+
+    makefile_template_linux = '''#
+#	Created by pysvn Extension/Source/setup.py
+#       -- makefile_template_linux --
 #
 PYTHON=%(python_exe)s
 SVN_INCLUDE=%(svn_include)s

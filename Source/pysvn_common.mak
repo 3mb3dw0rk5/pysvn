@@ -3,16 +3,15 @@
 #
 #	include this mak file after defining the variables it needs
 #
-
 CXX_OBJECTS=cxxsupport.o cxx_extensions.o cxxextensions.o IndirectPythonInterface.o
 PYSVN_OBJECTS=pysvn.o pysvn_callbacks.o pysvn_client.o pysvn_enum_string.o \
 	pysvn_transaction.o pysvn_revision.o pysvn_docs.o pysvn_path.o \
 	pysvn_arg_processing.o pysvn_converters.o pysvn_svnenv.o pysvn_profile.o
 PYSVN_INCLUDES=pysvn.hpp pysvn_docs.hpp pysvn_svnenv.hpp
 
-all: pysvn/_pysvn.so 
+all: pysvn/%(pysvn_module_name)s.so 
 
-pysvn/_pysvn.so: $(PYSVN_OBJECTS) $(CXX_OBJECTS)
+pysvn/%(pysvn_module_name)s.so: $(PYSVN_OBJECTS) $(CXX_OBJECTS)
 	$(LDSHARED) -o $@ $(PYSVN_OBJECTS) $(CXX_OBJECTS) $(LDLIBS)
 
 pysvn.o: pysvn.cpp $(PYSVN_INCLUDES) pysvn_version.hpp
@@ -76,7 +75,7 @@ clean:
 	rm -f pysvn_version.hpp
 	rm -f pysvn_docs.hpp pysvn_docs.cpp
 	rm -f *.o
-	rm -f pysvn/_pysvn.so
+	rm -f pysvn/*.so
 
-test: pysvn/_pysvn.so
+test: pysvn/%(pysvn_module_name)s.so
 	PYTHONPATH=. $(PYTHON) -c "import pysvn;print pysvn.version,pysvn.Client()"

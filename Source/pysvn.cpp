@@ -327,8 +327,6 @@ PythonDisallowThreads::~PythonDisallowThreads()
 }
 
 //--------------------------------------------------------------------------------
-
-
 static pysvn_module* the_pysvn_module = NULL;
 extern "C" void init_pysvn()
 {
