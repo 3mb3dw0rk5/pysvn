@@ -1,0 +1,1 @@
+devenv pysvn.sln /useenv %*
