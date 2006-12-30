@@ -53,7 +53,7 @@ print 'Info: Copy files'
 kit_files_info = [
 	('../../Source/pysvn/__init__.py',
 		'ROOT/usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn', '444'),
-	('../../Source/pysvn/_pysvn.so',
+	('../../Source/pysvn/_pysvn_%(pymaj)d_%(pymin)d.so' % locals(),
 		'ROOT/usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn', '444'),
 	('../../LICENSE.txt',
 		'ROOT/usr/share/doc/pysvn', '444'),

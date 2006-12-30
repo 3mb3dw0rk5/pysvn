@@ -70,7 +70,7 @@ Compression=bzip/9
 #include "msvc_system_files.iss"
 
 Source: "..\..\..\Source\pysvn\__init__.py"; DestDir: "{app}";
-Source: "..\..\..\Source\pysvn\_pysvn.pyd"; DestDir: "{app}";
+Source: "..\..\..\Source\pysvn\_pysvn_%(py_maj)d_%(py_min)d.pyd"; DestDir: "{app}";
 Source: "..\..\..\Docs\pysvn.html"; DestDir: "{app}";
 Source: "..\..\..\Docs\pysvn_prog_guide.html"; DestDir: "{app}";
 Source: "..\..\..\Docs\pysvn_prog_ref.html"; DestDir: "{app}";

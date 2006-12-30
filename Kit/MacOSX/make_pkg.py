@@ -20,7 +20,7 @@ pysvn_version_string = '%d.%d.%d-%d' % (pysvn.version[0], pysvn.version[1], pysv
 pysvn_short_version_string = '%d.%d.%d' % (pysvn.version[0], pysvn.version[1], pysvn.version[2])
 svn_version_package_string = '%d%d%d' % (pysvn.svn_version[0], pysvn.svn_version[1], pysvn.svn_version[2])
 svn_version_string = '%d.%d.%d' % (pysvn.svn_version[0], pysvn.svn_version[1], pysvn.svn_version[2])
-
+pysvn_so_string = 'pysvn_%d_%d.so' % (pymaj, pymin)
 pkg_filename = 'py%s%s_pysvn_svn%s-%s-%s' % (pymaj, pymin, svn_version_package_string, pysvn_version_string, processor)
 print 'Info: Packageing %s' % pkg_filename
 build_time  = time.time()
@@ -78,14 +78,14 @@ def findDylibs( image, dylib_list, depth=0 ):
                 findDylibs( libpath, dylib_list, depth+1 )
         
 dylib_list = []
-findDylibs( '../../Source/pysvn/_pysvn.so', dylib_list )
+findDylibs( '../../Source/pysvn/%s' % pysvn_so_string, dylib_list )
 
 print 'Info: Copy files'
 
 cp_list = [
     ('../../Source/pysvn/__init__.py',
         'Contents/pysvn'),
-    ('../../Source/pysvn/_pysvn.so',
+    ('../../Source/pysvn/%s' % pysvn_so_string,
         'Contents/pysvn'),
     ('../../LICENSE.txt',
         'Resources/License.txt'),
@@ -143,7 +143,7 @@ f.write('''<html>
 
 <h2>Pysvn home <a href="http://pysvn.tigris.org">http://pysvn.tigris.org</a></h2>
 
-<h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Barry Scott</h2>
+<h2>&#160;&#160;&#160;&#160;&#160;Barry Scott</h2>
 </body>
 </html>
 ''' % locals() )
