@@ -453,7 +453,7 @@ LDLIBS= \
                     'PyCXX include',
                     '--pycxx-dir=',
                     None,
-                    [   '../Import/pycxx-5.3.6'],
+                    [   '../Import/pycxx-5.3.7'],
                     'CXX/Version.hxx' )
 
     def find_svn_inc( self, argv ):
