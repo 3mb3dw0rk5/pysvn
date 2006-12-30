@@ -20,7 +20,7 @@ pysvn_version_string = '%d.%d.%d-%d' % (pysvn.version[0], pysvn.version[1], pysv
 pysvn_short_version_string = '%d.%d.%d' % (pysvn.version[0], pysvn.version[1], pysvn.version[2])
 svn_version_package_string = '%d%d%d' % (pysvn.svn_version[0], pysvn.svn_version[1], pysvn.svn_version[2])
 svn_version_string = '%d.%d.%d' % (pysvn.svn_version[0], pysvn.svn_version[1], pysvn.svn_version[2])
-pysvn_so_string = 'pysvn_%d_%d.so' % (pymaj, pymin)
+pysvn_so_string = '_pysvn_%d_%d.so' % (pymaj, pymin)
 pkg_filename = 'py%s%s_pysvn_svn%s-%s-%s' % (pymaj, pymin, svn_version_package_string, pysvn_version_string, processor)
 print 'Info: Packageing %s' % pkg_filename
 build_time  = time.time()
@@ -115,7 +115,7 @@ for cp_src, cp_dst_dir_fmt in cp_list:
 
 print 'Info: Fix the install paths for the dylib files'
 
-fixup_path_list = ['tmp/Contents/pysvn/_pysvn.so']
+fixup_path_list = ['tmp/Contents/pysvn/%s' % pysvn_so_string]
 for libpath in dylib_list:
     fixup_path_list.append( 'tmp/Contents/pysvn/' + os.path.basename( libpath ) )
 
