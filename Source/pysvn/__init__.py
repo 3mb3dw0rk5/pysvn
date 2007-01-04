@@ -88,11 +88,27 @@ SVN_DIRENT_LAST_AUTHOR = 0x00020
 SVN_DIRENT_ALL         = 0xffffffffl
 
 try:
-    _pysvn = __import__( '_pysvn_%d_%d' % sys.version_info[:2], globals(), locals(), ('*',) )
+    maj_min = sys.version_info[:2]
+
+    #
+    # use an if tree so that its easy for app makers to
+    # find the import that is requires
+    #
+    if maj_min == (2,3):
+        import _pysvn_2_3
+        _pysvn = _pysvn_2_3
+    elif maj_min == (2,4):
+        import _pysvn_2_4
+        _pysvn = _pysvn_2_4
+    elif maj_min == (2,5):
+        import _pysvn_2_5
+        _pysvn = _pysvn_2_5
+    else:
+        raise ImportError( 'Fix pysvn/__init__.py to support python %d.%d' % tuple(maj_min) )
+
     for key, value in _pysvn.__dict__.items():
         if not key.startswith( '__' ):
             globals()[ key ] = value
-
 
 except ImportError, e:
     # check for common installation errors that show up as ImportError
