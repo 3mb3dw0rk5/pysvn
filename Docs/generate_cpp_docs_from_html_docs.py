@@ -90,7 +90,7 @@ class XhtmlParser:
         for node, name in all_named_nodes:
             self.docsFromNode( node, name )
 
-        copyright = ''' Copyright (c) 2003-2006 Barry A Scott.  All rights reserved.
+        copyright = ''' Copyright (c) 2003-2007 Barry A Scott.  All rights reserved.
 
  This software is licensed as described in the file LICENSE.txt,
  which you should have received as part of this distribution.

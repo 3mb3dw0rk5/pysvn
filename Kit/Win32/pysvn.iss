@@ -58,7 +58,7 @@ end;
 [Setup]
 AppName=Python %(py_maj)d.%(py_min)d PySVN
 AppVerName=Python %(py_maj)d.%(py_min)d PySVN %(pysvn_version_string)s 
-AppCopyright=Copyright (C) 2003-2006 Barry A. Scott
+AppCopyright=Copyright (C) 2003-2007 Barry A. Scott
 DefaultDirName={code:pythondir}\lib\site-packages\pysvn
 DefaultGroupName=PySVN for Python %(py_maj)d.%(py_min)d
 DisableStartupPrompt=yes

@@ -88,7 +88,7 @@ Packager:	Barry A. Scott <barry@barrys-emacs.org>
 %%description
 PySVN %(pysvn_version_string)s for Python %(python_version_string)s and Subversion %(svn_version_string)s
 
-Copyright Barry A. Scott (c) 2003-2006
+Copyright Barry A. Scott (c) 2003-2007
 
 mailto:barry@barrys-emacs.org
 http://pysvn.tigris.org
