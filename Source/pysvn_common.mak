@@ -9,9 +9,9 @@ PYSVN_OBJECTS=pysvn.o pysvn_callbacks.o pysvn_client.o pysvn_enum_string.o \
 	pysvn_arg_processing.o pysvn_converters.o pysvn_svnenv.o pysvn_profile.o
 PYSVN_INCLUDES=pysvn.hpp pysvn_docs.hpp pysvn_svnenv.hpp
 
-all: pysvn/%(pysvn_module_name)s.so 
+all: pysvn/%(pysvn_module_name)s
 
-pysvn/%(pysvn_module_name)s.so: $(PYSVN_OBJECTS) $(CXX_OBJECTS)
+pysvn/%(pysvn_module_name)s: $(PYSVN_OBJECTS) $(CXX_OBJECTS)
 	$(LDSHARED) -o $@ $(PYSVN_OBJECTS) $(CXX_OBJECTS) $(LDLIBS)
 
 pysvn.o: pysvn.cpp $(PYSVN_INCLUDES) pysvn_version.hpp
@@ -76,6 +76,7 @@ clean:
 	rm -f pysvn_docs.hpp pysvn_docs.cpp
 	rm -f *.o
 	rm -f pysvn/*.so
+	rm -f pysvn/*.dll
 
-test: pysvn/%(pysvn_module_name)s.so
+test: pysvn/%(pysvn_module_name)s
 	PYTHONPATH=. $(PYTHON) -c "import pysvn;print pysvn.version,pysvn.Client()"

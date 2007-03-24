@@ -153,9 +153,11 @@ class MakeFileCreater:
         py_cflags_list.append( '-Dinit_pysvn=init_pysvn_%d_%d' % sys.version_info[:2] )
         py_cflags_list.append( '-Dinit_pysvn_d=init_pysvn_%d_%d_d' % sys.version_info[:2] )
 
+        module_type = '.so'
+        if sys.platform == 'cygwin':
+            module_type = '.dll'
         template_values = {
-            'pysvn_module_name': '_pysvn_%d_%d' % sys.version_info[:2],
-#            'pysvn_module_name': '_pysvn',
+            'pysvn_module_name': '_pysvn_%d_%d%s' % (sys.version_info[0], sys.version_info[1], module_type),
 
             # python executable
             'python_exe':       sys.executable,
@@ -214,6 +216,7 @@ class MakeFileCreater:
 
             else:
                 makefile.write( self.makefile_template_macosx % template_values )
+
         elif sys.platform.startswith('aix'):
             if self.verbose:
                 print 'Info: Using AIX makefile template'
@@ -230,10 +233,17 @@ class MakeFileCreater:
                 else:
                     template_values['python_exp'] = 'python.exp'
             makefile.write( self.makefile_template_aix % template_values )
+
         elif sys.platform.startswith('linux'):
             if self.verbose:
                 print 'Info: Using Linux makefile template'
             makefile.write( self.makefile_template_linux % template_values )
+
+        elif sys.platform == 'cygwin':
+            if self.verbose:
+                print 'Info: Using Cygwin makefile template'
+            makefile.write( self.makefile_template_cygwin % template_values )
+
         else:
             if self.verbose:
                 print 'Info: Using unix makefile template'
@@ -301,6 +311,45 @@ LDLIBS=-L%(svn_lib_dir)s -Wl,--rpath -Wl,%(svn_lib_dir)s \
 -lsvn_diff-1 \
 -lsvn_repos-1 \
  -lgssapi_krb5 -lkrb5 -lk5crypto -lkrb5support -lcom_err -lresolv -lexpat -lneon
+
+#include pysvn_common.mak
+'''
+
+    makefile_template_cygwin = '''#
+#	Created by pysvn Extension/Source/setup.py
+#       -- makefile_template_cygwin --
+#
+PYTHON=%(python_exe)s
+SVN_INCLUDE=%(svn_include)s
+CCC=g++ -c
+CCCFLAGS=-Wall -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s
+CC=gcc -c
+CCFLAGS=-Wall %(includes)s %(debug_cflags)s
+PYCXX=%(pycxx_dir)s
+LDSHARED=g++ -shared %(debug_cflags)s
+LDLIBS=-L%(svn_lib_dir)s \
+-L/usr/lib/python2.5/config -lpython2.5.dll \
+-lsvn_client-1   \
+-lsvn_repos-1    \
+-lsvn_subr-1     \
+-lsvn_delta-1    \
+-lsvn_fs_fs-1    \
+-lsvn_fs-1       \
+-lsvn_ra_svn-1   \
+-lsvn_repos-1    \
+-lsvn_ra_local-1 \
+-lsvn_ra_dav-1   \
+-lsvn_diff-1     \
+-lsvn_ra-1       \
+-lsvn_wc-1       \
+-lapr-1          \
+-lneon           \
+-laprutil-1      \
+-liconv          \
+-lexpat          \
+-lpthread        \
+-lz              \
+
 
 #include pysvn_common.mak
 '''
@@ -484,7 +533,7 @@ LDLIBS= \
                         '/usr/local/lib',                       # typical *BSD
                         '/usr/pkg/lib',                         # netbsb
                     ],
-                    self.is_mac_os_x and 'libsvn_client-1.dylib' or 'libsvn_client-1.so' )
+                    self.get_lib_name_for_platform( 'libsvn_client-1' ) )
         # if we are using the Fink SVN then remember this
         self.is_mac_os_x_fink = dir.startswith( '/sw/' )
         self.is_mac_os_x_darwin_ports = dir.startswith( '/opt/local/' )
@@ -528,9 +577,10 @@ LDLIBS= \
 
     def find_apr_lib( self, argv ):
         last_exception = None
-        for apr_libname, self.lib_apr in [
-                            (self.is_mac_os_x and 'libapr-1.dylib' or 'libapr-1.so', 'apr-1'),
-                            (self.is_mac_os_x and 'libapr-0.dylib' or 'libapr-0.so', 'apr-0')]:
+        lib_list = [(self.get_lib_name_for_platform( 'libapr-1' ), 'apr-1'),
+                    (self.get_lib_name_for_platform( 'libapr-0' ), 'apr-0')]
+
+        for apr_libname, self.lib_apr in lib_list:
             try:
                 return self.find_dir( argv,
                     'APR library',
@@ -541,9 +591,7 @@ LDLIBS= \
             except SetupError:
                 pass
 
-        for apr_libname, self.lib_apr in [
-                            (self.is_mac_os_x and 'libapr-1.dylib' or 'libapr-1.so', 'apr-1'),
-                            (self.is_mac_os_x and 'libapr-0.dylib' or 'libapr-0.so', 'apr-0')]:
+        for apr_libname, self.lib_apr in lib_list:
             try:
                 return self.find_dir( argv,
                     'APR library',
@@ -564,6 +612,14 @@ LDLIBS= \
                 last_exception = e
         raise last_exception
 
+
+    def get_lib_name_for_platform( self, libname ):
+        if self.is_mac_os_x:
+            return '%s.dylib' % libname
+        elif sys.platform == 'cygwin':
+            return '%s.dll.a' % libname
+        else:
+            return '%s.so' % libname
 
     def find_dir( self, argv, name, kw, svn_root_suffix, base_dir_list, check_file ):
         dirname = self.__find_dir( argv, name, kw, svn_root_suffix, base_dir_list, check_file )

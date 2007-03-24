@@ -44,7 +44,7 @@ def main( args ):
 
 def initLocale():
     # init the locale
-    if sys.platform == 'win32':
+    if sys.platform in ['win32','cygwin']:
         locale.setlocale( locale.LC_ALL, '' )
 
     else:
