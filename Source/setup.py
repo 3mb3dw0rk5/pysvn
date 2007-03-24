@@ -198,7 +198,7 @@ class MakeFileCreater:
 
                 # 10.4 needs the libintl.a but 10.3 does not
                 template_values['extra_libs'] = '%(svn_lib_dir)s/libintl.a' % template_values
-                template_values['frameworks'] = '-framework System %s -framework CoreFoundation -framework Kerberos' % framework_lib
+                template_values['frameworks'] = '-framework System %s -framework CoreFoundation -framework Kerberos -framework Security' % framework_lib
             else:
                 if self.verbose:
                     print 'Info: Using Mac OS X 10.3 makefile template'
