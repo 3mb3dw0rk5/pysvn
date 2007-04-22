@@ -239,10 +239,16 @@ class MakeFileCreater:
                 print 'Info: Using Linux makefile template'
             makefile.write( self.makefile_template_linux % template_values )
 
+        elif sys.platform.startswith('freebsd'):
+            if self.verbose:
+                print 'Info: Using FreeBSD makefile template'
+            makefile.write( self.makefile_template_freebsd % template_values )
+
         elif sys.platform == 'cygwin':
             if self.verbose:
                 print 'Info: Using Cygwin makefile template'
             makefile.write( self.makefile_template_cygwin % template_values )
+
 
         else:
             if self.verbose:
@@ -311,6 +317,27 @@ LDLIBS=-L%(svn_lib_dir)s -Wl,--rpath -Wl,%(svn_lib_dir)s \
 -lsvn_diff-1 \
 -lsvn_repos-1 \
  -lgssapi_krb5 -lkrb5 -lk5crypto -lkrb5support -lcom_err -lresolv -lexpat -lneon
+
+#include pysvn_common.mak
+'''
+
+    makefile_template_freebsd = '''#
+#	Created by pysvn Extension/Source/setup.py
+#       -- makefile_template_freebsd --
+#
+PYTHON=%(python_exe)s
+SVN_INCLUDE=%(svn_include)s
+CCC=g++ -c
+CCCFLAGS=-Wall -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s
+CC=gcc -c
+CCFLAGS=-Wall -fPIC %(includes)s %(debug_cflags)s
+PYCXX=%(pycxx_dir)s
+LDSHARED=g++ -shared %(debug_cflags)s
+LDLIBS=-L%(svn_lib_dir)s -Wl,--rpath -Wl,%(svn_lib_dir)s \
+-lsvn_client-1 \
+-lsvn_diff-1 \
+-lsvn_repos-1 \
+ -lkrb5 -lcom_err -lexpat -lneon
 
 #include pysvn_common.mak
 '''
