@@ -333,7 +333,7 @@ CC=gcc -c
 CCFLAGS=-Wall -fPIC %(includes)s %(debug_cflags)s
 PYCXX=%(pycxx_dir)s
 LDSHARED=g++ -shared %(debug_cflags)s
-LDLIBS=-L%(svn_lib_dir)s -Wl,--rpath -Wl,%(svn_lib_dir)s \
+LDLIBS=-L%(svn_lib_dir)s -Wl,--rpath -Wl,/usr/lib:/usr/local/lib:%(svn_lib_dir)s \
 -lsvn_client-1 \
 -lsvn_diff-1 \
 -lsvn_repos-1 \
