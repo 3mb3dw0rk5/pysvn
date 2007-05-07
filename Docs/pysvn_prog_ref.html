@@ -111,8 +111,8 @@ if hasattr( client, 'lock' ):
 <li><a href="#pysvn_transaction">Transaction</a> - the subversion transaction interface</li>
 <li><a href="#pysvn_revision">Revision</a> - subversion revision objects</li>
 <li><a href="#pysvn_clienterror">ClientError</a> - Exception class raised by client commands on error</li>
-<li><a href="#pysvn_status">Status</a> - subversion status object</li>
-<li><a href="#pysvn_entry">Entry</a> - subversion entry object</li>
+<li><a href="#pysvn_status">PysvnStatus</a> - subversion status object</li>
+<li><a href="#pysvn_entry">PysvnEntry</a> - subversion entry object</li>
 </ul>
 
 <p>The following enumerations are provided:
@@ -1490,7 +1490,7 @@ directory in status_list. If path is a single file status is
 returned for that single file in status_list.
 <span class="svn_1002000">Set ignore_externals to True to ignore externals definitions.</span>
 </p>
-<p>The status_list is a list of <a href="#pysvn_status">status</a> objects. 
+<p>The status_list is a list of <a href="#pysvn_status">PysvnStatus</a> objects. 
 </p>
 
 <p>Options:
@@ -1807,12 +1807,12 @@ except pysvn.ClientError, e:
         print 'Code:',code,'Message:',message
 </pre>
 
-<h2><a href="#pysvn_module">pysvn</a>.<a name="pysvn_status">Status - subversion status object</a></h2>
+<h2><a href="#pysvn_module">pysvn</a>.<a name="pysvn_status">PysvnStatus - subversion status object</a></h2>
 <p>Each status object has the following fields:
 </p>
 <ul>
 <li>path - string - the path name</li>
-<li>entry - <a href="#pysvn_entry">Entry</a> - entry information</li>
+<li>entry - <a href="#pysvn_entry">PysvnEntry</a> - entry information</li>
 <li>is_versioned - Boolean - true if the path is versioned</li>
 <li>is_locked - Boolean - true if the path is locked</li>
 <li>is_copied - Boolean - true if the path is copied</li>
@@ -1829,7 +1829,7 @@ except pysvn.ClientError, e:
   information</li>
 </ul>
 
-<h2><a href="#pysvn_module">pysvn</a>.<a name="pysvn_entry">Entry - subversion entry object</a></h2>
+<h2><a href="#pysvn_module">pysvn</a>.<a name="pysvn_entry">PysvnEntry - subversion entry object</a></h2>
 
 <ul>
 <li>checksum - string</li>
@@ -1970,7 +1970,7 @@ file was either absent or not under version control.</li>
 <p>Copyright &copy; 2004-2007 Barry A. Scott. All rigths reserved.</p>
 <script type="text/javascript">
 // expect this to fail on IE and other browsers that don't support
-changeDisplay( 1003000 );
+changeDisplay( 1004000 );
 changeVisual( "hilite" );
 // good we can toggle the display turn on the buttons
 document.getElementById( "buttons_work" ).style.display = "block";
