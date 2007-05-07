@@ -1757,7 +1757,7 @@ functions called by pysvn return an error.
 
 <h3>exception_style = 0</h3>
 
-<p>The arg property is set to a single string parameter containing
+<p>The args property is set to a single string parameter containing
 the whole error message. '\n' is used to seperate message parts.
 </p>
 
@@ -1772,12 +1772,12 @@ client = pysvn.Client()
 client.exception_style = 0
 try:
 
-    client.update( '' )
+    client.update( '.' )
 except pysvn.ClientError, e:
     # convert to a string
     print str(e)
-    # or access the string in arg directly
-    print e.arg
+    # or access the string in args directly
+    print e.args
 </pre>
 
 <h3>exception_style = 1</h3>
@@ -1801,9 +1801,9 @@ try:
     client.update( '' )
 except pysvn.ClientError, e:
     # print the whole message
-    print e.arg[0]
+    print e.args[0]
     # or process the error list
-    for message, code in e.arg[1]:
+    for message, code in e.args[1]:
         print 'Code:',code,'Message:',message
 </pre>
 
