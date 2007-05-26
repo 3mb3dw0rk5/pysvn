@@ -1,6 +1,6 @@
 //
 // ====================================================================
-// (c) 2003-2006 Barry A Scott.  All rights reserved.
+// (c) 2003-2007 Barry A Scott.  All rights reserved.
 //
 // This software is licensed as described in the file LICENSE.txt,
 // which you should have received as part of this distribution.
@@ -1430,9 +1430,9 @@ Py::Object pysvn_client::cmd_diff_summarize( const Py::Tuple &a_args, const Py::
 
         svn_error_t *error = svn_client_diff_summarize
             (
-            path1.c_str(),
+            norm_path1.c_str(),
             &revision1,
-            path2.c_str(),
+            norm_path2.c_str(),
             &revision2,
             recurse,
             ignore_ancestry,
@@ -1462,7 +1462,6 @@ Py::Object pysvn_client::cmd_diff_summarize_peg( const Py::Tuple &a_args, const 
 {
     static argument_description args_desc[] =
     {
-    { true,  name_tmp_path },
     { true,  name_url_or_path },
     { false, name_peg_revision },
     { false, name_revision_start },
@@ -1474,7 +1473,6 @@ Py::Object pysvn_client::cmd_diff_summarize_peg( const Py::Tuple &a_args, const 
     FunctionArguments args( "diff", args_desc, a_args, a_kws );
     args.check();
 
-    std::string tmp_path( args.getUtf8String( name_tmp_path ) );
     std::string path( args.getUtf8String( name_url_or_path ) );
     svn_opt_revision_t revision_start = args.getRevision( name_revision1, svn_opt_revision_base );
     svn_opt_revision_t revision_end = args.getRevision( name_revision2, svn_opt_revision_working );
@@ -1491,7 +1489,6 @@ Py::Object pysvn_client::cmd_diff_summarize_peg( const Py::Tuple &a_args, const 
 
     try
     {
-        std::string norm_tmp_path( svnNormalisedIfPath( tmp_path, pool ) );
         std::string norm_path( svnNormalisedIfPath( path, pool ) );
 
         checkThreadPermission();
@@ -1503,7 +1500,7 @@ Py::Object pysvn_client::cmd_diff_summarize_peg( const Py::Tuple &a_args, const 
 
         svn_error_t *error = svn_client_diff_summarize_peg
             (
-            path.c_str(),
+            norm_path.c_str(),
             &peg_revision,
             &revision_start,
             &revision_end,
