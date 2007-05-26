@@ -468,11 +468,10 @@ SvnContext::~SvnContext()
 {
     delete m_config_dir;
 
-// Why isn't the pool release - object life time problems?
-//    if( m_pool )
-//    {
-//        apr_pool_destroy( m_pool );
-//    }
+    if( m_pool )
+    {
+        apr_pool_destroy( m_pool );
+    }
 }
 
 SvnContext::operator svn_client_ctx_t *()
