@@ -163,7 +163,7 @@ apr_time_t convertStringToTime( const std::string &text, apr_time_t now, SvnPool
         &matched,
         &result,
         text.c_str(),
-                now,
+        now,
         pool
         );
     if( error != NULL || !matched )
