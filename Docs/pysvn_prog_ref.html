@@ -1309,25 +1309,19 @@ propset( prop_name,
          recurse=False<span class="svn_1002000">,
          skip_checks=False</span> )
 </pre>
-<p>Set the property prop_name to prop_value in path.
+<p>Set the property prop_name to prop_value in url_or_path.
 </p>
-<p><span class="svn_1002000">If  skip_checks is true, do no validity checking.  But if 
+<p><span class="svn_1002000">If skip_checks is true, do no validity checking.  But if 
 skip_checks is false, and  propname is not a valid property for 
 target, return an error, either  SVN_ERR_ILLEGAL_TARGET (if the
 property is not appropriate for  target), or 
 SVN_ERR_BAD_MIME_TYPE (if  propname is "svn:mime-type", but 
 propval is not a valid mime-type).</span>
 </p>
-<p>The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
+<p>The revision defaults to pysvn.Revision( opt_revision_kind.head )
 if the url_or_path is a URL otherwise to
 pysvn.Revision( opt_revision_kind.working ).
 </p>
-<p><span class="svn_1002000">peg_revision indicates in
-which revision url_or_path is valid.  If peg_revision.kind
-is opt_revision_kind.unspecified, then it defaults to
-opt_revision_kind.head for URLs or opt_revision_kind.working for
-WC targets.
-</span></p>
 
 <h4><a name="pysvn_client_relocate"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.relocate</a></h4>
 <pre>
