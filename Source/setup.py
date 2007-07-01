@@ -1,6 +1,6 @@
 #
 # ====================================================================
-# (c) 2005-2006 Barry A Scott.  All rights reserved.
+# (c) 2005-2007 Barry A Scott.  All rights reserved.
 #
 # This software is licensed as described in the file LICENSE.txt,
 # which you should have received as part of this distribution.
@@ -59,6 +59,7 @@ def setup_help( argv ):
         --svn-inc-dir=<dir>
         --svn-lib-dir=<dir>
         --define=<define-string>
+        --universal (build Mac OS X universal binary - not working at yet)
 
 ''' % (basename, basename)
     return 1
@@ -70,6 +71,7 @@ class MakeFileCreater:
         self.is_mac_os_x_fink = False
         self.is_mac_os_x_darwin_ports = False
         self.mac_os_x_version = None
+        self.mac_os_x_universal = False
 
     def node_text( self, all_nodes ):
         all_text = []
@@ -98,16 +100,27 @@ class MakeFileCreater:
                     self.mac_os_x_version = [int(s) for s in self.mac_os_x_version_string.split('.')]
                     self.is_mac_os_x = True
 
+                    # look for the universal SDK
+                    self.mac_os_x_universal = os.path.exists( '/Developer/SDKs/MacOSX%d.%du.sdk' %
+                                                (self.mac_os_x_version[0], self.mac_os_x_version[1]) )
+                    if self.mac_os_x_universal:
+                        print 'Info: Mac OS X Universal SDKs found'
 
     def createMakefile( self, argv ):
         self.verbose = '--verbose' in argv
         self.detectMacVersion()
+        if '--universal' in argv and self.mac_os_x_universal:
+            print 'Info: turning on universal support'
+            self.mac_os_x_universal = True
+        else:
+            self.mac_os_x_universal = False
 
         if self.verbose:
             print 'Info: Creating makefile for python %r' % (sys.version_info,)
 
         debug_cflags_list = []
         if '--enable-debug' in argv:
+            print 'Info: Enabling debug'
             debug_cflags_list.append( '-g' )
 
         include_dir_list = []
@@ -214,8 +227,10 @@ class MakeFileCreater:
             elif self.is_mac_os_x_darwin_ports:
                 makefile.write( self.makefile_template_macosx_darwin_ports % template_values )
 
+            elif self.mac_os_x_universal:
+                makefile.write( self.makefile_template_macosx_universal % template_values )
             else:
-                makefile.write( self.makefile_template_macosx % template_values )
+                makefile.write( self.makefile_template_macosx_one_arch % template_values )
 
         elif sys.platform.startswith('aix'):
             if self.verbose:
@@ -420,9 +435,9 @@ LDLIBS=-L%(svn_lib_dir)s \
 #include pysvn_common.mak
 '''
 
-    makefile_template_macosx = '''#
+    makefile_template_macosx_one_arch = '''#
 #	Created by pysvn Extension/Source/setup.py
-#       -- makefile_template_macosx --
+#       -- makefile_template_macosx_one_arch --
 #
 PYTHON=%(python_exe)s
 SVN_INCLUDE=%(svn_include)s
@@ -440,6 +455,31 @@ LDLIBS=-L%(svn_lib_dir)s \
 -lsvn_fs-1 \
 -lsvn_subr-1 \
 -lsvn_diff-1 \
+-l%(lib_apr)s
+#include pysvn_common.mak
+'''
+
+    makefile_template_macosx_universal = '''#
+#	Created by pysvn Extension/Source/setup.py
+#       -- makefile_template_macosx_universal --
+#
+PYTHON=%(python_exe)s
+SVN_INCLUDE=%(svn_include)s
+CCC=g++ -c
+CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s -isysroot /Developer/SDKs/MacOSX10.4u.sdk -arch ppc -arch i386
+CC=gcc -c
+CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s %(debug_cflags)s -isysroot /Developer/SDKs/MacOSX10.4u.sdk -arch ppc -arch i386
+PYCXX=%(pycxx_dir)s
+LDSHARED=g++ -bundle -twolevel_namespace %(debug_cflags)s -u _PyMac_Error %(frameworks)s -Wl,-syslibroot,/Developer/SDKs/MacOSX10.4u.sdk -arch ppc -arch i386
+LDLIBS=-L%(svn_lib_dir)s \
+-L%(apr_lib_dir)s \
+-lsvn_client-1 \
+-lsvn_repos-1 \
+-lsvn_wc-1 \
+-lsvn_fs-1 \
+-lsvn_subr-1 \
+-lsvn_diff-1 \
+-lsvn_ra_dav-1 \
 -l%(lib_apr)s
 #include pysvn_common.mak
 '''
