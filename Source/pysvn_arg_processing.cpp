@@ -234,11 +234,19 @@ int FunctionArguments::getInteger( const char *name, int default_value )
         return default_value;
     }
 }
+
 std::string FunctionArguments::getUtf8String( const char *name )
 {
     Py::String any( getArg( name ) );
-    Py::String utf8( any.encode( g_utf_8 ) );
-    return utf8.as_std_string();
+    if( any.isUnicode() )
+    {
+        Py::String utf8( any.encode( g_utf_8 ) );
+        return utf8.as_std_string();
+    }
+    else
+    {
+        return any.as_std_string();
+    }
 }
 
 std::string FunctionArguments::getUtf8String( const char *name, const std::string &default_value )
