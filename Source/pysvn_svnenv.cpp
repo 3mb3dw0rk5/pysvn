@@ -60,6 +60,8 @@ SvnException::SvnException( svn_error_t *error )
     arg_list[1] = error_list;
 
     m_exception_arg = arg_list;
+
+    svn_error_clear( error );
 }
 
 SvnException::SvnException( const SvnException &other )
