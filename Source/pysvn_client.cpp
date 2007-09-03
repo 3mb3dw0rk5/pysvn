@@ -161,7 +161,7 @@ static void init_py_names()
     py_name_callback_ssl_server_trust_prompt = new Py::String( name_callback_ssl_server_trust_prompt );
     py_name_created_rev = new Py::String( name_created_rev );
     py_name_exception_style = new Py::String( name_exception_style );
-    py_name_has_props = new Py::String( name_header_encoding );
+    py_name_has_props = new Py::String( name_has_props );
     py_name_kind = new Py::String( name_kind );
     py_name_last_author = new Py::String( name_last_author );
     py_name_name = new Py::String( name_name );
