@@ -1213,7 +1213,7 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
 #endif
     { false, NULL }
     };
-    FunctionArguments args( "diff", args_desc, a_args, a_kws );
+    FunctionArguments args( "diff_peg", args_desc, a_args, a_kws );
     args.check();
 
     std::string tmp_path( args.getUtf8String( name_tmp_path ) );
@@ -1470,12 +1470,12 @@ Py::Object pysvn_client::cmd_diff_summarize_peg( const Py::Tuple &a_args, const 
     { false, name_ignore_ancestry },
     { false, NULL }
     };
-    FunctionArguments args( "diff", args_desc, a_args, a_kws );
+    FunctionArguments args( "diff_summarize_peg", args_desc, a_args, a_kws );
     args.check();
 
     std::string path( args.getUtf8String( name_url_or_path ) );
-    svn_opt_revision_t revision_start = args.getRevision( name_revision1, svn_opt_revision_base );
-    svn_opt_revision_t revision_end = args.getRevision( name_revision2, svn_opt_revision_working );
+    svn_opt_revision_t revision_start = args.getRevision( name_revision_start, svn_opt_revision_base );
+    svn_opt_revision_t revision_end = args.getRevision( name_revision_end, svn_opt_revision_working );
     svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, revision_end );
     bool recurse = args.getBoolean( name_recurse, true );
     bool ignore_ancestry = args.getBoolean( name_ignore_ancestry, true );
