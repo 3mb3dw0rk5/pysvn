@@ -2040,11 +2040,10 @@ Py::Object pysvn_client::cmd_lock( const Py::Tuple &a_args, const Py::Dict &a_kw
     try
     {
         type_error_message = "expecting string for comment (arg 2)";
-
         std::string comment( args.getUtf8String( name_comment ) );
 
         type_error_message = "expecting boolean for force keyword arg";
-        bool force = args.getBoolean( name_force, true );
+        bool force = args.getBoolean( name_force, false );
 
         try
         {
