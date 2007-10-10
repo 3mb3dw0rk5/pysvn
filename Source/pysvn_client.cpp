@@ -913,7 +913,11 @@ Py::Object pysvn_client::cmd_copy( const Py::Tuple &a_args, const Py::Dict &a_kw
         Py::String dest_path( args.getUtf8String( name_dest_url_or_path ) );
 
         type_error_message = "expecting revision for keyword src_revision";
-        svn_opt_revision_t revision = args.getRevision( name_src_revision, svn_opt_revision_head );
+        svn_opt_revision_t revision;
+        if( is_svn_url( src_path ) )
+            revision = args.getRevision( name_src_revision, svn_opt_revision_head );
+        else
+            revision = args.getRevision( name_src_revision, svn_opt_revision_working );
 
         try
         {
