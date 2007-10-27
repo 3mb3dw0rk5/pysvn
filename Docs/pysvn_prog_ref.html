@@ -31,9 +31,13 @@ span.svn_example {display: inline; }
 </style>
 
 <style id="show_style" type="text/css">
+span.svn_1005000 {display: inline; }
+span.svn_1004000 {display: inline; }
 span.svn_1003000 {display: inline; }
 span.svn_1002000 {display: inline; }
 span.svn_1001000 {display: inline; }
+div.svn_1005000 {display: block; }
+div.svn_1004000 {display: block; }
 div.svn_1003000 {display: block; }
 div.svn_1002000 {display: block; }
 div.svn_1001000 {display: block; }
@@ -1038,12 +1042,11 @@ one of these values to return only the selected fields:
 <p>The tuple contains:
 </p>
 <ul>
-<li>0 - full path or url of file</li>
-<li>1 - dictionary of dirent information</li>
-<li>2 - dictionary of lock information or None</li>
+<li>0 - PysvnList containing the dirent information</li>
+<li>1 - PysvnLock containing the lock information or None</li>
 </ul>
 
-<p>The dirent dictionary contains the requested fields:
+<p>The PysvnList object contains the requested dirent fields:
 </p>
 <ul>
 <li>created_rev - pysvn.<a href="#pysvn_revision">Revision</a> - the revision of the last change</li>
@@ -1055,6 +1058,18 @@ one of these values to return only the selected fields:
 <li>time - float - the time of the last change</li>
 </ul>
 </div>
+
+<p>The PysvnList object obtains the lock information:
+</p>
+<ul>
+<li>comment - string - the lock comment</li>
+<li>token - string - lock token</li>
+<li>path - </li>
+<li>owner - string - owner of the lock</li>
+<li>expiration_date - None or int - time lock will expire</li>
+<li>is_dav_comment - boolean - true is a commment from DAV</li>
+<li>creation_date - int - time the lock was created</li>
+</ul>
 
 <div class="svn_1002000">
 <h4><a name="pysvn_client_lock"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.lock</a></h4>
