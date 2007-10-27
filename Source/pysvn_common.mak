@@ -59,16 +59,16 @@ pysvn_svnenv.o: pysvn_svnenv.cpp $(PYSVN_INCLUDES)
 pysvn_profile.o: pysvn_profile.cpp $(PYSVN_INCLUDES)
 	$(CCC) $(CCCFLAGS) -o $@ $<
 
-cxxsupport.o: $(PYCXX)/Src/cxxsupport.cxx
+cxxsupport.o: $(PYCXXSRC)/cxxsupport.cxx
 	$(CCC) $(CCCFLAGS) -o $@ $<
 
-cxx_extensions.o: $(PYCXX)/Src/cxx_extensions.cxx
+cxx_extensions.o: $(PYCXXSRC)/cxx_extensions.cxx
 	$(CCC) $(CCCFLAGS) -o $@ $<
 
-cxxextensions.o: $(PYCXX)/Src/cxxextensions.c
+cxxextensions.o: $(PYCXXSRC)/cxxextensions.c
 	$(CC) -c $(CCFLAGS) -o $@ $<
 
-IndirectPythonInterface.o: $(PYCXX)/Src/IndirectPythonInterface.cxx
+IndirectPythonInterface.o: $(PYCXXSRC)/IndirectPythonInterface.cxx
 	$(CCC) $(CCCFLAGS) -o $@ $< 
 
 clean:

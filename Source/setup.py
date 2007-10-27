@@ -54,6 +54,7 @@ def setup_help( argv ):
         --verbose
         --enable-debug
         --pycxx-dir=<dir>
+        --pycxx-src-dir=<dir>
         --apr-inc-dir=<dir>
         --svn-root-dir=<dir>
         --svn-inc-dir=<dir>
@@ -134,6 +135,9 @@ class MakeFileCreater:
         # add pycxx include
         pycxx_dir = self.find_pycxx( argv )
         include_dir_list.append( pycxx_dir )
+        # add pycxx source
+        pycxx_src_dir = self.find_pycxx_src( argv, pycxx_dir )
+        include_dir_list.append( pycxx_src_dir )
         # add SVN include
         svn_include = self.find_svn_inc( argv )
         include_dir_list.append( svn_include )
@@ -194,7 +198,10 @@ class MakeFileCreater:
             'lib_apr':          self.lib_apr,    # set as a side effect of find_apr_lib
 
             # pycxx src dir
-            'pycxx_dir':        pycxx_dir
+            'pycxx_dir':        pycxx_dir,
+
+            # pycxx src dir
+            'pycxx_src_dir':        pycxx_src_dir
             }
 
         print 'Info: Creating Makefile for Source'
@@ -305,6 +312,7 @@ CCCFLAGS=-Wall -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cfla
 CC=gcc -c
 CCFLAGS=-Wall -fPIC %(includes)s %(debug_cflags)s
 PYCXX=%(pycxx_dir)s
+PYCXXSRC=%(pycxx_src_dir)s
 LDSHARED=g++ -shared %(debug_cflags)s
 LDLIBS=-L%(svn_lib_dir)s -Wl,--rpath -Wl,%(svn_lib_dir)s \
 -lsvn_client-1 \
@@ -326,6 +334,7 @@ CCCFLAGS=-Wall -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cfla
 CC=gcc -c
 CCFLAGS=-Wall -fPIC %(includes)s %(debug_cflags)s
 PYCXX=%(pycxx_dir)s
+PYCXXSRC=%(pycxx_src_dir)s
 LDSHARED=g++ -shared %(debug_cflags)s
 LDLIBS=-L%(svn_lib_dir)s -Wl,--rpath -Wl,%(svn_lib_dir)s \
 -lsvn_client-1 \
@@ -347,6 +356,7 @@ CCCFLAGS=-Wall -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cfla
 CC=gcc -c
 CCFLAGS=-Wall -fPIC %(includes)s %(debug_cflags)s
 PYCXX=%(pycxx_dir)s
+PYCXXSRC=%(pycxx_src_dir)s
 LDSHARED=g++ -shared %(debug_cflags)s
 LDLIBS=-L%(svn_lib_dir)s -Wl,--rpath -Wl,/usr/lib:/usr/local/lib:%(svn_lib_dir)s \
 -lsvn_client-1 \
@@ -368,6 +378,7 @@ CCCFLAGS=-Wall -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s
 CC=gcc -c
 CCFLAGS=-Wall %(includes)s %(debug_cflags)s
 PYCXX=%(pycxx_dir)s
+PYCXXSRC=%(pycxx_src_dir)s
 LDSHARED=g++ -shared %(debug_cflags)s
 LDLIBS=-L%(svn_lib_dir)s \
 -L/usr/lib/python2.5/config -lpython2.5.dll \
@@ -407,6 +418,7 @@ CCCFLAGS=-Wall -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cfla
 CC=gcc -c
 CCFLAGS=-Wall -fPIC %(includes)s %(debug_cflags)s
 PYCXX=%(pycxx_dir)s
+PYCXXSRC=%(pycxx_src_dir)s
 LDSHARED=g++ -shared %(debug_cflags)s
 LDLIBS=-L%(svn_lib_dir)s \
 -lsvn_client-1   \
@@ -446,6 +458,7 @@ CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cfla
 CC=gcc -c
 CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s %(debug_cflags)s
 PYCXX=%(pycxx_dir)s
+PYCXXSRC=%(pycxx_src_dir)s
 LDSHARED=g++ -bundle %(debug_cflags)s -u _PyMac_Error %(frameworks)s
 LDLIBS=-L%(svn_lib_dir)s \
 -L%(apr_lib_dir)s \
@@ -495,6 +508,7 @@ CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cfla
 CC=gcc -c
 CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s %(debug_cflags)s
 PYCXX=%(pycxx_dir)s
+PYCXXSRC=%(pycxx_src_dir)s
 LDSHARED=g++ -bundle %(debug_cflags)s -u _PyMac_Error %(frameworks)s
 LDLIBS= \
 %(svn_lib_dir)s/libsvn_client-1.a \
@@ -534,6 +548,7 @@ CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cfla
 CC=gcc -c
 CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s %(debug_cflags)s
 PYCXX=%(pycxx_dir)s
+PYCXXSRC=%(pycxx_src_dir)s
 LDSHARED=g++ -bundle %(debug_cflags)s -u _PyMac_Error %(frameworks)s
 LDLIBS= \
 %(svn_lib_dir)s/libsvn_client-1.a \
@@ -571,6 +586,14 @@ LDLIBS= \
                     None,
                     [   '../Import/pycxx-5.4.0'],
                     'CXX/Version.hxx' )
+
+    def find_pycxx_src( self, argv, pycxx_dir ):
+        return self.find_dir( argv,
+                    'PyCXX Source',
+                    '--pycxx-src-dir=',
+                    None,
+                    [  '%s/Src' % pycxx_dir],
+                    'cxxsupport.cxx' )
 
     def find_svn_inc( self, argv ):
         return self.find_dir( argv,
