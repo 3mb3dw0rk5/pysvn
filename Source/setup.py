@@ -483,6 +483,7 @@ CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cfla
 CC=gcc -c
 CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s %(debug_cflags)s -isysroot /Developer/SDKs/MacOSX10.4u.sdk -arch ppc -arch i386
 PYCXX=%(pycxx_dir)s
+PYCXXSRC=%(pycxx_src_dir)s
 LDSHARED=g++ -bundle -twolevel_namespace %(debug_cflags)s -u _PyMac_Error %(frameworks)s -Wl,-syslibroot,/Developer/SDKs/MacOSX10.4u.sdk -arch ppc -arch i386
 LDLIBS=-L%(svn_lib_dir)s \
 -L%(apr_lib_dir)s \
