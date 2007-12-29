@@ -50,14 +50,14 @@ class Test:
 		self.client.callback_get_log_message = get_log_message_good
 		self.test_1_sub1()
 
-		self.client.remove( 'http://torment/svn/barrys-test-lib/trunk/fred/testing/bar99.txt' )
+		self.client.remove( 'http://liara/svn/barrys-test-lib/trunk/fred/testing/bar99.txt' )
 
 	def test_1_sub1( self, expected=None ):
 		try:
 			self.info( 'Expecting error %s' % expected )
 			self.client.copy(
-				'http://torment/svn/barrys-test-lib/trunk/fred/testing/bar.txt',
-				'http://torment/svn/barrys-test-lib/trunk/fred/testing/bar99.txt' )
+				'http://liara/svn/barrys-test-lib/trunk/fred/testing/bar.txt',
+				'http://liara/svn/barrys-test-lib/trunk/fred/testing/bar99.txt' )
 		except pysvn.ClientError, e:
 			if expected is None:
 				self.failed( 'unexpected exception: %s' % e )
