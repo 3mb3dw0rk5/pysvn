@@ -7,9 +7,9 @@
 //
 // ====================================================================
 //
-all_versions = new Array( 1001000, 1002000, 1003000, 1004000 )
+all_versions = new Array( 1001000, 1002000, 1003000, 1004000, 1005000 )
 
-current_version = 1004000;
+current_version = 1005000;
 change_style = "hilite";
 
 function changeDisplay( version )

@@ -1,6 +1,6 @@
 //
 // ====================================================================
-// Copyright (c) 2003-2006 Barry A Scott.  All rights reserved.
+// Copyright (c) 2003-2007 Barry A Scott.  All rights reserved.
 //
 // This software is licensed as described in the file LICENSE.txt,
 // which you should have received as part of this distribution.
@@ -8,7 +8,7 @@
 // ====================================================================
 //
 
-#ifdef _MSC_VER
+#if defined( _MSC_VER )
 // disable warning C4786: symbol greater than 255 character,
 // nessesary to ignore as <map> causes lots of warning
 #pragma warning(disable: 4786)
@@ -274,7 +274,7 @@ Py::Object toObject
     entry[ str_text_time ] = toObject( svn_entry.text_time );
     entry[ str_url ] = utf8_string_or_none( svn_entry.url );
     entry[ str_uuid ] = utf8_string_or_none( svn_entry.uuid );
-#ifdef PYSVN_HAS_CLIENT_STATUS2
+#if defined( PYSVN_HAS_CLIENT_STATUS2 )
     entry[ str_lock_token ] = utf8_string_or_none( svn_entry.lock_token );
     entry[ str_lock_owner ] = utf8_string_or_none( svn_entry.lock_owner );
     entry[ str_lock_comment ] = utf8_string_or_none( svn_entry.lock_comment );
@@ -285,7 +285,7 @@ Py::Object toObject
 }
 
 
-#ifdef PYSVN_HAS_CLIENT_INFO
+#if defined( PYSVN_HAS_CLIENT_INFO )
 Py::Object toObject
     (
     const svn_info_t &info,
@@ -323,7 +323,7 @@ Py::Object toObject
     // The author of the last_changed_rev.
     py_info[str_last_changed_author] = utf8_string_or_none( info.last_changed_author );
 
-#ifdef PYSVN_HAS_CLIENT_LOCK
+#if defined( PYSVN_HAS_CLIENT_LOCK )
     // An exclusive lock, if present.  Could be either local or remote.
     if( info.lock == NULL )
     {
@@ -362,7 +362,7 @@ Py::Object toObject
     return wrapper_info.wrapDict( py_info );
 }
 #endif
-#ifdef PYSVN_HAS_CLIENT_LOCK
+#if defined( PYSVN_HAS_CLIENT_LOCK )
 Py::Object toObject
     (
     const svn_lock_t &lock,

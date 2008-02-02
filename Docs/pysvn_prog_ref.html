@@ -60,11 +60,12 @@ gives an tutorial introduction to the pysvn module.
 
 <p>This document covers pysvn version 1.5.0. Features offered by pysvn
 depend on the version of SVN that is being used. Full functionality is
-only available with SVN 1.4.0 or later.
+only available with SVN 1.5.0 or later.
 </p>
 <p>Click one of the buttons below to show the pysvn API as supported
 by a particular version of the SVN.</p>
 <div id="buttons_work" style="display: none">
+<span class="button" onclick='changeDisplay( 1005000 )'>Show SVN 1.5.0 API</span>
 <span class="button" onclick='changeDisplay( 1004000 )'>Show SVN 1.4.0 API</span>
 <span class="button" onclick='changeDisplay( 1003000 )'>Show SVN 1.3.0 API</span>
 <span class="button" onclick='changeDisplay( 1002000 )'>Show SVN 1.2.0 API</span>
@@ -80,7 +81,7 @@ by a particular version of the SVN.</p>
 Sorry you browser does not support the show API buttons. Try viewing this page in FireFox.
 </div>
 <p>
-Showing the PySVN API supported by SVN <span id="version_shown">1.4.0</span>.
+Showing the PySVN API supported by SVN <span id="version_shown">1.5.0</span>.
 Unsupported parts of the API are show like: <span class="svn_example">This</span>.
 </p>
 <p>The recommended way to test for a feature is to use the python 
@@ -428,74 +429,74 @@ a tuple of three values (retcode, accepted_failures, save).
 </tr>
 <tr bgcolor="#e0e0e0">
 <td><a href="#pysvn_client_copy">copy</a></td>
+<td><span class="svn_1005000"><a href="#pysvn_client_copy2">copy2</a></span></td>
 <td><a href="#pysvn_client_diff">diff</a></td>
 <td><span class="svn_1001000"><a href="#pysvn_client_diff_peg">diff_peg</a></span></td>
 <td><span class="svn_1004000"><a href="#pysvn_client_diff_summarize">diff_summarize</a></span></td>
 <td><span class="svn_1004000"><a href="#pysvn_client_diff_summarize_peg">diff_summarize_peg</a></span></td>
-<td><a href="#pysvn_client_export">export</a></td>
 </tr>
 <tr>
+<td><a href="#pysvn_client_export">export</a></td>
 <td><span class="svn_1003000"><a href="#pysvn_client_get_adm_dir">get_adm_dir</a></span></td>
 <td><a href="#pysvn_client_get_auth_cache">get_auth_cache</a></td>
 <td><a href="#pysvn_client_get_auto_props">get_auto_props</a></td>
 <td><a href="#pysvn_client_get_default_password">get_default_password</a></td>
 <td><a href="#pysvn_client_get_default_username">get_default_username</a></td>
-<td><a href="#pysvn_client_get_interactive">get_interactive</a></td>
 </tr>
 <tr bgcolor="#e0e0e0">
+<td><a href="#pysvn_client_get_interactive">get_interactive</a></td>
 <td><a href="#pysvn_client_get_store_passwords">get_store_passwords</a></td>
 <td><a href="#pysvn_client_import_">import_</a></td>
 <td><a href="#pysvn_client_info">info</a></td>
 <td><span class="svn_1003000"><a href="#pysvn_client_info2">info2</a></span></td>
 <td><span class="svn_1003000"><a href="#pysvn_client_is_adm_dir">is_adm_dir</a></span></td>
-<td><a href="#pysvn_client_is_url">is_url</a></td>
 </tr>
 <tr>
+<td><a href="#pysvn_client_is_url">is_url</a></td>
 <td><span class="svn_1004000"><a href="#pysvn_client_list">list</a></span></td>
 <td><a href="#pysvn_client_log">log</a></td>
 <td><span class="svn_1002000"><a href="#pysvn_client_lock">lock</a></span></td>
 <td><a href="#pysvn_client_ls">ls</a></td>
 <td><a href="#pysvn_client_merge">merge</a></td>
-<td><span class="svn_1001000"><a href="#pysvn_client_merge_peg">merge_peg</a></span></td>
 </tr>
 <tr bgcolor="#e0e0e0">
+<td><span class="svn_1001000"><a href="#pysvn_client_merge_peg">merge_peg</a></span></td>
+<td><span class="svn_1005000"><a href="#pysvn_client_merge_peg2">merge_peg2</a></span></td>
 <td><a href="#pysvn_client_mkdir">mkdir</a></td>
 <td><a href="#pysvn_client_move">move</a></td>
+<td><span class="svn_1005000"><a href="#pysvn_client_copy2">copy2</a></span></td>
 <td><a href="#pysvn_client_propdel">propdel</a></td>
+</tr>
+<tr>
 <td><a href="#pysvn_client_propget">propget</a></td>
 <td><a href="#pysvn_client_proplist">proplist</a></td>
 <td><a href="#pysvn_client_propset">propset</a></td>
-</tr>
-<tr>
 <td><a href="#pysvn_client_relocate">relocate</a></td>
 <td><a href="#pysvn_client_remove">remove</a></td>
 <td><a href="#pysvn_client_resolved">resolved</a></td>
+</tr>
+<tr bgcolor="#e0e0e0">
 <td><a href="#pysvn_client_revert">revert</a></td>
 <td><a href="#pysvn_client_revpropdel">revpropdel</a></td>
 <td><a href="#pysvn_client_revpropget">revpropget</a></td>
-</tr>
-<tr bgcolor="#e0e0e0">
 <td><a href="#pysvn_client_revproplist">revproplist</a></td>
 <td><a href="#pysvn_client_revpropset">revpropset</a></td>
+<td><span class="svn_1005000"><a href="#pysvn_client_root_url_from_path">root_url_from_path</a></span></td>
+</tr>
+<tr>
 <td><span class="svn_1003000"><a href="#pysvn_client_set_adm_dir">set_adm_dir</a></span></td>
 <td><a href="#pysvn_client_set_auth_cache">set_auth_cache</a></td>
 <td><a href="#pysvn_client_set_auto_props">set_auto_props</a></td>
 <td><a href="#pysvn_client_set_default_password">set_default_password</a></td>
-</tr>
-<tr>
 <td><a href="#pysvn_client_set_default_username">set_default_username</a></td>
 <td><a href="#pysvn_client_set_interactive">set_interactive</a></td>
+</tr>
+<tr>
 <td><a href="#pysvn_client_set_store_passwords">set_store_passwords</a></td>
 <td><a href="#pysvn_client_status">status</a></td>
 <td><a href="#pysvn_client_switch">switch</a></td>
 <td><span class="svn_1002000"><a href="#pysvn_client_unlock">unlock</a></span></td>
-</tr>
-<tr>
 <td><a href="#pysvn_client_update">update</a></td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
 </table>
@@ -505,11 +506,13 @@ a tuple of three values (retcode, accepted_failures, save).
 add( path,
      recurse=True<span class="svn_1001000">,
      force=False</span><span class="svn_1003000">,
-     ignore=False</span> )
+     ignore=False</span><span class="svn_1005000">,
+     depth=QQQ</span> )
 add( [path,path],
      recurse=True<span class="svn_1001000">,
      force=False</span><span class="svn_1003000">,
-     ignore=True</span> )
+     ignore=True</span><span class="svn_1005000">,
+     depth=depth</span> )
 </pre>
 <p>
 Schedules all the files or directories specfied in the paths
@@ -519,7 +522,10 @@ operation to run.</span> <span class="svn_1003000">Set ignore to False to
 disregard default and svn:ignore property ignores.</span>
 Files are added at the next checkin.
 </p>
-
+<div class="svn_1005000">
+<p>The depth can be used as in place of recurse. QQQ
+</p>
+</div>
 <h4><a name="pysvn_client_annotate"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.annotate</a></h4>
 <pre>
 file_annotation = \
@@ -656,6 +662,35 @@ working copy (WC) path or URL:
 callback must be implemented to return a log message.
 </p>
 
+<div class="svn_1005000">
+<h4><a name="pysvn_client_copy2"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.copy2</a></h4>
+<pre>
+copy2( sources,
+       dest_url_or_path,
+       copy_as_child=False,
+       make_parents=False,
+       with_merge_history=False )
+</pre>
+<p>
+Duplicate something in working copy or repos, remembering history.
+The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
+if the src_path is a URL otherwise to
+pysvn.Revision( opt_revision_kind.working ).
+</p>
+<p>src_url_or_path and dest_url_or_path can each be either a
+working copy (WC) path or URL:
+<ul>
+<li>WC  -> WC:   copy and schedule for addition (with history)</li>
+<li>WC  -> URL:  immediately commit a copy of WC to URL</li>
+<li>URL -> WC:   check out URL into WC, schedule for addition</li>
+<li>URL -> URL:  complete server-side copy; used to branch and tag</li>
+</ul>
+</p>
+<p>If the destination is a URL the <a href="#pysvn_client_callback_get_log_message">client_get_log_message</a>
+callback must be implemented to return a log message.
+</p>
+</div>
+
 <h4><a name="pysvn_client_diff"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.diff</a></h4>
 <pre>
 diff_text = \
@@ -669,7 +704,8 @@ diff( tmp_path,
       diff_deleted=True<span class="svn_1002000">,
       ignore_content_type=False</span><span class="svn_1003000">,
       header_encoding="",
-      diff_options=[]</span> )
+      diff_options=[]</span><span class="svn_1005000">,
+     depth=depth</span> )
 </pre>
 <p>
 Return the differences between revision1 of url_or_path
@@ -695,6 +731,10 @@ diff program that subversion uses. Typical options are
 The exact options that work depend on the version of subversion used
 and its configuration.</span>
 </p>
+<div class="svn_1005000">
+<p>The depth can be used as in place of recurse. QQQ
+</p>
+</div>
 
 <div class="svn_1001000">
 <h4><a name="pysvn_client_diff_peg"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.diff_peg</a></h4>
@@ -710,7 +750,8 @@ diff_peg( tmp_path,
           diff_deleted=True<span class="svn_1002000">,
           ignore_content_type=False</span><span class="svn_1003000">,
           header_encoding="",
-          diff_options=[]</span> )
+          diff_options=[]</span><span class="svn_1005000">,
+          depth=depth</span> )
 </pre>
 <p>
 return the differences between two revisions of the url_or_path.
@@ -726,6 +767,10 @@ For example tmp_path=/tmp/diff_prefix will create files like
 Set recurse to True to recursively diff a directory's children.
 diff_text is a string containing the diff.
 </p>
+<div class="svn_1005000">
+<p>The depth can be used as in place of recurse. QQQ
+</p>
+</div>
 <p>peg_revision indicates in which revision url_or_path is valid.
 If peg_revision.kind is opt_revision_kind.unspecified, then it
 defaults to opt_revision_kind.head for URLs or
@@ -755,7 +800,8 @@ diff_summarize( url_or_path1,
                 url_or_path2=url_or_path,
                 revision2=pysvn.Revision( opt_revision_kind.working ),
                 recurse=True,
-                ignore_ancestry=False )
+                ignore_ancestry=False<span class="svn_1005000">,
+                depth=depth</span> )
 </pre>
 <p>
 Produce a diff summary which lists the changed items between
@@ -767,6 +813,10 @@ The function may report false positives if ignore_ancestry is False,
 since a file might have been modified between two revisions, but still
 have the same contents.
 </p>
+<div class="svn_1005000">
+<p>The depth can be used as in place of recurse. QQQ
+</p>
+</div>
 </div>
 
 <div class="svn_1004000">
@@ -778,7 +828,8 @@ diff_summarize_peg( url_or_path,
                     revision_start=pysvn.Revision( opt_revision_kind.base ),
                     revision_end=pysvn.Revision( opt_revision_kind.working ),
                     recurse=True,
-                    ignore_ancestry=False )
+                    ignore_ancestry=False<span class="svn_1005000">,
+                    depth=depth</span> )
 </pre>
 <p>
 Produce a diff summary which lists the changed items between the
@@ -795,6 +846,10 @@ of that function's url_or_path1 and url_or_path2 argments.
 The function may report false positives if ignore_ancestry is False,
 as described in the documentation for diff_summarize().
 </p>
+<div class="svn_1005000">
+<p>The depth can be used as in place of recurse. QQQ
+</p>
+</div>
 </div>
 
 <h4><a name="pysvn_client_export"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.export</a></h4>
@@ -807,7 +862,8 @@ export( src_url_or_path,
         native_eol=None</span><span class="svn_1003000">,
         ignore_externals=False,
         recurse=True,
-        peg_revision=pysvn.Revision( opt_revision_kind.unspecified )</span> )
+        peg_revision=pysvn.Revision( opt_revision_kind.unspecified )</span><span class="svn_1005000">,
+        depth=depth</span> )
 </pre>
 <p>Create an unversioned copy of the src_path at revision in dest_path.
 <span class="svn_1003000">Set recurse to False to export a single file. Set ignore_externals to
@@ -828,6 +884,10 @@ WC targets.
   by src_path into dest_path.  All local changes will be preserved,
   but files not under revision control will not be copied.</li>
 </ol>
+<div class="svn_1005000">
+<p>The depth can be used as in place of recurse. QQQ
+</p>
+</div>
 
 <p><span class="svn_1001000">native_eol parameter allows the line ending of files with
 svn:eol-style propery set to native to be overriden.
@@ -930,7 +990,8 @@ entry_list = \
 info2( url_or_path,
        revision=pysvn.Revision( opt_revision_kind.unspecified ),
        peg_revision=pysvn.Revision( opt_revision_kind.unspecified ),
-       recurse=True )
+       recurse=True<span class="svn_1005000">,
+       depth=depth</span> )
 
 </pre>
 <p>return information on url_or_path as a list of (path, info_dict)
@@ -943,6 +1004,10 @@ is opt_revision_kind.unspecified, then it defaults to
 opt_revision_kind.head for URLs or opt_revision_kind.working for
 WC targets.
 </span></p>
+<div class="svn_1005000">
+<p>The depth can be used as in place of recurse. QQQ
+</p>
+</div>
 
 <p>The info_dict contains:
 <ul>
@@ -994,6 +1059,16 @@ is_adm_dir( name )
 </p>
 </div>
 
+<div class="svn_1005000">
+<h4><a name="pysvn_client_root_url_from_path"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.root_url_from_path</a></h4>
+<pre>
+root_url = \
+    root_url_from_path( url_or_path )
+</pre>
+<p>Return the root URL of the repository given the url_or_path.
+</p>
+</div>
+
 <h4><a name="pysvn_client_is_url"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.is_url</a></h4>
 <pre>
 rc = \
@@ -1011,7 +1086,8 @@ list( url_or_path,
       revision=pysvn.Revision( opt_revision_kind.head ),
       recurse=True,
       dirent_fields=pysvn.SVN_DIRENT_ALL,
-      fetch_locks=False )
+      fetch_locks=False<span class="svn_1005000">,
+      depth=depth</span> )
 </pre>
 
 <p>
@@ -1024,6 +1100,10 @@ If peg_revision.kind is opt_revision_kind.unspecified, then it
 defaults to opt_revision_kind.head for URLs or
 opt_revision_kind.working for WC targets.
 </p>
+<div class="svn_1005000">
+<p>The depth can be used as in place of recurse. QQQ
+</p>
+</div>
 
 <p>dirent_fields controls which dirent fields will return.
 Use pysvn.SVN_DIRENT_ALL to return all fields. Bit-wise or
@@ -1161,23 +1241,33 @@ merge( url_or_path1,
        revision2,
        local_path,
        force=False,
-       recurse=True )
+       recurse=True<span class="svn_1005000">,
+       depth=depth,
+       record_only=False,
+       merge_options=[]</span> )
 </pre>
 <p>Apply the differences between two sources to a working copy path.
 </p>
+<div class="svn_1005000">
+<p>The depth can be used as in place of recurse. QQQ
+</p>
+</div>
 
 <div class="svn_1001000">
 <h4><a name="pysvn_client_merge_peg"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.merge_peg</a></h4>
 <pre>
 merge_peg( url_or_path,
-       revision1,
-       revision2,
-       peg_revision,
-       local_path,
-       recurse=True,
-       notice_ancestry,
-       force=False,
-       dry_run=False )
+           revision1,
+           revision2,
+           peg_revision,
+           local_path,
+           recurse=True,
+           notice_ancestry,
+           force=False,
+           dry_run=False<span class="svn_1005000">,
+           depth=depth,
+           record_only=False,
+           merge_options=[]</span> )
 </pre>
 <p>Apply the differences between two sources to a working copy path.
 </p>
@@ -1187,6 +1277,36 @@ is opt_revision_kind.unspecified, then it defaults to
 opt_revision_kind.head for URLs or opt_revision_kind.working for
 WC targets.
 </span></p>
+<div class="svn_1005000">
+<p>The depth can be used as in place of recurse. QQQ
+</p>
+</div>
+</div>
+
+<div class="svn_1005000">
+<h4><a name="pysvn_client_merge_peg2"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.merge_peg2</a></h4>
+<pre>
+merge_peg2( sources,
+            ranges_to_merge,
+            peg_revision,
+            tareget_wcpath,
+            depth=depth,
+            notice_ancestry=False,
+            force=False,
+            dry_run=False,
+            record_only=True,
+            merge_options=[] )
+</pre>
+<p>Apply the differences between the ranges_to_merge in sources to a working copy path, target_wcpath.
+ranges_to_merge is a list of tuples with the start and end revisions to be merged.
+</p>
+<p>peg_revision indicates in which revision url_or_path is valid.
+If peg_revision.kind is opt_revision_kind.unspecified, then it defaults to
+opt_revision_kind.head for URLs or opt_revision_kind.working for
+WC targets.
+</p>
+<p>The depth can be used as in place of recurse. QQQ
+</p>
 </div>
 
 <h4><a name="pysvn_client_mkdir"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.mkdir</a></h4>
@@ -1246,6 +1366,35 @@ behaviour.
 repository via an immediate commit.
 </p>
 
+<div class="svn_1005000">
+<h4><a name="pysvn_client_move2"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.move2</a></h4>
+<pre>
+move2( sources,
+       dest_url_or_path,
+       move_as_child=False,
+       make_parents=False,
+       with_merge_history=False )
+</pre>
+<p>
+Duplicate something in working copy or repos, remembering history.
+The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
+if the src_path is a URL otherwise to
+pysvn.Revision( opt_revision_kind.working ).
+</p>
+<p>src_url_or_path and dest_url_or_path can each be either a
+working copy (WC) path or URL:
+<ul>
+<li>WC  -> WC:   move and schedule for addition (with history)</li>
+<li>WC  -> URL:  immediately commit a move of WC to URL</li>
+<li>URL -> WC:   check out URL into WC, schedule for addition</li>
+<li>URL -> URL:  complete server-side move; used to branch and tag</li>
+</ul>
+</p>
+<p>If the destination is a URL the <a href="#pysvn_client_callback_get_log_message">client_get_log_message</a>
+callback must be implemented to return a log message.
+</p>
+</div>
+
 <h4><a name="pysvn_client_propdel"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.propdel</a></h4>
 <pre>
 rev = \
@@ -1253,7 +1402,8 @@ propdel( prop_name,
          url_or_path,
          revision=pysvn.Revision(),
          recurse=False<span class="svn_1002000">,
-         skip_checks=False</span> )
+         skip_checks=False</span><span class="svn_1005000">,
+         depth=depth</span> )
 </pre>
 <p>Delete the property prop_name from url_or_path.
 </p>
@@ -1268,6 +1418,10 @@ propval is not a valid mime-type).</span>
 pysvn.Revision( opt_revision_kind.head ) if the src_path is a
 URL otherwise to pysvn.Revision( opt_revision_kind.working ).
 </p>
+<div class="svn_1005000">
+<p>The depth can be used as in place of recurse. QQQ
+</p>
+</div>
 
 <h4><a name="pysvn_client_propget"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.propget</a></h4>
 <pre>
@@ -1276,7 +1430,8 @@ propget( prop_name,
          url_or_path,
          revision=pysvn.Revision(),
          recurse=False<span class="svn_1002000">,
-         peg_revision=pysvn.Revision( opt_revision_kind.unspecified )</span> )
+         peg_revision=pysvn.Revision( opt_revision_kind.unspecified )</span><span class="svn_1005000">,
+         depth=depth</span> )
 </pre>
 <p>Returns a dictionary with keys of url_or_path and values of
 the prop_name.
@@ -1291,6 +1446,10 @@ is opt_revision_kind.unspecified, then it defaults to
 opt_revision_kind.head for URLs or opt_revision_kind.working for
 WC targets.
 </span></p>
+<div class="svn_1005000">
+<p>The depth can be used as in place of recurse. QQQ
+</p>
+</div>
 
 <h4><a name="pysvn_client_proplist"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.proplist</a></h4>
 <pre>
@@ -1298,7 +1457,8 @@ prop_list = \
 proplist( url_or_path,
           revision=pysvn.Revision(),
           recurse=False<span class="svn_1002000">,
-          peg_revision=pysvn.Revision( opt_revision_kind.unspecified )</span> )
+          peg_revision=pysvn.Revision( opt_revision_kind.unspecified )</span><span class="svn_1005000">,
+          depth=depth</span> )
 </pre>
 <p>Returns a list of tuples (path, prop_dict). The prop_dict
 contains the prop_names and their values if set on the path.
@@ -1313,16 +1473,22 @@ is opt_revision_kind.unspecified, then it defaults to
 opt_revision_kind.head for URLs or opt_revision_kind.working for
 WC targets.
 </span></p>
+<div class="svn_1005000">
+<p>The depth can be used as in place of recurse. QQQ
+</p>
+</div>
 
 <h4><a name="pysvn_client_propset"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.propset</a></h4>
 <pre>
-rev = \
-propset( prop_name,
+<span class="svn_1005000">commit_info = \
+</span>propset( prop_name,
          prop_value,
          url_or_path,
          revision=pysvn.Revision(),
          recurse=False<span class="svn_1002000">,
-         skip_checks=False</span> )
+         skip_checks=False</span><span class="svn_1005000">,
+         depth=depth,
+         allow_unver_obstructions=False</span> )
 </pre>
 <p>Set the property prop_name to prop_value in url_or_path.
 </p>
@@ -1337,21 +1503,34 @@ propval is not a valid mime-type).</span>
 if the url_or_path is a URL otherwise to
 pysvn.Revision( opt_revision_kind.working ).
 </p>
+<div class="svn_1005000">
+<p>The depth can be used as in place of recurse. QQQ
+</p>
+<p>If allow_unver_obstructions is False then the update will abort
+if there are any unversioned obstructing items.
+</p>
+</div>
 
 <h4><a name="pysvn_client_relocate"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.relocate</a></h4>
 <pre>
 relocate( from_url,
           to_url,
           path,
-          recurse=True)
+          recurse=True<span class="svn_1005000">,
+          depth=depth</span> )
 </pre>
 <p>Relocate the working copy from from_url to to_url of path.
 </p>
+<div class="svn_1005000">
+<p>The depth can be used as in place of recurse. QQQ
+</p>
+</div>
 
 <h4><a name="pysvn_client_remove"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.remove</a></h4>
 <pre>
 remove( url_or_path_list,
-        force=False )
+        force=False<span class="svn_1005000">,
+        keep_local=False</span> )
 </pre>
 <p>If url_or_path is a path, each item is scheduled for deletion
 upon the next commit.  Files, and directories that have not been
@@ -1361,6 +1540,11 @@ or modified items; set force=True to override this
 behaviour.
 </p>
 
+<div class="svn_1005000">
+<p>Set keep_local to True to prevent the local file from being delete.
+</p>
+</div>
+
 <p>If url_or_path is a URL, the items are deleted from the
 repository via an immediate commit.
 </p>
@@ -1368,21 +1552,32 @@ repository via an immediate commit.
 <h4><a name="pysvn_client_resolved"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.resolved</a></h4>
 <pre>
 resolved( path,
-          recurse=True )
+          recurse=True<span class="svn_1005000">,
+          depth=depth</span> )
 </pre>
 <p>Mark the conflicted file at path as resolved.
 </p>
+<div class="svn_1005000">
+<p>The depth can be used as in place of recurse. QQQ
+</p>
+</div>
 
 <h4><a name="pysvn_client_revert"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.revert</a></h4>
 <pre>
 revert( path,
-        recurse=False )
+        recurse=False<span class="svn_1005000">,
+        depth=depth</span> )
 revert( [path,path],
-        recurse=False )
+        recurse=False<span class="svn_1005000">,
+        depth=depth</span> )
 </pre>
 <p>Discard any changes in the working copy at path.
 Set recurse to True to recursively revert a directory's children.
 </p>
+<div class="svn_1005000">
+<p>The depth can be used as in place of recurse. QQQ
+</p>
+</div>
 
 <h4><a name="pysvn_client_revpropdel"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.revpropdel</a></h4>
 <pre>
@@ -1492,7 +1687,8 @@ status( path,
         get_all=True,
         update=False,
         ignore=False<span class="svn_1002000">,
-        ignore_externals=False</span> )
+        ignore_externals=False</span><span class="svn_1005000">,
+        depth=depth</span> )
 </pre>
 <p>If path is a directory status is returned for all files in the
 directory in status_list. If path is a single file status is
@@ -1523,6 +1719,11 @@ returned for that single file in status_list.
   with the svn_wc_notify_status_external action before 
   handling each externals definition, and with 
   svn_wc_notify_status_completed after each.</li>
+
+<li><div class="svn_1005000">
+<p>depth - can be used as in place of recurse. QQQ
+</p>
+</div></li>
 </ul>
 </p>
 <h4><a name="pysvn_client_switch"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.switch</a></h4>
@@ -1530,10 +1731,15 @@ returned for that single file in status_list.
 switch( path,
         url,
         recurse=True,
-        revision=pysvn.Revision( opt_revision_kind.head ) )
+        revision=pysvn.Revision( opt_revision_kind.head )<span class="svn_1005000">,
+        depth=depth</span> )
 </pre>
 <p>Update the working copy to a different URL.
 </p>
+<div class="svn_1005000">
+<p>The depth can be used as in place of recurse. QQQ
+</p>
+</div>
 
 <ol>
 <li>Update the working copy to mirror a new URL. This behaviour is a
@@ -1560,12 +1766,17 @@ revision = \
 update( path,
         recurse=True,
         revision=pysvn.Revision( opt_revision_kind.head )<span class="svn_1002000">,
-        ignore_externals=False</span> )
+        ignore_externals=False</span><span class="svn_1005000">,
+        depth=depth</span> )
 </pre>
 <p>Update the file in the working copy at path to the specified
 revision. Set recurse to True to recursively update a directory's
 children. <span class="svn_1002000">Set ignore_externals to True to ignore externals definitions.</span>
 </p>
+<div class="svn_1005000">
+<p>The depth can be used as in place of recurse. QQQ
+</p>
+</div>
 <p>update returns a pysvn.Revision containing the number of the
 revision the working copy was updated to.
 </p>

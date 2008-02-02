@@ -1,6 +1,6 @@
 //
 // ====================================================================
-// Copyright (c) 2003-2006 Barry A Scott.  All rights reserved.
+// Copyright (c) 2003-2007 Barry A Scott.  All rights reserved.
 //
 // This software is licensed as described in the file LICENSE.txt,
 // which you should have received as part of this distribution.
@@ -59,7 +59,7 @@ public:     // data
     //
     Py::Object  m_pyfn_GetLogin;
     Py::Object  m_pyfn_Notify;
-#ifdef PYSVN_HAS_CONTEXT_PROGRESS
+#if defined( PYSVN_HAS_CONTEXT_PROGRESS )
     Py::Object  m_pyfn_Progress;
 #endif
     Py::Object  m_pyfn_Cancel;
@@ -92,7 +92,7 @@ private:    // methods
     // this method will be called to notify about
     // the progress of an ongoing action
     //
-#ifdef PYSVN_HAS_CONTEXT_NOTIFY2
+#if defined( PYSVN_HAS_CONTEXT_NOTIFY2 )
     void contextNotify2
         (
         const svn_wc_notify_t *notify,
@@ -111,7 +111,7 @@ private:    // methods
         );
 #endif
 
-#ifdef PYSVN_HAS_CONTEXT_PROGRESS
+#if defined( PYSVN_HAS_CONTEXT_PROGRESS )
     void contextProgress
         (
         apr_off_t progress,
@@ -210,6 +210,9 @@ public:
     Py::Object cmd_cleanup( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_checkin( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_copy( const Py::Tuple& args, const Py::Dict &kws );
+#if defined( PYSVN_HAS_CLIENT_COPY4 )
+    Py::Object cmd_copy2( const Py::Tuple& args, const Py::Dict &kws );
+#endif
     Py::Object cmd_diff( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_diff_peg( const Py::Tuple& args, const Py::Dict &kws );
 #if defined( PYSVN_HAS_CLIENT_DIFF_SUMMARIZE )
@@ -218,12 +221,12 @@ public:
 #endif
     Py::Object cmd_export( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_info( const Py::Tuple& args, const Py::Dict &kws );
-#ifdef PYSVN_HAS_CLIENT_INFO
+#if defined( PYSVN_HAS_CLIENT_INFO )
     Py::Object cmd_info2( const Py::Tuple& args, const Py::Dict &kws );
 #endif
     Py::Object cmd_import( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_log( const Py::Tuple& args, const Py::Dict &kws );
-#ifdef PYSVN_HAS_CLIENT_LOCK
+#if defined( PYSVN_HAS_CLIENT_LOCK )
     Py::Object cmd_lock( const Py::Tuple& args, const Py::Dict &kws );
 #endif
 #if defined( PYSVN_HAS_CLIENT_LIST )
@@ -232,8 +235,14 @@ public:
     Py::Object cmd_ls( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_merge( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_merge_peg( const Py::Tuple& args, const Py::Dict &kws );
+#if defined( PYSVN_HAS_CLIENT_MERGE_PEG3 )
+    Py::Object cmd_merge_peg2( const Py::Tuple& args, const Py::Dict &kws );
+#endif
     Py::Object cmd_mkdir( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_move( const Py::Tuple& args, const Py::Dict &kws );
+#if defined( PYSVN_HAS_CLIENT_MOVE4 )
+    Py::Object cmd_move2( const Py::Tuple& args, const Py::Dict &kws );
+#endif
     Py::Object cmd_propdel( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_propget( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_proplist( const Py::Tuple& args, const Py::Dict &kws );
@@ -248,7 +257,7 @@ public:
     Py::Object cmd_revpropset( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_status( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_switch( const Py::Tuple& args, const Py::Dict &kws );
-#ifdef PYSVN_HAS_CLIENT_LOCK
+#if defined( PYSVN_HAS_CLIENT_LOCK )
     Py::Object cmd_unlock( const Py::Tuple& args, const Py::Dict &kws );
 #endif
     Py::Object cmd_update( const Py::Tuple& args, const Py::Dict &kws );
@@ -272,6 +281,10 @@ public:
     Py::Object is_adm_dir( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object get_adm_dir( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object set_adm_dir( const Py::Tuple& args, const Py::Dict &kws );
+#endif
+
+#if defined( PYSVN_HAS_CLIENT_ROOT_URL_FROM_PATH )
+    Py::Object cmd_root_url_from_path( const Py::Tuple& args, const Py::Dict &kws );
 #endif
 
     // check that we are not in use on another thread
@@ -397,6 +410,16 @@ public:
     svn_opt_revision_t getRevision( const char *name, svn_opt_revision_kind default_value );
     svn_opt_revision_t getRevision( const char *name, svn_opt_revision_t default_value );
 
+#if defined( PYSVN_HAS_SVN__DEPTH_PARAMETER )
+    svn_depth_t getDepth( const char *depth_name, const char *recursive_name, svn_depth_t default_value );
+    svn_depth_t getDepth( const char *depth_name, svn_depth_t default_value );
+    svn_depth_t getDepth( const char *depth_name );
+#endif
+#if defined( PYSVN_HAS_SVN_WC_CONFLICT_CHOICE_T )
+    svn_wc_conflict_choice_t getWcConflictChoice( const char *choice_name, svn_wc_conflict_choice_t default_value );
+    svn_wc_conflict_choice_t getWcConflictChoice( const char *choice_name );
+#endif
+
 private:
     const std::string           m_function_name;
     const argument_description  *m_arg_desc;
@@ -428,6 +451,16 @@ public:
         if( it != m_enum_to_string.end() )
             return (*it).second;
 
+        not_found = "-unknown (";
+        int u1000 = value/1000 % 10;
+        int u100 = value/100 % 10;
+        int u10 = value/10 % 10;
+        int u1 = value % 10;
+        not_found += char( '0' + u1000 );
+        not_found += char( '0' + u100 );
+        not_found += char( '0' + u10 );
+        not_found += char( '0' + u1 );
+        not_found += ")-";
         return not_found;
     }
 
@@ -715,7 +748,7 @@ extern Py::Object toObject
     SvnPool &pool,
     const DictWrapper &wrapper_entry
     );
-#ifdef PYSVN_HAS_CLIENT_INFO
+#if defined( PYSVN_HAS_CLIENT_INFO )
 extern Py::Object toObject
     (
     const svn_info_t &info,
@@ -724,7 +757,7 @@ extern Py::Object toObject
     const DictWrapper &wrapper_wc_info
     );
 #endif
-#ifdef PYSVN_HAS_CLIENT_LOCK
+#if defined( PYSVN_HAS_CLIENT_LOCK )
 extern Py::Object toObject
     (
     const svn_lock_t &lock,

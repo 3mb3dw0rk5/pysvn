@@ -206,6 +206,9 @@ class MakeFileCreater:
 
         print 'Info: Creating Makefile for Source'
 
+        major, minor, patch = self.getSvnVersion( svn_include )
+        template_values[ 'svn_version_maj_min' ] = '%d.%d' % (major, minor)
+
         makefile = file( 'Makefile', 'w' )
         if self.is_mac_os_x:
             # need to figure out the framework dir to use otherwise the latest
@@ -297,7 +300,7 @@ class MakeFileCreater:
 #       -- makefile_tests_template --
 #
 PYTHON=%(python_exe)s
-
+SVN_VERSION_MAJ_MIN=%(svn_version_maj_min)s
 #include pysvn_test_common.mak
 '''
 
@@ -736,6 +739,25 @@ LDLIBS= \
                 return os.path.abspath( dir )
 
         raise SetupError, 'cannot find %s %s - use %s' % (name, check_file, kw)
+
+    def getSvnVersion( self, svn_include ):
+        all_svn_version_lines = file( os.path.join( svn_include, 'svn_version.h' ) ).readlines()
+        major = None
+        minor = None
+        patch = None
+        for line in all_svn_version_lines:
+            words = line.strip().split()
+            if len(words) > 2 and words[0] == '#define':
+                if words[1] == 'SVN_VER_MAJOR':
+                    major = int(words[2])
+                elif words[1] == 'SVN_VER_MINOR':
+                    minor = int(words[2])
+                elif words[1] == 'SVN_VER_PATCH':
+                    patch = int(words[2])
+ 
+        print 'Info: Building against SVN %d.%d.%d' % (major, minor, patch)
+        return (major, minor, patch)
+
 
 if __name__ == '__main__':
     sys.exit( main( sys.argv ) )

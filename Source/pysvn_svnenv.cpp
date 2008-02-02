@@ -1,6 +1,6 @@
 //
 // ====================================================================
-// Copyright (c) 2003-2006 Barry A Scott.  All rights reserved.
+// Copyright (c) 2003-2007 Barry A Scott.  All rights reserved.
 //
 // This software is licensed as described in the file LICENSE.txt,
 // which you should have received as part of this distribution.
@@ -11,8 +11,6 @@
 #include "svn_config.h"
 #include "svn_pools.h"
 #include "CXX/Objects.hxx"
-
-static const char *toHex( unsigned int num );
 
 //--------------------------------------------------------------------------------
 //
@@ -36,7 +34,6 @@ SvnException::SvnException( svn_error_t *error )
             whole_message += "\n";
         }
 
-
         if( error->message != NULL )
         {
             t[0] = Py::String( error->message );
@@ -44,10 +41,12 @@ SvnException::SvnException( svn_error_t *error )
         }
         else
         {
-            std::string message = "Code: ";
-            message += toHex( error->apr_err );
-            t[0] = Py::String( message );
-            whole_message += message;
+            char buffer[256];
+            buffer[0] = '\0';
+
+            svn_strerror( error->apr_err, buffer, sizeof( buffer ) );
+            whole_message += buffer;
+            t[0] = Py::String( buffer );
         }
         t[1] = Py::Int( error->apr_err );
         error_list.append( t );
@@ -100,7 +99,7 @@ Py::Object &SvnException::pythonExceptionArg( int style )
 //        SvnContext
 //
 //--------------------------------------------------------------------------------
-#ifdef PYSVN_HAS_CONTEXT_LOG_MSG2
+#if defined( PYSVN_HAS_CONTEXT_LOG_MSG2 )
 extern "C" svn_error_t *handlerLogMsg2
     (
     const char **log_msg,
@@ -146,7 +145,7 @@ extern "C" svn_error_t *handlerLogMsg
 }
 #endif
 
-#ifdef PYSVN_HAS_CONTEXT_NOTIFY2
+#if defined( PYSVN_HAS_CONTEXT_NOTIFY2 )
 extern "C" void handlerNotify2
     (
     void *baton,
@@ -177,7 +176,7 @@ extern "C" void handlerNotify
 }
 #endif
 
-#ifdef PYSVN_HAS_CONTEXT_PROGRESS
+#if defined( PYSVN_HAS_CONTEXT_PROGRESS )
 extern "C" void handlerProgress
     (
     apr_off_t progress,
@@ -353,16 +352,16 @@ SvnContext::SvnContext( const std::string &config_dir_str )
 
     svn_config_ensure( m_config_dir, m_pool );
 
-#ifdef PYSVN_HAS_SVN_AUTH_PROVIDERS
+#if defined( PYSVN_HAS_SVN_AUTH_PROVIDERS )
     apr_array_header_t *providers = apr_array_make( m_pool, 11, sizeof( svn_auth_provider_object_t * ) );
 
     // simple providers
     svn_auth_provider_object_t *provider = NULL;
-#ifdef WIN32
+#if defined( WIN32 )
     svn_auth_get_windows_simple_provider(&provider, m_pool);
     *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
 #endif
-#ifdef DARWIN
+#if defined( DARWIN )
     svn_auth_get_keychain_simple_provider(&provider, m_pool);
     *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
 #endif
@@ -436,7 +435,7 @@ SvnContext::SvnContext( const std::string &config_dir_str )
     svn_auth_set_parameter( auth_baton, SVN_AUTH_PARAM_CONFIG_DIR, m_config_dir );
 
     m_context.auth_baton = auth_baton;
-#ifdef PYSVN_HAS_CONTEXT_LOG_MSG2
+#if defined( PYSVN_HAS_CONTEXT_LOG_MSG2 )
     m_context.log_msg_func2 = handlerLogMsg2;
     m_context.log_msg_baton2 = this;
     m_context.log_msg_func = NULL;
@@ -449,7 +448,7 @@ SvnContext::SvnContext( const std::string &config_dir_str )
     m_context.cancel_func = handlerCancel;
     m_context.cancel_baton = this;
 
-#ifdef PYSVN_HAS_CONTEXT_NOTIFY2
+#if defined( PYSVN_HAS_CONTEXT_NOTIFY2 )
     m_context.notify_func2 = handlerNotify2;
     m_context.notify_baton2 = this;
     m_context.notify_func = NULL;
@@ -459,7 +458,7 @@ SvnContext::SvnContext( const std::string &config_dir_str )
     m_context.notify_baton = this;
 #endif
 
-#ifdef PYSVN_HAS_CONTEXT_PROGRESS
+#if defined( PYSVN_HAS_CONTEXT_PROGRESS )
     m_context.progress_func = handlerProgress;
     m_context.progress_baton = this;
 #endif
@@ -580,6 +579,8 @@ SvnPool::operator apr_pool_t *() const
     return m_pool;
 }
 
+#if 0
+// keep around as it useful for debugging pysvn
 static const char *toHex( unsigned int num )
 {
     static char buffer[9];
@@ -590,3 +591,4 @@ static const char *toHex( unsigned int num )
     buffer[8] = '\0';
     return buffer;
 }
+#endif

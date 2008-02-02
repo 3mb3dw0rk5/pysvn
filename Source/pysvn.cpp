@@ -1,6 +1,6 @@
 //
 // ====================================================================
-// Copyright (c) 2003-2006 Barry A Scott.  All rights reserved.
+// Copyright (c) 2003-2008 Barry A Scott.  All rights reserved.
 //
 // This software is licensed as described in the file LICENSE.txt,
 // which you should have received as part of this distribution.
@@ -11,7 +11,7 @@
 //  pysvn.cpp
 //
 
-#ifdef _MSC_VER
+#if defined( _MSC_VER )
 // disable warning C4786: symbol greater than 255 character,
 // nessesary to ignore as <map> causes lots of warning
 #pragma warning(disable: 4786)
@@ -68,6 +68,18 @@ pysvn_module::pysvn_module()
     pysvn_enum< svn_client_diff_summarize_kind_t >::init_type();
     pysvn_enum_value< svn_client_diff_summarize_kind_t >::init_type();
 #endif
+#ifdef QQQ
+    pysvn_enum< svn_wc_conflict_action_t >::init_type();
+    pysvn_enum_value< svn_wc_conflict_action_t >::init_type();
+#endif
+#if defined( PYSVN_HAS_SVN__DEPTH_PARAMETER )
+    pysvn_enum< svn_depth_t >::init_type();
+    pysvn_enum_value< svn_depth_t >::init_type();
+#endif
+#if defined( PYSVN_HAS_SVN_WC_CONFLICT_CHOICE_T )
+    pysvn_enum< svn_wc_conflict_choice_t >::init_type();
+    pysvn_enum_value< svn_wc_conflict_choice_t >::init_type();
+#endif
 
     add_keyword_method("_Client", &pysvn_module::new_client, pysvn_client_doc);
     add_keyword_method("Revision", &pysvn_module::new_revision, pysvn_revision_doc);
@@ -94,7 +106,7 @@ pysvn_module::pysvn_module()
     svn_api_version[2] = Py::Int( SVN_VER_MICRO );
     svn_api_version[3] = Py::String( SVN_VER_TAG );
 
-#ifdef PYSVN_HAS_CLIENT_VERSION
+#if defined( PYSVN_HAS_CLIENT_VERSION )
     const svn_version_t *client_version = svn_client_version();
     Py::Tuple svn_version(4);
     svn_version[0] = Py::Int( client_version->major );
@@ -117,6 +129,12 @@ pysvn_module::pysvn_module()
     d["node_kind"] = Py::asObject( new pysvn_enum< svn_node_kind_t >() );
 #if defined( PYSVN_HAS_CLIENT_DIFF_SUMMARIZE )
     d["diff_summarize_kind"] = Py::asObject( new pysvn_enum< svn_client_diff_summarize_kind_t >() );
+#endif
+#if defined( PYSVN_HAS_SVN__DEPTH_PARAMETER )
+    d["depth"] = Py::asObject( new pysvn_enum< svn_depth_t >() );
+#endif
+#if defined( PYSVN_HAS_SVN_WC_CONFLICT_CHOICE_T )
+    d["wc_conflict_choice"] = Py::asObject( new pysvn_enum< svn_wc_conflict_choice_t >() );
 #endif
 }
 

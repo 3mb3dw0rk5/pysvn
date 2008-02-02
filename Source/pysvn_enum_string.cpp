@@ -1,6 +1,6 @@
 //
 // ====================================================================
-// Copyright (c) 2003-2006 Barry A Scott.  All rights reserved.
+// Copyright (c) 2003-2007 Barry A Scott.  All rights reserved.
 //
 // This software is licensed as described in the file LICENSE.txt,
 // which you should have received as part of this distribution.
@@ -10,7 +10,7 @@
 //
 //  pysvn_enum_string.cpp
 //
-#ifdef _MSC_VER
+#if defined( _MSC_VER )
 // disable warning C4786: symbol greater than 255 character,
 // nessesary to ignore as <map> causes lots of warning
 #pragma warning(disable: 4786)
@@ -111,18 +111,27 @@ template <> EnumString< svn_wc_notify_action_t >::EnumString()
     // Processed a single revision's blame.
     add( svn_wc_notify_blame_revision, "annotate_revision" );
 
-#ifdef PYSVN_HAS_CLIENT_LOCK
-  // Locking a path.
-  add( svn_wc_notify_locked, "locked" );
+#if defined( PYSVN_HAS_CLIENT_LOCK )
+    // Locking a path.
+    add( svn_wc_notify_locked, "locked" );
 
-  //Unlocking a path.
-  add( svn_wc_notify_unlocked, "unlocked" );
+    //Unlocking a path.
+    add( svn_wc_notify_unlocked, "unlocked" );
 
-  // Failed to lock a path.
-  add( svn_wc_notify_failed_lock, "failed_lock" );
+    // Failed to lock a path.
+    add( svn_wc_notify_failed_lock, "failed_lock" );
 
-  // Failed to unlock a path.
-  add( svn_wc_notify_failed_unlock, "failed_unlock" );
+    // Failed to unlock a path.
+    add( svn_wc_notify_failed_unlock, "failed_unlock" );
+#endif
+#if defined( PYSVN_HAS_SVN_WC_NOTIFY_ACTION_T__1_5 )
+    add( svn_wc_notify_exists, "exists" );
+    add( svn_wc_notify_changelist_set, "changelist_set" );
+    add( svn_wc_notify_changelist_clear, "changelist_clear" );
+    add( svn_wc_notify_changelist_failed, "changelist_failed" );
+    add( svn_wc_notify_changelist_moved, "changelist_moved" );
+    add( svn_wc_notify_merge_begin, "merge_begin" );
+    add( svn_wc_notify_update_replace, "update_replace" );
 #endif
 }
 
@@ -275,5 +284,47 @@ template <> EnumString< svn_client_diff_summarize_kind_t >::EnumString()
 
   /** A deleted item */
   add( svn_client_diff_summarize_kind_deleted, "delete" );
+}
+#endif
+
+#if defined( QQQ )
+template <> EnumString< svn_wc_conflict_action_t >::EnumString()
+: m_type_name( "conflict_action" )
+{
+  add( svn_wc_conflict_action_edit, "edit" );
+  add( svn_wc_conflict_action_add, "add" );
+  add( svn_wc_conflict_action_delete, "delete" );
+}
+#endif
+
+#if defined( PYSVN_HAS_SVN__DEPTH_PARAMETER )
+template <> EnumString< svn_depth_t >::EnumString()
+: m_type_name( "depth" )
+{
+    add( svn_depth_unknown, "unknown" );
+    add( svn_depth_exclude, "exclude" );
+    add( svn_depth_empty, "empty" );
+    add( svn_depth_files, "files" );
+    add( svn_depth_immediates, "immediates" );
+    add( svn_depth_infinity, "infinity" );
+}
+#endif
+
+
+#if defined( PYSVN_HAS_SVN_WC_CONFLICT_CHOICE_T )
+template <> EnumString< svn_wc_conflict_choice_t >::EnumString()
+{
+  // Don't resolve the conflict now.  Let libsvn_wc mark the path
+  // 'conflicted', so user can run 'svn resolved' later.
+  add( svn_wc_conflict_choose_postpone, "postpone" );
+
+  // If their were files to choose from, select one as a way of
+  // resolving the conflict here and now.  libsvn_wc will then do the
+  // work of "installing" the chosen file.
+  add( svn_wc_conflict_choose_base, "base" );   // user chooses the original version
+  add( svn_wc_conflict_choose_theirs, "theirs" ); // user chooses incoming version
+  add( svn_wc_conflict_choose_mine, "mine" );   // user chooses his/her own version
+  add( svn_wc_conflict_choose_merged, "merged" ); // user chooses the merged version
+
 }
 #endif

@@ -1,13 +1,13 @@
 //
 // ====================================================================
-// Copyright (c) 2003-2006 Barry A Scott.  All rights reserved.
+// Copyright (c) 2003-2007 Barry A Scott.  All rights reserved.
 //
 // This software is licensed as described in the file LICENSE.txt,
 // which you should have received as part of this distribution.
 //
 // ====================================================================
 //
-#ifdef _MSC_VER
+#if defined( _MSC_VER )
 // disable warning C4786: symbol greater than 255 character,
 // nessesary to ignore as <map> causes lots of warning
 #pragma warning(disable: 4786)
@@ -323,7 +323,6 @@ svn_opt_revision_t FunctionArguments::getRevision
     svn_opt_revision_t default_value
     )
 {
-
     if( hasArg( name ) )
     {
         return getRevision( name );
@@ -333,3 +332,90 @@ svn_opt_revision_t FunctionArguments::getRevision
         return default_value;
     }
 }
+
+#if defined( PYSVN_HAS_SVN__DEPTH_PARAMETER )
+svn_depth_t FunctionArguments::getDepth
+    (
+    const char *depth_name,
+    const char *recursive_name,
+    svn_depth_t default_value
+    )
+{
+    if( hasArg( recursive_name ) and hasArg( depth_name ) )
+    {
+        std::string msg = m_function_name;
+        msg += "() cannot mix ";
+        msg += depth_name;
+        msg += " and ";
+        msg += recursive_name;
+        throw Py::TypeError( msg );
+    }
+
+    if( hasArg( recursive_name ) )
+    {
+        if( getBoolean( recursive_name ) )
+        {
+            return svn_depth_infinity;
+        }
+        else
+        {
+            return svn_depth_files;
+        }
+    }
+
+    if( hasArg( depth_name ) )
+    {
+        return getDepth( depth_name );
+    }
+
+    return default_value;
+}
+
+svn_depth_t FunctionArguments::getDepth
+    (
+    const char *depth_name,
+    svn_depth_t default_value
+    )
+{
+    if( hasArg( depth_name ) )
+    {
+        return getDepth( depth_name );
+    }
+
+    return default_value;
+}
+
+svn_depth_t FunctionArguments::getDepth
+    (
+    const char *depth_name
+    )
+{
+    Py::ExtensionObject< pysvn_enum_value<svn_depth_t> > py_kind( getArg( depth_name ) );
+    return svn_depth_t( py_kind.extensionObject()->m_value );
+}
+#endif // PYSVN_HAS_SVN__DEPTH_PARAMETER
+
+#if defined( PYSVN_HAS_SVN_WC_CONFLICT_CHOICE_T )
+svn_wc_conflict_choice_t FunctionArguments::getWcConflictChoice
+    (
+    const char *choice_name,
+    svn_wc_conflict_choice_t default_value
+    )
+{
+    if( hasArg( choice_name ) )
+    {
+        return getWcConflictChoice( choice_name );
+    }
+
+    return default_value;
+}
+
+svn_wc_conflict_choice_t FunctionArguments::getWcConflictChoice
+    (
+    const char *choice_name
+    )
+{
+    Py::ExtensionObject< pysvn_enum_value<svn_wc_conflict_choice_t> > py_kind( getArg( choice_name ) );
+    return svn_wc_conflict_choice_t( py_kind.extensionObject()->m_value );
+}
+#endif

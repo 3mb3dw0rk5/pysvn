@@ -1,6 +1,6 @@
 //
 // ====================================================================
-// (c) 2003-2006 Barry A Scott.  All rights reserved.
+// (c) 2003-2007 Barry A Scott.  All rights reserved.
 //
 // This software is licensed as described in the file LICENSE.txt,
 // which you should have received as part of this distribution.
@@ -93,14 +93,64 @@
 #define PYSVN_HAS_SVN_AUTH_PROVIDERS
 #endif
 
+// SVN 1.5 or later
+#if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 5) || SVN_VER_MAJOR > 1
+#define PYSVN_HAS_SVN__DEPTH_PARAMETER
+#define PYSVN_HAS_CLIENT_ADD4
+#define PYSVN_HAS_CLIENT_ADD_TO_CHANGELIST QQQ
+#define PYSVN_HAS_SVN_CLIENT_BLAME_RECEIVER2_T QQQ
+#define PYSVN_HAS_CLIENT_ANNOTATE4
+#define PYSVN_HAS_CLIENT_CHECKOUT3
+#define PYSVN_HAS_CLIENT_COMMIT4
+#define PYSVN_HAS_CLIENT_COPY4
+#define PYSVN_HAS_SVN_CLIENT_CTX_T__CONFLICT_FUNC QQQ
+#define PYSVN_HAS_SVN_CLIENT_CTX_T__LOG_MSG_FUNC3 QQQ
+#define PYSVN_HAS_SVN_CLIENT_CTX_T__MIMETYPES_MAP QQQ
+#define PYSVN_HAS_SVN_CLIENT_CTX_T__REVPROP_TABLE QQQ
+#define PYSVN_HAS_CLIENT_DELETE3
+#define PYSVN_HAS_CLIENT_DIFF4
+#define PYSVN_HAS_CLIENT_DIFF_PEG4
+#define PYSVN_HAS_CLIENT_DIFF_SUMMARIZE2
+#define PYSVN_HAS_CLIENT_DIFF_SUMMARIZE_PEG2
+#define PYSVN_HAS_CLIENT_EXPORT4
+#define PYSVN_HAS_CLIENT_GET_CHANGELIST QQQ
+#define PYSVN_HAS_CLIENT_GET_CHANGELIST_STREAMY QQQ
+#define PYSVN_HAS_SVN_CLIENT_GET_COMMIT_LOG3_T QQQ
+#define PYSVN_HAS_CLIENT_IMPORT3
+#define PYSVN_HAS_CLIENT_INFO2
+#define PYSVN_HAS_CLIENT_LIST2
+#define PYSVN_HAS_CLIENT_LOG4
+#define PYSVN_HAS_CLIENT_MERGE3
+#define PYSVN_HAS_CLIENT_MERGEINFO_GET_AVAILABLE QQQ
+#define PYSVN_HAS_CLIENT_MERGEINFO_GET_MERGED QQQ
+#define PYSVN_HAS_CLIENT_MERGE_PEG3 QQQ
+#define PYSVN_HAS_CLIENT_MKDIR3
+#define PYSVN_HAS_CLIENT_MOVE5
+#define PYSVN_HAS_CLIENT_PROPGET4
+#define PYSVN_HAS_CLIENT_PROPLIST3
+#define PYSVN_HAS_CLIENT_PROPSET3
+#define PYSVN_HAS_CLIENT_REMOVE_FROM_CHANGELIST QQQ
+#define PYSVN_HAS_CLIENT_RESOLVED2
+#define PYSVN_HAS_CLIENT_REVERT2
+#define PYSVN_HAS_CLIENT_ROOT_URL_FROM_PATH
+#define PYSVN_HAS_CLIENT_STATUS3
+#define PYSVN_HAS_CLIENT_SUGGEST_MERGE_SOURCES QQQ
+#define PYSVN_HAS_CLIENT_SWITCH2
+#define PYSVN_HAS_CLIENT_UPDATE3
+#define PYSVN_HAS_SVN_INFO_T__CHANGELIST QQQ
+#define PYSVN_HAS_SVN_INFO_T__SIZES QQQ
+#define PYSVN_HAS_SVN_WC_NOTIFY_ACTION_T__1_5 QQQ
+#define PYSVN_HAS_SVN_WC_CONFLICT_CHOICE_T QQQ
+#endif
 
-#ifdef PYSVN_HAS_CLIENT_STATUS2
+
+#if defined( PYSVN_HAS_CLIENT_STATUS2 )
 typedef svn_wc_status2_t pysvn_wc_status_t;
 #else
 typedef svn_wc_status_t pysvn_wc_status_t;
 #endif
 
-#ifdef PYSVN_HAS_SVN_COMMIT_INFO_T
+#if defined( PYSVN_HAS_SVN_COMMIT_INFO_T )
 typedef svn_commit_info_t pysvn_commit_info_t;
 #else
 typedef svn_client_commit_info_t pysvn_commit_info_t;
@@ -181,7 +231,7 @@ public:
     // this method will be called to notify about
     // the progress of an ongoing action
     //
-#ifdef PYSVN_HAS_CONTEXT_NOTIFY2
+#if defined( PYSVN_HAS_CONTEXT_NOTIFY2 )
     virtual void contextNotify2
         (
         const svn_wc_notify_t *notify,
@@ -201,7 +251,7 @@ public:
 #endif
 
 
-#ifdef PYSVN_HAS_CONTEXT_PROGRESS
+#if defined( PYSVN_HAS_CONTEXT_PROGRESS )
     virtual void contextProgress
         (
         apr_off_t progress,
@@ -268,7 +318,7 @@ public:
 
 private:
 #if 0
-#ifdef PYSVN_HAS_CONTEXT_LOG_MSG2
+#if defined( PYSVN_HAS_CONTEXT_LOG_MSG2 )
     extern "C" static svn_error_t *handlerLogMsg2
         (
         const char **log_msg,
@@ -288,7 +338,7 @@ private:
         );
 #endif
 
-#ifdef PYSVN_HAS_CONTEXT_PROGRESS
+#if defined( PYSVN_HAS_CONTEXT_PROGRESS )
     extern "C" static void handlerProgress
         (
         apr_off_t progress,
@@ -298,7 +348,7 @@ private:
         );
 #endif
 
-#ifdef PYSVN_HAS_CONTEXT_NOTIFY2
+#if defined( PYSVN_HAS_CONTEXT_NOTIFY2 )
     extern "C" static void handlerNotify2
         (
         void * baton,

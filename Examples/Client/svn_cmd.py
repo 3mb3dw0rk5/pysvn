@@ -107,11 +107,23 @@ pysvn.wc_notify_action.update_external: 'X',
 pysvn.wc_notify_action.update_update: 'U',
 pysvn.wc_notify_action.annotate_revision: 'A',
 }
+
+# new in svn 1.4?
 if hasattr( pysvn.wc_notify_action, 'locked' ):
     wc_notify_action_map[ pysvn.wc_notify_action.locked ] = 'locked'
     wc_notify_action_map[ pysvn.wc_notify_action.unlocked ] = 'unlocked'
     wc_notify_action_map[ pysvn.wc_notify_action.failed_lock ] = 'failed_lock'
     wc_notify_action_map[ pysvn.wc_notify_action.failed_unlock ] = 'failed_unlock'
+
+# new in svn 1.5
+if hasattr( pysvn.wc_notify_action, 'exists' ):
+    wc_notify_action_map[ pysvn.wc_notify_action.exists ] = 'exists'
+    wc_notify_action_map[ pysvn.wc_notify_action.changelist_set ] = 'changelist_set'
+    wc_notify_action_map[ pysvn.wc_notify_action.changelist_clear ] = 'changelist_clear'
+    wc_notify_action_map[ pysvn.wc_notify_action.changelist_failed ] = 'changelist_failed'
+    wc_notify_action_map[ pysvn.wc_notify_action.changelist_moved ] = 'changelist_moved'
+    wc_notify_action_map[ pysvn.wc_notify_action.merge_begin ] = 'merge_begin'
+    wc_notify_action_map[ pysvn.wc_notify_action.update_replace ] = 'update_replace'
 
 
 class SvnCommand:
@@ -223,6 +235,7 @@ class SvnCommand:
             self.printNotifyMessages()
             print e.args[0]
             return 1
+
         except CommandError, e:
             self.printNotifyMessages()
             print e.reason()
@@ -270,12 +283,12 @@ class SvnCommand:
         self.printNotifyMessages()
 
         for line in all_lines:
-            print '%d| r%d | %s | %s | %s' % \
-                (line['number'],
-                line['revision'].number,
-                line['author'],
-                line['date'],
-                line['line'])
+            print ('%d| r%d | %s | %s | %s' %
+                (line['number']
+                ,line['revision'].number
+                ,line['author']
+                ,line['date']
+                ,line['line']))
     cmd_ann = cmd_annotate
 
     def cmd_cat( self, args ):
@@ -522,25 +535,29 @@ class SvnCommand:
         verbose = args.getBooleanOption( '--verbose', True )
         positional_args = args.getPositionalArgs( 1, 1 )
         all_logs = self.client.log( positional_args[0],
-                    revision_start=start_revision,
-                    revision_end=end_revision,
-                    discover_changed_paths=verbose )
+                                    revision_start=start_revision,
+                                    revision_end=end_revision,
+                                    discover_changed_paths=verbose )
 
         for log in all_logs:
             print '-'*60
-            print 'rev %d: %s | %s | %d lines' % \
-                (log.revision.number, log.author, fmtDateTime( log.date ),
-                len(log.message.split('\n')))
+            print ('rev %d: %s | %s | %d lines' %
+                (log.revision.number
+                ,log.author
+                ,fmtDateTime( log.date )
+                ,len( log.message.split('\n') )))
 
-            if len(log.changed_paths) > 0:
+            if len( log.changed_paths ) > 0:
                 print 'Changed paths:'
                 for change_info in log.changed_paths:
                     if change_info.copyfrom_path is None:
                         print '  %s %s' % (change_info.action, change_info.path)
                     else:
-                        print '  %s %s (from %s:%d)' % \
-                            (change_info.action, change_info.path,
-                            change_info.copyfrom_path, change_info.copyfrom_revision.number)
+                        print ('  %s %s (from %s:%d)' %
+                            (change_info.action
+                            ,change_info.path
+                            ,change_info.copyfrom_path
+                            ,change_info.copyfrom_revision.number))
 
             print log.message
 
@@ -795,7 +812,9 @@ class SvnCommand:
                 lock_state = 'O'
 
             if file.entry is not None and detailed:
-                print '%s%s %s %6d %6d %-14s %s' % (state, lock_state,
+                print '%s%s %s %6d %6d %-14s %s' % (
+                    state,
+                    lock_state,
                     odd_status,
                     file.entry.revision.number,
                     file.entry.commit_revision.number,

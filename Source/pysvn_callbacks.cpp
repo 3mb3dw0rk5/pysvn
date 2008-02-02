@@ -1,6 +1,6 @@
 //
 // ====================================================================
-// Copyright (c) 2003-2006 Barry A Scott.  All rights reserved.
+// Copyright (c) 2003-2007 Barry A Scott.  All rights reserved.
 //
 // This software is licensed as described in the file LICENSE.txt,
 // which you should have received as part of this distribution.
@@ -10,7 +10,7 @@
 //
 //  pysvn_callbacks.cpp
 //
-#ifdef _MSC_VER
+#if defined( _MSC_VER )
 // disable warning C4786: symbol greater than 255 character,
 // nessesary to ignore as <map> causes lots of warning
 #pragma warning(disable: 4786)
@@ -24,7 +24,7 @@ pysvn_context::pysvn_context( const std::string &config_dir )
 : SvnContext( config_dir )
 , m_pyfn_GetLogin()
 , m_pyfn_Notify()
-#ifdef PYSVN_HAS_CONTEXT_PROGRESS
+#if defined( PYSVN_HAS_CONTEXT_PROGRESS )
 , m_pyfn_Progress()
 #endif
 , m_pyfn_GetLogMessage()
@@ -141,7 +141,7 @@ bool pysvn_context::contextGetLogin
     return false;
 }
 
-#ifdef PYSVN_HAS_CONTEXT_PROGRESS
+#if defined( PYSVN_HAS_CONTEXT_PROGRESS )
 void pysvn_context::contextProgress
     (
     apr_off_t progress,
@@ -182,7 +182,7 @@ void pysvn_context::contextProgress
 // the progress of an ongoing action
 //
 
-#ifdef PYSVN_HAS_CONTEXT_NOTIFY2
+#if defined( PYSVN_HAS_CONTEXT_NOTIFY2 )
 void pysvn_context::contextNotify2
     (
     const svn_wc_notify_t *notify,

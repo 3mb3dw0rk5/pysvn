@@ -128,6 +128,7 @@ class XhtmlParser:
 
             self.__extractText( None, docs, node )
 
+        debug( 'docsFromNode adding %s' % name )
         self.all_docs[ name ] = docs
 
     def __extractText( self, parent, docs, node ):
