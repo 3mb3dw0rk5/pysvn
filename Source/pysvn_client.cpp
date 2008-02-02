@@ -886,8 +886,6 @@ Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a
             std_changelist_name = args.getString( name_changelist_name );
             changelist_name = std_changelist_name.c_str();
         }
-#else
-        bool recurse = args.getBoolean( name_recurse, true );
 #endif
 
         try
@@ -2393,7 +2391,7 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
 
 #if defined( PYSVN_HAS_CLIENT_DIFF4 )
     svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity );
-#elif
+#else
     bool recurse = args.getBoolean( name_recurse, true );
 #endif
 
@@ -4218,7 +4216,7 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
     SvnPool pool( m_context );
     apr_hash_t *props = NULL;
 
-#if defined( PYSVN_HAS_CLIENT_PROPGET2 )
+#if defined( PYSVN_HAS_CLIENT_PROPGET3 )
     svn_revnum_t actual_revnum = 0;
 #endif
 
@@ -4425,6 +4423,11 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
                 throw Py::AttributeError( "cannot mix URL and PATH in name_path" );
             }
 
+#if defined( PYSVN_HAS_CLIENT_PROPLIST3 )
+        ProplistReceiveBaton proplist_baton( &permission, pool );
+#else
+        apr_array_header_t *props = NULL;
+#endif
         try
         {
             const char *norm_path_c_str= norm_path.c_str();
@@ -4433,8 +4436,6 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
             PythonAllowThreads permission( m_context );
 
 #if defined( PYSVN_HAS_CLIENT_PROPLIST3 )
-            ProplistReceiveBaton proplist_baton( &permission, pool );
-
             svn_error_t *error = svn_client_proplist3
                 (
                 norm_path_c_str,
@@ -4447,7 +4448,6 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
                 pool
                 );
 #elif defined( PYSVN_HAS_CLIENT_PROPLIST2 )
-            apr_array_header_t *props = NULL;
             svn_error_t *error = svn_client_proplist2
                 (
                 &props,
@@ -4459,7 +4459,6 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
                 pool
                 );
 #else
-            apr_array_header_t *props = NULL;
             svn_error_t *error = svn_client_proplist
                 (
                 &props,
@@ -4472,12 +4471,6 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 #endif
             if( error != NULL )
                 throw SvnException( error );
-
-#if defined( PYSVN_HAS_CLIENT_PROPLIST3 )
-            list_of_proplists = proplist_baton.m_prop_list;
-#else
-            proplistToObject( list_of_proplists, props, pool );
-#endif
         }
         catch( SvnException &e )
         {
@@ -4487,6 +4480,11 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
             throw_client_error( e );
         }
 
+#if defined( PYSVN_HAS_CLIENT_PROPLIST3 )
+        list_of_proplists.append( proplist_baton.m_prop_list );
+#else
+        proplistToObject( list_of_proplists, props, pool );
+#endif
     }
     
     return list_of_proplists;
@@ -6098,7 +6096,7 @@ void pysvn_client::init_type()
     add_keyword_method("merge_peg2", &pysvn_client::cmd_merge_peg2, pysvn_client_merge_peg2_doc );
 #endif
     add_keyword_method("mkdir", &pysvn_client::cmd_mkdir, pysvn_client_mkdir_doc );
-#if defined( PYSVN_HAS_CLIENT_MOVE4 )
+#if defined( PYSVN_HAS_CLIENT_MOVE5 )
     add_keyword_method("move2", &pysvn_client::cmd_move2, pysvn_client_move2_doc );
 #endif
     add_keyword_method("move", &pysvn_client::cmd_move, pysvn_client_move_doc );
