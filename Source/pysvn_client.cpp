@@ -4216,7 +4216,7 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
     SvnPool pool( m_context );
     apr_hash_t *props = NULL;
 
-#if defined( PYSVN_HAS_CLIENT_PROPGET3 )
+#if defined( PYSVN_HAS_CLIENT_PROPGET4 )
     svn_revnum_t actual_revnum = 0;
 #endif
 
@@ -4242,6 +4242,7 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
             pool
             );
 #elif defined( PYSVN_HAS_CLIENT_PROPGET3 )
+        // when was propget3 added to SVN? */
         svn_error_t *error = svn_client_propget3
             (
             &props,
@@ -4296,10 +4297,10 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
 class ProplistReceiveBaton
 {
 public:
-    ProplistReceiveBaton( PythonAllowThreads *permission, SvnPool &pool )
+    ProplistReceiveBaton( PythonAllowThreads *permission, Py::List prop_list, SvnPool &pool )
         : m_permission( permission )
         , m_pool( pool )
-        , m_prop_list()
+        , m_prop_list( prop_list )
         {}
     ~ProplistReceiveBaton()
         {}
@@ -4423,11 +4424,6 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
                 throw Py::AttributeError( "cannot mix URL and PATH in name_path" );
             }
 
-#if defined( PYSVN_HAS_CLIENT_PROPLIST3 )
-        ProplistReceiveBaton proplist_baton( &permission, pool );
-#else
-        apr_array_header_t *props = NULL;
-#endif
         try
         {
             const char *norm_path_c_str= norm_path.c_str();
@@ -4436,6 +4432,7 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
             PythonAllowThreads permission( m_context );
 
 #if defined( PYSVN_HAS_CLIENT_PROPLIST3 )
+            ProplistReceiveBaton proplist_baton( &permission, list_of_proplists, pool );
             svn_error_t *error = svn_client_proplist3
                 (
                 norm_path_c_str,
@@ -4448,6 +4445,7 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
                 pool
                 );
 #elif defined( PYSVN_HAS_CLIENT_PROPLIST2 )
+            apr_array_header_t *props = NULL;
             svn_error_t *error = svn_client_proplist2
                 (
                 &props,
@@ -4459,6 +4457,7 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
                 pool
                 );
 #else
+            apr_array_header_t *props = NULL;
             svn_error_t *error = svn_client_proplist
                 (
                 &props,
@@ -4471,6 +4470,12 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 #endif
             if( error != NULL )
                 throw SvnException( error );
+
+            permission.allowThisThread();
+
+#if !defined( PYSVN_HAS_CLIENT_PROPLIST3 )
+            proplistToObject( list_of_proplists, props, pool );
+#endif
         }
         catch( SvnException &e )
         {
@@ -4479,12 +4484,6 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 
             throw_client_error( e );
         }
-
-#if defined( PYSVN_HAS_CLIENT_PROPLIST3 )
-        list_of_proplists.append( proplist_baton.m_prop_list );
-#else
-        proplistToObject( list_of_proplists, props, pool );
-#endif
     }
     
     return list_of_proplists;
