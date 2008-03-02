@@ -284,19 +284,26 @@ extern "C" svn_error_t *handlerSslClientCertPrompt
     (
     svn_auth_cred_ssl_client_cert_t **cred, 
     void *baton, 
+    const char *a_realm,
+    svn_boolean_t a_may_save,
     apr_pool_t *pool
     )
 {
     SvnContext *context = reinterpret_cast<SvnContext *>( baton );
 
+    if( a_realm == NULL )
+        a_realm = "";
+    std::string realm( a_realm );
+    bool may_save = a_may_save != 0;
     std::string cert_file;
-    if( !context->contextSslClientCertPrompt( cert_file ) )
+    if( !context->contextSslClientCertPrompt( cert_file, realm, may_save ) )
         return svn_error_create (SVN_ERR_CANCELLED, NULL, "");
 
     svn_auth_cred_ssl_client_cert_t *new_cred = (svn_auth_cred_ssl_client_cert_t*)
         apr_palloc (pool, sizeof (svn_auth_cred_ssl_client_cert_t));
 
     new_cred->cert_file = svn_string_ncreate( cert_file.data(), cert_file.length(), pool )->data;
+    new_cred->may_save = may_save;
 
     *cred = new_cred;
 
@@ -308,7 +315,7 @@ extern "C" svn_error_t *handlerSslClientCertPwPrompt
     svn_auth_cred_ssl_client_cert_pw_t **cred, 
     void *baton, 
     const char *a_realm,
-    svn_boolean_t maySave,
+    svn_boolean_t a_may_save,
     apr_pool_t *pool
     )
 {
@@ -319,7 +326,7 @@ extern "C" svn_error_t *handlerSslClientCertPwPrompt
     std::string realm( a_realm );
 
     std::string password;
-    bool may_save = maySave != 0;
+    bool may_save = a_may_save != 0;
     if( !context->contextSslClientCertPwPrompt( password, realm, may_save ) )
         return svn_error_create( SVN_ERR_CANCELLED, NULL, "" );
 
@@ -327,14 +334,12 @@ extern "C" svn_error_t *handlerSslClientCertPwPrompt
         apr_palloc (pool, sizeof (svn_auth_cred_ssl_client_cert_pw_t));
 
     new_cred->password = svn_string_ncreate( password.data(), password.length(), pool )->data;
-
     new_cred->may_save = may_save;
+
     *cred = new_cred;
 
     return SVN_NO_ERROR;
 }
-
-
 
 SvnContext::SvnContext( const std::string &config_dir_str )
 : m_pool( NULL )
@@ -389,6 +394,9 @@ SvnContext::SvnContext( const std::string &config_dir_str )
     svn_auth_get_ssl_server_trust_prompt_provider( &provider, handlerSslServerTrustPrompt, this, m_pool );
     *(svn_auth_provider_object_t **)apr_array_push (providers) = provider;
 
+    svn_auth_get_ssl_client_cert_prompt_provider( &provider, handlerSslClientCertPrompt, this, 3, m_pool );
+    *(svn_auth_provider_object_t **)apr_array_push (providers) = provider;
+
     svn_auth_get_ssl_client_cert_pw_prompt_provider( &provider, handlerSslClientCertPwPrompt, this, 3, m_pool );
     *(svn_auth_provider_object_t **)apr_array_push (providers) = provider;
 #else
@@ -419,6 +427,9 @@ SvnContext::SvnContext( const std::string &config_dir_str )
     *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
 
     svn_client_get_ssl_server_trust_prompt_provider( &provider, handlerSslServerTrustPrompt, this, m_pool );
+    *(svn_auth_provider_object_t **)apr_array_push (providers) = provider;
+
+    svn_client_get_ssl_client_cert_prompt_provider( &provider, handlerSslClientCertPrompt, this, 3, m_pool );
     *(svn_auth_provider_object_t **)apr_array_push (providers) = provider;
 
     svn_client_get_ssl_client_cert_pw_prompt_provider( &provider, handlerSslClientCertPwPrompt, this, 3, m_pool );

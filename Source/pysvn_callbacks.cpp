@@ -442,7 +442,7 @@ bool pysvn_context::contextSslServerTrustPrompt
 // this method is called to retrieve client side
 // information
 //
-bool pysvn_context::contextSslClientCertPrompt( std::string & certFile )
+bool pysvn_context::contextSslClientCertPrompt( std::string &_cert_file, const std::string &_realm, bool &_may_save )
 {
     PythonDisallowThreads callback_permission( m_permission );
 
@@ -453,10 +453,31 @@ bool pysvn_context::contextSslClientCertPrompt( std::string & certFile )
         return false;
     }
 
-    Py::Tuple args( 0 );
+    Py::Callable callback( m_pyfn_SslClientCertPrompt );
+
+    Py::Tuple args( 2 );
+    args[0] = Py::String( _realm );
+    args[1] = Py::Int( _may_save );
+
+    Py::Tuple results;
+    Py::Int retcode;
+    Py::String cert_file;
+    Py::Int may_save_out;
+
     try
     {
-        return get_string( m_pyfn_SslClientCertPrompt, args, certFile );
+        results = callback.apply( args );
+        retcode = results[0];
+        cert_file = results[1];
+        may_save_out = results[2];
+
+        if( long( retcode ) != 0 )
+        {
+            _cert_file = cert_file.as_std_string();
+            _may_save = long( may_save_out ) != 0;
+
+            return true;
+        }
     }
     catch( Py::Exception &e )
     {
@@ -464,6 +485,8 @@ bool pysvn_context::contextSslClientCertPrompt( std::string & certFile )
         e.clear();
 
         m_error_message = "unhandled exception in callback_ssl_client_cert_prompt";
+
+        return false;
     }
 
     return false;

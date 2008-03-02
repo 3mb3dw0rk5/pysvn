@@ -300,7 +300,7 @@ public:
     //
     virtual bool contextSslClientCertPrompt
         (
-        std::string &certFile
+        std::string &cert_file, const std::string &realm, bool &may_save
         ) = 0;
 
     //
@@ -398,6 +398,8 @@ private:
         (
         svn_auth_cred_ssl_client_cert_t **cred, 
         void *baton, 
+        const char *realm,
+        svn_boolean_t may_save,
         apr_pool_t *pool
         );
 

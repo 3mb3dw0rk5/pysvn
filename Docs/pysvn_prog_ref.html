@@ -342,8 +342,8 @@ prevent saving the password.</li>
 <pre>
 import pysvn
 
-def ssl_client_cert_prompt():
-    return retcode, certfile
+def ssl_client_cert_prompt( realm, may_save ):
+    return retcode, certfile, may_save
 
 client = pysvn.Client()
 client.callback_ssl_client_cert_prompt = ssl_client_cert_prompt
@@ -353,7 +353,7 @@ client.callback_ssl_client_cert_prompt = ssl_client_cert_prompt
 needs a client certificate.
 </p>
 <p>pysvn expect the callback_ssl_client_cert_prompt to return a
-tuple of two values (retcode, certfile).
+tuple of three values (retcode, certfile, may_save).
 </p>
 <ul>
 <li>retcode - boolean, False if no certificate is available.

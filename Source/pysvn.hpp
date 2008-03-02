@@ -152,7 +152,7 @@ private:    // methods
     // this method is called to retrieve client side
     // information
     //
-    bool contextSslClientCertPrompt( std::string & certFile );
+    bool contextSslClientCertPrompt( std::string &certFile, const std::string &realm, bool &may_save );
 
     //
     // this method is called to retrieve the password
