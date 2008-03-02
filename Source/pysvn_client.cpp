@@ -4410,13 +4410,17 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
             if( is_svn_url( path ) )
             {
                 revision = revision_url;
+#if defined( PYSVN_HAS_CLIENT_PROPLIST2 )
                 peg_revision = peg_revision_url;
+#endif
                 is_url = true;
             }
             else
             {
                 revision = revision_file;
+#if defined( PYSVN_HAS_CLIENT_PROPLIST2 )
                 peg_revision = peg_revision_file;
+#endif
             }
         else
             if( is_svn_url( path ) && !is_url )
