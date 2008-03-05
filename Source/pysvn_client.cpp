@@ -5433,7 +5433,7 @@ Py::Object pysvn_client::cmd_update( const Py::Tuple &a_args, const Py::Dict &a_
     bool recurse = args.getBoolean( name_recurse, true );
 #endif
 #if defined( PYSVN_HAS_CLIENT_UPDATE2 )
-    bool ignore_externals = args.getBoolean( name_recurse, false );
+    bool ignore_externals = args.getBoolean( name_ignore_externals, false );
 #endif
     apr_array_header_t *result_revs = NULL;
 
