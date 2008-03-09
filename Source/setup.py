@@ -588,7 +588,10 @@ LDLIBS= \
                     'PyCXX include',
                     '--pycxx-dir=',
                     None,
-                    [   '../Import/pycxx-5.4.0'],
+                    [
+                        '../Import/pycxx-5.4.0',
+                        distutils.sysconfig.get_python_inc() # typical Linux
+                    ],
                     'CXX/Version.hxx' )
 
     def find_pycxx_src( self, argv, pycxx_dir ):
@@ -596,7 +599,10 @@ LDLIBS= \
                     'PyCXX Source',
                     '--pycxx-src-dir=',
                     None,
-                    [  '%s/Src' % pycxx_dir],
+                    [
+                        '%s/Src' % pycxx_dir,
+                        '/usr/share/python%s/CXX' % distutils.sysconfig.get_python_version() # typical Linux
+                    ],
                     'cxxsupport.cxx' )
 
     def find_svn_inc( self, argv ):
@@ -625,7 +631,7 @@ LDLIBS= \
                         '/usr/lib',                             # typical Linux
                         '/usr/local/lib64',                     # typical 64bit Linux
                         '/usr/local/lib',                       # typical *BSD
-                        '/usr/pkg/lib',                         # netbsb
+                        '/usr/pkg/lib',                         # netbsd
                     ],
                     self.get_lib_name_for_platform( 'libsvn_client-1' ) )
         # if we are using the Fink SVN then remember this
@@ -647,7 +653,7 @@ LDLIBS= \
             except SetupError:
                 pass
 
-        for apr_ver in ['apr-1', 'apr-0']:
+        for apr_ver in ['apr-1.0', 'apr-1', 'apr-0']:
             try:
                 return self.find_dir( argv,
                     'APR include',
