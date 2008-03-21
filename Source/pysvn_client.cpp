@@ -49,8 +49,7 @@ static const char name_callback_ssl_client_cert_prompt[] = "callback_ssl_client_
 static const char name_callback_ssl_server_prompt[] = "callback_ssl_server_prompt";
 static const char name_callback_ssl_server_trust_prompt[] = "callback_ssl_server_trust_prompt";
 static const char name_changed_paths[] = "changed_paths";
-static const char name_changelist_name[] = "changelist_name";
-static const char name_changelist_names[] = "changelist_names";
+static const char name_changelists[] = "changelists";
 static const char name_comment[] = "comment";
 static const char name_conflict_choice[] = "conflict_choice";
 static const char name_copy_as_child[] = "copy_as_child";
@@ -847,7 +846,7 @@ Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a
 #if defined( PYSVN_HAS_CLIENT_COMMIT4 )
     { false, name_depth },
     { false, name_keep_changelist },
-    { false, name_changelist_names },
+    { false, name_changelists },
 #endif
     { false, NULL }
     };
@@ -882,9 +881,9 @@ Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a
         bool keep_changelist = args.getBoolean( name_keep_changelist, false );
         apr_array_header_t *changelists = NULL;
 
-        if( args.hasArg( name_changelist_names ) )
+        if( args.hasArg( name_changelists ) )
         {
-            changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelist_names ), pool );
+            changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
         }
 #endif
 
@@ -1619,7 +1618,7 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
 #if defined( PYSVN_HAS_CLIENT_DIFF_PEG4 )
     { false, name_depth },
     { false, name_relative_to_dir },
-    { false, name_changelist_names },
+    { false, name_changelists },
 #endif
     { false, NULL }
     };
@@ -1646,9 +1645,9 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
 
     apr_array_header_t *changelists = NULL;
 
-    if( args.hasArg( name_changelist_names ) )
+    if( args.hasArg( name_changelists ) )
     {
-        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelist_names ), pool );
+        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
     }
 #else
     bool recurse = args.getBoolean( name_recurse, true );
@@ -1853,7 +1852,7 @@ Py::Object pysvn_client::cmd_diff_summarize( const Py::Tuple &a_args, const Py::
     { false, name_ignore_ancestry },
 #if defined( PYSVN_HAS_CLIENT_DIFF_SUMMARIZE2 )
     { false, name_depth },
-    { false, name_changelist_names },
+    { false, name_changelists },
 #endif
     { false, NULL }
     };
@@ -1872,9 +1871,9 @@ Py::Object pysvn_client::cmd_diff_summarize( const Py::Tuple &a_args, const Py::
 
     apr_array_header_t *changelists = NULL;
 
-    if( args.hasArg( name_changelist_names ) )
+    if( args.hasArg( name_changelists ) )
     {
-        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelist_names ), pool );
+        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
     }
 #else
     bool recurse = args.getBoolean( name_recurse, true );
@@ -1952,7 +1951,7 @@ Py::Object pysvn_client::cmd_diff_summarize_peg( const Py::Tuple &a_args, const 
     { false, name_ignore_ancestry },
 #if defined( PYSVN_HAS_CLIENT_DIFF_SUMMARIZE_PEG2 )
     { false, name_depth },
-    { false, name_changelist_names },
+    { false, name_changelists },
 #endif
     { false, NULL }
     };
@@ -1970,9 +1969,9 @@ Py::Object pysvn_client::cmd_diff_summarize_peg( const Py::Tuple &a_args, const 
     svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity );
     apr_array_header_t *changelists = NULL;
 
-    if( args.hasArg( name_changelist_names ) )
+    if( args.hasArg( name_changelists ) )
     {
-        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelist_names ), pool );
+        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
     }
 #else
     bool recurse = args.getBoolean( name_recurse, true );
@@ -2407,7 +2406,7 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
     { false, name_recurse },
 #if defined( PYSVN_HAS_CLIENT_INFO2 )
     { false, name_depth },
-    { false, name_changelist_names },
+    { false, name_changelists },
 #endif
     { false, NULL }
     };
@@ -2428,9 +2427,9 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
 #if defined( PYSVN_HAS_CLIENT_INFO2 )
     apr_array_header_t *changelists = NULL;
 
-    if( args.hasArg( name_changelist_names ) )
+    if( args.hasArg( name_changelists ) )
     {
-        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelist_names ), pool );
+        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
     }
 
     svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity );
@@ -4119,7 +4118,7 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a
 #if defined( PYSVN_HAS_CLIENT_PROPSET3 )
     { false, name_depth },
     { false, name_base_revision_for_url },
-    { false, name_changelist_names },
+    { false, name_changelists },
 #endif
     { false, NULL }
     };
@@ -4142,9 +4141,9 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a
 
     apr_array_header_t *changelists = NULL;
 
-    if( args.hasArg( name_changelist_names ) )
+    if( args.hasArg( name_changelists ) )
     {
-        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelist_names ), pool );
+        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
     }
 
     svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files );
@@ -4233,7 +4232,7 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
 #endif
 #if defined( PYSVN_HAS_CLIENT_PROPGET3 )
     { false, name_depth },
-    { false, name_changelist_names },
+    { false, name_changelists },
 #endif
     { false, NULL }
     };
@@ -4248,9 +4247,9 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
 #if defined( PYSVN_HAS_CLIENT_PROPGET3 )
     apr_array_header_t *changelists = NULL;
 
-    if( args.hasArg( name_changelist_names ) )
+    if( args.hasArg( name_changelists ) )
     {
-        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelist_names ), pool );
+        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
     }
 
     svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files );
@@ -4395,7 +4394,7 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 #endif
 #if defined( PYSVN_HAS_CLIENT_PROPLIST3 )
     { false, name_depth },
-    { false, name_changelist_names },
+    { false, name_changelists },
 #endif
     { false, NULL }
     };
@@ -4409,9 +4408,9 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 #if defined( PYSVN_HAS_CLIENT_PROPLIST3 )
     apr_array_header_t *changelists = NULL;
 
-    if( args.hasArg( name_changelist_names ) )
+    if( args.hasArg( name_changelists ) )
     {
-        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelist_names ), pool );
+        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
     }
 
     svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files );
@@ -4562,7 +4561,7 @@ Py::Object pysvn_client::cmd_propset( const Py::Tuple &a_args, const Py::Dict &a
 #if defined( PYSVN_HAS_CLIENT_PROPSET3 )
     { false, name_depth },
     { false, name_base_revision_for_url },
-    { false, name_changelist_names },
+    { false, name_changelists },
 #endif
     { false, NULL }
     };
@@ -4584,9 +4583,9 @@ Py::Object pysvn_client::cmd_propset( const Py::Tuple &a_args, const Py::Dict &a
 #if defined( PYSVN_HAS_CLIENT_PROPSET3 )
     apr_array_header_t *changelists = NULL;
 
-    if( args.hasArg( name_changelist_names ) )
+    if( args.hasArg( name_changelists ) )
     {
-        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelist_names ), pool );
+        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
     }
 
     svn_revnum_t base_revision_for_url = args.getInteger( name_base_revision_for_url, 0 );
@@ -4862,7 +4861,7 @@ Py::Object pysvn_client::cmd_revert( const Py::Tuple &a_args, const Py::Dict &a_
     { false, name_recurse },
 #if defined( PYSVN_HAS_CLIENT_REVERT2 )
     { false, name_depth },
-    { false, name_changelist_names },
+    { false, name_changelists },
 #endif
     { false, NULL }
     };
@@ -4879,9 +4878,9 @@ Py::Object pysvn_client::cmd_revert( const Py::Tuple &a_args, const Py::Dict &a_
 #if defined( PYSVN_HAS_CLIENT_REVERT2 )
         apr_array_header_t *changelists = NULL;
 
-        if( args.hasArg( name_changelist_names ) )
+        if( args.hasArg( name_changelists ) )
         {
-            changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelist_names ), pool );
+            changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
         }
         svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files );
 #else
@@ -5224,7 +5223,7 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
 #endif
 #if defined( PYSVN_HAS_CLIENT_STATUS3 )
     { false, name_depth },
-    { false, name_changelist_names },
+    { false, name_changelists },
 #endif
     { false, NULL }
     };
@@ -5238,9 +5237,9 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
 #if defined( PYSVN_HAS_CLIENT_STATUS3 )
     apr_array_header_t *changelists = NULL;
 
-    if( args.hasArg( name_changelist_names ) )
+    if( args.hasArg( name_changelists ) )
     {
-        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelist_names ), pool );
+        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
     }
 
     svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity );
