@@ -1,6 +1,6 @@
 //
 // ====================================================================
-// Copyright (c) 2003-2007 Barry A Scott.  All rights reserved.
+// Copyright (c) 2003-2008 Barry A Scott.  All rights reserved.
 //
 // This software is licensed as described in the file LICENSE.txt,
 // which you should have received as part of this distribution.
@@ -327,5 +327,200 @@ template <> EnumString< svn_wc_conflict_choice_t >::EnumString()
   add( svn_wc_conflict_choose_theirs_conflict, "theirs_conflict" ); // user chooses incoming (for conflicted hunks)
   add( svn_wc_conflict_choose_mine_conflict, "mine_conflict" );   // user chooses own (for conflicted hunks)
   add( svn_wc_conflict_choose_merged, "merged" ); // user chooses the merged version
+}
+#endif
+
+//--------------------------------------------------------------------------------
+template <> void pysvn_enum< svn_opt_revision_kind >::init_type(void)
+{
+    behaviors().name("opt_revision_kind");
+    behaviors().doc("opt_revision_kind enumeration");
+    behaviors().supportGetattr();
+}
+
+template <> void pysvn_enum_value< svn_opt_revision_kind >::init_type(void)
+{
+    behaviors().name("opt_revision_kind");
+    behaviors().doc("opt_revision_kind value");
+    behaviors().supportCompare();
+    behaviors().supportRepr();
+    behaviors().supportStr();
+    behaviors().supportHash();
+}
+
+template <> void pysvn_enum< svn_wc_notify_action_t >::init_type(void)
+{
+    behaviors().name("wc_notify_action");
+    behaviors().doc("wc_notify_action enumeration");
+    behaviors().supportGetattr();
+}
+
+template <> void pysvn_enum_value< svn_wc_notify_action_t >::init_type(void)
+{
+    behaviors().name("wc_notify_action");
+    behaviors().doc("wc_notify_action value");
+    behaviors().supportCompare();
+    behaviors().supportRepr();
+    behaviors().supportStr();
+    behaviors().supportHash();
+}
+
+template <> void pysvn_enum< svn_wc_status_kind >::init_type(void)
+{
+    behaviors().name("wc_status_kind");
+    behaviors().doc("wc_status_kind enumeration");
+    behaviors().supportGetattr();
+}
+
+template <> void pysvn_enum_value< svn_wc_status_kind >::init_type(void)
+{
+    behaviors().name("wc_status_kind");
+    behaviors().doc("wc_status_kind value");
+    behaviors().supportCompare();
+    behaviors().supportRepr();
+    behaviors().supportStr();
+    behaviors().supportHash();
+}
+
+template <> void pysvn_enum< svn_wc_schedule_t >::init_type(void)
+{
+    behaviors().name("wc_schedule");
+    behaviors().doc("wc_schedule enumeration");
+    behaviors().supportGetattr();
+}
+
+template <> void pysvn_enum_value< svn_wc_schedule_t >::init_type(void)
+{
+    behaviors().name("wc_schedule");
+    behaviors().doc("wc_schedule value");
+    behaviors().supportCompare();
+    behaviors().supportRepr();
+    behaviors().supportStr();
+    behaviors().supportHash();
+}
+
+template <> void pysvn_enum< svn_wc_merge_outcome_t >::init_type(void)
+{
+    behaviors().name("wc_merge_outcome");
+    behaviors().doc("wc_merge_outcome enumeration");
+    behaviors().supportGetattr();
+}
+
+template <> void pysvn_enum_value< svn_wc_merge_outcome_t >::init_type(void)
+{
+    behaviors().name("wc_merge_outcome");
+    behaviors().doc("wc_merge_outcome value");
+    behaviors().supportCompare();
+    behaviors().supportRepr();
+    behaviors().supportStr();
+    behaviors().supportHash();
+}
+
+template <> void pysvn_enum< svn_wc_notify_state_t >::init_type(void)
+{
+    behaviors().name("wc_notify_state");
+    behaviors().doc("wc_notify_state enumeration");
+    behaviors().supportGetattr();
+}
+
+template <> void pysvn_enum_value< svn_wc_notify_state_t >::init_type(void)
+{
+    behaviors().name("wc_notify_state");
+    behaviors().doc("wc_notify_state value");
+    behaviors().supportCompare();
+    behaviors().supportRepr();
+    behaviors().supportStr();
+    behaviors().supportHash();
+}
+
+template <> void pysvn_enum< svn_node_kind_t >::init_type(void)
+{
+    behaviors().name("node_kind");
+    behaviors().doc("node_kind enumeration");
+    behaviors().supportGetattr();
+}
+
+template <> void pysvn_enum_value< svn_node_kind_t >::init_type(void)
+{
+    behaviors().name("node_kind");
+    behaviors().doc("node_kind value");
+    behaviors().supportCompare();
+    behaviors().supportRepr();
+    behaviors().supportStr();
+    behaviors().supportHash();
+}
+
+#if defined( PYSVN_HAS_DIFF_FILE_IGNORE_SPACE )
+template <> void pysvn_enum< svn_diff_file_ignore_space_t >::init_type(void)
+{
+    behaviors().name("diff_file_ignore_space");
+    behaviors().doc("diff_file_ignore_space enumeration");
+    behaviors().supportGetattr();
+}
+
+template <> void pysvn_enum_value< svn_diff_file_ignore_space_t >::init_type(void)
+{
+    behaviors().name("diff_file_ignore_space");
+    behaviors().doc("diff_file_ignore_space value");
+    behaviors().supportCompare();
+    behaviors().supportRepr();
+    behaviors().supportStr();
+    behaviors().supportHash();
+}
+#endif
+
+#if defined( PYSVN_HAS_CLIENT_DIFF_SUMMARIZE )
+template <> void pysvn_enum< svn_client_diff_summarize_kind_t >::init_type(void)
+{
+    behaviors().name("client_diff_summarize_kind");
+    behaviors().doc("client_diff_summarize_kind enumeration");
+    behaviors().supportGetattr();
+}
+
+template <> void pysvn_enum_value< svn_client_diff_summarize_kind_t >::init_type(void)
+{
+    behaviors().name("client_diff_summarize_kind");
+    behaviors().doc("client_diff_summarize_kind value");
+    behaviors().supportCompare();
+    behaviors().supportRepr();
+    behaviors().supportStr();
+    behaviors().supportHash();
+}
+#endif
+
+#if defined( PYSVN_HAS_SVN__DEPTH_PARAMETER )
+template <> void pysvn_enum< svn_depth_t >::init_type(void)
+{
+    behaviors().name("depth");
+    behaviors().doc("depth enumeration");
+    behaviors().supportGetattr();
+}
+
+template <> void pysvn_enum_value< svn_depth_t >::init_type(void)
+{
+    behaviors().name("depth");
+    behaviors().doc("depth value");
+    behaviors().supportCompare();
+    behaviors().supportRepr();
+    behaviors().supportStr();
+    behaviors().supportHash();
+}
+#endif
+#if defined( PYSVN_HAS_SVN_WC_CONFLICT_CHOICE_T )
+template <> void pysvn_enum< svn_wc_conflict_choice_t >::init_type(void)
+{
+    behaviors().name("wc_conflict_choice");
+    behaviors().doc("wc_conflict_choice enumeration");
+    behaviors().supportGetattr();
+}
+
+template <> void pysvn_enum_value< svn_wc_conflict_choice_t >::init_type(void)
+{
+    behaviors().name("wc_conflict_choice");
+    behaviors().doc("wc_conflict_choice value");
+    behaviors().supportCompare();
+    behaviors().supportRepr();
+    behaviors().supportStr();
+    behaviors().supportHash();
 }
 #endif

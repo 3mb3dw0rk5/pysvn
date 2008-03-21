@@ -1,6 +1,6 @@
 //
 // ====================================================================
-// Copyright (c) 2003-2007 Barry A Scott.  All rights reserved.
+// Copyright (c) 2003-2008 Barry A Scott.  All rights reserved.
 //
 // This software is licensed as described in the file LICENSE.txt,
 // which you should have received as part of this distribution.
@@ -763,5 +763,15 @@ extern Py::Object toObject
     const svn_lock_t &lock,
     const DictWrapper &wrapper_lock
     );
+
+
+extern void revisionKindCompatibleCheck
+    (
+    bool is_url,
+    const svn_opt_revision_t &revision,
+    const char *revision_name,
+    const char *url_or_path_name
+    );
+
 #endif
 //--------------------------------------------------------------------------------
