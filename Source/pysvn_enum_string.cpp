@@ -322,9 +322,10 @@ template <> EnumString< svn_wc_conflict_choice_t >::EnumString()
   // resolving the conflict here and now.  libsvn_wc will then do the
   // work of "installing" the chosen file.
   add( svn_wc_conflict_choose_base, "base" );   // user chooses the original version
-  add( svn_wc_conflict_choose_theirs, "theirs" ); // user chooses incoming version
-  add( svn_wc_conflict_choose_mine, "mine" );   // user chooses his/her own version
+  add( svn_wc_conflict_choose_theirs_full, "theirs_full" ); // user chooses incoming version
+  add( svn_wc_conflict_choose_mine_full, "mine_full" );   // user chooses own version
+  add( svn_wc_conflict_choose_theirs_conflict, "theirs_conflict" ); // user chooses incoming (for conflicted hunks)
+  add( svn_wc_conflict_choose_mine_conflict, "mine_conflict" );   // user chooses own (for conflicted hunks)
   add( svn_wc_conflict_choose_merged, "merged" ); // user chooses the merged version
-
 }
 #endif

@@ -50,6 +50,7 @@ static const char name_callback_ssl_server_prompt[] = "callback_ssl_server_promp
 static const char name_callback_ssl_server_trust_prompt[] = "callback_ssl_server_trust_prompt";
 static const char name_changed_paths[] = "changed_paths";
 static const char name_changelist_name[] = "changelist_name";
+static const char name_changelist_names[] = "changelist_names";
 static const char name_comment[] = "comment";
 static const char name_conflict_choice[] = "conflict_choice";
 static const char name_copy_as_child[] = "copy_as_child";
@@ -58,6 +59,7 @@ static const char name_copyfrom_revision[] = "copyfrom_revision";
 static const char name_created_rev[] = "created_rev";
 static const char name_date[] = "date";
 static const char name_depth[] = "depth";
+static const char name_depth_is_sticky[] = "depth_is_sticky";
 static const char name_dest_path[] = "dest_path";
 static const char name_dest_url_or_path[] = "dest_url_or_path";
 static const char name_diff_deleted[] = "diff_deleted";
@@ -110,6 +112,7 @@ static const char name_prop_value[] = "prop_value";
 static const char name_ranges_to_merge[] = "ranges_to_merge";
 static const char name_record_only[] = "record_only";
 static const char name_recurse[] = "recurse";
+static const char name_relative_to_dir[] = "relative_to_dir";
 static const char name_repos_path[] = "repos_path";
 static const char name_revision1[] = "revision1";
 static const char name_revision2[] = "revision2";
@@ -136,7 +139,6 @@ static const char name_url_or_path2[] = "url_or_path2";
 static const char name_url_or_path[] = "url_or_path";
 static const char name_username[] = "username";
 static const char name_utf8[] = "utf-8";
-static const char name_with_merge_history[] = "with_merge_history";
 
 static Py::String *py_name_callback_cancel;
 static Py::String *py_name_callback_get_log_message;
@@ -385,7 +387,6 @@ Py::Object pysvn_client::cmd_add( const Py::Tuple &a_args, const Py::Dict &a_kws
             PythonAllowThreads permission( m_context );
 
             SvnPool pool( m_context );
-
 
 #if defined( PYSVN_HAS_CLIENT_ADD4 )
             svn_error_t * error = svn_client_add4
@@ -846,7 +847,7 @@ Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a
 #if defined( PYSVN_HAS_CLIENT_COMMIT4 )
     { false, name_depth },
     { false, name_keep_changelist },
-    { false, name_changelist_name },
+    { false, name_changelist_names },
 #endif
     { false, NULL }
     };
@@ -879,12 +880,11 @@ Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a
         svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity );
 
         bool keep_changelist = args.getBoolean( name_keep_changelist, false );
-        std::string std_changelist_name;
-        const char *changelist_name = NULL;
-        if( args.hasArg( name_changelist_name ) )
+        apr_array_header_t *changelists = NULL;
+
+        if( args.hasArg( name_changelist_names ) )
         {
-            std_changelist_name = args.getString( name_changelist_name );
-            changelist_name = std_changelist_name.c_str();
+            changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelist_names ), pool );
         }
 #endif
 
@@ -904,7 +904,7 @@ Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a
                 depth,
                 keep_locks,
                 keep_changelist,
-                changelist_name,
+                changelists,
                 m_context,
                 pool
                 );
@@ -1110,7 +1110,6 @@ Py::Object pysvn_client::cmd_copy2( const Py::Tuple &a_args, const Py::Dict &a_k
     { true, name_dest_url_or_path },
     { false, name_copy_as_child },
     { false, name_make_parents },
-    { false, name_with_merge_history },
     { false, NULL }
     };
     FunctionArguments args( "copy2", args_desc, a_args, a_kws );
@@ -1226,9 +1225,6 @@ Py::Object pysvn_client::cmd_copy2( const Py::Tuple &a_args, const Py::Dict &a_k
         type_error_message = "expecting boolean for keyword make_parents";
         bool make_parents = args.getBoolean( name_make_parents, false );
 
-        type_error_message = "expecting boolean for keyword with_merge_history";
-        bool with_merge_history = args.getBoolean( name_with_merge_history, false );
-
         try
         {
             std::string norm_dest_path( svnNormalisedIfPath( dest_path, pool ) );
@@ -1245,7 +1241,6 @@ Py::Object pysvn_client::cmd_copy2( const Py::Tuple &a_args, const Py::Dict &a_k
                 norm_dest_path.c_str(),
                 copy_as_child,
                 make_parents,
-                with_merge_history,
                 m_context,
                 pool
                 );
@@ -1623,6 +1618,8 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
 #endif
 #if defined( PYSVN_HAS_CLIENT_DIFF_PEG4 )
     { false, name_depth },
+    { false, name_relative_to_dir },
+    { false, name_changelist_names },
 #endif
     { false, NULL }
     };
@@ -1634,8 +1631,25 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
     svn_opt_revision_t revision_start = args.getRevision( name_revision_start, svn_opt_revision_base );
     svn_opt_revision_t revision_end = args.getRevision( name_revision_end, svn_opt_revision_working );
     svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, revision_end );
+
+    SvnPool pool( m_context );
+
 #if defined( PYSVN_HAS_CLIENT_DIFF_PEG4 )
     svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity );
+    std::string std_relative_to_dir;
+    const char *relative_to_dir = NULL;
+    if( args.hasArg( name_relative_to_dir ) )
+    {
+        std_relative_to_dir = args.getString( name_relative_to_dir );
+        relative_to_dir = std_relative_to_dir.c_str();
+    }
+
+    apr_array_header_t *changelists = NULL;
+
+    if( args.hasArg( name_changelist_names ) )
+    {
+        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelist_names ), pool );
+    }
 #else
     bool recurse = args.getBoolean( name_recurse, true );
 #endif
@@ -1644,8 +1658,6 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
 #if defined( PYSVN_HAS_CLIENT_DIFF_PEG2 )
     bool ignore_content_type = args.getBoolean( name_ignore_content_type, false );
 #endif
-
-    SvnPool pool( m_context );
 
 #if defined( PYSVN_HAS_CLIENT_DIFF_PEG3 )
     std::string header_encoding( args.getUtf8String( name_header_encoding, empty_string ) );
@@ -1699,6 +1711,7 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
             &peg_revision,
             &revision_start,
             &revision_end,
+            relative_to_dir,
             depth,
             ignore_ancestry,
             !diff_deleted,
@@ -1706,6 +1719,7 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
             header_encoding_ptr,
             output_file.file(),
             error_file.file(),
+            changelists,
             m_context,
             pool
             );
@@ -1839,6 +1853,7 @@ Py::Object pysvn_client::cmd_diff_summarize( const Py::Tuple &a_args, const Py::
     { false, name_ignore_ancestry },
 #if defined( PYSVN_HAS_CLIENT_DIFF_SUMMARIZE2 )
     { false, name_depth },
+    { false, name_changelist_names },
 #endif
     { false, NULL }
     };
@@ -1849,14 +1864,22 @@ Py::Object pysvn_client::cmd_diff_summarize( const Py::Tuple &a_args, const Py::
     svn_opt_revision_t revision1 = args.getRevision( name_revision1, svn_opt_revision_base );
     std::string path2( args.getUtf8String( name_url_or_path2, path1 ) );
     svn_opt_revision_t revision2 = args.getRevision( name_revision2, svn_opt_revision_working );
+
+    SvnPool pool( m_context );
+
 #if defined( PYSVN_HAS_CLIENT_DIFF_SUMMARIZE2 )
     svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity );
+
+    apr_array_header_t *changelists = NULL;
+
+    if( args.hasArg( name_changelist_names ) )
+    {
+        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelist_names ), pool );
+    }
 #else
     bool recurse = args.getBoolean( name_recurse, true );
 #endif
     bool ignore_ancestry = args.getBoolean( name_ignore_ancestry, true );
-
-    SvnPool pool( m_context );
 
     try
     {
@@ -1879,6 +1902,7 @@ Py::Object pysvn_client::cmd_diff_summarize( const Py::Tuple &a_args, const Py::
             &revision2,
             depth,
             ignore_ancestry,
+            changelists,
             diff_summarize_c,
             reinterpret_cast<void *>( &diff_baton ),
             m_context,
@@ -1928,6 +1952,7 @@ Py::Object pysvn_client::cmd_diff_summarize_peg( const Py::Tuple &a_args, const 
     { false, name_ignore_ancestry },
 #if defined( PYSVN_HAS_CLIENT_DIFF_SUMMARIZE_PEG2 )
     { false, name_depth },
+    { false, name_changelist_names },
 #endif
     { false, NULL }
     };
@@ -1938,8 +1963,17 @@ Py::Object pysvn_client::cmd_diff_summarize_peg( const Py::Tuple &a_args, const 
     svn_opt_revision_t revision_start = args.getRevision( name_revision_start, svn_opt_revision_base );
     svn_opt_revision_t revision_end = args.getRevision( name_revision_end, svn_opt_revision_working );
     svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, revision_end );
+
+    SvnPool pool( m_context );
+
 #if defined( PYSVN_HAS_CLIENT_DIFF_SUMMARIZE_PEG2 )
     svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity );
+    apr_array_header_t *changelists = NULL;
+
+    if( args.hasArg( name_changelist_names ) )
+    {
+        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelist_names ), pool );
+    }
 #else
     bool recurse = args.getBoolean( name_recurse, true );
 #endif
@@ -1949,8 +1983,6 @@ Py::Object pysvn_client::cmd_diff_summarize_peg( const Py::Tuple &a_args, const 
     revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
     revisionKindCompatibleCheck( is_url, revision_start, name_revision_start, name_url_or_path );
     revisionKindCompatibleCheck( is_url, revision_end, name_revision_end, name_url_or_path );
-
-    SvnPool pool( m_context );
 
     try
     {
@@ -1972,6 +2004,7 @@ Py::Object pysvn_client::cmd_diff_summarize_peg( const Py::Tuple &a_args, const 
             &revision_end,
             depth,
             ignore_ancestry,
+            changelists,
             diff_summarize_c,
             reinterpret_cast<void *>( &diff_baton ),
             m_context,
@@ -2374,6 +2407,7 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
     { false, name_recurse },
 #if defined( PYSVN_HAS_CLIENT_INFO2 )
     { false, name_depth },
+    { false, name_changelist_names },
 #endif
     { false, NULL }
     };
@@ -2389,7 +2423,16 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
     svn_opt_revision_t revision = args.getRevision( name_revision, kind );
     svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, revision );
 
-#if defined( PYSVN_HAS_CLIENT_DIFF4 )
+    SvnPool pool( m_context );
+
+#if defined( PYSVN_HAS_CLIENT_INFO2 )
+    apr_array_header_t *changelists = NULL;
+
+    if( args.hasArg( name_changelist_names ) )
+    {
+        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelist_names ), pool );
+    }
+
     svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity );
 #else
     bool recurse = args.getBoolean( name_recurse, true );
@@ -2399,7 +2442,6 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
     revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
     revisionKindCompatibleCheck( is_url, revision, name_revision, name_url_or_path );
 
-    SvnPool pool( m_context );
     try
     {
         std::string norm_path( svnNormalisedIfPath( path, pool ) );
@@ -2420,6 +2462,7 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
                 info_receiver_c,
                 reinterpret_cast<void *>( &info_baton ),
                 depth,
+                changelists,
                 m_context,
                 pool
                 );
@@ -3865,7 +3908,6 @@ Py::Object pysvn_client::cmd_move2( const Py::Tuple &a_args, const Py::Dict &a_k
     { false, name_force },
     { false, name_move_as_child },
     { false, name_make_parents },
-    { false, name_with_merge_history },
     { false, NULL }
     };
     FunctionArguments args( "move2", args_desc, a_args, a_kws );
@@ -3918,9 +3960,6 @@ Py::Object pysvn_client::cmd_move2( const Py::Tuple &a_args, const Py::Dict &a_k
         type_error_message = "expecting boolean for keyword make_parents";
         bool make_parents = args.getBoolean( name_make_parents, false );
 
-        type_error_message = "expecting boolean for keyword with_merge_history";
-        bool with_merge_history = args.getBoolean( name_with_merge_history, false );
-
         try
         {
             std::string norm_dest_path( svnNormalisedIfPath( dest_path, pool ) );
@@ -3937,7 +3976,6 @@ Py::Object pysvn_client::cmd_move2( const Py::Tuple &a_args, const Py::Dict &a_k
                 force,
                 move_as_child,
                 make_parents,
-                with_merge_history,
                 m_context,
                 pool
                 );
@@ -4081,6 +4119,7 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a
 #if defined( PYSVN_HAS_CLIENT_PROPSET3 )
     { false, name_depth },
     { false, name_base_revision_for_url },
+    { false, name_changelist_names },
 #endif
     { false, NULL }
     };
@@ -4096,8 +4135,18 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a
     else
         revision = args.getRevision( name_revision, svn_opt_revision_working );
 
+    SvnPool pool( m_context );
+
 #if defined( PYSVN_HAS_CLIENT_PROPSET3 )
     svn_revnum_t base_revision_for_url = args.getInteger( name_base_revision_for_url, 0 );
+
+    apr_array_header_t *changelists = NULL;
+
+    if( args.hasArg( name_changelist_names ) )
+    {
+        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelist_names ), pool );
+    }
+
     svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files );
 #else
     bool recurse = args.getBoolean( name_recurse, false );
@@ -4106,7 +4155,6 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a
     bool skip_checks = args.getBoolean( name_skip_checks, false );
 #endif
 
-    SvnPool pool( m_context );
 #if defined( PYSVN_HAS_CLIENT_PROPSET3 )
     pysvn_commit_info_t *commit_info = NULL;
 #endif
@@ -4129,6 +4177,7 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a
             depth,
             skip_checks,
             base_revision_for_url,
+            changelists,
             m_context.ctx(),
             pool
             );
@@ -4182,8 +4231,9 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
 #if defined( PYSVN_HAS_CLIENT_PROPGET2 )
     { false, name_peg_revision },
 #endif
-#if defined( PYSVN_HAS_CLIENT_PROPGET4 )
+#if defined( PYSVN_HAS_CLIENT_PROPGET3 )
     { false, name_depth },
+    { false, name_changelist_names },
 #endif
     { false, NULL }
     };
@@ -4193,7 +4243,16 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
     std::string propname( args.getUtf8String( name_prop_name ) );
     std::string path( args.getUtf8String( name_url_or_path ) );
 
-#if defined( PYSVN_HAS_CLIENT_PROPGET4 )
+    SvnPool pool( m_context );
+
+#if defined( PYSVN_HAS_CLIENT_PROPGET3 )
+    apr_array_header_t *changelists = NULL;
+
+    if( args.hasArg( name_changelist_names ) )
+    {
+        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelist_names ), pool );
+    }
+
     svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files );
 #else
     bool recurse = args.getBoolean( name_recurse, false );
@@ -4213,10 +4272,9 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
 #endif
     revisionKindCompatibleCheck( is_url, revision, name_revision, name_url_or_path );
 
-    SvnPool pool( m_context );
     apr_hash_t *props = NULL;
 
-#if defined( PYSVN_HAS_CLIENT_PROPGET4 )
+#if defined( PYSVN_HAS_CLIENT_PROPGET3 )
     svn_revnum_t actual_revnum = 0;
 #endif
 
@@ -4228,21 +4286,7 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
 
         PythonAllowThreads permission( m_context );
 
-#if defined( PYSVN_HAS_CLIENT_PROPGET4 )
-        svn_error_t *error = svn_client_propget4
-            (
-            &props,
-            propname.c_str(),
-            norm_path.c_str(),
-            &peg_revision,
-            &revision,
-            &actual_revnum,
-            depth,
-            m_context,
-            pool
-            );
-#elif defined( PYSVN_HAS_CLIENT_PROPGET3 )
-        // when was propget3 added to SVN? */
+#if defined( PYSVN_HAS_CLIENT_PROPGET3 )
         svn_error_t *error = svn_client_propget3
             (
             &props,
@@ -4251,7 +4295,8 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
             &peg_revision,
             &revision,
             &actual_revnum,
-            recurse,
+            depth,
+            changelists,
             m_context,
             pool
             );
@@ -4350,6 +4395,7 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 #endif
 #if defined( PYSVN_HAS_CLIENT_PROPLIST3 )
     { false, name_depth },
+    { false, name_changelist_names },
 #endif
     { false, NULL }
     };
@@ -4358,7 +4404,16 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 
     Py::List path_list( toListOfStrings( args.getArg( name_url_or_path ) ) );
 
+    SvnPool pool( m_context );
+
 #if defined( PYSVN_HAS_CLIENT_PROPLIST3 )
+    apr_array_header_t *changelists = NULL;
+
+    if( args.hasArg( name_changelist_names ) )
+    {
+        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelist_names ), pool );
+    }
+
     svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files );
 #else
     bool recurse = args.getBoolean( name_recurse, false );
@@ -4393,8 +4448,6 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
         peg_revision_file = revision_file;
     }
 #endif
-
-    SvnPool pool( m_context );
 
     Py::List list_of_proplists;
 
@@ -4443,6 +4496,7 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
                 &peg_revision,
                 &revision,
                 depth,
+                changelists,
                 proplist_receiver_c,
                 reinterpret_cast<void *>( &proplist_baton ),
                 m_context,
@@ -4508,6 +4562,7 @@ Py::Object pysvn_client::cmd_propset( const Py::Tuple &a_args, const Py::Dict &a
 #if defined( PYSVN_HAS_CLIENT_PROPSET3 )
     { false, name_depth },
     { false, name_base_revision_for_url },
+    { false, name_changelist_names },
 #endif
     { false, NULL }
     };
@@ -4524,7 +4579,16 @@ Py::Object pysvn_client::cmd_propset( const Py::Tuple &a_args, const Py::Dict &a
     else
         revision = args.getRevision( name_revision, svn_opt_revision_working );
 
+    SvnPool pool( m_context );
+
 #if defined( PYSVN_HAS_CLIENT_PROPSET3 )
+    apr_array_header_t *changelists = NULL;
+
+    if( args.hasArg( name_changelist_names ) )
+    {
+        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelist_names ), pool );
+    }
+
     svn_revnum_t base_revision_for_url = args.getInteger( name_base_revision_for_url, 0 );
     svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files );
 #else
@@ -4534,7 +4598,6 @@ Py::Object pysvn_client::cmd_propset( const Py::Tuple &a_args, const Py::Dict &a
     bool skip_checks = args.getBoolean( name_skip_checks, false );
 #endif
 
-    SvnPool pool( m_context );
 #if defined( PYSVN_HAS_CLIENT_PROPSET3 )
     pysvn_commit_info_t *commit_info = NULL;
 #endif
@@ -4559,6 +4622,7 @@ Py::Object pysvn_client::cmd_propset( const Py::Tuple &a_args, const Py::Dict &a
             depth,
             skip_checks,
             base_revision_for_url,
+            changelists,
             m_context.ctx(),
             pool
             );
@@ -4798,6 +4862,7 @@ Py::Object pysvn_client::cmd_revert( const Py::Tuple &a_args, const Py::Dict &a_
     { false, name_recurse },
 #if defined( PYSVN_HAS_CLIENT_REVERT2 )
     { false, name_depth },
+    { false, name_changelist_names },
 #endif
     { false, NULL }
     };
@@ -4812,6 +4877,12 @@ Py::Object pysvn_client::cmd_revert( const Py::Tuple &a_args, const Py::Dict &a_
     try
     {
 #if defined( PYSVN_HAS_CLIENT_REVERT2 )
+        apr_array_header_t *changelists = NULL;
+
+        if( args.hasArg( name_changelist_names ) )
+        {
+            changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelist_names ), pool );
+        }
         svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files );
 #else
         bool recurse = args.getBoolean( name_recurse, false );
@@ -4828,6 +4899,7 @@ Py::Object pysvn_client::cmd_revert( const Py::Tuple &a_args, const Py::Dict &a_
                 (
                 targets,
                 depth,
+                changelists,
                 m_context,
                 pool
                 );
@@ -5152,6 +5224,7 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
 #endif
 #if defined( PYSVN_HAS_CLIENT_STATUS3 )
     { false, name_depth },
+    { false, name_changelist_names },
 #endif
     { false, NULL }
     };
@@ -5159,7 +5232,17 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
     args.check();
 
     Py::String path( args.getUtf8String( name_path ) );
+
+    SvnPool pool( m_context );
+
 #if defined( PYSVN_HAS_CLIENT_STATUS3 )
+    apr_array_header_t *changelists = NULL;
+
+    if( args.hasArg( name_changelist_names ) )
+    {
+        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelist_names ), pool );
+    }
+
     svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity );
 #else
     bool recurse = args.getBoolean( name_recurse, true );
@@ -5171,7 +5254,6 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
     bool ignore_externals = args.getBoolean( name_ignore_externals, false );
 #endif
 
-    SvnPool pool( m_context );
     apr_hash_t *status_hash = NULL;
 
     Py::List entries_list;
@@ -5205,6 +5287,7 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
             update,
             !ignore,
             ignore_externals,
+            changelists,
             m_context,
             pool
             );
@@ -5414,6 +5497,7 @@ Py::Object pysvn_client::cmd_update( const Py::Tuple &a_args, const Py::Dict &a_
 #endif
 #if defined( PYSVN_HAS_CLIENT_UPDATE3 )
     { false, name_depth },
+    { false, name_depth_is_sticky },
     { false, name_allow_unver_obstructions },
 #endif
     { false, NULL }
@@ -5428,6 +5512,7 @@ Py::Object pysvn_client::cmd_update( const Py::Tuple &a_args, const Py::Dict &a_
     svn_opt_revision_t revision = args.getRevision( name_revision, svn_opt_revision_head );
 #if defined( PYSVN_HAS_CLIENT_UPDATE3 )
     svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity );
+    bool depth_is_sticky = args.getBoolean( name_depth_is_sticky, false );
     bool allow_unver_obstructions = args.getBoolean( name_allow_unver_obstructions, false );
 #else
     bool recurse = args.getBoolean( name_recurse, true );
@@ -5450,6 +5535,7 @@ Py::Object pysvn_client::cmd_update( const Py::Tuple &a_args, const Py::Dict &a_
             targets,
             &revision,
             depth,
+            depth_is_sticky,
             ignore_externals,
             allow_unver_obstructions,
             m_context,
