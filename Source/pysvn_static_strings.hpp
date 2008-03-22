@@ -32,6 +32,7 @@ PYSVN_STATIC_STRING( name_callback_ssl_client_cert_prompt, "callback_ssl_client_
 PYSVN_STATIC_STRING( name_callback_ssl_server_prompt, "callback_ssl_server_prompt" )
 PYSVN_STATIC_STRING( name_callback_ssl_server_trust_prompt, "callback_ssl_server_trust_prompt" )
 PYSVN_STATIC_STRING( name_changed_paths, "changed_paths" )
+PYSVN_STATIC_STRING( name_changelist, "changelist" )
 PYSVN_STATIC_STRING( name_changelists, "changelists" )
 PYSVN_STATIC_STRING( name_comment, "comment" )
 PYSVN_STATIC_STRING( name_conflict_choice, "conflict_choice" )

@@ -62,4 +62,7 @@ cmd_pysvn status --verbose ${TESTROOT}/wc1
 ${PYTHON} ${WORKDIR}/Tests/test_07_copy2.py ${TESTROOT}/configdir
 ${PYTHON} ${WORKDIR}/Tests/test_07_move2.py ${TESTROOT}/configdir
 
+${PYTHON} ${WORKDIR}/Tests/test_07_changelist.py ${TESTROOT}/configdir
+
+
 true

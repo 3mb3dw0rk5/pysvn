@@ -4,7 +4,7 @@
 <!--
 
  ====================================================================
- Copyright (c) 2004-2007 Barry A. Scott.  All rights reserved.
+ Copyright (c) 2004-2008 Barry A. Scott.  All rights reserved.
 
  This software is licensed as described in the file LICENSE.txt,
  which you should have received as part of this distribution.
@@ -421,85 +421,106 @@ a tuple of three values (retcode, accepted_failures, save).
 <table border="0" cellspacing="0" cellpadding="5">
 <tr>
 <td><a href="#pysvn_client_add">add</a></td>
+<td><span class="svn_1005000"><a href="#pysvn_client_add_to_changelist">add_to_changelist</a></span></td>
 <td><a href="#pysvn_client_annotate">annotate</a></td>
 <td><a href="#pysvn_client_cat">cat</a></td>
 <td><a href="#pysvn_client_checkin">checkin</a></td>
 <td><a href="#pysvn_client_checkout">checkout</a></td>
-<td><a href="#pysvn_client_cleanup">cleanup</a></td>
 </tr>
 <tr bgcolor="#e0e0e0">
+<td><a href="#pysvn_client_cleanup">cleanup</a></td>
 <td><a href="#pysvn_client_copy">copy</a></td>
 <td><span class="svn_1005000"><a href="#pysvn_client_copy2">copy2</a></span></td>
 <td><a href="#pysvn_client_diff">diff</a></td>
 <td><span class="svn_1001000"><a href="#pysvn_client_diff_peg">diff_peg</a></span></td>
 <td><span class="svn_1004000"><a href="#pysvn_client_diff_summarize">diff_summarize</a></span></td>
-<td><span class="svn_1004000"><a href="#pysvn_client_diff_summarize_peg">diff_summarize_peg</a></span></td>
 </tr>
 <tr>
+<td><span class="svn_1004000"><a href="#pysvn_client_diff_summarize_peg">diff_summarize_peg</a></span></td>
 <td><a href="#pysvn_client_export">export</a></td>
 <td><span class="svn_1003000"><a href="#pysvn_client_get_adm_dir">get_adm_dir</a></span></td>
 <td><a href="#pysvn_client_get_auth_cache">get_auth_cache</a></td>
 <td><a href="#pysvn_client_get_auto_props">get_auto_props</a></td>
-<td><a href="#pysvn_client_get_default_password">get_default_password</a></td>
-<td><a href="#pysvn_client_get_default_username">get_default_username</a></td>
+<td><span class="svn_1005000"><a href="#pysvn_client_get_changelist">get_changelist</a></span></td>
 </tr>
 <tr bgcolor="#e0e0e0">
+<td><a href="#pysvn_client_get_default_password">get_default_password</a></td>
+<td><a href="#pysvn_client_get_default_username">get_default_username</a></td>
 <td><a href="#pysvn_client_get_interactive">get_interactive</a></td>
 <td><a href="#pysvn_client_get_store_passwords">get_store_passwords</a></td>
 <td><a href="#pysvn_client_import_">import_</a></td>
 <td><a href="#pysvn_client_info">info</a></td>
-<td><span class="svn_1003000"><a href="#pysvn_client_info2">info2</a></span></td>
-<td><span class="svn_1003000"><a href="#pysvn_client_is_adm_dir">is_adm_dir</a></span></td>
 </tr>
 <tr>
+<td><span class="svn_1003000"><a href="#pysvn_client_info2">info2</a></span></td>
+<td><span class="svn_1003000"><a href="#pysvn_client_is_adm_dir">is_adm_dir</a></span></td>
 <td><a href="#pysvn_client_is_url">is_url</a></td>
 <td><span class="svn_1004000"><a href="#pysvn_client_list">list</a></span></td>
 <td><a href="#pysvn_client_log">log</a></td>
 <td><span class="svn_1002000"><a href="#pysvn_client_lock">lock</a></span></td>
-<td><a href="#pysvn_client_ls">ls</a></td>
-<td><a href="#pysvn_client_merge">merge</a></td>
 </tr>
 <tr bgcolor="#e0e0e0">
+<td><a href="#pysvn_client_ls">ls</a></td>
+<td><a href="#pysvn_client_merge">merge</a></td>
 <td><span class="svn_1001000"><a href="#pysvn_client_merge_peg">merge_peg</a></span></td>
 <td><span class="svn_1005000"><a href="#pysvn_client_merge_peg2">merge_peg2</a></span></td>
 <td><a href="#pysvn_client_mkdir">mkdir</a></td>
 <td><a href="#pysvn_client_move">move</a></td>
-<td><span class="svn_1005000"><a href="#pysvn_client_copy2">copy2</a></span></td>
-<td><a href="#pysvn_client_propdel">propdel</a></td>
 </tr>
 <tr>
+<td><span class="svn_1005000"><a href="#pysvn_client_copy2">copy2</a></span></td>
+<td><a href="#pysvn_client_propdel">propdel</a></td>
 <td><a href="#pysvn_client_propget">propget</a></td>
 <td><a href="#pysvn_client_proplist">proplist</a></td>
 <td><a href="#pysvn_client_propset">propset</a></td>
 <td><a href="#pysvn_client_relocate">relocate</a></td>
-<td><a href="#pysvn_client_remove">remove</a></td>
-<td><a href="#pysvn_client_resolved">resolved</a></td>
 </tr>
 <tr bgcolor="#e0e0e0">
+<td><a href="#pysvn_client_remove">remove</a></td>
+<td><span class="svn_1005000"><a href="#pysvn_client_remove_from_changelist">remove_from_changelist</a></span></td>
+<td><a href="#pysvn_client_resolved">resolved</a></td>
 <td><a href="#pysvn_client_revert">revert</a></td>
 <td><a href="#pysvn_client_revpropdel">revpropdel</a></td>
 <td><a href="#pysvn_client_revpropget">revpropget</a></td>
+</tr>
+<tr>
 <td><a href="#pysvn_client_revproplist">revproplist</a></td>
 <td><a href="#pysvn_client_revpropset">revpropset</a></td>
 <td><span class="svn_1005000"><a href="#pysvn_client_root_url_from_path">root_url_from_path</a></span></td>
-</tr>
-<tr>
 <td><span class="svn_1003000"><a href="#pysvn_client_set_adm_dir">set_adm_dir</a></span></td>
 <td><a href="#pysvn_client_set_auth_cache">set_auth_cache</a></td>
 <td><a href="#pysvn_client_set_auto_props">set_auto_props</a></td>
+</tr>
+<tr bgcolor="#e0e0e0">
 <td><a href="#pysvn_client_set_default_password">set_default_password</a></td>
 <td><a href="#pysvn_client_set_default_username">set_default_username</a></td>
 <td><a href="#pysvn_client_set_interactive">set_interactive</a></td>
-</tr>
-<tr>
 <td><a href="#pysvn_client_set_store_passwords">set_store_passwords</a></td>
 <td><a href="#pysvn_client_status">status</a></td>
 <td><a href="#pysvn_client_switch">switch</a></td>
+</tr>
+<tr>
 <td><span class="svn_1002000"><a href="#pysvn_client_unlock">unlock</a></span></td>
 <td><a href="#pysvn_client_update">update</a></td>
 <td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
 </tr>
 </table>
+
+<div class="svn_1005000">
+<h4><a name="pysvn_client_add_to_changelist"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.add_to_changelist</a></h4>
+<pre>
+add_to_changelist( path,
+                   changelist,
+                   depth=QQQ,
+                   changelists=[] )
+</pre>
+<p>
+TBD
+</p>
+</div>
 
 <h4><a name="pysvn_client_add"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.add</a></h4>
 <pre>
@@ -526,6 +547,7 @@ Files are added at the next checkin.
 <p>The depth can be used as in place of recurse. QQQ
 </p>
 </div>
+
 <h4><a name="pysvn_client_annotate"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.annotate</a></h4>
 <pre>
 file_annotation = \
@@ -926,6 +948,20 @@ enabled = get_auto_props()
 <p>Returns true if svn will automatically set properties
 when adding files, otherwise returns false.
 </p>
+
+<div class="svn_1005000">
+<h4><a name="pysvn_client_get_changelist"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.get_changelist</a></h4>
+<pre>
+changelist_list = \
+get_changelist( path,
+                changelist,
+                depth=QQQ,
+                changelists=[] )
+</pre>
+<p>
+TBD
+</p>
+</div>
 
 <h4><a name="pysvn_client_get_default_password"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.get_default_password</a></h4>
 <pre>
@@ -1548,6 +1584,19 @@ behaviour.
 <p>If url_or_path is a URL, the items are deleted from the
 repository via an immediate commit.
 </p>
+
+<div class="svn_1005000">
+<h4><a name="pysvn_client_remove_from_changelist"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.remove_from_changelist</a></h4>
+<pre>
+remove_from_changelist( path,
+                        changelist,
+                        depth=QQQ,
+                        changelists=[] )
+</pre>
+<p>
+TBD
+</p>
+</div>
 
 <h4><a name="pysvn_client_resolved"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.resolved</a></h4>
 <pre>
@@ -2187,10 +2236,10 @@ file was either absent or not under version control.</li>
 <li>unknown - something's here, but we don't know what</li>
 </ul>
 
-<p>Copyright &copy; 2004-2007 Barry A. Scott. All rigths reserved.</p>
+<p>Copyright &copy; 2004-2008 Barry A. Scott. All rigths reserved.</p>
 <script type="text/javascript">
 // expect this to fail on IE and other browsers that don't support
-changeDisplay( 1004000 );
+changeDisplay( 1005000 );
 changeVisual( "hilite" );
 // good we can toggle the display turn on the buttons
 document.getElementById( "buttons_work" ).style.display = "block";

@@ -755,6 +755,9 @@ void pysvn_client::init_type()
     behaviors().supportSetattr();
 
     add_keyword_method("add", &pysvn_client::cmd_add, pysvn_client_add_doc );
+#ifdef PYSVN_HAS_CLIENT_ADD_TO_CHANGELIST
+    add_keyword_method("add_to_changelist", &pysvn_client::cmd_add_to_changelist, pysvn_client_add_to_changelist_doc );
+#endif
     add_keyword_method("annotate", &pysvn_client::cmd_annotate, pysvn_client_annotate_doc );
     add_keyword_method("cat", &pysvn_client::cmd_cat, pysvn_client_cat_doc );
     add_keyword_method("checkin", &pysvn_client::cmd_checkin, pysvn_client_checkin_doc );
@@ -773,6 +776,9 @@ void pysvn_client::init_type()
     add_keyword_method("diff_summarize_peg", &pysvn_client::cmd_diff_summarize_peg, pysvn_client_diff_summarize_peg_doc );
 #endif
     add_keyword_method("export", &pysvn_client::cmd_export, pysvn_client_export_doc );
+#ifdef PYSVN_HAS_CLIENT_GET_CHANGELIST
+    add_keyword_method("get_changelist", &pysvn_client::cmd_get_changelist, pysvn_client_get_changelist_doc );
+#endif
 #if defined( PYSVN_HAS_WC_ADM_DIR )
     add_keyword_method("get_adm_dir", &pysvn_client::get_adm_dir, pysvn_client_get_adm_dir_doc );
 #endif
@@ -818,6 +824,9 @@ void pysvn_client::init_type()
     add_keyword_method("propset", &pysvn_client::cmd_propset, pysvn_client_propset_doc );
     add_keyword_method("relocate", &pysvn_client::cmd_relocate, pysvn_client_relocate_doc );
     add_keyword_method("remove", &pysvn_client::cmd_remove, pysvn_client_remove_doc );
+#ifdef PYSVN_HAS_CLIENT_REMOVE_FROM_CHANGELISTS
+    add_keyword_method("remove_from_changelists", &pysvn_client::cmd_remove_from_changelists, pysvn_client_remove_from_changelists_doc );
+#endif
     add_keyword_method("resolved", &pysvn_client::cmd_resolved, pysvn_client_resolved_doc );
     add_keyword_method("revert", &pysvn_client::cmd_revert, pysvn_client_revert_doc );
     add_keyword_method("revpropdel", &pysvn_client::cmd_revpropdel, pysvn_client_revpropdel_doc );

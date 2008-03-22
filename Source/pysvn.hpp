@@ -204,6 +204,9 @@ public:
 
     // SVN commands
     Py::Object cmd_add( const Py::Tuple& args, const Py::Dict &kws );
+#ifdef PYSVN_HAS_CLIENT_ADD_TO_CHANGELIST
+    Py::Object cmd_add_to_changelist( const Py::Tuple& args, const Py::Dict &kws );
+#endif
     Py::Object cmd_annotate( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_cat( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_checkout( const Py::Tuple& args, const Py::Dict &kws );
@@ -220,6 +223,9 @@ public:
     Py::Object cmd_diff_summarize_peg( const Py::Tuple& args, const Py::Dict &kws );
 #endif
     Py::Object cmd_export( const Py::Tuple& args, const Py::Dict &kws );
+#ifdef PYSVN_HAS_CLIENT_GET_CHANGELIST
+    Py::Object cmd_get_changelist( const Py::Tuple& args, const Py::Dict &kws );
+#endif
     Py::Object cmd_info( const Py::Tuple& args, const Py::Dict &kws );
 #if defined( PYSVN_HAS_CLIENT_INFO )
     Py::Object cmd_info2( const Py::Tuple& args, const Py::Dict &kws );
@@ -249,6 +255,9 @@ public:
     Py::Object cmd_propset( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_relocate( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_remove( const Py::Tuple& args, const Py::Dict &kws );
+#ifdef PYSVN_HAS_CLIENT_REMOVE_FROM_CHANGELISTS
+    Py::Object cmd_remove_from_changelists( const Py::Tuple& args, const Py::Dict &kws );
+#endif
     Py::Object cmd_resolved( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_revert( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_revpropdel( const Py::Tuple& args, const Py::Dict &kws );

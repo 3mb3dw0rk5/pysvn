@@ -70,3 +70,16 @@ Info: Move2 will succeed
 Info: Move2 will raise error
 Info: Error: 'Operation does not support multiple sources'
 Info: Code: 195014, Message: 'Operation does not support multiple sources'
+After add_to_changelist show all
+   changelist-two file_a2.txt
+   changelist-one file_b1.txt
+   changelist-two file_b2.txt
+   changelist-one file_a1.txt
+After add_to_changelist show changelist-two
+   changelist-two file_a2.txt
+   changelist-two file_b2.txt
+After remove_from_changelists all changelist-two show all
+   changelist-one file_b1.txt
+   changelist-one file_a1.txt
+After remove_from_changelists all show all
+   changelist-one file_b1.txt
