@@ -1,6 +1,6 @@
 #
 # ====================================================================
-# (c) 2005-2007 Barry A Scott.  All rights reserved.
+# (c) 2005-2008 Barry A Scott.  All rights reserved.
 #
 # This software is licensed as described in the file LICENSE.txt,
 # which you should have received as part of this distribution.

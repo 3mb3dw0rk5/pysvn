@@ -20,6 +20,10 @@
 
 static const char name_utf8[] = "utf-8";
 static const std::string str_URL( "URL" );
+static const std::string str_changelist( "changelist" );
+static const std::string str_depth( "depth" );
+static const std::string str_working_size( "working_size" );
+static const std::string str_size( "size" );
 static const std::string str_checksum( "checksum" );
 static const std::string str_comment( "comment" );
 static const std::string str_commit_author( "commit_author" );
@@ -294,6 +298,7 @@ Py::Object toObject
     const DictWrapper &wrapper_wc_info
     )
 {
+
     Py::Dict py_info;
 
     // Where the item lives in the repository.
@@ -355,7 +360,19 @@ Py::Object toObject
         py_wc_info[str_conflict_new] = utf8_string_or_none( info.conflict_new );
         py_wc_info[str_conflict_work] = utf8_string_or_none( info.conflict_wrk );
         py_wc_info[str_prejfile] = utf8_string_or_none( info.prejfile );
-
+#ifdef PYSVN_HAS_SVN_INFO_T__CHANGELIST
+        py_wc_info[str_changelist] = utf8_string_or_none( info.changelist );
+        py_wc_info[str_depth] = toEnumValue( info.depth );
+#endif
+#ifdef PYSVN_HAS_SVN_INFO_T__SIZES
+#ifdef HAVE_LONG_LONG
+        py_wc_info[str_working_size] = Py::LongLong( static_cast<PY_LONG_LONG>( info.working_size ) );
+        py_wc_info[str_size] = Py::LongLong( static_cast<PY_LONG_LONG>( info.size ) );
+#else
+        py_wc_info[str_working_size] = Py::Int( static_cast<int>( info.working_size ) );
+        py_wc_info[str_size] = Py::Int( static_cast<int>( info.size ) );
+#endif
+#endif
         py_info[str_wc_info] = wrapper_wc_info.wrapDict( py_wc_info );
     }
 
