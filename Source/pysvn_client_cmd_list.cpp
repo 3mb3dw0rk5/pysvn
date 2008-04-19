@@ -142,9 +142,9 @@ Py::Object pysvn_client::cmd_ls( const Py::Tuple &a_args, const Py::Dict &a_kws 
 class ListReceiveBaton
 {
 public:
-    ListReceiveBaton( PythonAllowThreads *permission)
+    ListReceiveBaton( PythonAllowThreads *permission, Py::List &list_list )
         : m_permission( permission )
-        , m_list_list()
+        , m_list_list( list_list )
         {}
     ~ListReceiveBaton()
         {}
@@ -158,7 +158,7 @@ public:
     DictWrapper         *m_wrapper_lock;
     DictWrapper         *m_wrapper_list;
 
-    Py::List            m_list_list;
+    Py::List            &m_list_list;
 };
 
 extern "C"
@@ -277,13 +277,15 @@ Py::Object pysvn_client::cmd_list( const Py::Tuple &a_args, const Py::Dict &a_kw
     SvnPool pool( m_context );
     std::string norm_path( svnNormalisedIfPath( path, pool ) );
 
+    Py::List list_list;
+
     try
     {
         checkThreadPermission();
 
         PythonAllowThreads permission( m_context );
 
-        ListReceiveBaton list_baton( &permission );
+        ListReceiveBaton list_baton( &permission, list_list );
         list_baton.m_dirent_fields = dirent_fields;
         list_baton.m_is_url = is_url;
         list_baton.m_fetch_locks = fetch_locks;
@@ -322,8 +324,6 @@ Py::Object pysvn_client::cmd_list( const Py::Tuple &a_args, const Py::Dict &a_kw
 #endif
         if( error != 0 )
             throw SvnException( error );
-
-        return list_baton.m_list_list;
     }
     catch( SvnException &e )
     {
@@ -331,7 +331,8 @@ Py::Object pysvn_client::cmd_list( const Py::Tuple &a_args, const Py::Dict &a_kw
         m_context.checkForError( m_module.client_error );
 
         throw_client_error( e );
-        return Py::None();          // needed to remove warning about return value missing
     }
+
+    return list_list;
 }
 #endif

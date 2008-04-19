@@ -90,17 +90,17 @@ Py::Object pysvn_client::cmd_add_to_changelist( const Py::Tuple &a_args, const P
 class ChangelistBaton
 {
 public:
-    ChangelistBaton( PythonAllowThreads *permission, SvnPool &pool )
+    ChangelistBaton( PythonAllowThreads *permission, SvnPool &pool, Py::List &changelist_list )
         : m_permission( permission )
         , m_pool( pool )
-        , m_changelist_list()
+        , m_changelist_list( changelist_list )
         {}
     ~ChangelistBaton()
         {}
 
     PythonAllowThreads  *m_permission;
     SvnPool             &m_pool;
-    Py::List            m_changelist_list;
+    Py::List            &m_changelist_list;
 };
 
 svn_error_t *changelistReceiver
@@ -164,13 +164,15 @@ Py::Object pysvn_client::cmd_get_changelist( const Py::Tuple &a_args, const Py::
 
         svn_depth_t depth = args.getDepth( name_depth, svn_depth_files );
 
+        Py::List changelist_list;
+
         try
         {
             checkThreadPermission();
 
             PythonAllowThreads permission( m_context );
 
-            ChangelistBaton baton( &permission, pool );
+            ChangelistBaton baton( &permission, pool, changelist_list );
 
             svn_error_t *error = svn_client_get_changelists
                 (
@@ -184,8 +186,6 @@ Py::Object pysvn_client::cmd_get_changelist( const Py::Tuple &a_args, const Py::
                 );
             if( error != NULL )
                 throw SvnException( error );
-
-            return baton.m_changelist_list;
         }
         catch( SvnException &e )
         {
@@ -194,6 +194,8 @@ Py::Object pysvn_client::cmd_get_changelist( const Py::Tuple &a_args, const Py::
 
             throw_client_error( e );
         }
+
+        return changelist_list;
     }
     catch( Py::TypeError & )
     {

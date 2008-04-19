@@ -397,12 +397,13 @@ public:
     InfoReceiveBaton
         (
         PythonAllowThreads *permission,
+        Py::List &info_list,
         const DictWrapper &wrapper_info,
         const DictWrapper &wrapper_lock,
         const DictWrapper &wrapper_wc_info
         )
     : m_permission( permission )
-    , m_info_list()
+    , m_info_list( info_list )
     , m_wrapper_info( wrapper_info )
     , m_wrapper_lock( wrapper_lock )
     , m_wrapper_wc_info( wrapper_wc_info )
@@ -411,7 +412,7 @@ public:
     {}
 
     PythonAllowThreads  *m_permission;
-    Py::List            m_info_list;
+    Py::List            &m_info_list;
     const DictWrapper   &m_wrapper_info;
     const DictWrapper   &m_wrapper_lock;
     const DictWrapper   &m_wrapper_wc_info;
@@ -494,6 +495,8 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
     revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
     revisionKindCompatibleCheck( is_url, revision, name_revision, name_url_or_path );
 
+    Py::List info_list;
+
     try
     {
         std::string norm_path( svnNormalisedIfPath( path, pool ) );
@@ -502,7 +505,7 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
 
         PythonAllowThreads permission( m_context );
 
-        InfoReceiveBaton info_baton( &permission, m_wrapper_info, m_wrapper_lock, m_wrapper_wc_info );
+        InfoReceiveBaton info_baton( &permission, info_list, m_wrapper_info, m_wrapper_lock, m_wrapper_wc_info );
 
 #if defined( PYSVN_HAS_CLIENT_INFO2 )
         svn_error_t *error = 
@@ -534,8 +537,6 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
 #endif
         if( error != NULL )
             throw SvnException( error );
-
-        return info_baton.m_info_list;
     }
     catch( SvnException &e )
     {
@@ -543,8 +544,9 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
         m_context.checkForError( m_module.client_error );
 
         throw_client_error( e );
-        return Py::None();          // needed to remove warning about return value missing
     }
+
+    return info_list;
 }
 #endif
 
@@ -552,13 +554,13 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
 class Log4Baton
 {
 public:
-    Log4Baton( PythonAllowThreads *permission, SvnPool &pool )
+    Log4Baton( PythonAllowThreads *permission, SvnPool &pool, Py::List &log_list )
         : m_permission( permission )
         , m_pool( pool )
         , m_now( apr_time_now() )
         , m_wrapper_log( NULL )
         , m_wrapper_log_changed_path( NULL )
-        , m_log_list()
+        , m_log_list( log_list )
         , m_has_children( false )
         {}
     ~Log4Baton()
@@ -569,7 +571,7 @@ public:
     apr_time_t          m_now;
     DictWrapper         *m_wrapper_log;
     DictWrapper         *m_wrapper_log_changed_path;
-    Py::List            m_log_list;
+    Py::List            &m_log_list;
     bool                m_has_children;
 };
 
@@ -718,13 +720,15 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
 
     apr_array_header_t *targets = targetsFromStringOrList( url_or_path_list, pool );
 
+    Py::List log_list;
+
     try
     {
         checkThreadPermission();
 
         PythonAllowThreads permission( m_context );
 
-        Log4Baton baton( &permission, pool );
+        Log4Baton baton( &permission, pool, log_list );
         baton.m_wrapper_log = &m_wrapper_log;
         baton.m_wrapper_log_changed_path = &m_wrapper_log_changed_path;
 
@@ -746,8 +750,6 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
             );
         if( error != NULL )
             throw SvnException( error );
-
-        return baton.m_log_list;
     }
     catch( SvnException &e )
     {
@@ -757,7 +759,7 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
         throw_client_error( e );
     }
 
-    return Py::None();
+    return log_list;
 }
 #else
 class LogChangePathInfo

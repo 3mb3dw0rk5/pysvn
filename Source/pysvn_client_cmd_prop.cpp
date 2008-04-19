@@ -256,7 +256,7 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
 class ProplistReceiveBaton
 {
 public:
-    ProplistReceiveBaton( PythonAllowThreads *permission, Py::List prop_list, SvnPool &pool )
+    ProplistReceiveBaton( PythonAllowThreads *permission, SvnPool &pool, Py::List &prop_list )
         : m_permission( permission )
         , m_pool( pool )
         , m_prop_list( prop_list )
@@ -267,7 +267,7 @@ public:
     PythonAllowThreads  *m_permission;
     SvnPool             &m_pool;
 
-    Py::List            m_prop_list;
+    Py::List            &m_prop_list;
 };
 
 extern "C"
@@ -403,7 +403,7 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
             PythonAllowThreads permission( m_context );
 
 #if defined( PYSVN_HAS_CLIENT_PROPLIST3 )
-            ProplistReceiveBaton proplist_baton( &permission, list_of_proplists, pool );
+            ProplistReceiveBaton proplist_baton( &permission, pool, list_of_proplists );
             svn_error_t *error = svn_client_proplist3
                 (
                 norm_path_c_str,

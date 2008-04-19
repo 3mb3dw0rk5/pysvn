@@ -464,9 +464,9 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
 class DiffSummarizeBaton
 {
 public:
-    DiffSummarizeBaton( PythonAllowThreads *permission)
+    DiffSummarizeBaton( PythonAllowThreads *permission, Py::List &diff_list )
         : m_permission( permission )
-        , m_diff_list()
+        , m_diff_list( diff_list )
         {}
     ~DiffSummarizeBaton()
         {}
@@ -474,7 +474,7 @@ public:
     PythonAllowThreads  *m_permission;
 
     DictWrapper         *m_wrapper_diff_summary;
-    Py::List            m_diff_list;
+    Py::List            &m_diff_list;
 };
 
 extern "C"
@@ -543,6 +543,8 @@ Py::Object pysvn_client::cmd_diff_summarize( const Py::Tuple &a_args, const Py::
 #endif
     bool ignore_ancestry = args.getBoolean( name_ignore_ancestry, true );
 
+    Py::List diff_list;
+
     try
     {
         std::string norm_path1( svnNormalisedIfPath( path1, pool ) );
@@ -552,7 +554,7 @@ Py::Object pysvn_client::cmd_diff_summarize( const Py::Tuple &a_args, const Py::
 
         PythonAllowThreads permission( m_context );
 
-        DiffSummarizeBaton diff_baton( &permission );
+        DiffSummarizeBaton diff_baton( &permission, diff_list );
         diff_baton.m_wrapper_diff_summary = &m_wrapper_diff_summary;
 
 #if defined( PYSVN_HAS_CLIENT_DIFF_SUMMARIZE2 )
@@ -587,8 +589,6 @@ Py::Object pysvn_client::cmd_diff_summarize( const Py::Tuple &a_args, const Py::
 #endif
         if( error != NULL )
             throw SvnException( error );
-
-        return diff_baton.m_diff_list;
     }
     catch( SvnException &e )
     {
@@ -599,7 +599,7 @@ Py::Object pysvn_client::cmd_diff_summarize( const Py::Tuple &a_args, const Py::
     }
 
     // cannot convert to Unicode as we have no idea of the encoding of the bytes
-    return Py::None();
+    return diff_list;
 }
 
 Py::Object pysvn_client::cmd_diff_summarize_peg( const Py::Tuple &a_args, const Py::Dict &a_kws )
@@ -646,6 +646,8 @@ Py::Object pysvn_client::cmd_diff_summarize_peg( const Py::Tuple &a_args, const 
     revisionKindCompatibleCheck( is_url, revision_start, name_revision_start, name_url_or_path );
     revisionKindCompatibleCheck( is_url, revision_end, name_revision_end, name_url_or_path );
 
+    Py::List diff_list;
+
     try
     {
         std::string norm_path( svnNormalisedIfPath( path, pool ) );
@@ -654,7 +656,7 @@ Py::Object pysvn_client::cmd_diff_summarize_peg( const Py::Tuple &a_args, const 
 
         PythonAllowThreads permission( m_context );
 
-        DiffSummarizeBaton diff_baton( &permission );
+        DiffSummarizeBaton diff_baton( &permission, diff_list );
         diff_baton.m_wrapper_diff_summary = &m_wrapper_diff_summary;
 
 #if defined( PYSVN_HAS_CLIENT_DIFF_SUMMARIZE_PEG2 )
@@ -689,8 +691,6 @@ Py::Object pysvn_client::cmd_diff_summarize_peg( const Py::Tuple &a_args, const 
 #endif
         if( error != NULL )
             throw SvnException( error );
-
-        return diff_baton.m_diff_list;
     }
     catch( SvnException &e )
     {
@@ -701,6 +701,6 @@ Py::Object pysvn_client::cmd_diff_summarize_peg( const Py::Tuple &a_args, const 
     }
 
     // cannot convert to Unicode as we have no idea of the encoding of the bytes
-    return Py::None();
+    return diff_list;
 }
 #endif
