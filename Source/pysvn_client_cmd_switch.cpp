@@ -56,6 +56,7 @@ Py::Object pysvn_client::cmd_relocate( const Py::Tuple &a_args, const Py::Dict &
             m_context,
             pool
             );
+        permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
     }
@@ -128,6 +129,7 @@ Py::Object pysvn_client::cmd_switch( const Py::Tuple &a_args, const Py::Dict &a_
             pool
             );
 #endif
+        permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
     }

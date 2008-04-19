@@ -124,6 +124,7 @@ Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a
                 pool
                 );
 #endif
+            permission.allowThisThread();
             if( error != NULL )
                 throw SvnException( error );
         }
@@ -236,6 +237,7 @@ Py::Object pysvn_client::cmd_checkout( const Py::Tuple &a_args, const Py::Dict &
             pool
             );
 #endif
+        permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
     }
@@ -273,6 +275,8 @@ Py::Object pysvn_client::cmd_cleanup( const Py::Tuple &a_args, const Py::Dict &a
         PythonAllowThreads permission( m_context );
 
         svn_error_t * error = svn_client_cleanup( norm_path.c_str(), m_context, pool);
+
+        permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
     }
@@ -338,6 +342,7 @@ Py::Object pysvn_client::cmd_resolved( const Py::Tuple &a_args, const Py::Dict &
             pool
             );
 #endif
+        permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
     }
@@ -430,6 +435,7 @@ Py::Object pysvn_client::cmd_update( const Py::Tuple &a_args, const Py::Dict &a_
             pool
             );
 #endif
+        permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
     }

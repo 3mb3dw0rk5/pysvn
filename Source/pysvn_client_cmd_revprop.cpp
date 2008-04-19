@@ -61,6 +61,7 @@ Py::Object pysvn_client::cmd_revpropdel( const Py::Tuple &a_args, const Py::Dict
             m_context,
             pool
             );
+        permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
     }
@@ -114,6 +115,7 @@ Py::Object pysvn_client::cmd_revpropget( const Py::Tuple &a_args, const Py::Dict
             m_context,
             pool
             );
+        permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
     }
@@ -176,6 +178,7 @@ Py::Object pysvn_client::cmd_revproplist( const Py::Tuple &a_args, const Py::Dic
             m_context,
             pool
             );
+        permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
     }
@@ -239,6 +242,7 @@ Py::Object pysvn_client::cmd_revpropset( const Py::Tuple &a_args, const Py::Dict
             m_context,
             pool
             );
+        permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
     }

@@ -152,6 +152,7 @@ Py::Object pysvn_client::cmd_merge( const Py::Tuple &a_args, const Py::Dict &a_k
             pool
             );
 #endif
+        permission.allowThisThread();
         if( error != 0 )
             throw SvnException( error );
     }
@@ -300,6 +301,7 @@ Py::Object pysvn_client::cmd_merge_peg2( const Py::Tuple &a_args, const Py::Dict
             m_context,
             pool
             );
+        permission.allowThisThread();
         if( error != 0 )
             throw SvnException( error );
     }
@@ -422,6 +424,7 @@ Py::Object pysvn_client::cmd_merge_peg( const Py::Tuple &a_args, const Py::Dict 
             pool
             );
 #endif
+        permission.allowThisThread();
         if( error != 0 )
             throw SvnException( error );
     }

@@ -167,12 +167,13 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
 
         checkThreadPermission();
 
-        PythonAllowThreads permission( m_context );
         pysvn_apr_file output_file( pool );
         pysvn_apr_file error_file( pool );
 
         output_file.open_unique_file( norm_tmp_path );
         error_file.open_unique_file( norm_tmp_path );
+
+        PythonAllowThreads permission( m_context );
 
 #if defined( PYSVN_HAS_CLIENT_DIFF4 )
         svn_error_t *error = svn_client_diff3
@@ -236,6 +237,7 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
             pool
             );
 #endif
+        permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
 
@@ -437,6 +439,7 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
             pool
             );
 #endif
+        permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
 
@@ -587,6 +590,7 @@ Py::Object pysvn_client::cmd_diff_summarize( const Py::Tuple &a_args, const Py::
             pool
             );
 #endif
+        permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
     }
@@ -689,6 +693,7 @@ Py::Object pysvn_client::cmd_diff_summarize_peg( const Py::Tuple &a_args, const 
             pool
             );
 #endif
+        permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
     }

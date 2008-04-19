@@ -658,6 +658,7 @@ Py::Object pysvn_client::cmd_root_url_from_path( const Py::Tuple& a_args, const 
             m_context,
             pool
             );
+        permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
     }

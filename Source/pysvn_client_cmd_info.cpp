@@ -306,6 +306,7 @@ Py::Object pysvn_client::cmd_annotate( const Py::Tuple &a_args, const Py::Dict &
             pool
             );
 #endif
+        permission.allowThisThread();
         if( error != NULL )
         {
             throw SvnException( error );
@@ -367,10 +368,13 @@ Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kw
         svn_wc_adm_access_t *adm_access = NULL;
 
         svn_error_t *error = svn_wc_adm_probe_open( &adm_access, NULL, norm_path.c_str(), false, false, pool );
+        permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
 
+        permission.allowOtherThreads();
         error = svn_wc_entry( &entry, norm_path.c_str(), adm_access, false, pool );
+        permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
         
@@ -535,6 +539,7 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
                 pool
                 );
 #endif
+        permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
     }
@@ -748,6 +753,7 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
             m_context,
             pool
             );
+        permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
     }
@@ -1017,6 +1023,7 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
             pool
             );
 #endif
+        permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
     }
@@ -1230,7 +1237,7 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
             pool
             );
 #endif
-
+        permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
     }

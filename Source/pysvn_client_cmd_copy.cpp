@@ -162,6 +162,7 @@ Py::Object pysvn_client::cmd_copy2( const Py::Tuple &a_args, const Py::Dict &a_k
                 m_context,
                 pool
                 );
+            permission.allowThisThread();
             if( error != NULL )
             {
                 throw SvnException( error );
@@ -256,6 +257,7 @@ Py::Object pysvn_client::cmd_copy( const Py::Tuple &a_args, const Py::Dict &a_kw
                 pool
                 );
 #endif
+            permission.allowThisThread();
             if( error != NULL )
                 throw SvnException( error );
         }
@@ -356,6 +358,7 @@ Py::Object pysvn_client::cmd_move2( const Py::Tuple &a_args, const Py::Dict &a_k
                 m_context,
                 pool
                 );
+            permission.allowThisThread();
             if( error != NULL )
             {
                 throw SvnException( error );
@@ -462,7 +465,7 @@ Py::Object pysvn_client::cmd_move( const Py::Tuple &a_args, const Py::Dict &a_kw
                 pool
                 );
 #endif
-
+            permission.allowThisThread();
             if( error != NULL )
                 throw SvnException( error );
         }

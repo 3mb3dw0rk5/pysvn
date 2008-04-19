@@ -88,7 +88,7 @@ Py::Object pysvn_client::cmd_ls( const Py::Tuple &a_args, const Py::Dict &a_kws 
             pool
             );
 #endif
-
+        permission.allowThisThread();
         if( error != 0 )
             throw SvnException( error );
     }
@@ -322,6 +322,7 @@ Py::Object pysvn_client::cmd_list( const Py::Tuple &a_args, const Py::Dict &a_kw
             pool
             );
 #endif
+        permission.allowThisThread();
         if( error != 0 )
             throw SvnException( error );
     }

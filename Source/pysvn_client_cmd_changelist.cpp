@@ -66,6 +66,7 @@ Py::Object pysvn_client::cmd_add_to_changelist( const Py::Tuple &a_args, const P
                 m_context,
                 pool
                 );
+            permission.allowThisThread();
             if( error != NULL )
                 throw SvnException( error );
         }
@@ -184,6 +185,7 @@ Py::Object pysvn_client::cmd_get_changelist( const Py::Tuple &a_args, const Py::
                 m_context,
                 pool
                 );
+            permission.allowThisThread();
             if( error != NULL )
                 throw SvnException( error );
         }
@@ -249,6 +251,7 @@ Py::Object pysvn_client::cmd_remove_from_changelists( const Py::Tuple &a_args, c
                 m_context,
                 pool
                 );
+            permission.allowThisThread();
             if( error != NULL )
                 throw SvnException( error );
         }
