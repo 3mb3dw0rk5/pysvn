@@ -297,7 +297,7 @@ Py::Object pysvn_client::cmd_resolved( const Py::Tuple &a_args, const Py::Dict &
     {
     { true,  name_path },
     { false, name_recurse },
-#if defined( PYSVN_HAS_CLIENT_RESOLVED2 )
+#if defined( PYSVN_HAS_CLIENT_RESOLVE )
     { false, name_depth },
     { false, name_conflict_choice },
 #endif
@@ -307,7 +307,7 @@ Py::Object pysvn_client::cmd_resolved( const Py::Tuple &a_args, const Py::Dict &
     args.check();
 
     std::string path( args.getUtf8String( name_path ) );
-#if defined( PYSVN_HAS_CLIENT_RESOLVED2 )
+#if defined( PYSVN_HAS_CLIENT_RESOLVE )
     svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files );
     svn_wc_conflict_choice_t conflict_choice = args.getWcConflictChoice(
                                 name_conflict_choice, svn_wc_conflict_choose_merged );
@@ -324,8 +324,8 @@ Py::Object pysvn_client::cmd_resolved( const Py::Tuple &a_args, const Py::Dict &
         checkThreadPermission();
 
         PythonAllowThreads permission( m_context );
-#if defined( PYSVN_HAS_CLIENT_RESOLVED2 )
-        svn_error_t *error = svn_client_resolved2
+#if defined( PYSVN_HAS_CLIENT_RESOLVE )
+        svn_error_t *error = svn_client_resolve
             (
             norm_path.c_str(),
             depth,

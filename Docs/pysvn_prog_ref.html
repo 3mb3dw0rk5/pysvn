@@ -477,7 +477,7 @@ a tuple of three values (retcode, accepted_failures, save).
 </tr>
 <tr bgcolor="#e0e0e0">
 <td><a href="#pysvn_client_remove">remove</a></td>
-<td><span class="svn_1005000"><a href="#pysvn_client_remove_from_changelist">remove_from_changelist</a></span></td>
+<td><span class="svn_1005000"><a href="#pysvn_client_remove_from_changelists">remove_from_changelists</a></span></td>
 <td><a href="#pysvn_client_resolved">resolved</a></td>
 <td><a href="#pysvn_client_revert">revert</a></td>
 <td><a href="#pysvn_client_revpropdel">revpropdel</a></td>
@@ -1586,12 +1586,12 @@ repository via an immediate commit.
 </p>
 
 <div class="svn_1005000">
-<h4><a name="pysvn_client_remove_from_changelist"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.remove_from_changelist</a></h4>
+<h4><a name="pysvn_client_remove_from_changelists"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.remove_from_changelists</a></h4>
 <pre>
-remove_from_changelist( path,
-                        changelist,
-                        depth=QQQ,
-                        changelists=[] )
+remove_from_changelists( path,
+                         changelist,
+                         depth=pysvn.depth.infinite,
+                         changelists=[] )
 </pre>
 <p>
 TBD

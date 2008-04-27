@@ -366,11 +366,23 @@ Py::Object toObject
 #endif
 #ifdef PYSVN_HAS_SVN_INFO_T__SIZES
 #ifdef HAVE_LONG_LONG
-        py_wc_info[str_working_size] = Py::LongLong( static_cast<PY_LONG_LONG>( info.working_size ) );
-        py_wc_info[str_size] = Py::LongLong( static_cast<PY_LONG_LONG>( info.size ) );
+        if( info.working_size == SVN_INFO_SIZE_UNKNOWN )
+            py_wc_info[str_working_size] = Py::None();
+        else
+            py_wc_info[str_working_size] = Py::LongLong( static_cast<PY_LONG_LONG>( info.working_size ) );
+        if( info.size == SVN_INFO_SIZE_UNKNOWN )
+            py_wc_info[str_size] = Py::None();
+        else
+            py_wc_info[str_size] = Py::LongLong( static_cast<PY_LONG_LONG>( info.size ) );
 #else
-        py_wc_info[str_working_size] = Py::Int( static_cast<int>( info.working_size ) );
-        py_wc_info[str_size] = Py::Int( static_cast<int>( info.size ) );
+        if( info.working_size == SVN_INFO_SIZE_UNKNOWN )
+            py_wc_info[str_working_size] = Py::None();
+        else
+            py_wc_info[str_working_size] = Py::Int( static_cast<int>( info.working_size ) );
+        if( info.size == SVN_INFO_SIZE_UNKNOWN )
+            py_wc_info[str_size] = Py::None();
+        else
+            py_wc_info[str_size] = Py::Int( static_cast<int>( info.size ) );
 #endif
 #endif
         py_info[str_wc_info] = wrapper_wc_info.wrapDict( py_wc_info );

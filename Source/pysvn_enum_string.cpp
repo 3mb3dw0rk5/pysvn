@@ -128,9 +128,9 @@ template <> EnumString< svn_wc_notify_action_t >::EnumString()
     add( svn_wc_notify_exists, "exists" );
     add( svn_wc_notify_changelist_set, "changelist_set" );
     add( svn_wc_notify_changelist_clear, "changelist_clear" );
-    add( svn_wc_notify_changelist_failed, "changelist_failed" );
     add( svn_wc_notify_changelist_moved, "changelist_moved" );
     add( svn_wc_notify_merge_begin, "merge_begin" );
+    add( svn_wc_notify_foreign_merge_begin, "foreign_merge_begin" );
     add( svn_wc_notify_update_replace, "update_replace" );
 #endif
 }

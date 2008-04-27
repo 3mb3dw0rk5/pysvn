@@ -120,8 +120,8 @@ if hasattr( pysvn.wc_notify_action, 'exists' ):
     wc_notify_action_map[ pysvn.wc_notify_action.exists ] = 'exists'
     wc_notify_action_map[ pysvn.wc_notify_action.changelist_set ] = 'changelist_set'
     wc_notify_action_map[ pysvn.wc_notify_action.changelist_clear ] = 'changelist_clear'
-    wc_notify_action_map[ pysvn.wc_notify_action.changelist_failed ] = 'changelist_failed'
     wc_notify_action_map[ pysvn.wc_notify_action.changelist_moved ] = 'changelist_moved'
+    wc_notify_action_map[ pysvn.wc_notify_action.foreign_merge_begin ] = 'foreign_merge_begin'
     wc_notify_action_map[ pysvn.wc_notify_action.merge_begin ] = 'merge_begin'
     wc_notify_action_map[ pysvn.wc_notify_action.update_replace ] = 'update_replace'
 
@@ -273,6 +273,14 @@ class SvnCommand:
         force = args.getBooleanOption( '--force', False )
         
         self.client.add( args.getPositionalArgs( 1 ), recurse=recurse, force=force )
+
+    def cmd_add_to_changelist( self, args ):
+        if not hasattr( self.client, add_to_changelist ):
+            print 'Error: add_to_changelist is not supported by this version of Subversion'
+            return
+
+        path, changelist = args.getPositionalArgs( 2, 2 )
+        self.client.add_to_changelist( path, changelist )
 
     def cmd_annotate( self, args ):
         start_revision, end_revision = args.getOptionalRevisionPair( '--revision', '0', 'head' )
@@ -755,6 +763,14 @@ class SvnCommand:
         positional_args = args.getPositionalArgs( 1, 0 )
         self.client.remove( positional_args, force=force )
     cmd_rm = cmd_remove
+
+    def cmd_remove_from_changelists( self, args ):
+        if not hasattr( self.client, remove_from_changelists ):
+            print 'Error: remove_from_changelists is not supported by this version of Subversion'
+            return
+
+        path = args.getPositionalArgs( 1, 1 )[0]
+        self.client.remove_from_changelists( path )
 
     def cmd_resolved( self, args ):
         recurse = args.getBooleanOption( '--recursive', True )
