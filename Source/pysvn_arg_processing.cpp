@@ -235,6 +235,24 @@ int FunctionArguments::getInteger( const char *name, int default_value )
     }
 }
 
+long FunctionArguments::getLong( const char *name )
+{
+    Py::Long long_val( getArg( name ) );
+    return long_val;
+}
+
+long FunctionArguments::getLong( const char *name, long default_value )
+{
+    if( hasArg( name ) )
+    {
+        return getLong( name );
+    }
+    else
+    {
+        return default_value;
+    }
+}
+
 std::string FunctionArguments::getUtf8String( const char *name )
 {
     Py::String any( getArg( name ) );

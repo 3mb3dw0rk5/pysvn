@@ -411,6 +411,8 @@ public:
     bool getBoolean( const char *name, bool default_value );
     int getInteger( const char *name );
     int getInteger( const char *name, int default_value );
+    long getLong( const char *name );
+    long getLong( const char *name, long default_value );
     std::string getUtf8String( const char *name );
     std::string getUtf8String( const char *name, const std::string &default_value );
     std::string getString( const char *name, const std::string &default_value );

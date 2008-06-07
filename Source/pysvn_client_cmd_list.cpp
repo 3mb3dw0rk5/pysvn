@@ -268,7 +268,7 @@ Py::Object pysvn_client::cmd_list( const Py::Tuple &a_args, const Py::Dict &a_kw
 #else
     bool recurse = args.getBoolean( name_recurse, false );
 #endif
-    apr_uint32_t dirent_fields = args.getInteger( name_dirent_fields, SVN_DIRENT_ALL );
+    apr_uint32_t dirent_fields = args.getLong( name_dirent_fields, SVN_DIRENT_ALL );
     bool fetch_locks = args.getBoolean( name_fetch_locks, false );
 
     revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
