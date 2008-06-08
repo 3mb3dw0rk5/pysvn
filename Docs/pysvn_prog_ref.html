@@ -602,12 +602,20 @@ revision = \
 checkin( path,
         log_message,
         recurse=True<span class="svn_1002000">,
-        keep_locks=False</span> )
+        keep_locks=False</span><span class="svn_1005000">,
+        depth,
+        keep_changelist,
+        changelists,
+        revprops</span> )
 revision = \
 checkin( [path,path],
         log_message,
         recurse=True<span class="svn_1002000">,
-        keep_locks=False</span> )
+        keep_locks=False</span><span class="svn_1005000">,
+        depth,
+        keep_changelist,
+        changelists,
+        revprops</span> )
 </pre>
 <p>
 checkin the files in the path_list to the repository with the
@@ -618,6 +626,12 @@ keep_locks to True to prevent locks in the path being unlocked.</span>
 <p>checkin returns a pysvn.Revision containing the number of the
 checked in revision.
 </p>
+
+<p>depth,
+        keep_changelist,
+        changelists,
+        revprops TBD</p>
+
 
 <h4><a name="pysvn_client_checkout"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.checkout</a></h4>
 <pre>
@@ -691,7 +705,7 @@ copy2( sources,
        dest_url_or_path,
        copy_as_child=False,
        make_parents=False,
-       with_merge_history=False )
+       revprops )
 </pre>
 <p>
 Duplicate something in working copy or repos, remembering history.
@@ -699,6 +713,9 @@ The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
 if the src_path is a URL otherwise to
 pysvn.Revision( opt_revision_kind.working ).
 </p>
+
+<p>revprops TBD</p>
+
 <p>src_url_or_path and dest_url_or_path can each be either a
 working copy (WC) path or URL:
 <ul>
@@ -998,7 +1015,8 @@ import_( path,
          url,
          log_message,
          recurse=True<span class="svn_1003000">,
-         ignore=False</span> )
+         ignore=False</span><span class="svn_1005000">,
+         revprops</span> )
 </pre>
 <p>
 Commit an unversioned file or tree into the repository.
@@ -1008,6 +1026,9 @@ Parent directories are created as necessary in the repository.
 <span class="svn_1003000">Set ignore to False to
 disregard default and svn:ignore property ignores.</span>
 </p>
+
+<p>revprops TBD</p>
+
 <p>import_ returns a pysvn.Revision containing the number of the
 checked in revision.
 </p>
@@ -1348,15 +1369,21 @@ WC targets.
 <h4><a name="pysvn_client_mkdir"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.mkdir</a></h4>
 <pre>
 mkdir( url_or_path,
-       log_message )
+       log_message<span class="svn_1005000">,
+       make_parents,
+       revprops</span> )
 mkdir( [url_or_path,url_or_path],
-       log_message )
+       log_message<span class="svn_1005000">,
+       make_parents,
+       revprops</span> )
 </pre>
 <p>Create a new directory under revision control.
 </p>
 
 <p>url_or_path can be a list of URLs and paths
 </p>
+
+<p>make_parents and revprops TBD</p>
 
 <p>If url_or_path is a path, each directory is scheduled for
 addition upon the next commit.
@@ -1409,7 +1436,7 @@ move2( sources,
        dest_url_or_path,
        move_as_child=False,
        make_parents=False,
-       with_merge_history=False )
+       revprops )
 </pre>
 <p>
 Duplicate something in working copy or repos, remembering history.
@@ -1417,6 +1444,9 @@ The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
 if the src_path is a URL otherwise to
 pysvn.Revision( opt_revision_kind.working ).
 </p>
+
+<p>revprops TBD</p>
+
 <p>src_url_or_path and dest_url_or_path can each be either a
 working copy (WC) path or URL:
 <ul>
@@ -1439,7 +1469,8 @@ propdel( prop_name,
          revision=pysvn.Revision(),
          recurse=False<span class="svn_1002000">,
          skip_checks=False</span><span class="svn_1005000">,
-         depth=depth</span> )
+         depth=depth,
+         revprops</span> )
 </pre>
 <p>Delete the property prop_name from url_or_path.
 </p>
@@ -1457,6 +1488,7 @@ URL otherwise to pysvn.Revision( opt_revision_kind.working ).
 <div class="svn_1005000">
 <p>The depth can be used as in place of recurse. QQQ
 </p>
+<p>revprops TBD</p>
 </div>
 
 <h4><a name="pysvn_client_propget"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.propget</a></h4>
@@ -1524,7 +1556,8 @@ WC targets.
          recurse=False<span class="svn_1002000">,
          skip_checks=False</span><span class="svn_1005000">,
          depth=depth,
-         allow_unver_obstructions=False</span> )
+         allow_unver_obstructions=False,
+         revprops</span> )
 </pre>
 <p>Set the property prop_name to prop_value in url_or_path.
 </p>
@@ -1545,6 +1578,8 @@ pysvn.Revision( opt_revision_kind.working ).
 <p>If allow_unver_obstructions is False then the update will abort
 if there are any unversioned obstructing items.
 </p>
+<p>revprops TBD</p>
+
 </div>
 
 <h4><a name="pysvn_client_relocate"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.relocate</a></h4>
@@ -1566,7 +1601,8 @@ relocate( from_url,
 <pre>
 remove( url_or_path_list,
         force=False<span class="svn_1005000">,
-        keep_local=False</span> )
+        keep_local=False,
+        revprops</span> )
 </pre>
 <p>If url_or_path is a path, each item is scheduled for deletion
 upon the next commit.  Files, and directories that have not been
@@ -1579,6 +1615,7 @@ behaviour.
 <div class="svn_1005000">
 <p>Set keep_local to True to prevent the local file from being delete.
 </p>
+<p>revprops TBD</p>
 </div>
 
 <p>If url_or_path is a URL, the items are deleted from the
