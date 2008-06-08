@@ -209,6 +209,7 @@ Py::Object pysvn_client::cmd_mkdir( const Py::Tuple &a_args, const Py::Dict &a_k
     { false, name_log_message },
 #if defined( PYSVN_HAS_CLIENT_MKDIR3 )
     { false, name_make_parents },
+    { false, name_revprops },
 #endif
     { false, NULL }
     };
@@ -227,6 +228,16 @@ Py::Object pysvn_client::cmd_mkdir( const Py::Tuple &a_args, const Py::Dict &a_k
 
 #if defined( PYSVN_HAS_CLIENT_MKDIR3 )
     bool make_parents = args.getBoolean( name_make_parents, false );
+
+    apr_hash_t *revprops = NULL;
+    if( args.hasArg( name_revprops ) )
+    {
+        Py::Object py_revprop = args.getArg( name_revprops );
+        if( !py_revprop.isNone() )
+        {
+            revprops = hashOfStringsFromDistOfStrings( py_revprop, pool );
+        }
+    }
 #endif
 
     try
@@ -257,6 +268,7 @@ Py::Object pysvn_client::cmd_mkdir( const Py::Tuple &a_args, const Py::Dict &a_k
             &commit_info,       // changed type
             targets,
             make_parents,
+            revprops,
             m_context,
             pool
             );
@@ -300,6 +312,7 @@ Py::Object pysvn_client::cmd_remove( const Py::Tuple &a_args, const Py::Dict &a_
     { false, name_force },
 #if defined( PYSVN_HAS_CLIENT_DELETE3 )
     { false, name_keep_local },
+    { false, name_revprops },
 #endif
     { false, NULL }
     };
@@ -308,10 +321,21 @@ Py::Object pysvn_client::cmd_remove( const Py::Tuple &a_args, const Py::Dict &a_
 
     bool force = args.getBoolean( name_force, false );
 #if defined( PYSVN_HAS_CLIENT_DELETE3 )
+    SvnPool pool( m_context );
+
     bool keep_local = args.getBoolean( name_keep_local, false );
+
+    apr_hash_t *revprops = NULL;
+    if( args.hasArg( name_revprops ) )
+    {
+        Py::Object py_revprop = args.getArg( name_revprops );
+        if( !py_revprop.isNone() )
+        {
+            revprops = hashOfStringsFromDistOfStrings( py_revprop, pool );
+        }
+    }
 #endif
 
-    SvnPool pool( m_context );
     apr_array_header_t *targets = targetsFromStringOrList( args.getArg( name_url_or_path ), pool );
 
     pysvn_commit_info_t *commit_info = NULL;
@@ -328,6 +352,7 @@ Py::Object pysvn_client::cmd_remove( const Py::Tuple &a_args, const Py::Dict &a_
             targets,
             force,
             keep_local,
+            revprops,
             m_context,
             pool
             );

@@ -34,6 +34,7 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a
     { false, name_depth },
     { false, name_base_revision_for_url },
     { false, name_changelists },
+    { false, name_revprops },
 #endif
     { false, NULL }
     };
@@ -71,6 +72,16 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a
 
 #if defined( PYSVN_HAS_CLIENT_PROPSET3 )
     pysvn_commit_info_t *commit_info = NULL;
+
+    apr_hash_t *revprops = NULL;
+    if( args.hasArg( name_revprops ) )
+    {
+        Py::Object py_revprop = args.getArg( name_revprops );
+        if( !py_revprop.isNone() )
+        {
+            revprops = hashOfStringsFromDistOfStrings( py_revprop, pool );
+        }
+    }
 #endif
 
     try
@@ -92,6 +103,7 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a
             skip_checks,
             base_revision_for_url,
             changelists,
+            revprops,
             m_context.ctx(),
             pool
             );
@@ -478,6 +490,7 @@ Py::Object pysvn_client::cmd_propset( const Py::Tuple &a_args, const Py::Dict &a
     { false, name_depth },
     { false, name_base_revision_for_url },
     { false, name_changelists },
+    { false, name_revprops },
 #endif
     { false, NULL }
     };
@@ -506,6 +519,16 @@ Py::Object pysvn_client::cmd_propset( const Py::Tuple &a_args, const Py::Dict &a
 
     svn_revnum_t base_revision_for_url = args.getInteger( name_base_revision_for_url, 0 );
     svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files );
+
+    apr_hash_t *revprops = NULL;
+    if( args.hasArg( name_revprops ) )
+    {
+        Py::Object py_revprop = args.getArg( name_revprops );
+        if( !py_revprop.isNone() )
+        {
+            revprops = hashOfStringsFromDistOfStrings( py_revprop, pool );
+        }
+    }
 #else
     bool recurse = args.getBoolean( name_recurse, false );
 #endif
@@ -538,6 +561,7 @@ Py::Object pysvn_client::cmd_propset( const Py::Tuple &a_args, const Py::Dict &a
             skip_checks,
             base_revision_for_url,
             changelists,
+            revprops,
             m_context.ctx(),
             pool
             );

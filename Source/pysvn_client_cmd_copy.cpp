@@ -28,6 +28,7 @@ Py::Object pysvn_client::cmd_copy2( const Py::Tuple &a_args, const Py::Dict &a_k
     { true, name_dest_url_or_path },
     { false, name_copy_as_child },
     { false, name_make_parents },
+    { false, name_revprops },
     { false, NULL }
     };
     FunctionArguments args( "copy2", args_desc, a_args, a_kws );
@@ -143,6 +144,16 @@ Py::Object pysvn_client::cmd_copy2( const Py::Tuple &a_args, const Py::Dict &a_k
         type_error_message = "expecting boolean for keyword make_parents";
         bool make_parents = args.getBoolean( name_make_parents, false );
 
+        apr_hash_t *revprops = NULL;
+        if( args.hasArg( name_revprops ) )
+        {
+            Py::Object py_revprop = args.getArg( name_revprops );
+            if( !py_revprop.isNone() )
+            {
+                revprops = hashOfStringsFromDistOfStrings( py_revprop, pool );
+            }
+        }
+
         try
         {
             std::string norm_dest_path( svnNormalisedIfPath( dest_path, pool ) );
@@ -159,6 +170,7 @@ Py::Object pysvn_client::cmd_copy2( const Py::Tuple &a_args, const Py::Dict &a_k
                 norm_dest_path.c_str(),
                 copy_as_child,
                 make_parents,
+                revprops,
                 m_context,
                 pool
                 );
@@ -287,6 +299,7 @@ Py::Object pysvn_client::cmd_move2( const Py::Tuple &a_args, const Py::Dict &a_k
     { false, name_force },
     { false, name_move_as_child },
     { false, name_make_parents },
+    { false, name_revprops },
     { false, NULL }
     };
     FunctionArguments args( "move2", args_desc, a_args, a_kws );
@@ -339,6 +352,16 @@ Py::Object pysvn_client::cmd_move2( const Py::Tuple &a_args, const Py::Dict &a_k
         type_error_message = "expecting boolean for keyword make_parents";
         bool make_parents = args.getBoolean( name_make_parents, false );
 
+        apr_hash_t *revprops = NULL;
+        if( args.hasArg( name_revprops ) )
+        {
+            Py::Object py_revprop = args.getArg( name_revprops );
+            if( !py_revprop.isNone() )
+            {
+                revprops = hashOfStringsFromDistOfStrings( py_revprop, pool );
+            }
+        }
+
         try
         {
             std::string norm_dest_path( svnNormalisedIfPath( dest_path, pool ) );
@@ -355,6 +378,7 @@ Py::Object pysvn_client::cmd_move2( const Py::Tuple &a_args, const Py::Dict &a_k
                 force,
                 move_as_child,
                 make_parents,
+                revprops,
                 m_context,
                 pool
                 );

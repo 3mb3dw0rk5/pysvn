@@ -34,6 +34,7 @@ Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a
     { false, name_depth },
     { false, name_keep_changelist },
     { false, name_changelists },
+    { false, name_revprops },
 #endif
     { false, NULL }
     };
@@ -72,6 +73,16 @@ Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a
         {
             changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
         }
+
+    apr_hash_t *revprops = NULL;
+    if( args.hasArg( name_revprops ) )
+    {
+        Py::Object py_revprop = args.getArg( name_revprops );
+        if( !py_revprop.isNone() )
+        {
+            revprops = hashOfStringsFromDistOfStrings( py_revprop, pool );
+        }
+    }
 #endif
 
         try
@@ -91,6 +102,7 @@ Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a
                 keep_locks,
                 keep_changelist,
                 changelists,
+                revprops,
                 m_context,
                 pool
                 );

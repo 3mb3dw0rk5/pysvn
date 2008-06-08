@@ -578,3 +578,35 @@ Py::List toListOfStrings( Py::Object obj )
     return list;
 }
 
+apr_hash_t *hashOfStringsFromDistOfStrings( Py::Object arg, SvnPool &pool )
+{
+    Py::Dict dict( arg );
+
+    apr_hash_t *hash = apr_hash_make( pool );
+
+    std::string type_error_message;
+    try
+    {
+        Py::List all_keys( dict.keys() );
+
+        for( Py::List::size_type i=0; i<all_keys.length(); i++ )
+        {
+            type_error_message = "expecting string key in dict";
+            Py::String key( asUtf8String( all_keys[i] ) );
+
+            type_error_message = "expecting string value in dict";
+            Py::String value( asUtf8String( dict[ key ] ) );
+
+            char *hash_key = apr_pstrdup( pool, key.as_std_string().c_str() );
+            svn_string_t *hash_value = svn_string_create( value.as_std_string().c_str(), pool );
+
+            apr_hash_set( hash, hash_key, APR_HASH_KEY_STRING, hash_value );
+        }
+    }
+    catch( Py::TypeError & )
+    {
+        throw Py::TypeError( type_error_message );
+    }
+
+    return hash;
+}

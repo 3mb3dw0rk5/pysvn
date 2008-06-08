@@ -740,6 +740,7 @@ extern Py::String asUtf8String( Py::Object obj );
 extern apr_array_header_t *targetsFromStringOrList( Py::Object arg, SvnPool &pool );
 extern Py::List toListOfStrings( Py::Object obj );
 extern apr_array_header_t *arrayOfStringsFromListOfStrings( Py::Object arg, SvnPool &pool );
+extern apr_hash_t *hashOfStringsFromDistOfStrings( Py::Object arg, SvnPool &pool );
 
 Py::Object toObject( apr_time_t t );
 Py::Object toObject( pysvn_commit_info_t *commit_info );

@@ -183,6 +183,7 @@ Py::Object pysvn_client::cmd_import( const Py::Tuple &a_args, const Py::Dict &a_
 #if defined( PYSVN_HAS_CLIENT_IMPORT3 )
     { false, name_depth },
     { false, name_ignore_unknown_node_types },
+    { false, name_revprops },
 #endif
     { false, NULL }
     };
@@ -193,9 +194,21 @@ Py::Object pysvn_client::cmd_import( const Py::Tuple &a_args, const Py::Dict &a_
     std::string url( args.getUtf8String( name_url ) );
     std::string message( args.getUtf8String( name_log_message ) );
 
+    SvnPool pool( m_context );
+
 #if defined( PYSVN_HAS_CLIENT_IMPORT3 )
     svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity );
     bool ignore_unknown_node_types = args.getBoolean( name_ignore_unknown_node_types, false );
+
+    apr_hash_t *revprops = NULL;
+    if( args.hasArg( name_revprops ) )
+    {
+        Py::Object py_revprop = args.getArg( name_revprops );
+        if( !py_revprop.isNone() )
+        {
+            revprops = hashOfStringsFromDistOfStrings( py_revprop, pool );
+        }
+    }
 #else
     bool recurse = args.getBoolean( name_recurse, true );
 #endif
@@ -203,7 +216,6 @@ Py::Object pysvn_client::cmd_import( const Py::Tuple &a_args, const Py::Dict &a_
     bool ignore = args.getBoolean( name_ignore, false );
 #endif
 
-    SvnPool pool( m_context );
     pysvn_commit_info_t *commit_info = NULL;
 
     try
@@ -225,6 +237,7 @@ Py::Object pysvn_client::cmd_import( const Py::Tuple &a_args, const Py::Dict &a_
             depth,
             !ignore,
             ignore_unknown_node_types,
+            revprops,
             m_context,
             pool
             );
