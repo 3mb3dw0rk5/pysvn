@@ -59,10 +59,16 @@ cmd_pysvn checkin -m "commit added files"
 
 cmd_pysvn status --verbose ${TESTROOT}/wc1
 
+echo Info: running test_07_copy2
 ${PYTHON} ${WORKDIR}/Tests/test_07_copy2.py ${TESTROOT}/configdir
+
+echo Info: running test_07_move2
 ${PYTHON} ${WORKDIR}/Tests/test_07_move2.py ${TESTROOT}/configdir
 
+echo Info: running test_07_changelist
 ${PYTHON} ${WORKDIR}/Tests/test_07_changelist.py ${TESTROOT}/configdir
 
+echo Info: running test_07_revprops
+${PYTHON} ${WORKDIR}/Tests/test_07_revprops.py ${TESTROOT}/configdir
 
 true
