@@ -319,9 +319,10 @@ Py::Object pysvn_client::cmd_remove( const Py::Tuple &a_args, const Py::Dict &a_
     FunctionArguments args( "remove", args_desc, a_args, a_kws );
     args.check();
 
+    SvnPool pool( m_context );
+
     bool force = args.getBoolean( name_force, false );
 #if defined( PYSVN_HAS_CLIENT_DELETE3 )
-    SvnPool pool( m_context );
 
     bool keep_local = args.getBoolean( name_keep_local, false );
 

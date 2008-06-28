@@ -8,7 +8,7 @@
 // ====================================================================
 //
 //
-//  pysvn_static_strings.cpp
+//  pysvn_static_strings.hpp
 //
 #ifndef PYSVN_STATIC_PY_STRING_P
 #define PYSVN_STATIC_STRING( name, value ) const char name[] = value;
