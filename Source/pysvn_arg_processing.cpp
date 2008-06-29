@@ -359,7 +359,7 @@ svn_depth_t FunctionArguments::getDepth
     svn_depth_t default_value
     )
 {
-    if( hasArg( recursive_name ) and hasArg( depth_name ) )
+    if( hasArg( recursive_name ) && hasArg( depth_name ) )
     {
         std::string msg = m_function_name;
         msg += "() cannot mix ";
