@@ -408,7 +408,7 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Brand version info"
-					CommandLine="PATH=C:\Program Files\Subversion\bin;%PATH%
+					CommandLine="PATH=L:\BuildRoot\Win32-MSVC71-1.4.6\subversion-1.4.6\Release\bin;%PATH%
 %PY%\python ..\Builder\brand_version.py ..\Builder\version.info &quot;$(InputPath)&quot;
 "
 					Outputs=".\pysvn.rc"/>
@@ -1042,39 +1042,6 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="pysvn_static_strings.cpp">
-			<FileConfiguration
-				Name="Profile|Win32">
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="0"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
-					BrowseInformation="1"
-					CompileAs="2"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32">
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="0"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
-					BrowseInformation="1"
-					CompileAs="2"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Release|Win32">
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="0"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
-					BrowseInformation="1"
-					CompileAs="2"/>
-			</FileConfiguration>
-		</File>
-		<File
 			RelativePath="pysvn_path.cpp">
 			<FileConfiguration
 				Name="Profile|Win32">
@@ -1147,7 +1114,8 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Generate pysvn_docs.cpp/.hpp"
-					CommandLine="%PY%\python $(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py $(SUBVERSION)/subversion/include $(InputPath) $(SolutionDir)\pysvn_docs.hpp $(SolutionDir)\pysvn_docs.cpp"
+					CommandLine="%PY%\python $(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py $(SUBVERSION)/subversion/include $(InputPath) $(SolutionDir)\pysvn_docs.hpp $(SolutionDir)\pysvn_docs.cpp
+"
 					AdditionalDependencies="$(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py"
 					Outputs="$(SolutionDir)\pysvn_docs.cpp;$(SolutionDir)\pysvn_docs.hpp"/>
 			</FileConfiguration>
@@ -1156,7 +1124,8 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Generate pysvn_docs.cpp/.hpp"
-					CommandLine="%PY%\python $(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py $(SUBVERSION)/subversion/include $(InputPath) $(SolutionDir)\pysvn_docs.hpp $(SolutionDir)\pysvn_docs.cpp"
+					CommandLine="%PY%\python $(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py $(SUBVERSION)/subversion/include $(InputPath) $(SolutionDir)\pysvn_docs.hpp $(SolutionDir)\pysvn_docs.cpp
+"
 					AdditionalDependencies="$(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py"
 					Outputs="$(SolutionDir)\pysvn_docs.cpp;$(SolutionDir)\pysvn_docs.hpp"/>
 			</FileConfiguration>
@@ -1165,13 +1134,47 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Generate pysvn_docs.cpp/.hpp"
-					CommandLine="%PY%\python $(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py $(SUBVERSION)/subversion/include $(InputPath) $(SolutionDir)\pysvn_docs.hpp $(SolutionDir)\pysvn_docs.cpp"
+					CommandLine="%PY%\python $(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py $(SUBVERSION)/subversion/include $(InputPath) $(SolutionDir)\pysvn_docs.hpp $(SolutionDir)\pysvn_docs.cpp
+"
 					AdditionalDependencies="$(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py"
 					Outputs="$(SolutionDir)\pysvn_docs.cpp;$(SolutionDir)\pysvn_docs.hpp"/>
 			</FileConfiguration>
 		</File>
 		<File
 			RelativePath="pysvn_revision.cpp">
+			<FileConfiguration
+				Name="Profile|Win32">
+				<Tool
+					Name="VCCLCompilerTool"
+					Optimization="0"
+					AdditionalIncludeDirectories=""
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					BrowseInformation="1"
+					CompileAs="2"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug|Win32">
+				<Tool
+					Name="VCCLCompilerTool"
+					Optimization="0"
+					AdditionalIncludeDirectories=""
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					BrowseInformation="1"
+					CompileAs="2"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32">
+				<Tool
+					Name="VCCLCompilerTool"
+					Optimization="0"
+					AdditionalIncludeDirectories=""
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					BrowseInformation="1"
+					CompileAs="2"/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath="pysvn_static_strings.cpp">
 			<FileConfiguration
 				Name="Profile|Win32">
 				<Tool
@@ -1297,7 +1300,7 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Brand version info"
-					CommandLine="PATH=C:\Program Files\Subversion\bin;%PATH%
+					CommandLine="PATH=L:\BuildRoot\Win32-MSVC71-1.4.6\subversion-1.4.6\Release\bin;%PATH%
 %PY%\python ..\Builder\brand_version.py ..\Builder\version.info &quot;$(InputPath)&quot;
 "
 					Outputs=".\pysvn_version.hpp"/>
