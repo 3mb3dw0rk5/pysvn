@@ -82,9 +82,9 @@ Source: "..\..\..\Examples\Client\parse_datetime.py"; DestDir: "{app}\Examples\C
 
 Source: "intl3_svn.dll"; DestDir: "{app}"
 
-Source: "libapr.dll"; DestDir: "{app}"
-Source: "libaprutil.dll"; DestDir: "{app}"
-Source: "libapriconv.dll"; DestDir: "{app}"
+Source: "libapr-1.dll"; DestDir: "{app}"
+Source: "libaprutil-1.dll"; DestDir: "{app}"
+Source: "libapriconv-1.dll"; DestDir: "{app}"
 
 Source: "libexpat.dll"; DestDir: "{app}"
 Source: "libgettextlib.dll"; DestDir: "{app}"
