@@ -1,4 +1,4 @@
-@echo offq
+@echo off
 rem figure out where we are
 for %%I in ( %0\..\.. ) do set WORKDIR=%%~fI
 
@@ -23,7 +23,7 @@ if "%PY_MIN%" == "6" set COMPILER=msvc71
 
 if exist ..\..\ReleaseEngineering\win32-%COMPILER%\software-versions-%SVN_VER_MAJ_MIN%.cmd (
     pushd ..\..\ReleaseEngineering\win32-%COMPILER%
-    call software-versions-%SVN_VER_MAJ_MIN%.cmd offq
+    call software-versions-%SVN_VER_MAJ_MIN%.cmd off
     popd
     )
 
@@ -36,7 +36,8 @@ set PYLIB=python%PY_MAJ%%PY_MIN%
 set PYTHONPATH=%WORKDIR%\Source
 set PYTHON=%PY%\python.exe
 set wc_SVNVERSION=L:\BuildRoot\Win32-MSVC71-1.4.6\subversion-1.4.6\Release\bin\svnversion.exe
-rem Need python and DB4 on the path
+
+rem Need python and SVN on the path
 PATH %PY%;%SUBVERSION%\%BUILD_TYPE%\bin;%PATH%
 
 rem prove the python version selected
