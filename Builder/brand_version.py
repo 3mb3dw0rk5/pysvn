@@ -19,7 +19,7 @@ for line in file( version_details ):
     key, value = [s.strip() for s in line.split('=',1)]
     branding_info[ key ] = value
 
-svnversion_image = os.environ.get( 'PYSVN_SVNVERSION', 'svnversion' )
+svnversion_image = os.environ.get( 'WC_SVNVERSION', 'svnversion' )
 if ' ' in svnversion_image:
     cmd = ('"%s" -c "%s" 2>&1' %
         (svnversion_image
