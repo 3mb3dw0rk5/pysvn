@@ -62,7 +62,7 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a
         changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
     }
 
-    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files );
+    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files, svn_depth_empty );
 #else
     bool recurse = args.getBoolean( name_recurse, false );
 #endif
@@ -180,7 +180,7 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
         changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
     }
 
-    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files );
+    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files, svn_depth_empty );
 #else
     bool recurse = args.getBoolean( name_recurse, false );
 #endif
@@ -342,7 +342,7 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
         changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
     }
 
-    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files );
+    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files, svn_depth_empty );
 #else
     bool recurse = args.getBoolean( name_recurse, false );
 #endif
@@ -518,7 +518,7 @@ Py::Object pysvn_client::cmd_propset( const Py::Tuple &a_args, const Py::Dict &a
     }
 
     svn_revnum_t base_revision_for_url = args.getInteger( name_base_revision_for_url, 0 );
-    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files );
+    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files, svn_depth_empty );
 
     apr_hash_t *revprops = NULL;
     if( args.hasArg( name_revprops ) )

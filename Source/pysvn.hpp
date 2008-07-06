@@ -422,7 +422,7 @@ public:
     svn_opt_revision_t getRevision( const char *name, svn_opt_revision_t default_value );
 
 #if defined( PYSVN_HAS_SVN__DEPTH_PARAMETER )
-    svn_depth_t getDepth( const char *depth_name, const char *recursive_name, svn_depth_t default_value );
+    svn_depth_t getDepth( const char *depth_name, const char *recursive_name, svn_depth_t default_value, svn_depth_t recursive_false_value=svn_depth_files );
     svn_depth_t getDepth( const char *depth_name, svn_depth_t default_value );
     svn_depth_t getDepth( const char *depth_name );
 #endif

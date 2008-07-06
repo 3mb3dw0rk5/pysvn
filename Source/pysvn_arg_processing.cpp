@@ -356,7 +356,8 @@ svn_depth_t FunctionArguments::getDepth
     (
     const char *depth_name,
     const char *recursive_name,
-    svn_depth_t default_value
+    svn_depth_t default_value,
+    svn_depth_t recursive_false_value
     )
 {
     if( hasArg( recursive_name ) && hasArg( depth_name ) )
@@ -377,7 +378,7 @@ svn_depth_t FunctionArguments::getDepth
         }
         else
         {
-            return svn_depth_files;
+            return recursive_false_value;
         }
     }
 
