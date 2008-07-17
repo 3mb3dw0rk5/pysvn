@@ -617,7 +617,10 @@ static svn_error_t *log4Receiver
         }
         if( revprops_dict.hasKey( "svn:log" ) )
         {
-            entry_dict[ name_message ] = revprops_dict[ "svn:log" ];
+            Py::String utf8_message( revprops_dict[ "svn:log" ] );
+            Py::String message( utf8_message.decode( name_utf8 ) );
+            revprops_dict[ "svn:log" ] = message;
+            entry_dict[ name_message ] = message;
         }
     }
     entry_dict[ name_revprops ] = revprops;
