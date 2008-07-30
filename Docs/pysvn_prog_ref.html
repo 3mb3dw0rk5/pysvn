@@ -131,6 +131,7 @@ if hasattr( client, 'lock' ):
 <li><a href="#pysvn_wc_merge_outcome">wc_merge_outcome</a> - see Client.Merge()</li>
 <li><a href="#pysvn_wc_notify_state">wc_notify_state</a> - see Client.callback_notify</li>
 <li><a href="#pysvn_node_kind">node_kind</a> - see Client.status() and Client.ls()</li>
+<li><a href="#pysvn_depth">depth</a> - replacement for recurse</li>
 </ul>
 
 <p>Use python builtin dir() to list all available values in an enumeration:
@@ -520,6 +521,12 @@ add_to_changelist( path,
 <p>
 TBD
 </p>
+
+<div class="svn_1005000">
+<p>depth is one of the pysvn.depth enums.
+</p>
+</div>
+
 </div>
 
 <h4><a name="pysvn_client_add"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.add</a></h4>
@@ -528,12 +535,12 @@ add( path,
      recurse=True<span class="svn_1001000">,
      force=False</span><span class="svn_1003000">,
      ignore=False</span><span class="svn_1005000">,
-     depth=QQQ</span> )
+     depth=None</span> )
 add( [path,path],
      recurse=True<span class="svn_1001000">,
      force=False</span><span class="svn_1003000">,
      ignore=True</span><span class="svn_1005000">,
-     depth=depth</span> )
+     depth=None</span> )
 </pre>
 <p>
 Schedules all the files or directories specfied in the paths
@@ -544,7 +551,7 @@ disregard default and svn:ignore property ignores.</span>
 Files are added at the next checkin.
 </p>
 <div class="svn_1005000">
-<p>The depth can be used as in place of recurse. QQQ
+<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
 </div>
 
@@ -744,7 +751,7 @@ diff( tmp_path,
       ignore_content_type=False</span><span class="svn_1003000">,
       header_encoding="",
       diff_options=[]</span><span class="svn_1005000">,
-     depth=depth</span> )
+      depth=depth</span> )
 </pre>
 <p>
 Return the differences between revision1 of url_or_path
@@ -771,7 +778,7 @@ The exact options that work depend on the version of subversion used
 and its configuration.</span>
 </p>
 <div class="svn_1005000">
-<p>The depth can be used as in place of recurse. QQQ
+<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
 </div>
 
@@ -807,7 +814,7 @@ Set recurse to True to recursively diff a directory's children.
 diff_text is a string containing the diff.
 </p>
 <div class="svn_1005000">
-<p>The depth can be used as in place of recurse. QQQ
+<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
 </div>
 <p>peg_revision indicates in which revision url_or_path is valid.
@@ -853,7 +860,7 @@ since a file might have been modified between two revisions, but still
 have the same contents.
 </p>
 <div class="svn_1005000">
-<p>The depth can be used as in place of recurse. QQQ
+<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
 </div>
 </div>
@@ -886,7 +893,7 @@ The function may report false positives if ignore_ancestry is False,
 as described in the documentation for diff_summarize().
 </p>
 <div class="svn_1005000">
-<p>The depth can be used as in place of recurse. QQQ
+<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
 </div>
 </div>
@@ -924,7 +931,7 @@ WC targets.
   but files not under revision control will not be copied.</li>
 </ol>
 <div class="svn_1005000">
-<p>The depth can be used as in place of recurse. QQQ
+<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
 </div>
 
@@ -972,12 +979,16 @@ when adding files, otherwise returns false.
 changelist_list = \
 get_changelist( path,
                 changelist,
-                depth=QQQ,
+                depth=depth,
                 changelists=[] )
 </pre>
 <p>
 TBD
 </p>
+
+<p>The depth is one of the pysvn.depth enums.
+</p>
+
 </div>
 
 <h4><a name="pysvn_client_get_default_password"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.get_default_password</a></h4>
@@ -1062,7 +1073,7 @@ opt_revision_kind.head for URLs or opt_revision_kind.working for
 WC targets.
 </span></p>
 <div class="svn_1005000">
-<p>The depth can be used as in place of recurse. QQQ
+<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
 </div>
 
@@ -1158,7 +1169,7 @@ defaults to opt_revision_kind.head for URLs or
 opt_revision_kind.working for WC targets.
 </p>
 <div class="svn_1005000">
-<p>The depth can be used as in place of recurse. QQQ
+<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
 </div>
 
@@ -1306,7 +1317,7 @@ merge( url_or_path1,
 <p>Apply the differences between two sources to a working copy path.
 </p>
 <div class="svn_1005000">
-<p>The depth can be used as in place of recurse. QQQ
+<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
 </div>
 
@@ -1335,7 +1346,7 @@ opt_revision_kind.head for URLs or opt_revision_kind.working for
 WC targets.
 </span></p>
 <div class="svn_1005000">
-<p>The depth can be used as in place of recurse. QQQ
+<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
 </div>
 </div>
@@ -1362,7 +1373,7 @@ If peg_revision.kind is opt_revision_kind.unspecified, then it defaults to
 opt_revision_kind.head for URLs or opt_revision_kind.working for
 WC targets.
 </p>
-<p>The depth can be used as in place of recurse. QQQ
+<p>The depth is one of the pysvn.depth enums.
 </p>
 </div>
 
@@ -1486,7 +1497,7 @@ pysvn.Revision( opt_revision_kind.head ) if the src_path is a
 URL otherwise to pysvn.Revision( opt_revision_kind.working ).
 </p>
 <div class="svn_1005000">
-<p>The depth can be used as in place of recurse. QQQ
+<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
 <p>revprops TBD</p>
 </div>
@@ -1515,7 +1526,7 @@ opt_revision_kind.head for URLs or opt_revision_kind.working for
 WC targets.
 </span></p>
 <div class="svn_1005000">
-<p>The depth can be used as in place of recurse. QQQ
+<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
 </div>
 
@@ -1542,7 +1553,7 @@ opt_revision_kind.head for URLs or opt_revision_kind.working for
 WC targets.
 </span></p>
 <div class="svn_1005000">
-<p>The depth can be used as in place of recurse. QQQ
+<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
 </div>
 
@@ -1573,7 +1584,7 @@ if the url_or_path is a URL otherwise to
 pysvn.Revision( opt_revision_kind.working ).
 </p>
 <div class="svn_1005000">
-<p>The depth can be used as in place of recurse. QQQ
+<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
 <p>If allow_unver_obstructions is False then the update will abort
 if there are any unversioned obstructing items.
@@ -1593,7 +1604,7 @@ relocate( from_url,
 <p>Relocate the working copy from from_url to to_url of path.
 </p>
 <div class="svn_1005000">
-<p>The depth can be used as in place of recurse. QQQ
+<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
 </div>
 
@@ -1644,7 +1655,7 @@ resolved( path,
 <p>Mark the conflicted file at path as resolved.
 </p>
 <div class="svn_1005000">
-<p>The depth can be used as in place of recurse. QQQ
+<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
 </div>
 
@@ -1661,7 +1672,7 @@ revert( [path,path],
 Set recurse to True to recursively revert a directory's children.
 </p>
 <div class="svn_1005000">
-<p>The depth can be used as in place of recurse. QQQ
+<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
 </div>
 
@@ -1807,7 +1818,7 @@ returned for that single file in status_list.
   svn_wc_notify_status_completed after each.</li>
 
 <li><div class="svn_1005000">
-<p>depth - can be used as in place of recurse. QQQ
+<p>depth - can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
 </div></li>
 </ul>
@@ -1823,7 +1834,7 @@ switch( path,
 <p>Update the working copy to a different URL.
 </p>
 <div class="svn_1005000">
-<p>The depth can be used as in place of recurse. QQQ
+<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
 </div>
 
@@ -1860,7 +1871,7 @@ revision. Set recurse to True to recursively update a directory's
 children. <span class="svn_1002000">Set ignore_externals to True to ignore externals definitions.</span>
 </p>
 <div class="svn_1005000">
-<p>The depth can be used as in place of recurse. QQQ
+<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
 </div>
 <p>update returns a pysvn.Revision containing the number of the
@@ -2271,6 +2282,24 @@ file was either absent or not under version control.</li>
 <li>file - regular file</li>
 <li>dir - directory</li>
 <li>unknown - something's here, but we don't know what</li>
+</ul>
+
+<h2><a href="#pysvn_module">pysvn</a>.<a
+	name="pysvn_depth">depth - subversion depth enumeration</a></h2>
+<ul>
+<li>empty - Just the named directory D, no entries.  Updates will not pull in
+     any files or subdirectories not already present.</li>
+<li>exclude - not used yet</li>
+<li>files - D + its file children, but not subdirs.  Updates will pull in any
+     files not already present, but not subdirectories.</li>
+<li>immediates - D + immediate children (D and its entries).  Updates will pull in
+     any files or subdirectories not already present; those
+     subdirectories' this_dir entries will have depth-empty.</li>
+<li>infinity - D + all descendants (full recursion from D).  Updates will pull
+     in any files or subdirectories not already present; those
+     subdirectories' this_dir entries will have depth-infinity.
+     Equivalent to the pre-1.5 default update behavior.</li>
+<li>unknown - Depth undetermined or ignored</li>
 </ul>
 
 <p>Copyright &copy; 2004-2008 Barry A. Scott. All rigths reserved.</p>
