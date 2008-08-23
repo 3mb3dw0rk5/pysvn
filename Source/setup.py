@@ -343,7 +343,7 @@ LDLIBS=-L%(svn_lib_dir)s -Wl,--rpath -Wl,%(svn_lib_dir)s \
 -lsvn_client-1 \
 -lsvn_diff-1 \
 -lsvn_repos-1 \
- -lcom_err -lresolv -lexpat -lneon
+-lcom_err -lresolv -lexpat -lneon -lssl
 
 #include pysvn_common.mak
 '''
