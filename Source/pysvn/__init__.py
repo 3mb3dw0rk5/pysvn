@@ -1,6 +1,6 @@
 '''
  ====================================================================
- Copyright (c) 2003-2006 Barry A Scott.  All rights reserved.
+ Copyright (c) 2003-2008 Barry A Scott.  All rights reserved.
 
  This software is licensed as described in the file LICENSE.txt,
  which you should have received as part of this distribution.
@@ -97,12 +97,31 @@ try:
     if maj_min == (2,3):
         import _pysvn_2_3
         _pysvn = _pysvn_2_3
+
     elif maj_min == (2,4):
         import _pysvn_2_4
         _pysvn = _pysvn_2_4
+
     elif maj_min == (2,5):
         import _pysvn_2_5
         _pysvn = _pysvn_2_5
+
+    elif maj_min == (2,6):
+        import _pysvn_2_6
+        _pysvn = _pysvn_2_6
+
+    elif maj_min == (2,7):
+        import _pysvn_2_7
+        _pysvn = _pysvn_2_7
+
+    elif maj_min == (3,0):
+        import _pysvn_3_0
+        _pysvn = _pysvn_3_0
+
+    elif maj_min == (3,1):
+        import _pysvn_3_1
+        _pysvn = _pysvn_3_1
+
     else:
         raise ImportError( 'Fix pysvn/__init__.py to support python %d.%d' % tuple(maj_min) )
 
