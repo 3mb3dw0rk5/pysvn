@@ -90,6 +90,7 @@ SVN_DIRENT_ALL         = 0xffffffffl
 try:
     maj_min = sys.version_info[:2]
 
+### IMPORT BLOCK BEGIN
     #
     # use an if tree so that its easy for app makers to
     # find the import that is requires
@@ -124,6 +125,7 @@ try:
 
     else:
         raise ImportError( 'Fix pysvn/__init__.py to support python %d.%d' % tuple(maj_min) )
+### IMPORT BLOCK END
 
     for key, value in _pysvn.__dict__.items():
         if not key.startswith( '__' ):
