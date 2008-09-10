@@ -1,1 +1,1 @@
-devenv pysvn-for-%1.sln /useenv
+devenv pysvn-for-svn-%1.sln /useenv
