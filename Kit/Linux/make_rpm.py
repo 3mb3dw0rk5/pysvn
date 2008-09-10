@@ -48,22 +48,10 @@ for kit_dir in [
     if not os.path.exists( kit_dir ):
         os.makedirs( kit_dir )
 
-print 'Info: Creating __init__.py for python version %s' % python_version_string
-pysvn__init__file_contents = file( '../../Source/pysvn/__init__.py' ).readlines()
-block_begin_index = pysvn__init__file_contents.index( '### IMPORT BLOCK BEGIN\n' )
-block_end_index = pysvn__init__file_contents.index( '### IMPORT BLOCK END\n' ) + 1
-
-pysvn__init__file_contents[ block_begin_index:block_end_index ] = [
-    '    import _pysvn_%d_%d\n' % (pymaj, pymin),
-    '    _pysvn = _pysvn_%d_%d\n' % (pymaj, pymin),
-    ]
-
-f = file( 'tmp/ROOT/usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/__init__.py' % locals(), 'w' )
-f.write( ''.join( pysvn__init__file_contents ) )
-f.close()
-
 print 'Info: Copy files'
 kit_files_info = [
+    ('../../Source/pysvn/__init__.py',
+        'ROOT/usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn', '444'),
     ('../../Source/pysvn/_pysvn_%(pymaj)d_%(pymin)d.so' % locals(),
         'ROOT/usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn', '444'),
     ('../../LICENSE.txt',
@@ -118,9 +106,6 @@ rm -f /usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/__init__.pyo
 %%files
 %%defattr (-,root,root)
 ''' % locals() )
-
-kit_filename = '/usr/lib/python%(pymaj)d.%(pymin)d/site-packages/pysvn/__init__.py' % locals()
-f.write( '%%attr(%s,root,root) %s\n' % ('444', kit_filename) )
 
 kit_filename = os.path.join( cp_dst_dir_fmt[len('ROOT'):] % locals(), os.path.basename( cp_src ) )
 for cp_src, cp_dst_dir_fmt, perm in kit_files_info:

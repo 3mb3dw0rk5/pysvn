@@ -22,7 +22,10 @@ PYSVN_OBJECTS=pysvn.o pysvn_callbacks.o pysvn_client.o pysvn_static_strings.o \
 	pysvn_transaction.o pysvn_revision.o pysvn_docs.o pysvn_path.o \
 	pysvn_arg_processing.o pysvn_converters.o pysvn_svnenv.o pysvn_profile.o
 PYSVN_INCLUDES=pysvn.hpp pysvn_docs.hpp pysvn_svnenv.hpp pysvn_static_strings.hpp
-all: pysvn/%(pysvn_module_name)s
+all: pysvn/__init__.py pysvn/%(pysvn_module_name)s
+
+pysvn/__init__.py : pysvn/__init__.py.template
+	$(PYTHON) create__init__.py pysvn/__init__.py.template pysvn/__init__.py
 
 pysvn/%(pysvn_module_name)s: $(PYSVN_OBJECTS) $(CXX_OBJECTS)
 	@echo Compile $@
@@ -164,8 +167,9 @@ clean:
 	rm -f pysvn_version.hpp
 	rm -f pysvn_docs.hpp pysvn_docs.cpp
 	rm -f *.o
+	rm -f pysvn/__init__.py
+	rm -f pysvn/__init__.pyc
 	rm -f pysvn/*.so
-	rm -f pysvn/*.dll
 
-test: pysvn/%(pysvn_module_name)s
+test: pysvn/__init__.py pysvn/%(pysvn_module_name)s
 	PYTHONPATH=. $(PYTHON) -c "import pysvn;print pysvn.version,pysvn.Client()"
