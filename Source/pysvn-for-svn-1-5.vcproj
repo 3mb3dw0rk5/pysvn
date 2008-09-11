@@ -407,7 +407,7 @@
 				Name="Release|Win32">
 				<Tool
 					Name="VCCustomBuildTool"
-					Description="Brand version info"
+					Description="Info: Brand version info"
 					CommandLine="PATH=L:\BuildRoot\Win32-MSVC71-1.4.6\subversion-1.4.6\Release\bin;%PATH%
 %PY%\python ..\Builder\brand_version.py ..\Builder\version.info &quot;$(InputPath)&quot;
 "
@@ -420,7 +420,7 @@
 				Name="Profile|Win32">
 				<Tool
 					Name="VCCustomBuildTool"
-					Description="Create __init__.py"
+					Description="Info: Create __init__.py"
 					CommandLine="PATH=C:\Program Files\Subversion\bin;%PATH%
 %PY%\python .\create__init__.py pysvn\__init__.py.template pysvn\__init__.py
 "
@@ -430,7 +430,7 @@
 				Name="Debug|Win32">
 				<Tool
 					Name="VCCustomBuildTool"
-					Description="Create __init__.py"
+					Description="Info: Create __init__.py"
 					CommandLine="PATH=C:\Program Files\Subversion\bin;%PATH%
 %PY%\python .\create__init__.py pysvn\__init__.py.template pysvn\__init__.py
 "
@@ -441,7 +441,7 @@
 				Name="Release|Win32">
 				<Tool
 					Name="VCCustomBuildTool"
-					Description="Create __init__.py"
+					Description="Info: Create __init__.py"
 					CommandLine="PATH=C:\Program Files\Subversion\bin;%PATH%
 %PY%\python .\create__init__.py pysvn\__init__.py.template pysvn\__init__.py
 "
@@ -1147,7 +1147,7 @@
 				Name="Profile|Win32">
 				<Tool
 					Name="VCCustomBuildTool"
-					Description="Generate pysvn_docs.cpp/.hpp"
+					Description="Info: Generate pysvn_docs.cpp/.hpp"
 					CommandLine="%PY%\python $(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py $(SUBVERSION)/subversion/include $(InputPath) $(SolutionDir)\pysvn_docs.hpp $(SolutionDir)\pysvn_docs.cpp
 "
 					AdditionalDependencies="$(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py"
@@ -1157,7 +1157,7 @@
 				Name="Debug|Win32">
 				<Tool
 					Name="VCCustomBuildTool"
-					Description="Generate pysvn_docs.cpp/.hpp"
+					Description="Info: Generate pysvn_docs.cpp/.hpp"
 					CommandLine="%PY%\python $(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py $(SUBVERSION)/subversion/include $(InputPath) $(SolutionDir)\pysvn_docs.hpp $(SolutionDir)\pysvn_docs.cpp
 "
 					AdditionalDependencies="$(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py"
@@ -1167,7 +1167,7 @@
 				Name="Release|Win32">
 				<Tool
 					Name="VCCustomBuildTool"
-					Description="Generate pysvn_docs.cpp/.hpp"
+					Description="Info: Generate pysvn_docs.cpp/.hpp"
 					CommandLine="%PY%\python $(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py $(SUBVERSION)/subversion/include $(InputPath) $(SolutionDir)\pysvn_docs.hpp $(SolutionDir)\pysvn_docs.cpp
 "
 					AdditionalDependencies="$(ProjectDir)\..\Docs\generate_cpp_docs_from_html_docs.py"
@@ -1312,7 +1312,7 @@
 				Name="Profile|Win32">
 				<Tool
 					Name="VCCustomBuildTool"
-					Description="Brand version info"
+					Description="Info: Brand version info"
 					CommandLine="PATH=C:\Program Files\Subversion\bin;%PATH%
 %PY%\python ..\Builder\brand_version.py ..\Builder\version.info &quot;$(InputPath)&quot;
 "
@@ -1322,7 +1322,7 @@
 				Name="Debug|Win32">
 				<Tool
 					Name="VCCustomBuildTool"
-					Description="Brand version info"
+					Description="Info: Brand version info"
 					CommandLine="PATH=C:\Program Files\Subversion\bin;%PATH%
 %PY%\python ..\Builder\brand_version.py ..\Builder\version.info &quot;$(InputPath)&quot;
 "
@@ -1333,7 +1333,7 @@
 				Name="Release|Win32">
 				<Tool
 					Name="VCCustomBuildTool"
-					Description="Brand version info"
+					Description="Info: Brand version info"
 					CommandLine="PATH=L:\BuildRoot\Win32-MSVC71-1.4.6\subversion-1.4.6\Release\bin;%PATH%
 %PY%\python ..\Builder\brand_version.py ..\Builder\version.info &quot;$(InputPath)&quot;
 "
