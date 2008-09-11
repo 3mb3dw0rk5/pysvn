@@ -9,10 +9,10 @@ def main( argv ):
     cpp_header_filename = argv[3]
     cpp_module_filename = argv[4]
 
-    print 'svn_include',svn_include
-    print 'html_doc',html_doc
-    print 'cpp_header_filename',cpp_header_filename
-    print 'cpp_module_filename',cpp_module_filename
+    print 'Info: svn_include',svn_include
+    print 'Info: html_doc',html_doc
+    print 'Info: cpp_header_filename',cpp_header_filename
+    print 'Info: cpp_module_filename',cpp_module_filename
 
     debug.enable( '--debug' in argv )
     try:

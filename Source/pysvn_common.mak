@@ -25,7 +25,7 @@ PYSVN_INCLUDES=pysvn.hpp pysvn_docs.hpp pysvn_svnenv.hpp pysvn_static_strings.hp
 all: pysvn/__init__.py pysvn/%(pysvn_module_name)s
 
 pysvn/__init__.py : pysvn/__init__.py.template
-	$(PYTHON) create__init__.py pysvn/__init__.py.template pysvn/__init__.py
+	$(PYTHON) -u create__init__.py pysvn/__init__.py.template pysvn/__init__.py
 
 pysvn/%(pysvn_module_name)s: $(PYSVN_OBJECTS) $(CXX_OBJECTS)
 	@echo Compile $@
@@ -37,7 +37,7 @@ pysvn.o: pysvn.cpp $(PYSVN_INCLUDES) pysvn_version.hpp
 
 pysvn_version.hpp: pysvn_version.hpp.template
 	@echo Compile $@
-	$(PYTHON) ../Builder/brand_version.py ../Builder/version.info pysvn_version.hpp.template
+	$(PYTHON) -u ../Builder/brand_version.py ../Builder/version.info pysvn_version.hpp.template
 
 pysvn_docs.hpp: pysvn_docs.cpp
 	@echo Compile $@
@@ -45,7 +45,7 @@ pysvn_docs.hpp: pysvn_docs.cpp
 
 pysvn_docs.cpp: ../Docs/pysvn_prog_ref.html ../Docs/generate_cpp_docs_from_html_docs.py
 	@echo Compile $@
-	$(PYTHON) ../Docs/generate_cpp_docs_from_html_docs.py $(SVN_INCLUDE) ../Docs/pysvn_prog_ref.html pysvn_docs.hpp pysvn_docs.cpp
+	$(PYTHON) -u ../Docs/generate_cpp_docs_from_html_docs.py $(SVN_INCLUDE) ../Docs/pysvn_prog_ref.html pysvn_docs.hpp pysvn_docs.cpp
 
 pysvn_callbacks.o: pysvn_callbacks.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
