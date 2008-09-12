@@ -8,10 +8,10 @@ clean:	../Source/Makefile
 	cd ../Tests && $(MAKE)  clean
 
 ../Source/Makefile: ../Source/setup.py
-	cd ../Source && $(PYTHON) setup.py configure $(CONFIG_ARGS)
+	cd ../Source && $(PYTHON) -u setup.py configure $(CONFIG_ARGS)
 
 kit:
-	cd ../Kit/MacOSX && $(PYTHON) make_pkg.py
+	cd ../Kit/MacOSX && $(PYTHON) -u make_pkg.py
 
 test:
 	cd ../Tests && $(MAKE)  all
