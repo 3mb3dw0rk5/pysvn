@@ -4,9 +4,9 @@
 import sys
 import os
 
-svn_include = sys.argv[1]
-init_template = sys.argv[2]
-init_output = sys.argv[3]
+init_template = sys.argv[1]
+init_output = sys.argv[2]
+gen_tool = sys.argv[3]
 
 pymaj, pymin, pypat, _, _ = sys.version_info
 python_version_string = '%d.%d.%d' % (pymaj, pymin, pypat)
@@ -25,26 +25,6 @@ f = open( init_output, 'w' )
 f.write( ''.join( pysvn__init__file_contents ) )
 f.close()
 
-f = open( 'generate_svn_error_codes.cpp', 'w' )
-svn_err_file = open( os.path.join( svn_include, 'svn_error_codes.h' ), 'r' )
-
-f.write( '#include <stdlib.h>\n' )
-f.write( '#include <stdio.h>\n' )
-f.write( '#include "svn_error_codes.h"\n' )
-f.write( 'int main( int argc, char **argv )\n' )
-f.write( '{\n' )
-f.write( '    printf( "\\n" );\n' )
-f.write( '    printf( "class svn_err:\\n" );\n' )
-
-emit = False
-for line in svn_err_file:
-    if line == 'SVN_ERROR_START\n':
-        emit = True
-
-    if emit and 'SVN_ERRDEF(' in line:
-        symbol = line.split( 'SVN_ERRDEF(' )[1].split( ',' )[0]
-        f.write( '    printf( "    %s=%%d\\n", %s );\n' % (symbol.lower()[len('SVN_ERR_'):], symbol) )
-
-f.write( '    return 0;\n' )
-f.write( '}\n' )
-f.close()
+cmd_gen = '%s >>%s' % (gen_tool, init_output)
+print 'Info: Running %r' % cmd_gen
+os.system( cmd_gen )

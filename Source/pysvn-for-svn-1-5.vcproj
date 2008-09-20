@@ -215,8 +215,45 @@
 		</Configuration>
 	</Configurations>
 	<References>
+		<ProjectReference
+			ReferencedProjectIdentifier="{8CB7EE5D-223C-4C12-B797-D1BBEDECCDE4}"
+			Name="generate_svn_error_codes"/>
 	</References>
 	<Files>
+		<File
+			RelativePath="pysvn\__init__.py.template">
+			<FileConfiguration
+				Name="Profile|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Info: Create __init__.py"
+					CommandLine="PATH=C:\Program Files\Subversion\bin;%PATH%
+%PY%\python .\create__init__.py pysvn\__init__.py.template pysvn\__init__.py generate_svn_error_codes\Debug\generate_svn_error_codes.exe
+"
+					Outputs="pysvn\__init__.py"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Info: Create __init__.py"
+					CommandLine="PATH=C:\Program Files\Subversion\bin;%PATH%
+%PY%\python .\create__init__.py pysvn\__init__.py.template pysvn\__init__.py generate_svn_error_codes\Debug\generate_svn_error_codes.exe
+"
+					AdditionalDependencies="..\Builder\brand_version.py;..\Builder\version.info;"
+					Outputs="pysvn\__init__.py"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Info: Create __init__.py"
+					CommandLine="PATH=C:\Program Files\Subversion\bin;%PATH%
+%PY%\python .\create__init__.py pysvn\__init__.py.template pysvn\__init__.py generate_svn_error_codes\Release\generate_svn_error_codes.exe
+"
+					Outputs="pysvn\__init__.py"/>
+			</FileConfiguration>
+		</File>
 		<File
 			RelativePath="$(PYCXX)\Src\cxx_extensions.cxx">
 			<FileConfiguration
@@ -412,40 +449,6 @@
 %PY%\python ..\Builder\brand_version.py ..\Builder\version.info &quot;$(InputPath)&quot;
 "
 					Outputs=".\pysvn.rc"/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath="pysvn\__init__.py.template">
-			<FileConfiguration
-				Name="Profile|Win32">
-				<Tool
-					Name="VCCustomBuildTool"
-					Description="Info: Create __init__.py"
-					CommandLine="PATH=C:\Program Files\Subversion\bin;%PATH%
-%PY%\python .\create__init__.py pysvn\__init__.py.template pysvn\__init__.py
-"
-					Outputs="pysvn\__init__.py"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32">
-				<Tool
-					Name="VCCustomBuildTool"
-					Description="Info: Create __init__.py"
-					CommandLine="PATH=C:\Program Files\Subversion\bin;%PATH%
-%PY%\python .\create__init__.py pysvn\__init__.py.template pysvn\__init__.py
-"
-					AdditionalDependencies="..\Builder\brand_version.py;..\Builder\version.info;"
-					Outputs="pysvn\__init__.py"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Release|Win32">
-				<Tool
-					Name="VCCustomBuildTool"
-					Description="Info: Create __init__.py"
-					CommandLine="PATH=C:\Program Files\Subversion\bin;%PATH%
-%PY%\python .\create__init__.py pysvn\__init__.py.template pysvn\__init__.py
-"
-					Outputs="pysvn\__init__.py"/>
 			</FileConfiguration>
 		</File>
 		<File
