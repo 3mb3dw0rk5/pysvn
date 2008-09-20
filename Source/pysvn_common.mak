@@ -24,10 +24,12 @@ PYSVN_OBJECTS=pysvn.o pysvn_callbacks.o pysvn_client.o pysvn_static_strings.o \
 PYSVN_INCLUDES=pysvn.hpp pysvn_docs.hpp pysvn_svnenv.hpp pysvn_static_strings.hpp
 all: pysvn/__init__.py pysvn/%(pysvn_module_name)s
 
-pysvn/__init__.py : pysvn/__init__.py.template
-	$(PYTHON) -u create__init__.py $(SVN_INCLUDE) pysvn/__init__.py.template pysvn/__init__.py
-	$(CCC) $(CCCFLAGS) generate_svn_error_codes.cpp -o generate_svn_error_codes
-	./generate_svn_error_codes >>pysvn/__init__.py
+pysvn/__init__.py : pysvn/__init__.py.template generate_svn_error_codes/generate_svn_error_codes
+	$(PYTHON) -u create__init__.py pysvn/__init__.py.template pysvn/__init__.py generate_svn_error_codes/generate_svn_error_codes
+
+generate_svn_error_codes/generate_svn_error_codes: generate_svn_error_codes/generate_svn_error_codes.cpp generate_svn_error_codes/create_svn_error_codes_hpp.py
+	$(PYTHON) -u generate_svn_error_codes/create_svn_error_codes_hpp.py $(SVN_INCLUDE)
+	$(CCC) $(CCCFLAGS) generate_svn_error_codes/generate_svn_error_codes.cpp -o generate_svn_error_codes/generate_svn_error_codes
 
 pysvn/%(pysvn_module_name)s: $(PYSVN_OBJECTS) $(CXX_OBJECTS)
 	@echo Compile $@
@@ -172,7 +174,9 @@ clean:
 	rm -f pysvn/__init__.py
 	rm -f pysvn/__init__.pyc
 	rm -f pysvn/*.so
-	rm -f generate_svn_error_codes generate_svn_error_codes.cpp generate_svn_error_codes.o
+	rm -f generate_svn_error_codes/generate_svn_error_codes
+	rm -f generate_svn_error_codes/generate_svn_error_codes.hpp
+	rm -f generate_svn_error_codes/generate_svn_error_codes.o
 
 test: pysvn/__init__.py pysvn/%(pysvn_module_name)s
 	PYTHONPATH=. $(PYTHON) -c "import pysvn;print pysvn.version,pysvn.Client()"
