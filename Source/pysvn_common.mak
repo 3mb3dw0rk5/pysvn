@@ -25,7 +25,9 @@ PYSVN_INCLUDES=pysvn.hpp pysvn_docs.hpp pysvn_svnenv.hpp pysvn_static_strings.hp
 all: pysvn/__init__.py pysvn/%(pysvn_module_name)s
 
 pysvn/__init__.py : pysvn/__init__.py.template
-	$(PYTHON) -u create__init__.py pysvn/__init__.py.template pysvn/__init__.py
+	$(PYTHON) -u create__init__.py $(SVN_INCLUDE) pysvn/__init__.py.template pysvn/__init__.py
+	$(CCC) $(CCCFLAGS) generate_svn_error_codes.cpp -o generate_svn_error_codes
+	./generate_svn_error_codes >>pysvn/__init__.py
 
 pysvn/%(pysvn_module_name)s: $(PYSVN_OBJECTS) $(CXX_OBJECTS)
 	@echo Compile $@
@@ -33,7 +35,7 @@ pysvn/%(pysvn_module_name)s: $(PYSVN_OBJECTS) $(CXX_OBJECTS)
 
 pysvn.o: pysvn.cpp $(PYSVN_INCLUDES) pysvn_version.hpp
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_version.hpp: pysvn_version.hpp.template
 	@echo Compile $@
@@ -49,111 +51,111 @@ pysvn_docs.cpp: ../Docs/pysvn_prog_ref.html ../Docs/generate_cpp_docs_from_html_
 
 pysvn_callbacks.o: pysvn_callbacks.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_client.o: pysvn_client.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_static_strings.o: pysvn_static_strings.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_client_cmd_add.o: pysvn_client_cmd_add.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_client_cmd_changelist.o: pysvn_client_cmd_changelist.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_client_cmd_checkin.o: pysvn_client_cmd_checkin.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_client_cmd_copy.o: pysvn_client_cmd_copy.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_client_cmd_diff.o: pysvn_client_cmd_diff.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_client_cmd_export.o: pysvn_client_cmd_export.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_client_cmd_info.o: pysvn_client_cmd_info.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_client_cmd_list.o: pysvn_client_cmd_list.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_client_cmd_lock.o: pysvn_client_cmd_lock.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_client_cmd_merge.o: pysvn_client_cmd_merge.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_client_cmd_prop.o: pysvn_client_cmd_prop.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_client_cmd_revprop.o: pysvn_client_cmd_revprop.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_client_cmd_switch.o: pysvn_client_cmd_switch.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_transaction.o: pysvn_transaction.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_enum_string.o: pysvn_enum_string.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_docs.o: pysvn_docs.cpp
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_path.o: pysvn_path.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_revision.o: pysvn_revision.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_arg_processing.o: pysvn_arg_processing.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_converters.o: pysvn_converters.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_svnenv.o: pysvn_svnenv.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 pysvn_profile.o: pysvn_profile.cpp $(PYSVN_INCLUDES)
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 cxxsupport.o: $(PYCXXSRC)/cxxsupport.cxx
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 cxx_extensions.o: $(PYCXXSRC)/cxx_extensions.cxx
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $<
+	$(CCC) -c $(CCCFLAGS) -o $@ $<
 
 cxxextensions.o: $(PYCXXSRC)/cxxextensions.c
 	@echo Compile $@
@@ -161,7 +163,7 @@ cxxextensions.o: $(PYCXXSRC)/cxxextensions.c
 
 IndirectPythonInterface.o: $(PYCXXSRC)/IndirectPythonInterface.cxx
 	@echo Compile $@
-	$(CCC) $(CCCFLAGS) -o $@ $< 
+	$(CCC) -c $(CCCFLAGS) -o $@ $< 
 
 clean:
 	rm -f pysvn_version.hpp
@@ -170,6 +172,7 @@ clean:
 	rm -f pysvn/__init__.py
 	rm -f pysvn/__init__.pyc
 	rm -f pysvn/*.so
+	rm -f generate_svn_error_codes generate_svn_error_codes.cpp generate_svn_error_codes.o
 
 test: pysvn/__init__.py pysvn/%(pysvn_module_name)s
 	PYTHONPATH=. $(PYTHON) -c "import pysvn;print pysvn.version,pysvn.Client()"
