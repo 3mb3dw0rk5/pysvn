@@ -589,6 +589,13 @@ static svn_error_t *log4Receiver
 {
     Log4Baton *baton = reinterpret_cast<Log4Baton *>( baton_ );
 
+    if( log_entry->revision == 0 )
+    {
+        // skip this blank entry
+        // as the svn log command does
+        return NULL;
+    }
+
     PythonDisallowThreads callback_permission( baton->m_permission );
 
     Py::Dict entry_dict;
@@ -848,6 +855,13 @@ static svn_error_t *logReceiver
     apr_pool_t *pool
     )
 {
+    if( rev == 0 )
+    {
+        // skip this blank entry
+        // as the svn log command does
+        return NULL;
+    }
+
     std::list<LogEntryInfo> *entries = (std::list<LogEntryInfo> *)baton;
 
     if( author == NULL )
