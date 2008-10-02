@@ -82,12 +82,12 @@ Version:    %(pysvn_version_package_string)s
 Group:        Development/Libraries
 Release:    %(pysvn_version_package_release_string)s
 Summary:    pysvn %(pysvn_version_package_string)s Python extension for Subversion %(svn_version_string)s
-License:    Apache Software License, Version 1.1 - Copyright Barry A. Scott (c) 2003-2007
+License:    Apache Software License, Version 1.1 - Copyright Barry A. Scott (c) 2003-2008
 Packager:    Barry A. Scott <barry@barrys-emacs.org>
 %%description
 PySVN %(pysvn_version_string)s for Python %(python_version_string)s and Subversion %(svn_version_string)s
 
-Copyright Barry A. Scott (c) 2003-2007
+Copyright Barry A. Scott (c) 2003-2008
 
 mailto:barry@barrys-emacs.org
 http://pysvn.tigris.org
