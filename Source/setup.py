@@ -189,6 +189,9 @@ class MakeFileCreater:
             # py_cflags
             'py_cflags':        ' '.join( py_cflags_list ),
 
+            # add svn bin dir
+            'svn_bin_dir':      self.find_svn_bin( argv ),
+
             # add svn lib dir
             'svn_lib_dir':      self.find_svn_lib( argv ),
 
@@ -201,7 +204,7 @@ class MakeFileCreater:
             'pycxx_dir':        pycxx_dir,
 
             # pycxx src dir
-            'pycxx_src_dir':        pycxx_src_dir
+            'pycxx_src_dir':    pycxx_src_dir
             }
 
         print 'Info: Creating Makefile for Source'
@@ -301,6 +304,7 @@ class MakeFileCreater:
 #
 PYTHON=%(python_exe)s
 SVN_VERSION_MAJ_MIN=%(svn_version_maj_min)s
+SVN_BIN_DIR=%(svn_bin_dir)s
 #include pysvn_test_common.mak
 '''
 
@@ -618,6 +622,20 @@ LDLIBS= \
                         '/usr/pkg/include/subversion-1',        # netbsd
                     ],
                     'svn_client.h' )
+
+    def find_svn_bin( self, argv ):
+        return self.find_dir( argv,
+                    'SVN bin',
+                    '--svn-bin-dir=',
+                    'bin',
+                    [
+                        '/opt/local/bin',      # Darwin - darwin ports
+                        '/sw/bin',             # Darwin - Fink
+                        '/usr/bin',            # typical Linux
+                        '/usr/local/bin',      # typical *BSD
+                        '/usr/pkg/bin',        # netbsd
+                    ],
+                    'svnadmin' )
 
     def find_svn_lib( self, argv ):
         dir = self.find_dir( argv,

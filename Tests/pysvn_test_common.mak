@@ -22,7 +22,7 @@ clean: clean-01 clean-03 clean-04 clean-05 clean-06 clean-07
 #
 test-01.unix.new.log: test-01.sh test-01.unix.known_good-$(SVN_VERSION_MAJ_MIN).log
 	-rm -rf testroot-01
-	PYTHON=$(PYTHON) ./test-01.sh >test-01.unix.new.log 2>&1
+	PATH=$(SVN_BIN_DIR):$(PATH) PYTHON=$(PYTHON) ./test-01.sh >test-01.unix.new.log 2>&1
 	$(PYTHON) benchmark_diff.py test-01.unix.known_good-$(SVN_VERSION_MAJ_MIN).log test-01.unix.new.log
 
 clean-01:
@@ -38,7 +38,7 @@ new-01: test-01.unix.new.log
 
 test-03.unix.new.log: test-03.sh test-03.unix.known_good-$(SVN_VERSION_MAJ_MIN).log
 	-rm -rf testroot-03
-	PYTHON=$(PYTHON) ./test-03.sh >test-03.unix.new.log 2>&1
+	PATH=$(SVN_BIN_DIR):$(PATH) PYTHON=$(PYTHON) ./test-03.sh >test-03.unix.new.log 2>&1
 	$(PYTHON) benchmark_diff.py test-03.unix.known_good-$(SVN_VERSION_MAJ_MIN).log test-03.unix.new.log
 
 clean-03:
@@ -54,7 +54,7 @@ new-03: test-03.unix.new.log
 
 test-04.unix.new.log: test-04.sh test-04.unix.known_good-$(SVN_VERSION_MAJ_MIN).log
 	-rm -rf testroot-04
-	PYTHON=$(PYTHON) ./test-04.sh >test-04.unix.new.log 2>&1
+	PATH=$(SVN_BIN_DIR):$(PATH) PYTHON=$(PYTHON) ./test-04.sh >test-04.unix.new.log 2>&1
 	$(PYTHON) benchmark_diff.py test-04.unix.known_good-$(SVN_VERSION_MAJ_MIN).log test-04.unix.new.log
 
 clean-04:
@@ -70,7 +70,7 @@ new-04: test-04.unix.new.log
 
 test-05.unix.new.log: test-05.sh test-05.unix.known_good-$(SVN_VERSION_MAJ_MIN).log
 	-rm -rf testroot-05
-	if PYTHONPATH=../Source $(PYTHON) svn_min_version.py 1 2 1; then PYTHON=$(PYTHON) ./test-05.sh >test-05.unix.new.log 2>&1; fi
+	if PYTHONPATH=../Source $(PYTHON) svn_min_version.py 1 2 1; then PATH=$(SVN_BIN_DIR):$(PATH) PYTHON=$(PYTHON) ./test-05.sh >test-05.unix.new.log 2>&1; fi
 	if PYTHONPATH=../Source $(PYTHON) svn_min_version.py 1 2 1; then $(PYTHON) benchmark_diff.py test-05.unix.known_good-$(SVN_VERSION_MAJ_MIN).log test-05.unix.new.log; fi
 
 clean-05:
@@ -86,7 +86,7 @@ new-05: test-05.unix.new.log
 
 test-06.unix.new.log: test-06.sh test-06.unix.known_good-$(SVN_VERSION_MAJ_MIN).log
 	-rm -rf testroot-06
-	if PYTHONPATH=../Source $(PYTHON) svn_min_version.py 1 3 0; then PYTHON=$(PYTHON) ./test-06.sh >test-06.unix.new.log 2>&1; fi
+	if PYTHONPATH=../Source $(PYTHON) svn_min_version.py 1 3 0; then PATH=$(SVN_BIN_DIR):$(PATH) PYTHON=$(PYTHON) ./test-06.sh >test-06.unix.new.log 2>&1; fi
 	if PYTHONPATH=../Source $(PYTHON) svn_min_version.py 1 3 0; then $(PYTHON) benchmark_diff.py test-06.unix.known_good-$(SVN_VERSION_MAJ_MIN).log test-06.unix.new.log; fi
 
 clean-06:
@@ -102,7 +102,7 @@ new-06: test-06.unix.new.log
 
 test-07.unix.new.log: test-07.sh test-07.unix.known_good-$(SVN_VERSION_MAJ_MIN).log
 	-rm -rf testroot-07
-	if PYTHONPATH=../Source $(PYTHON) svn_min_version.py 1 5 0; then PYTHON=$(PYTHON) ./test-07.sh >test-07.unix.new.log 2>&1; fi
+	if PYTHONPATH=../Source $(PYTHON) svn_min_version.py 1 5 0; then PATH=$(SVN_BIN_DIR):$(PATH) PYTHON=$(PYTHON) ./test-07.sh >test-07.unix.new.log 2>&1; fi
 	if PYTHONPATH=../Source $(PYTHON) svn_min_version.py 1 5 0; then $(PYTHON) benchmark_diff.py test-07.unix.known_good-$(SVN_VERSION_MAJ_MIN).log test-07.unix.new.log; fi
 
 clean-07:
@@ -115,4 +115,3 @@ diff-07: test-07.unix.new.log
 
 new-07: test-07.unix.new.log
 	cp  test-07.unix.new.log test-07.unix.known_good-$(SVN_VERSION_MAJ_MIN).log
-
