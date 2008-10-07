@@ -25,7 +25,7 @@ PYSVN_INCLUDES=pysvn.hpp pysvn_docs.hpp pysvn_svnenv.hpp pysvn_static_strings.hp
 all: pysvn/__init__.py pysvn/%(pysvn_module_name)s
 
 pysvn/__init__.py : pysvn/__init__.py.template generate_svn_error_codes/generate_svn_error_codes
-	$(PYTHON) -u create__init__.py pysvn/__init__.py.template pysvn/__init__.py generate_svn_error_codes/generate_svn_error_codes
+	$(PYTHON) -u create__init__.py pysvn/__init__.py.template pysvn/__init__.py generate_svn_error_codes/generate_svn_error_codes %(pysvn_module_name)s
 
 generate_svn_error_codes/generate_svn_error_codes: generate_svn_error_codes/generate_svn_error_codes.cpp generate_svn_error_codes/create_svn_error_codes_hpp.py
 	$(PYTHON) -u generate_svn_error_codes/create_svn_error_codes_hpp.py $(SVN_INCLUDE)

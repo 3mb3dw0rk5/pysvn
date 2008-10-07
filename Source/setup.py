@@ -55,6 +55,8 @@ def setup_help( argv ):
         --enable-debug
         --pycxx-dir=<dir>
         --pycxx-src-dir=<dir>
+        --norpath
+        --fixed-module-name
         --apr-inc-dir=<dir>
         --svn-root-dir=<dir>
         --svn-inc-dir=<dir>
@@ -164,17 +166,24 @@ class MakeFileCreater:
             if arg.startswith( '--define=' ):
                 py_cflags_list.append( '-D%s' % arg[len('--define-'):] )
 
-        # name of the module including the python version to help
-        # ensure that only a matching _pysvn.so for the version of
-        # python is imported
-        py_cflags_list.append( '-Dinit_pysvn=init_pysvn_%d_%d' % sys.version_info[:2] )
-        py_cflags_list.append( '-Dinit_pysvn_d=init_pysvn_%d_%d_d' % sys.version_info[:2] )
-
         module_type = '.so'
         if sys.platform == 'cygwin':
             module_type = '.dll'
+
+        if '--fixed-module-name' in argv:
+            print 'Info: Using fixed module name'
+            pysvn_module_name = '_pysvn'+ module_type
+
+        else:
+            # name of the module including the python version to help
+            # ensure that only a matching _pysvn.so for the version of
+            # python is imported
+            pysvn_module_name = '_pysvn_%d_%d%s' % (sys.version_info[0], sys.version_info[1], module_type)
+            py_cflags_list.append( '-Dinit_pysvn=init_pysvn_%d_%d' % sys.version_info[:2] )
+            py_cflags_list.append( '-Dinit_pysvn_d=init_pysvn_%d_%d_d' % sys.version_info[:2] )
+
         template_values = {
-            'pysvn_module_name': '_pysvn_%d_%d%s' % (sys.version_info[0], sys.version_info[1], module_type),
+            'pysvn_module_name': pysvn_module_name,
 
             # python executable
             'python_exe':       sys.executable,
@@ -204,7 +213,7 @@ class MakeFileCreater:
             'pycxx_dir':        pycxx_dir,
 
             # pycxx src dir
-            'pycxx_src_dir':    pycxx_src_dir
+            'pycxx_src_dir':    pycxx_src_dir,
             }
 
         print 'Info: Creating Makefile for Source'
@@ -265,7 +274,10 @@ class MakeFileCreater:
         elif sys.platform.startswith('linux'):
             if self.verbose:
                 print 'Info: Using Linux makefile template'
-            makefile.write( self.makefile_template_linux % template_values )
+            if '--norpath' in argv:
+                makefile.write( self.makefile_template_linux_norpath % template_values )
+            else:
+                makefile.write( self.makefile_template_linux % template_values )
 
         elif sys.platform.startswith('freebsd'):
             if self.verbose:
@@ -348,6 +360,29 @@ LDLIBS=-L%(svn_lib_dir)s -Wl,--rpath -Wl,%(svn_lib_dir)s \
 -lsvn_diff-1 \
 -lsvn_repos-1 \
 -lcom_err -lresolv -lexpat -lneon -lssl
+PYSVN_CREATE_INIT_OPTION=%(pysvn_create_init_option)s
+#include pysvn_common.mak
+'''
+
+    makefile_template_linux_norpath = '''#
+#	Created by pysvn Extension/Source/setup.py
+#       -- makefile_template_linux --
+#
+PYTHON=%(python_exe)s
+SVN_INCLUDE=%(svn_include)s
+CCC=g++
+CCCFLAGS=-Wall -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s
+CC=gcc
+CCFLAGS=-Wall -fPIC %(includes)s %(debug_cflags)s
+PYCXX=%(pycxx_dir)s
+PYCXXSRC=%(pycxx_src_dir)s
+LDSHARED=g++ -shared %(debug_cflags)s
+LDLIBS=-L%(svn_lib_dir)s \
+-lsvn_client-1 \
+-lsvn_diff-1 \
+-lsvn_repos-1 \
+-lcom_err -lresolv -lexpat -lneon -lssl
+PYSVN_CREATE_INIT_OPTION=%(create_init_option)s
 
 #include pysvn_common.mak
 '''
