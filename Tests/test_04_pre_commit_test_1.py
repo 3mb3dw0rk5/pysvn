@@ -23,5 +23,18 @@ for name, (action, kind, text_mod, prop_mod) in change_list:
         if kind == pysvn.node_kind.file:
             print '     contents: %r' % t.cat( name )
 
+print 'Info: changed( copy_info=True ) ...'
+changes = t.changed( copy_info=True )
+change_list = changes.items()
+change_list.sort()
+for name, (action, kind, text_mod, prop_mod, copyfrom_rev, copyfrom_path) in change_list:
+    print( '%s: action=%r, kind=%r, text_mod=%r, prop_mod=%r copyfrom_rev=%r copyfrom_path=%r' %
+            (name, action, kind, text_mod, prop_mod, copyfrom_rev, copyfrom_path) )
+    if action != 'D':
+        all_props = t.proplist( name )
+        for prop_name, prop_value in all_props.items():
+            print '     %s: %s' % (prop_name, prop_value)
+        if kind == pysvn.node_kind.file:
+            print '     contents: %r' % t.cat( name )
 
 sys.exit( 0 )

@@ -18,9 +18,11 @@ Info: revproplist() ...
 svn:log: pre-commit test 1
 svn:check-locks: true
 svn:author: barry
-svn:date: 2008-10-02T21:27:41.928204Z
+svn:date: 2008-10-07T19:24:40.882058Z
 Info: changed() ...
 trunk/test/a: action='A', kind=<node_kind.dir>, text_mod=0, prop_mod=0
+Info: changed( copy_info=True ) ...
+trunk/test/a: action='A', kind=<node_kind.dir>, text_mod=0, prop_mod=0 copyfrom_rev=0 copyfrom_path=None
 Info: test_1.output end ------------------------------------------
 Info: Add two files
 Info: Command: /Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir checkout file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos/trunk/test /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc
@@ -43,11 +45,16 @@ Info: revproplist() ...
 svn:log: Add two files
 svn:check-locks: true
 svn:author: barry
-svn:date: 2008-10-02T21:27:44.286669Z
+svn:date: 2008-10-07T19:24:44.350153Z
 Info: changed() ...
 trunk/test/a/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0
      contents: 'file1 A\n'
 trunk/test/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0
+     contents: 'file1 ROOT\n'
+Info: changed( copy_info=True ) ...
+trunk/test/a/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0 copyfrom_rev=0 copyfrom_path=None
+     contents: 'file1 A\n'
+trunk/test/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0 copyfrom_rev=0 copyfrom_path=None
      contents: 'file1 ROOT\n'
 Info: test_1.output end ------------------------------------------
 Info: Mod one file Mod one prop
@@ -64,12 +71,18 @@ Info: revproplist() ...
 svn:log: Mod one file Mod one prop
 svn:check-locks: true
 svn:author: barry
-svn:date: 2008-10-02T21:27:45.915135Z
+svn:date: 2008-10-07T19:24:46.001868Z
 Info: changed() ...
 trunk/test/a/file1.txt: action='R', kind=<node_kind.file>, text_mod=0, prop_mod=1
      svn:eol-style: native
      contents: 'file1 A\n'
 trunk/test/file1.txt: action='R', kind=<node_kind.file>, text_mod=1, prop_mod=0
+     contents: 'file1 ROOT ln 2\n'
+Info: changed( copy_info=True ) ...
+trunk/test/a/file1.txt: action='R', kind=<node_kind.file>, text_mod=0, prop_mod=1 copyfrom_rev=0 copyfrom_path=None
+     svn:eol-style: native
+     contents: 'file1 A\n'
+trunk/test/file1.txt: action='R', kind=<node_kind.file>, text_mod=1, prop_mod=0 copyfrom_rev=0 copyfrom_path=None
      contents: 'file1 ROOT ln 2\n'
 Info: test_1.output end ------------------------------------------
 Info: Delete one file
@@ -86,7 +99,33 @@ Info: revproplist() ...
 svn:log: Delete one file
 svn:check-locks: true
 svn:author: barry
-svn:date: 2008-10-02T21:27:47.889922Z
+svn:date: 2008-10-07T19:24:48.310007Z
 Info: changed() ...
 trunk/test/a/file1.txt: action='D', kind=<node_kind.file>, text_mod=0, prop_mod=0
+Info: changed( copy_info=True ) ...
+trunk/test/a/file1.txt: action='D', kind=<node_kind.file>, text_mod=0, prop_mod=0 copyfrom_rev=0 copyfrom_path=None
+Info: test_1.output end ------------------------------------------
+Info: Copy one file
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir cp /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/file1.txt /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/file1copy.txt
+A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/file1copy.txt
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir checkin -m Copy one file /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc
+A wc/file1copy.txt
+Revision 7
+Info: test_1.output start ----------------------------------------
+/Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_pre_commit_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 6-6
+Info: pre commit test 1
+Info: Transaction( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos, 6-6) ...
+Info: revproplist() ...
+svn:log: Copy one file
+svn:check-locks: true
+svn:author: barry
+svn:date: 2008-10-07T19:24:50.519703Z
+Info: changed() ...
+trunk/test/file1copy.txt: action='A', kind=<node_kind.file>, text_mod=0, prop_mod=1
+     svn:mergeinfo: 
+     contents: 'file1 ROOT ln 2\n'
+Info: changed( copy_info=True ) ...
+trunk/test/file1copy.txt: action='A', kind=<node_kind.file>, text_mod=0, prop_mod=1 copyfrom_rev=5 copyfrom_path=u'/trunk/test/file1.txt'
+     svn:mergeinfo: 
+     contents: 'file1 ROOT ln 2\n'
 Info: test_1.output end ------------------------------------------

@@ -72,3 +72,11 @@ cmd ${PYSVN} checkin -m "Delete one file" ${TESTROOT}/wc
 echo Info: test_1.output start ----------------------------------------
 cat ${TESTROOT}/test_1.output
 echo Info: test_1.output end ------------------------------------------
+
+echo Info: Copy one file
+
+cmd ${PYSVN} cp ${TESTROOT}/wc/file1.txt ${TESTROOT}/wc/file1copy.txt
+cmd ${PYSVN} checkin -m "Copy one file" ${TESTROOT}/wc
+echo Info: test_1.output start ----------------------------------------
+cat ${TESTROOT}/test_1.output
+echo Info: test_1.output end ------------------------------------------

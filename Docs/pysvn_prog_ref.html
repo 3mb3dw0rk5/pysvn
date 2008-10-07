@@ -1960,12 +1960,15 @@ Return the contents of path as a string, file_text.
 <h4><a name="pysvn_transaction_changed"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.changed</a></h4>
 <pre>
 file_text = \
-changed()
+changed( [copy_info=False] )
 </pre>
 <p>
 Return a dict of all changes in the transaction. The keys in
 the dict are the path names and the values are tuples contraining
 action, kind, text_mod, prop_mod.
+</p>
+<p>
+The optional copy_info parameter when True will return the copy from revision and copy from path information.
 </p>
 <ul>
 <li>action - string - a single letter indicating the action
@@ -1975,6 +1978,8 @@ action, kind, text_mod, prop_mod.
   modified</li>
 <li>prop_mod - int - is != 0 if the properties in this path
   have been modified</li>
+<li>copyfrom_rev - int - when path has been copied this is its copy from revision number</li>
+<li>copyfrom_path - int - when path has been copied this is its copy from path</li>
 </ul>
 
 <h4><a name="pysvn_transaction_propdel"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.propdel</a></h4>

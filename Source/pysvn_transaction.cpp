@@ -25,6 +25,7 @@
 
 static const char empty_string[] = "";
 static const char name___members__[] = "__members__";
+static const char name_copy_info[] = "copy_info";
 static const char name_exception_style[] = "exception_style";
 static const char name_path[] = "path";
 static const char name_prop_name[] = "prop_name";
@@ -34,6 +35,7 @@ static const char name_utf8[] = "UTF-8";
 static void convertReposTree
     (
     Py::Dict &dict,
+    bool copy_info,
     svn_repos_node_t *node,
     const std::string &path,
     apr_pool_t *pool
@@ -180,10 +182,13 @@ Py::Object pysvn_transaction::cmd_changed( const Py::Tuple &a_args, const Py::Di
 {
     static argument_description args_desc[] =
     {
+    { false, name_copy_info },
     { false, NULL }
     };
     FunctionArguments args( "changed", args_desc, a_args, a_kws );
     args.check();
+
+    bool copy_info = args.getBoolean( name_copy_info, false );
 
     SvnPool pool( m_transaction );
     svn_repos_node_t *tree = NULL;
@@ -227,7 +232,7 @@ Py::Object pysvn_transaction::cmd_changed( const Py::Tuple &a_args, const Py::Di
     }
 
     Py::Dict dict;
-    convertReposTree( dict, tree, empty_string, pool );
+    convertReposTree( dict, copy_info, tree, empty_string, pool );
 
     return dict;
 }
@@ -632,6 +637,7 @@ void pysvn_transaction::init_type()
 static void convertReposTree
     (
     Py::Dict &dict,
+    bool copy_info,
     svn_repos_node_t *node,
     const std::string &path,
     apr_pool_t *pool
@@ -645,8 +651,10 @@ static void convertReposTree
     // is node changed?
     if( node->action == 'A' )
         is_changed = true;
+
     else if( node->action == 'D' )
         is_changed = true;
+
     else if( node->action == 'R' )
     {
         if( node->text_mod )
@@ -654,20 +662,38 @@ static void convertReposTree
         if( node->prop_mod )
             is_changed = true;
     }
+
     else
         is_changed = false;
 
     if( is_changed )
-    {
-        Py::Tuple value( 4 );
-        char action[2] = {node->action, 0};
-        value[0] = Py::String( action );
-        value[1] = toEnumValue( node->kind );
-        value[2] = Py::Int( node->text_mod );
-        value[3] = Py::Int( node->prop_mod );
+        if( copy_info )
+        {
+            Py::Tuple value( 6 );
+            char action[2] = {node->action, 0};
+            value[0] = Py::String( action );
+            value[1] = toEnumValue( node->kind );
+            value[2] = Py::Int( node->text_mod );
+            value[3] = Py::Int( node->prop_mod );
+            if( node->copyfrom_path == NULL )
+                value[4] = Py::Int( 0 );
+            else
+                value[4] = Py::Int( node->copyfrom_rev );
+            value[5] = utf8_string_or_none( node->copyfrom_path );
 
-        dict[ Py::String( path ) ] = value;
-    }
+            dict[ Py::String( path, name_utf8 ) ] = value;
+        }
+        else
+        {
+            Py::Tuple value( 4 );
+            char action[2] = {node->action, 0};
+            value[0] = Py::String( action );
+            value[1] = toEnumValue( node->kind );
+            value[2] = Py::Int( node->text_mod );
+            value[3] = Py::Int( node->prop_mod );
+
+            dict[ Py::String( path, name_utf8 ) ] = value;
+        }
     
     /* Return here if the node has no children. */
     node = node->child;
@@ -680,7 +706,7 @@ static void convertReposTree
         full_path += "/";
     full_path += node->name;
 
-    convertReposTree( dict, node, full_path, pool );
+    convertReposTree( dict, copy_info, node, full_path, pool );
     while( node->sibling != NULL )
     {
         node = node->sibling;
@@ -690,6 +716,6 @@ static void convertReposTree
             full_path += "/";
         full_path += node->name;
 
-        convertReposTree( dict, node, full_path, pool );
+        convertReposTree( dict, copy_info, node, full_path, pool );
     }
 }
