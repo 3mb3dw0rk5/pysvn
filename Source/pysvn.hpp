@@ -585,6 +585,38 @@ public:
         }
     }
 
+    virtual Py::Object richCompare( const Py::Object &other, int op )
+    {
+        if( pysvn_enum_value::check( other ) )
+        {
+            pysvn_enum_value<T> *other_value = static_cast<pysvn_enum_value *>( other.ptr() );
+            switch( op )
+            {
+            case Py_EQ:
+                return Py::Boolean( m_value == other_value->m_value );
+            case Py_NE:
+                return Py::Boolean( m_value != other_value->m_value );
+            case Py_LT:
+                return Py::Boolean( m_value <  other_value->m_value );
+            case Py_LE:
+                return Py::Boolean( m_value <= other_value->m_value );
+            case Py_GT:
+                return Py::Boolean( m_value >  other_value->m_value );
+            case Py_GE:
+                return Py::Boolean( m_value >= other_value->m_value );
+            default:
+            throw Py::RuntimeError( "richcompare bad op" );
+            }
+        }
+        else
+        {
+            std::string msg( "expecting " );
+            msg += toTypeName( m_value );
+            msg += " object for rich compare ";
+            throw Py::AttributeError( msg );
+        }
+    }
+
     virtual Py::Object repr()
     {
         std::string s("<");

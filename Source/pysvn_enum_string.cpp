@@ -343,6 +343,7 @@ template <> void pysvn_enum_value< svn_opt_revision_kind >::init_type(void)
     behaviors().name("opt_revision_kind");
     behaviors().doc("opt_revision_kind value");
     behaviors().supportCompare();
+    behaviors().supportRichCompare();
     behaviors().supportRepr();
     behaviors().supportStr();
     behaviors().supportHash();
@@ -360,6 +361,7 @@ template <> void pysvn_enum_value< svn_wc_notify_action_t >::init_type(void)
     behaviors().name("wc_notify_action");
     behaviors().doc("wc_notify_action value");
     behaviors().supportCompare();
+    behaviors().supportRichCompare();
     behaviors().supportRepr();
     behaviors().supportStr();
     behaviors().supportHash();
@@ -377,6 +379,7 @@ template <> void pysvn_enum_value< svn_wc_status_kind >::init_type(void)
     behaviors().name("wc_status_kind");
     behaviors().doc("wc_status_kind value");
     behaviors().supportCompare();
+    behaviors().supportRichCompare();
     behaviors().supportRepr();
     behaviors().supportStr();
     behaviors().supportHash();
@@ -394,6 +397,7 @@ template <> void pysvn_enum_value< svn_wc_schedule_t >::init_type(void)
     behaviors().name("wc_schedule");
     behaviors().doc("wc_schedule value");
     behaviors().supportCompare();
+    behaviors().supportRichCompare();
     behaviors().supportRepr();
     behaviors().supportStr();
     behaviors().supportHash();
@@ -411,6 +415,7 @@ template <> void pysvn_enum_value< svn_wc_merge_outcome_t >::init_type(void)
     behaviors().name("wc_merge_outcome");
     behaviors().doc("wc_merge_outcome value");
     behaviors().supportCompare();
+    behaviors().supportRichCompare();
     behaviors().supportRepr();
     behaviors().supportStr();
     behaviors().supportHash();
@@ -428,6 +433,7 @@ template <> void pysvn_enum_value< svn_wc_notify_state_t >::init_type(void)
     behaviors().name("wc_notify_state");
     behaviors().doc("wc_notify_state value");
     behaviors().supportCompare();
+    behaviors().supportRichCompare();
     behaviors().supportRepr();
     behaviors().supportStr();
     behaviors().supportHash();
@@ -445,6 +451,7 @@ template <> void pysvn_enum_value< svn_node_kind_t >::init_type(void)
     behaviors().name("node_kind");
     behaviors().doc("node_kind value");
     behaviors().supportCompare();
+    behaviors().supportRichCompare();
     behaviors().supportRepr();
     behaviors().supportStr();
     behaviors().supportHash();
@@ -463,6 +470,7 @@ template <> void pysvn_enum_value< svn_diff_file_ignore_space_t >::init_type(voi
     behaviors().name("diff_file_ignore_space");
     behaviors().doc("diff_file_ignore_space value");
     behaviors().supportCompare();
+    behaviors().supportRichCompare();
     behaviors().supportRepr();
     behaviors().supportStr();
     behaviors().supportHash();
@@ -482,6 +490,7 @@ template <> void pysvn_enum_value< svn_client_diff_summarize_kind_t >::init_type
     behaviors().name("client_diff_summarize_kind");
     behaviors().doc("client_diff_summarize_kind value");
     behaviors().supportCompare();
+    behaviors().supportRichCompare();
     behaviors().supportRepr();
     behaviors().supportStr();
     behaviors().supportHash();
@@ -501,6 +510,7 @@ template <> void pysvn_enum_value< svn_depth_t >::init_type(void)
     behaviors().name("depth");
     behaviors().doc("depth value");
     behaviors().supportCompare();
+    behaviors().supportRichCompare();
     behaviors().supportRepr();
     behaviors().supportStr();
     behaviors().supportHash();
@@ -519,6 +529,7 @@ template <> void pysvn_enum_value< svn_wc_conflict_choice_t >::init_type(void)
     behaviors().name("wc_conflict_choice");
     behaviors().doc("wc_conflict_choice value");
     behaviors().supportCompare();
+    behaviors().supportRichCompare();
     behaviors().supportRepr();
     behaviors().supportStr();
     behaviors().supportHash();
