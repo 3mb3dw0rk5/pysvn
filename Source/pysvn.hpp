@@ -585,7 +585,7 @@ public:
         }
     }
 
-    virtual Py::Object richCompare( const Py::Object &other, int op )
+    virtual Py::Object rich_compare( const Py::Object &other, int op )
     {
         if( pysvn_enum_value::check( other ) )
         {
@@ -605,7 +605,7 @@ public:
             case Py_GE:
                 return Py::Boolean( m_value >= other_value->m_value );
             default:
-            throw Py::RuntimeError( "richcompare bad op" );
+            throw Py::RuntimeError( "rich_compare bad op" );
             }
         }
         else
