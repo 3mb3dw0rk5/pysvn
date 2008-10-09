@@ -35,7 +35,7 @@ set PY=c:\python%PY_MAJ%%PY_MIN%
 set PYLIB=python%PY_MAJ%%PY_MIN%
 set PYTHONPATH=%WORKDIR%\Source
 set PYTHON=%PY%\python.exe
-set wc_SVNVERSION=L:\BuildRoot\Win32-MSVC71-1.4.6\subversion-1.4.6\Release\bin\svnversion.exe
+set PYSVNMODULE=_pysvn_%PY_MAJ%_%PY_MIN%.pyd
 
 rem Need python and SVN on the path
 PATH %PY%;%SUBVERSION%\%BUILD_TYPE%\bin;%PATH%

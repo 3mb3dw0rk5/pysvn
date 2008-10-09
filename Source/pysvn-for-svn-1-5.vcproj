@@ -228,7 +228,7 @@
 					Name="VCCustomBuildTool"
 					Description="Info: Create __init__.py"
 					CommandLine="PATH=C:\Program Files\Subversion\bin;%PATH%
-%PY%\python .\create__init__.py pysvn\__init__.py.template pysvn\__init__.py generate_svn_error_codes\Debug\generate_svn_error_codes.exe
+%PY%\python .\create__init__.py pysvn\__init__.py.template pysvn\__init__.py generate_svn_error_codes\Debug\generate_svn_error_codes.exe %PYSVNMODULE%
 "
 					Outputs="pysvn\__init__.py"/>
 			</FileConfiguration>
@@ -238,7 +238,7 @@
 					Name="VCCustomBuildTool"
 					Description="Info: Create __init__.py"
 					CommandLine="PATH=C:\Program Files\Subversion\bin;%PATH%
-%PY%\python .\create__init__.py pysvn\__init__.py.template pysvn\__init__.py generate_svn_error_codes\Debug\generate_svn_error_codes.exe
+%PY%\python .\create__init__.py pysvn\__init__.py.template pysvn\__init__.py generate_svn_error_codes\Debug\generate_svn_error_codes.exe %PYSVNMODULE%
 "
 					AdditionalDependencies="..\Builder\brand_version.py;..\Builder\version.info;"
 					Outputs="pysvn\__init__.py"/>
@@ -249,7 +249,7 @@
 					Name="VCCustomBuildTool"
 					Description="Info: Create __init__.py"
 					CommandLine="PATH=C:\Program Files\Subversion\bin;%PATH%
-%PY%\python .\create__init__.py pysvn\__init__.py.template pysvn\__init__.py generate_svn_error_codes\Release\generate_svn_error_codes.exe
+%PY%\python .\create__init__.py pysvn\__init__.py.template pysvn\__init__.py generate_svn_error_codes\Release\generate_svn_error_codes.exe %PYSVNMODULE%
 "
 					Outputs="pysvn\__init__.py"/>
 			</FileConfiguration>
