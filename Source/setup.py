@@ -472,13 +472,14 @@ LDLIBS=-L%(svn_lib_dir)s \
 -lsvn_ra_svn-1   \
 -lsvn_repos-1    \
 -lsvn_ra_local-1 \
--lsvn_ra_dav-1   \
 -lsvn_diff-1     \
 -lsvn_ra-1       \
 -lsvn_wc-1       \
--lapr-0          \
+-lsvn_fs_util-1  \
+-lsvn_ra_neon-1  \
+-lapr-1          \
 -lneon           \
--laprutil-0      \
+-laprutil-1      \
 -liconv          \
 -lexpat          \
 -lintl           \
