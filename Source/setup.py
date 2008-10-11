@@ -629,7 +629,7 @@ LDLIBS= \
                     '--pycxx-dir=',
                     None,
                     [
-                        '../Import/pycxx-5.4.1',
+                        '../Import/pycxx-5.4.2',
                         distutils.sysconfig.get_python_inc() # typical Linux
                     ],
                     'CXX/Version.hxx' )
