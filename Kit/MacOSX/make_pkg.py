@@ -30,10 +30,16 @@ tmpdir = os.path.join( os.getcwd(), 'tmp' )
 
 if pymaj == 2 and pymin == 3:
     install_dir = '/System/Library/Frameworks/Python.framework/Versions/2.3/lib/python2.3/site-packages'
+
 elif pymaj == 2 and pymin == 4:
     install_dir = '/Library/Frameworks/Python.framework/Versions/2.4/lib/python2.4/site-packages'
+
 elif pymaj == 2 and pymin == 5:
     install_dir = '/Library/Frameworks/Python.framework/Versions/2.5/lib/python2.5/site-packages'
+
+elif pymaj == 2 and pymin == 6:
+    install_dir = '/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages'
+
 else:
     raise RuntimeError( 'Unsupported version of python' )
 
