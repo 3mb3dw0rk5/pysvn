@@ -51,9 +51,11 @@ Info: revproplist() ...
 svn:log: pre-commit test 1
 svn:check-locks: true
 svn:author: barry
-svn:date: 2008-07-05T14:52:50.285390Z
+svn:date: 2008-10-12T11:04:04.078898Z
 Info: changed() ...
 trunk/test/a: action='A', kind=<node_kind.dir>, text_mod=0, prop_mod=0
+Info: changed( copy_info=True ) ...
+trunk/test/a: action='A', kind=<node_kind.dir>, text_mod=0, prop_mod=0 copyfrom_rev=0 copyfrom_path=None
 
 B:\ > rem  test_1.output end ------------------------------------------ 
 
@@ -89,11 +91,16 @@ Info: revproplist() ...
 svn:log: Add two files
 svn:check-locks: true
 svn:author: barry
-svn:date: 2008-07-05T14:52:52.859220Z
+svn:date: 2008-10-12T11:04:06.912889Z
 Info: changed() ...
 trunk/test/a/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0
      contents: 'file1 A \r\n'
 trunk/test/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0
+     contents: 'file1 ROOT \r\n'
+Info: changed( copy_info=True ) ...
+trunk/test/a/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0 copyfrom_rev=0 copyfrom_path=None
+     contents: 'file1 A \r\n'
+trunk/test/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0 copyfrom_rev=0 copyfrom_path=None
      contents: 'file1 ROOT \r\n'
 
 B:\ > rem  test_1.output end ------------------------------------------ 
@@ -119,12 +126,18 @@ Info: revproplist() ...
 svn:log: Mod one file Mod one prop
 svn:check-locks: true
 svn:author: barry
-svn:date: 2008-07-05T14:52:54.621842Z
+svn:date: 2008-10-12T11:04:08.655342Z
 Info: changed() ...
 trunk/test/a/file1.txt: action='R', kind=<node_kind.file>, text_mod=1, prop_mod=1
      svn:eol-style: native
      contents: 'file1 A \n'
 trunk/test/file1.txt: action='R', kind=<node_kind.file>, text_mod=1, prop_mod=0
+     contents: 'file1 ROOT ln 2 \r\n'
+Info: changed( copy_info=True ) ...
+trunk/test/a/file1.txt: action='R', kind=<node_kind.file>, text_mod=1, prop_mod=1 copyfrom_rev=0 copyfrom_path=None
+     svn:eol-style: native
+     contents: 'file1 A \n'
+trunk/test/file1.txt: action='R', kind=<node_kind.file>, text_mod=1, prop_mod=0 copyfrom_rev=0 copyfrom_path=None
      contents: 'file1 ROOT ln 2 \r\n'
 
 B:\ > rem  test_1.output end ------------------------------------------ 
@@ -148,9 +161,11 @@ Info: revproplist() ...
 svn:log: Delete one file
 svn:check-locks: true
 svn:author: barry
-svn:date: 2008-07-05T14:52:56.634837Z
+svn:date: 2008-10-12T11:04:10.698218Z
 Info: changed() ...
 trunk/test/a/file1.txt: action='D', kind=<node_kind.file>, text_mod=0, prop_mod=0
+Info: changed( copy_info=True ) ...
+trunk/test/a/file1.txt: action='D', kind=<node_kind.file>, text_mod=0, prop_mod=0 copyfrom_rev=0 copyfrom_path=None
 
 B:\ > rem test_1.output end ------------------------------------------ 
 
