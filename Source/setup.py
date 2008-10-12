@@ -52,6 +52,7 @@ def setup_help( argv ):
 
     where <options> is one or more of:
         --verbose
+        --platform=<platform-name>
         --enable-debug
         --pycxx-dir=<dir>
         --pycxx-src-dir=<dir>
@@ -75,6 +76,7 @@ class MakeFileCreater:
         self.is_mac_os_x_darwin_ports = False
         self.mac_os_x_version = None
         self.mac_os_x_universal = False
+        self.platform = sys.platform
 
     def node_text( self, all_nodes ):
         all_text = []
@@ -110,6 +112,11 @@ class MakeFileCreater:
                         print 'Info: Mac OS X Universal SDKs found'
 
     def createMakefile( self, argv ):
+        for arg in argv:
+            if arg.startswith( '--platform=' ):
+                self.platform = arg[len('--platform='):]
+                print 'Info: Platform overridden as %s' % self.platform
+
         self.verbose = '--verbose' in argv
         self.detectMacVersion()
         if '--universal' in argv and self.mac_os_x_universal:
@@ -119,7 +126,7 @@ class MakeFileCreater:
             self.mac_os_x_universal = False
 
         if self.verbose:
-            print 'Info: Creating makefile for python %r' % (sys.version_info,)
+            print 'Info: Creating makefile for python %r on %s' % (sys.version_info,self.platform)
 
         debug_cflags_list = []
         if '--enable-debug' in argv:
@@ -164,10 +171,10 @@ class MakeFileCreater:
         # get user supplied defines
         for arg in argv:
             if arg.startswith( '--define=' ):
-                py_cflags_list.append( '-D%s' % arg[len('--define-'):] )
+                py_cflags_list.append( '-D%s' % arg[len('--define='):] )
 
         module_type = '.so'
-        if sys.platform == 'cygwin':
+        if self.platform == 'cygwin':
             module_type = '.dll'
 
         if '--fixed-module-name' in argv:
@@ -222,7 +229,7 @@ class MakeFileCreater:
         template_values[ 'svn_version_maj_min' ] = '%d.%d' % (major, minor)
 
         makefile = file( 'Makefile', 'w' )
-        if self.is_mac_os_x:
+        if self.platform == 'darwin' and self.is_mac_os_x:
             # need to figure out the framework dir to use otherwise the latest
             # python framework will be used and not the one matching this python
             var_prefix = distutils.sysconfig.get_config_var('prefix')
@@ -254,7 +261,7 @@ class MakeFileCreater:
             else:
                 makefile.write( self.makefile_template_macosx_one_arch % template_values )
 
-        elif sys.platform.startswith('aix'):
+        elif self.platform.startswith('aix'):
             if self.verbose:
                 print 'Info: Using AIX makefile template'
             for path in sys.path:
@@ -271,7 +278,12 @@ class MakeFileCreater:
                     template_values['python_exp'] = 'python.exp'
             makefile.write( self.makefile_template_aix % template_values )
 
-        elif sys.platform.startswith('linux'):
+        elif self.platform.startswith('sunos5'):
+            if self.verbose:
+                print 'Info: Using Sun OS 5 makefile template'
+            makefile.write( self.makefile_template_sunos5 % template_values )
+
+        elif self.platform.startswith('linux'):
             if self.verbose:
                 print 'Info: Using Linux makefile template'
             if '--norpath' in argv:
@@ -279,12 +291,12 @@ class MakeFileCreater:
             else:
                 makefile.write( self.makefile_template_linux % template_values )
 
-        elif sys.platform.startswith('freebsd'):
+        elif self.platform.startswith('freebsd'):
             if self.verbose:
                 print 'Info: Using FreeBSD makefile template'
             makefile.write( self.makefile_template_freebsd % template_values )
 
-        elif sys.platform == 'cygwin':
+        elif self.platform == 'cygwin':
             if self.verbose:
                 print 'Info: Using Cygwin makefile template'
             makefile.write( self.makefile_template_cygwin % template_values )
@@ -338,6 +350,28 @@ LDLIBS=-L%(svn_lib_dir)s -Wl,--rpath -Wl,%(svn_lib_dir)s \
 -lsvn_diff-1 \
 -lsvn_repos-1 \
  -lcom_err -lresolv -lexpat -lneon
+
+#include pysvn_common.mak
+'''
+
+    makefile_template_sunos5 = '''#
+#	Created by pysvn Extension/Source/setup.py
+#       -- makefile_template --
+#
+PYTHON=%(python_exe)s
+SVN_INCLUDE=%(svn_include)s
+CCC=g++
+CCCFLAGS=-Wall -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s
+CC=gcc
+CCFLAGS=-Wall -fPIC %(includes)s %(debug_cflags)s
+PYCXX=%(pycxx_dir)s
+PYCXXSRC=%(pycxx_src_dir)s
+LDSHARED=g++ -shared %(debug_cflags)s
+LDLIBS=-L%(svn_lib_dir)s -Wl,--rpath -Wl,%(svn_lib_dir)s \
+-lsvn_client-1 \
+-lsvn_diff-1 \
+-lsvn_repos-1 \
+ -lresolv -lexpat -lneon
 
 #include pysvn_common.mak
 '''
@@ -771,7 +805,7 @@ LDLIBS= \
     def get_lib_name_for_platform( self, libname ):
         if self.is_mac_os_x:
             return '%s.dylib' % libname
-        elif sys.platform == 'cygwin':
+        elif self.platform == 'cygwin':
             return '%s.dll.a' % libname
         else:
             return '%s.so' % libname
