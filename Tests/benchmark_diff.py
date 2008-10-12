@@ -1,6 +1,6 @@
 '''
  ====================================================================
- Copyright (c) 2005-2006 Barry A Scott.  All rights reserved.
+ Copyright (c) 2005-2008 Barry A Scott.  All rights reserved.
 
  This software is licensed as described in the file LICENSE.txt,
  which you should have received as part of this distribution.
@@ -80,14 +80,14 @@ class ReplaceDirtInString:
         uuid_re = re.compile(r'[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}')
         checksum_re = re.compile(r'[0-9a-z]{32}')
 
-        self.replacement_list = \
-                    [(dateAlphaNumeric_re,          '<alpha-date-and-time>'),
-                     (dateNumeric_re,               '<numeric-date-and-time>'),
-                     (uuid_re,                      '<UUID>'),
-                     (checksum_re,                  '<checksum>'),
-                     (dateUnixLs1_re,               '<ls-date-and-time>'),
-                     (dateUnixLs2_re,               '<ls-date-and-time>'),
-                    ]
+        self.replacement_list = [
+                        (dateAlphaNumeric_re,          '<alpha-date-and-time>'),
+                        (dateNumeric_re,               '<numeric-date-and-time>'),
+                        (uuid_re,                      '<UUID>'),
+                        (checksum_re,                  '<checksum>'),
+                        (dateUnixLs1_re,               '<ls-date-and-time>'),
+                        (dateUnixLs2_re,               '<ls-date-and-time>'),
+                        ]
 
 
         if self.workdir:
@@ -103,13 +103,17 @@ class ReplaceDirtInString:
                 self.replacement_list.append(
                      (python_re,        '<PYTHON>') )
 
-        if self.username:
-                username_spaces_re = LiteralSearch( self.username_spaces )
-                self.replacement_list.append(
-                        (username_spaces_re,        '<username>') )
-                username_re = LiteralSearch( self.username )
-                self.replacement_list.append(
-                        (username_re,        '<username>') )
+        if True:
+            # must replace username after workdir
+            username_spaces_re = re.compile( r'\b'+self.username_spaces )
+            self.replacement_list.append(
+                    (username_spaces_re,        '<username>') )
+
+            username_re = re.compile( r': %s\b' % self.username )
+            self.replacement_list.append( (username_re,                  ': <username>') )
+
+            username_re = LiteralSearch( '| %s |' % self.username )
+            self.replacement_list.append( (username_re,                  '| <username> |') )
 
     def find( self, keyword ):
         for line in self.lines_list:
