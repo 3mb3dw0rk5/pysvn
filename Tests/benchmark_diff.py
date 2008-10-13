@@ -54,9 +54,6 @@ class ReplaceDirtInString:
         self.workdir = self.find( 'WorkDir' )
         self.python = self.find( 'PYTHON' )
         self.username = self.find( 'Username' )
-        self.username_spaces = self.username
-        while len(self.username_spaces) < 10:
-            self.username_spaces = self.username_spaces + ' '
 
         # ------------------------------------------------------------------------
         # Version strings:
@@ -105,9 +102,9 @@ class ReplaceDirtInString:
 
         if True:
             # must replace username after workdir
-            username_spaces_re = re.compile( r'\b'+self.username_spaces )
+            username_spaces_re = re.compile( r'\b'+self.username+' * ' )
             self.replacement_list.append(
-                    (username_spaces_re,        '<username>') )
+                    (username_spaces_re,        '<username> ') )
 
             username_re = re.compile( r': %s\b' % self.username )
             self.replacement_list.append( (username_re,                  ': <username>') )
