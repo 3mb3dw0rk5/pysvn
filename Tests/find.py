@@ -21,5 +21,5 @@ def walk( dirname, all_files ):
 walk( sys.argv[1], all_files )
 
 all_files.sort()
-for file in all_files:
-    print file
+for filename in all_files:
+    print( filename )

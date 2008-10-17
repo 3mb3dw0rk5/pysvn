@@ -381,7 +381,7 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 
     for( Py::List::size_type i=0; i<path_list.length(); i++ )
     {
-        Py::String path_str( asUtf8String( path_list[i] ) );
+        Py::Bytes path_str( asUtf8Bytes( path_list[i] ) );
         std::string path( path_str.as_std_string() );
         std::string norm_path( svnNormalisedIfPath( path, pool ) );
 

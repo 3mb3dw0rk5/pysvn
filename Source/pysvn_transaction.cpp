@@ -105,7 +105,7 @@ int pysvn_transaction::setattr( const char *_name, const Py::Object &value )
     if( name == name_exception_style )
     {
         Py::Int style( value );
-        if( style == 0 || style == 1 )
+        if( style == 0l || style == 1l )
         {
             m_exception_style = style;
         }

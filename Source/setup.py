@@ -25,7 +25,7 @@ class SetupError(Exception):
 
 def main( argv ):
     if sys.platform == 'win32':
-        print 'Error: Works for Unix like systems only'
+        print( 'Error: Works for Unix like systems only' )
         return 1
 
     try:
@@ -36,13 +36,13 @@ def main( argv ):
             return setup_help( argv )
         else:
             return setup_help( argv )
-    except SetupError, e:
-        print 'Error:',str(e)
+    except SetupError as e:
+        print( 'Error:',str(e) )
         return 1
 
 def setup_help( argv ):
     basename = os.path.basename( argv[0] )
-    print '''
+    print( '''
 
     Create a makefile for this python and platform
         python %s configure <options>
@@ -65,7 +65,7 @@ def setup_help( argv ):
         --define=<define-string>
         --universal (build Mac OS X universal binary - not working at yet)
 
-''' % (basename, basename)
+''' % (basename, basename) )
     return 1
 
 class MakeFileCreater:
@@ -90,7 +90,7 @@ class MakeFileCreater:
 
     def detectMacVersion( self ):
         if os.path.exists( '/System/Library/CoreServices/SystemVersion.plist' ):
-            dom = xml.dom.minidom.parse( file( '/System/Library/CoreServices/SystemVersion.plist' ) )
+            dom = xml.dom.minidom.parse( open( '/System/Library/CoreServices/SystemVersion.plist' ) )
             plist = dom.getElementsByTagName( 'plist' )[0]
             plist_dict = plist.getElementsByTagName( 'dict' )[0]
             for key_or_value in plist_dict.childNodes:
@@ -101,7 +101,7 @@ class MakeFileCreater:
 
                     self.mac_os_x_version_string = self.node_text( value_node.childNodes )
                     if self.verbose:
-                        print 'Info: Mac OS X Version',self.mac_os_x_version_string
+                        print( 'Info: Mac OS X Version',self.mac_os_x_version_string )
                     self.mac_os_x_version = [int(s) for s in self.mac_os_x_version_string.split('.')]
                     self.is_mac_os_x = True
 
@@ -109,28 +109,28 @@ class MakeFileCreater:
                     self.mac_os_x_universal = os.path.exists( '/Developer/SDKs/MacOSX%d.%du.sdk' %
                                                 (self.mac_os_x_version[0], self.mac_os_x_version[1]) )
                     if self.mac_os_x_universal:
-                        print 'Info: Mac OS X Universal SDKs found'
+                        print( 'Info: Mac OS X Universal SDKs found' )
 
     def createMakefile( self, argv ):
         for arg in argv:
             if arg.startswith( '--platform=' ):
                 self.platform = arg[len('--platform='):]
-                print 'Info: Platform overridden as %s' % self.platform
+                print( 'Info: Platform overridden as %s' % self.platform )
 
         self.verbose = '--verbose' in argv
         self.detectMacVersion()
         if '--universal' in argv and self.mac_os_x_universal:
-            print 'Info: turning on universal support'
+            print( 'Info: turning on universal support' )
             self.mac_os_x_universal = True
         else:
             self.mac_os_x_universal = False
 
         if self.verbose:
-            print 'Info: Creating makefile for python %r on %s' % (sys.version_info,self.platform)
+            print( 'Info: Creating makefile for python %r' % (sys.version_info, self.platform) )
 
         debug_cflags_list = []
         if '--enable-debug' in argv:
-            print 'Info: Enabling debug'
+            print( 'Info: Enabling debug' )
             debug_cflags_list.append( '-g' )
 
         include_dir_list = []
@@ -139,7 +139,7 @@ class MakeFileCreater:
         include_dir_list.append( distutils.sysconfig.get_python_inc() )
         if distutils.sysconfig.get_python_inc() != distutils.sysconfig.get_python_inc( True ):
             include_dir_list.append( distutils.sysconfig.get_python_inc( True ) )
-        print 'Info: Found Python include in %s' % ' '.join( include_dir_list )
+        print( 'Info: Found Python include in %s' % ' '.join( include_dir_list ) )
 
         # add pycxx include
         pycxx_dir = self.find_pycxx( argv )
@@ -178,7 +178,7 @@ class MakeFileCreater:
             module_type = '.dll'
 
         if '--fixed-module-name' in argv:
-            print 'Info: Using fixed module name'
+            print( 'Info: Using fixed module name' )
             pysvn_module_name = '_pysvn'+ module_type
 
         else:
@@ -186,8 +186,12 @@ class MakeFileCreater:
             # ensure that only a matching _pysvn.so for the version of
             # python is imported
             pysvn_module_name = '_pysvn_%d_%d%s' % (sys.version_info[0], sys.version_info[1], module_type)
-            py_cflags_list.append( '-Dinit_pysvn=init_pysvn_%d_%d' % sys.version_info[:2] )
-            py_cflags_list.append( '-Dinit_pysvn_d=init_pysvn_%d_%d_d' % sys.version_info[:2] )
+            if sys.version_info[0] >= 3:
+                py_cflags_list.append( '-DPyInit__pysvn=PyInit__pysvn_%d_%d' % sys.version_info[:2] )
+                py_cflags_list.append( '-DPyInit__pysvn_d=PyInit__pysvn_%d_%d_d' % sys.version_info[:2] )
+            else:
+                py_cflags_list.append( '-Dinit_pysvn=init_pysvn_%d_%d' % sys.version_info[:2] )
+                py_cflags_list.append( '-Dinit_pysvn_d=init_pysvn_%d_%d_d' % sys.version_info[:2] )
 
         template_values = {
             'pysvn_module_name': pysvn_module_name,
@@ -223,12 +227,12 @@ class MakeFileCreater:
             'pycxx_src_dir':    pycxx_src_dir,
             }
 
-        print 'Info: Creating Makefile for Source'
+        print( 'Info: Creating Makefile for Source' )
 
         major, minor, patch = self.getSvnVersion( svn_include )
         template_values[ 'svn_version_maj_min' ] = '%d.%d' % (major, minor)
 
-        makefile = file( 'Makefile', 'w' )
+        makefile = open( 'Makefile', 'w' )
         if self.platform == 'darwin' and self.is_mac_os_x:
             # need to figure out the framework dir to use otherwise the latest
             # python framework will be used and not the one matching this python
@@ -238,14 +242,14 @@ class MakeFileCreater:
 
             if self.cmp_mac_os_x_version( (10,4) ) >= 0:
                 if self.verbose:
-                    print 'Info: Using Mac OS X 10.4 makefile template'
+                    print( 'Info: Using Mac OS X 10.4 makefile template' )
 
                 # 10.4 needs the libintl.a but 10.3 does not
                 template_values['extra_libs'] = '%(svn_lib_dir)s/libintl.a' % template_values
                 template_values['frameworks'] = '-framework System %s -framework CoreFoundation -framework Kerberos -framework Security' % framework_lib
             else:
                 if self.verbose:
-                    print 'Info: Using Mac OS X 10.3 makefile template'
+                    print( 'Info: Using Mac OS X 10.3 makefile template' )
 
                 template_values['extra_libs'] = ''
                 template_values['frameworks'] = '-framework System %s -framework CoreFoundation' % framework_lib
@@ -259,11 +263,14 @@ class MakeFileCreater:
             elif self.mac_os_x_universal:
                 makefile.write( self.makefile_template_macosx_universal % template_values )
             else:
-                makefile.write( self.makefile_template_macosx_one_arch % template_values )
+                if sys.version_info[0] >= 3:
+                    makefile.write( self.makefile_template_macosx_one_arch_py3 % template_values )
+                else:
+                    makefile.write( self.makefile_template_macosx_one_arch_py2 % template_values )
 
         elif self.platform.startswith('aix'):
             if self.verbose:
-                print 'Info: Using AIX makefile template'
+                print( 'Info: Using AIX makefile template' )
             for path in sys.path:
                 python_exp = os.path.join(path, 'config', 'python.exp')
                 if os.path.exists(python_exp):
@@ -280,12 +287,12 @@ class MakeFileCreater:
 
         elif self.platform.startswith('sunos5'):
             if self.verbose:
-                print 'Info: Using Sun OS 5 makefile template'
+                print( 'Info: Using Sun OS 5 makefile template' )
             makefile.write( self.makefile_template_sunos5 % template_values )
 
         elif self.platform.startswith('linux'):
             if self.verbose:
-                print 'Info: Using Linux makefile template'
+                print( 'Info: Using Linux makefile template' )
             if '--norpath' in argv:
                 makefile.write( self.makefile_template_linux_norpath % template_values )
             else:
@@ -293,30 +300,30 @@ class MakeFileCreater:
 
         elif self.platform.startswith('freebsd'):
             if self.verbose:
-                print 'Info: Using FreeBSD makefile template'
+                print( 'Info: Using FreeBSD makefile template' )
             makefile.write( self.makefile_template_freebsd % template_values )
 
         elif self.platform == 'cygwin':
             if self.verbose:
-                print 'Info: Using Cygwin makefile template'
+                print( 'Info: Using Cygwin makefile template' )
             makefile.write( self.makefile_template_cygwin % template_values )
 
 
         else:
             if self.verbose:
-                print 'Info: Using unix makefile template'
+                print( 'Info: Using unix makefile template' )
             makefile.write( self.makefile_template % template_values )
 
-        f = file( 'pysvn_common.mak', 'r' )
+        f = open( 'pysvn_common.mak', 'r' )
         makefile.write( f.read() % template_values )
         f.close()
         makefile.close()
 
-        print 'Info: Creating Makefile for Tests'
+        print( 'Info: Creating Makefile for Tests' )
 
-        makefile = file( '../Tests/Makefile', 'w' )
+        makefile = open( '../Tests/Makefile', 'w' )
         makefile.write( self.makefile_tests_template % template_values )
-        f = file( '../Tests/pysvn_test_common.mak', 'r' )
+        f = open( '../Tests/pysvn_test_common.mak', 'r' )
         makefile.write( f.read() )
         f.close()
         makefile.close()
@@ -525,7 +532,7 @@ LDLIBS=-L%(svn_lib_dir)s \
 #include pysvn_common.mak
 '''
 
-    makefile_template_macosx_one_arch = '''#
+    makefile_template_macosx_one_arch_py2 = '''#
 #	Created by pysvn Extension/Source/setup.py
 #       -- makefile_template_macosx_one_arch --
 #
@@ -538,6 +545,31 @@ CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s %(debug_cflags)s
 PYCXX=%(pycxx_dir)s
 PYCXXSRC=%(pycxx_src_dir)s
 LDSHARED=g++ -bundle %(debug_cflags)s -u _PyMac_Error %(frameworks)s
+LDLIBS=-L%(svn_lib_dir)s \
+-L%(apr_lib_dir)s \
+-lsvn_client-1 \
+-lsvn_repos-1 \
+-lsvn_wc-1 \
+-lsvn_fs-1 \
+-lsvn_subr-1 \
+-lsvn_diff-1 \
+-l%(lib_apr)s
+#include pysvn_common.mak
+'''
+
+    makefile_template_macosx_one_arch_py3 = '''#
+#	Created by pysvn Extension/Source/setup.py
+#       -- makefile_template_macosx_one_arch --
+#
+PYTHON=%(python_exe)s
+SVN_INCLUDE=%(svn_include)s
+CCC=g++
+CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s
+CC=gcc
+CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s %(debug_cflags)s
+PYCXX=%(pycxx_dir)s
+PYCXXSRC=%(pycxx_src_dir)s
+LDSHARED=g++ -bundle %(debug_cflags)s %(frameworks)s
 LDLIBS=-L%(svn_lib_dir)s \
 -L%(apr_lib_dir)s \
 -lsvn_client-1 \
@@ -760,7 +792,7 @@ LDLIBS= \
                         '/usr/local/include/apache2',           # alternate *BSD
                     ],
                     'apr.h' )
-            except SetupError, e:
+            except SetupError as e:
                 last_exception = e
         raise last_exception
 
@@ -797,7 +829,7 @@ LDLIBS= \
                         '/usr/pkg/lib',                         # netbsd
                     ],
                     apr_libname )
-            except SetupError, e:
+            except SetupError as e:
                 last_exception = e
         raise last_exception
 
@@ -812,7 +844,7 @@ LDLIBS= \
 
     def find_dir( self, argv, name, kw, svn_root_suffix, base_dir_list, check_file ):
         dirname = self.__find_dir( argv, name, kw, svn_root_suffix, base_dir_list, check_file )
-        print 'Info: Found %14.14s in %s' % (name, dirname)
+        print( 'Info: Found %14.14s in %s' % (name, dirname) )
         return dirname
 
     def __find_dir( self, argv, name, kw, svn_root_suffix, base_dir_list, check_file ):
@@ -829,14 +861,14 @@ LDLIBS= \
         for dir in base_dir_list:
             full_check_file = os.path.join( dir, check_file )
             if self.verbose:
-                print 'Info: Checking for %s in %s' % (name, full_check_file)
+                print( 'Info: Checking for %s in %s' % (name, full_check_file) )
             if os.path.exists( full_check_file ):
                 return os.path.abspath( dir )
 
-        raise SetupError, 'cannot find %s %s - use %s' % (name, check_file, kw)
+        raise SetupError( 'cannot find %s %s - use %s' % (name, check_file, kw) )
 
     def getSvnVersion( self, svn_include ):
-        all_svn_version_lines = file( os.path.join( svn_include, 'svn_version.h' ) ).readlines()
+        all_svn_version_lines = open( os.path.join( svn_include, 'svn_version.h' ) ).readlines()
         major = None
         minor = None
         patch = None
@@ -850,7 +882,7 @@ LDLIBS= \
                 elif words[1] == 'SVN_VER_PATCH':
                     patch = int(words[2])
  
-        print 'Info: Building against SVN %d.%d.%d' % (major, minor, patch)
+        print( 'Info: Building against SVN %d.%d.%d' % (major, minor, patch) )
         return (major, minor, patch)
 
 

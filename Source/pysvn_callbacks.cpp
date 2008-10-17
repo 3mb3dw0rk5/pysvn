@@ -18,7 +18,9 @@
 
 #include "pysvn.hpp"
 
-static bool get_string( Py::Object &fn, Py::Tuple &args, std::string & _msg );
+static const char *g_utf_8 = "utf-8";
+
+static bool get_string( Py::Object &fn, Py::Tuple &args, std::string &_msg );
 
 pysvn_context::pysvn_context( const std::string &config_dir )
 : SvnContext( config_dir )
@@ -121,8 +123,8 @@ bool pysvn_context::contextGetLogin
         if( long( retcode ) != 0 )
         {
             // copy out the answers
-            _username = username.as_std_string();
-            _password = password.as_std_string();
+            _username = username.as_std_string( g_utf_8 );
+            _password = password.as_std_string( g_utf_8 );
             _may_save = long( may_save_out ) != 0;
 
             return true;
@@ -205,7 +207,7 @@ void pysvn_context::contextNotify2
     info["action"] = toEnumValue( notify->action );
     info["kind"] = toEnumValue( notify->kind );
     if( notify->mime_type == NULL )
-        info["mime_type"] = Py::Nothing();
+        info["mime_type"] = Py::None();
     else
         info["mime_type"] = Py::String( notify->mime_type );
     info["content_state"] = toEnumValue( notify->content_state );
@@ -263,7 +265,7 @@ void pysvn_context::contextNotify
     info["action"] = toEnumValue( action );
     info["kind"] = toEnumValue( kind );
     if( mime_type == NULL )
-        info["mime_type"] = Py::Nothing();
+        info["mime_type"] = Py::None();
     else
         info["mime_type"] = Py::String( mime_type );
     info["content_state"] = toEnumValue( content_state );
@@ -473,7 +475,7 @@ bool pysvn_context::contextSslClientCertPrompt( std::string &_cert_file, const s
 
         if( long( retcode ) != 0 )
         {
-            _cert_file = cert_file.as_std_string();
+            _cert_file = cert_file.as_std_string( g_utf_8 );
             _may_save = long( may_save_out ) != 0;
 
             return true;
@@ -539,7 +541,7 @@ bool pysvn_context::contextSslClientCertPwPrompt
         if( long( retcode ) != 0 )
         {
             // copy out the answers
-            _password = password.as_std_string();
+            _password = password.as_std_string( g_utf_8 );
             _may_save = long( may_save_out ) != 0;
 
             return true;
@@ -569,18 +571,17 @@ static bool get_string( Py::Object &fn, Py::Tuple &args, std::string &msg )
 
     Py::Tuple results;
     Py::Int retcode;
-    Py::String maybe_unicode_message;
+    Py::String message;
 
     results = callback.apply( args );
     retcode = results[0];
-    maybe_unicode_message = results[1];
-    Py::String message( maybe_unicode_message.encode( "utf-8" ) );
+    message = results[1];
 
     // true returned
     if( long( retcode ) != 0 )
     {
         // copy out the answers
-        msg = message.as_std_string();
+        msg = message.as_std_string( g_utf_8 );
 
         return true;
     }

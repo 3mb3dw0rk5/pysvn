@@ -7,49 +7,51 @@
 
  ====================================================================
 '''
-
-import sys, os, cStringIO, re, pprint, string
+import sys
+import os
+import re
+import pprint
 import difflib
 
-_debug = 0
+_debug = False
 
 class LiteralMatch:
-    def __init__(self,start,end):
+    def __init__( self, start, end ):
         self.start_pos = start
         self.end_pos = end
 
-    def start(self):
+    def start( self ):
         return self.start_pos
-    def end(self):
+
+    def end( self ):
         return self.end_pos
 
-
 class LiteralSearch:
-    def __init__(self, substring):
+    def __init__( self, substring ):
         self.substring = substring
 
-    def search(self,line):
+    def search( self, line ):
         try:
             start_pos = line.index( self.substring )
             end_pos = start_pos + len(self.substring)
             return LiteralMatch( start_pos, end_pos )
-        except ValueError, detail:
+        except ValueError:
             return None
 
 class LiteralCaseBlindSearch:
-    def __init__(self, substring):
+    def __init__( self, substring ):
         self.substring = substring.lower()
 
-    def search(self,line):
+    def search( self, line ):
         try:
             start_pos = line.lower().index( self.substring )
             end_pos = start_pos + len(self.substring)
             return LiteralMatch( start_pos, end_pos )
-        except ValueError, detail:
+        except ValueError:
             return None
 
 class ReplaceDirtInString:
-    def __init__(self, lines_list):
+    def __init__( self, lines_list ):
         self.lines_list = lines_list
         self.workdir = self.find( 'WorkDir' )
         self.python = self.find( 'PYTHON' )
@@ -88,17 +90,17 @@ class ReplaceDirtInString:
 
 
         if self.workdir:
-                workdir_re1 = LiteralCaseBlindSearch( self.workdir )
-                workdir_re2 = LiteralCaseBlindSearch( os.path.realpath( self.workdir ) )
-                self.replacement_list.append(
-                     (workdir_re1,        '<workdir>') )
-                self.replacement_list.append(
-                     (workdir_re2,        '<workdir>') )
+            workdir_re1 = LiteralCaseBlindSearch( self.workdir )
+            workdir_re2 = LiteralCaseBlindSearch( os.path.realpath( self.workdir ) )
+            self.replacement_list.append(
+                 (workdir_re1,        '<workdir>') )
+            self.replacement_list.append(
+                 (workdir_re2,        '<workdir>') )
 
         if self.python:
-                python_re = LiteralCaseBlindSearch( self.python )
-                self.replacement_list.append(
-                     (python_re,        '<PYTHON>') )
+            python_re = LiteralCaseBlindSearch( self.python )
+            self.replacement_list.append(
+                 (python_re,        '<PYTHON>') )
 
         if True:
             # must replace username after workdir
@@ -114,21 +116,21 @@ class ReplaceDirtInString:
 
     def find( self, keyword ):
         for line in self.lines_list:
-            parts = string.split( line, ':' )
+            parts = line.split( ':' )
             if parts[0] == keyword:
-                value = string.strip( string.join( parts[1:], ':' ) )
-                if _debug: print 'find(',keyword,') ->',value
+                value = (':'.join( parts[1:] ) ).strip()
+                if _debug: print( 'find( %s ) -> %s' % (keyword, value) )
                 return value
         return ''
 
-    def execute(self):
-            return map(self.replace, self.lines_list)
+    def execute( self ):
+        return [self.replace( line ) for line in self.lines_list]
 
-    def replace(self,line):
-        if _debug: print 'Processing: ',line
+    def replace( self, line ):
+        if _debug: print( 'Processing: %s' % line )
         for re_expr, replacement_text in self.replacement_list:
             while 1:
-                if _debug: print '...trying:',replacement_text
+                if _debug: print( '...trying: %s' % replacement_text )
                 match = re_expr.search( line )
                 if match == None:
                     break
@@ -136,13 +138,12 @@ class ReplaceDirtInString:
         return line
 
 
-def stripDirty(filename):
-
+def stripDirty( filename ):
     f = open(filename, 'r')
     contents = f.read()
     f.close()
 
-    lines = string.split( contents.replace( '\r\n', '\n' ).replace( '\r', '\n' ), '\n' )
+    lines = contents.replace( '\r\n', '\n' ).replace( '\r', '\n' ).split( '\n' )
     replace = ReplaceDirtInString( lines )
     stripped_lines = replace.execute()
 
@@ -152,37 +153,35 @@ def stripDirty(filename):
 # ------------------------------------------------------------------------
 # main
  
-def main(argv):
- 
+def main( argv ):
     try:
+        benchmark_file = argv[1]
+        results_file = argv[2]
 
-        BenchmarkFile = argv[1]
-        ResultsFile = argv[2]
-
-        print 'Info: Comparing', BenchmarkFile
-        benchmark = stripDirty(BenchmarkFile)
-
-        print 'Info: Against  ', ResultsFile
-        results = stripDirty(ResultsFile)
+        print( 'Info: Comparing %s' % benchmark_file )
+        benchmark = stripDirty( benchmark_file )
         if _debug:
-            print 'Debug: results after we called stripDirty'
-            pprint.pprint(results)
+            print( 'Debug: benchmark after we called stripDirty' )
+            pprint.pprint( benchmark )
 
+        print( 'Info: Against   %s' % results_file )
+        results = stripDirty( results_file )
+        if _debug:
+            print( 'Debug: results after we called stripDirty' )
+            pprint.pprint( results )
 
-        f = open(ResultsFile + '.clean','w')
+        f = open( results_file + '.clean', 'w' )
         for line in results:
             f.write( line + '\n' )
         f.close()
 
-        f = open(BenchmarkFile + '.clean','w')
+        f = open( benchmark_file + '.clean', 'w' )
         for line in benchmark:
             f.write( line + '\n' )
         f.close()
 
-
-
         if results != benchmark:
-            print 'Error: Test failed - %s' % ResultsFile
+            print( 'Error: Test failed - %s' % results_file )
 
             sm = difflib.SequenceMatcher()
             sm.set_seq1( benchmark )
@@ -191,31 +190,28 @@ def main(argv):
 
             for tag, i1, i2, j1, j2 in opcodes:
                 if tag in ['delete','insert','replace']:
-                    print 'Error: --------------------------------------------------------------------------------'
+                    print( 'Error: --------------------------------------------------------------------------------' )
                 if tag in ['delete','replace']:
                     for line_index in range(i1,i2):
                         prefix = 'Benchmark(%d) %7s' % (line_index+1, tag)
-                        print 'Error: %26s %s' % (prefix, benchmark[line_index])
+                        print( 'Error: %26s %s' % (prefix, benchmark[line_index]) )
                 if tag in ['insert','replace']:
                     for line_index in range(j1,j2):
                         prefix = 'Result(%d) %7s' % (line_index+1, tag)
-                        print 'Error: %26s %s' % (prefix, results[line_index])
+                        print( 'Error: %26s %s' % (prefix, results[line_index]) )
 
-            print 'Error: --------------------------------------------------------------------------------'
+            print( 'Error: --------------------------------------------------------------------------------' )
             return 1
         else:
-            print 'Info: Test succeeded'
+            print( 'Info: Test succeeded' )
             return 0
 
-#    except KeyboardInterrupt:
-#        print 'Interrupted by Ctrl-C'
-    except IOError, detail:
-        print 'Error:', detail
+    except IOError as e:
+        print( 'Error: %s' % e )
 
     return 2
 
 # ------------------------------------------------------------------------
  
 if __name__ == "__main__":
-    sys.exit(main( sys.argv ))
-
+    sys.exit( main( sys.argv ) )

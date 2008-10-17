@@ -9,7 +9,7 @@ output_filename = input_filename[:-len('.template')]
 # create dictionary of branding strings
 branding_info = {}
 
-for line in file( version_details ):
+for line in open( version_details ):
     line = line.strip()
     if len(line) == 0:
         continue
@@ -29,13 +29,13 @@ else:
         (svnversion_image
         ,os.environ.get( 'PYSVN_EXPORTED_FROM', '..' )))
 
-print 'Info: Running %s' % cmd
+print( 'Info: Running %s' % cmd )
 build_revision = os.popen( cmd, 'r' ).read().strip()
 
 # build_revision is either a range nnn:mmm or mmm
 # we only want the mmm
 build_revision = build_revision.split(':')[-1]
-print 'Info: revision %s' % build_revision
+print( 'Info: revision %s' % build_revision )
 
 if build_revision[0] not in '0123456789':
     branding_info['BUILD'] = '0'
@@ -49,8 +49,8 @@ else:
 
 
 # read all the input text
-text = file( input_filename, 'r' ).read()
+text = open( input_filename, 'r' ).read()
 # and write of a branded version
-file( output_filename, 'w' ).write( text % branding_info )
+open( output_filename, 'w' ).write( text % branding_info )
 
 sys.exit(0)

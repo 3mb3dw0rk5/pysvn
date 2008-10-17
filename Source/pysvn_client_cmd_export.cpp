@@ -19,6 +19,8 @@
 #include "pysvn.hpp"
 #include "pysvn_static_strings.hpp"
 
+static const char *g_utf_8 = "utf-8";
+
 Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
     static argument_description args_desc[] =
@@ -62,7 +64,7 @@ Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_
         if( native_eol_obj != Py::None() )
         {
             Py::String eol_py_str( native_eol_obj );
-            std::string eol_str = eol_py_str.as_std_string();
+            std::string eol_str = eol_py_str.as_std_string( g_utf_8 );
             if( eol_str == "CR" )
                 native_eol = "CR";
             else if( eol_str == "CRLF" )

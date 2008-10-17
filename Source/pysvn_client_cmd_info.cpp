@@ -23,6 +23,8 @@
 #include "svn_sorts.h"
 #include "pysvn_static_strings.hpp"
 
+static const char *g_utf_8 = "utf-8";
+
 #if defined( PYSVN_HAS_CLIENT_ANNOTATE4 )
 class AnnotatedLineInfo
 {
@@ -614,7 +616,7 @@ static svn_error_t *log4Receiver
         if( revprops_dict.hasKey( "svn:date" ) )
         {
             Py::String date( revprops_dict[ "svn:date" ] );
-            Py::Object int_date = toObject( convertStringToTime( date.as_std_string(), baton->m_now, baton->m_pool ) );
+            Py::Object int_date = toObject( convertStringToTime( date.as_std_string( g_utf_8 ), baton->m_now, baton->m_pool ) );
             revprops_dict[ "svn:date" ] = int_date;
             entry_dict[ name_date ] = int_date;
         }
@@ -624,8 +626,7 @@ static svn_error_t *log4Receiver
         }
         if( revprops_dict.hasKey( "svn:log" ) )
         {
-            Py::String utf8_message( revprops_dict[ "svn:log" ] );
-            Py::String message( utf8_message.decode( name_utf8 ) );
+            Py::String message( revprops_dict[ "svn:log" ] );
             revprops_dict[ "svn:log" ] = message;
             entry_dict[ name_message ] = message;
         }
@@ -727,7 +728,7 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
 
     for( size_t i=0; i<url_or_path_list.size(); i++ )
     {
-        Py::String py_path( asUtf8String( url_or_path_list[ i ] ) );
+        Py::Bytes py_path( asUtf8Bytes( url_or_path_list[ i ] ) );
         std::string path( py_path.as_std_string() );
         bool is_url = is_svn_url( path );
 
@@ -952,7 +953,7 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
 
     for( size_t i=0; i<url_or_path_list.size(); i++ )
     {
-        Py::String py_path( asUtf8String( url_or_path_list[ i ] ) );
+        Py::Bytes py_path( asUtf8Bytes( url_or_path_list[ i ] ) );
         std::string path( py_path.as_std_string() );
         bool is_url = is_svn_url( path );
 
@@ -1138,12 +1139,6 @@ static void StatusEntriesFunc
 }
 #endif
 
-extern Py::Object toObject(
-    const char *path, pysvn_wc_status_t &svn_status,
-    const DictWrapper &wrapper_status,
-    const DictWrapper &wrapper_lock
-    );
-
 Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
     static argument_description args_desc[] =
@@ -1277,9 +1272,6 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
         const svn_sort__item_t *item = &APR_ARRAY_IDX( statusarray, i, const svn_sort__item_t );
         pysvn_wc_status_t *status = (pysvn_wc_status_t *)item->value;
 
-//        entries_list.append( Py::asObject(
-//            new pysvn_status( (const char *)item->key, status, m_context,
-//                m_wrapper_lock ) ) );
         entries_list.append( toObject(
                 Py::String( osNormalisedPath( (const char *)item->key, pool ), "UTF-8" ),
                 *status,

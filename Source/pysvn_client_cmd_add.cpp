@@ -61,7 +61,7 @@ Py::Object pysvn_client::cmd_add( const Py::Tuple &a_args, const Py::Dict &a_kws
     {
         for( Py::List::size_type i=0; i<path_list.length(); i++ )
         {
-            Py::String path_str( asUtf8String( path_list[i] ) );
+            Py::Bytes path_str( asUtf8Bytes( path_list[i] ) );
             std::string norm_path( svnNormalisedIfPath( path_str.as_std_string(), pool ) );
 
             checkThreadPermission();

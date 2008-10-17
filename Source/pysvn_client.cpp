@@ -25,6 +25,8 @@
 #include "svn_sorts.h"
 #include "pysvn_static_strings.hpp"
 
+static const char *g_utf_8 = "utf-8";
+
 static void init_py_names()
 {
     static bool init_done = false;
@@ -181,7 +183,7 @@ int pysvn_client::setattr( const char *_name, const Py::Object &value )
     else if( name == name_exception_style )
     {
         Py::Int style( value );
-        if( style == 0 || style == 1 )
+        if( style == 0l || style == 1l )
         {
             m_exception_style = style;
         }
@@ -271,7 +273,7 @@ Py::Object pysvn_client::helper_string_auth_set
     if( !param_obj.is( Py::None() ) )
     {
         Py::String param_str( param_obj );
-        ctx_str = param_str.as_std_string();
+        ctx_str = param_str.as_std_string( g_utf_8 );
         param = ctx_str.c_str();
     }
 
@@ -420,7 +422,7 @@ Py::Object pysvn_client::set_adm_dir( const Py::Tuple &a_args, const Py::Dict &a
 
     args.check();
 
-    std::string name( args.getString( name_name ) );
+    std::string name( args.getBytes( name_name ) );
 
     try
     {
@@ -592,7 +594,7 @@ Py::Object pysvn_client::is_adm_dir( const Py::Tuple &a_args, const Py::Dict &a_
 
     args.check();
 
-    std::string name( args.getString( name_name ) );
+    std::string name( args.getBytes( name_name ) );
 
     svn_boolean_t name_is_adm_dir = 0;
     try

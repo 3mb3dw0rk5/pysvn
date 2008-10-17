@@ -62,15 +62,7 @@ Py::Object pysvn_client::cmd_copy2( const Py::Tuple &a_args, const Py::Dict &a_k
 
             type_error_message = "expecting string for 1st tuple value in sources list";
             Py::String py_src_url_or_path( tuple_src_rev_pegrev[0] );
-            if( py_src_url_or_path.isUnicode() )
-            {
-                Py::String utf8( py_src_url_or_path.encode( name_utf8 ) );
-                src_url_or_path = py_src_url_or_path.as_std_string();
-            }
-            else
-            {
-                src_url_or_path = py_src_url_or_path.as_std_string();
-            }
+            src_url_or_path = py_src_url_or_path.as_std_string( name_utf8 );
             std::string norm_src_url_or_path( svnNormalisedIfPath( src_url_or_path, pool ) );
             bool is_url = is_svn_url( norm_src_url_or_path );
 
@@ -323,16 +315,7 @@ Py::Object pysvn_client::cmd_move2( const Py::Tuple &a_args, const Py::Dict &a_k
             Py::String py_src_url_or_path( list_all_sources[ index ] );
 
             std::string src_url_or_path;
-            if( py_src_url_or_path.isUnicode() )
-            {
-                Py::String utf8( py_src_url_or_path.encode( name_utf8 ) );
-                src_url_or_path = py_src_url_or_path.as_std_string();
-            }
-            else
-            {
-                src_url_or_path = py_src_url_or_path.as_std_string();
-            }
-
+            src_url_or_path = py_src_url_or_path.as_std_string( name_utf8 );
             std::string norm_src_url_or_path( svnNormalisedIfPath( src_url_or_path, pool ) );
 
             const char *src_path_copy = apr_pstrdup( pool, norm_src_url_or_path.c_str() );

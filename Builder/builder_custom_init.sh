@@ -22,7 +22,7 @@ unset PREF_VER
 if [ -e "${PYTHON}" ]
 then
     # prove the python version selected is as expected
-    ${PYTHON} -c "import sys;print 'Info: Python Version %r' % sys.version"
+    ${PYTHON} -c "import sys;print( 'Info: Python Version %r' % sys.version )"
 else
     echo "Error: Cannot find python${PY_MAJ}.${PY_MIN} on the PATH"
 fi

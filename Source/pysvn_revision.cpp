@@ -110,14 +110,14 @@ Py::Object pysvn_revision::getattr( const char *_name )
         if( m_svn_revision.kind == svn_opt_revision_date )
             return Py::Float( double( m_svn_revision.value.date )/1000000 );
         else
-            return Py::Nothing();
+            return Py::None();
     }
     else if( name == "number" )
     {
         if( m_svn_revision.kind == svn_opt_revision_number )
             return Py::Int( m_svn_revision.value.number );
         else
-            return Py::Nothing();
+            return Py::None();
     }
     return getattr_methods( _name );
 }

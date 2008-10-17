@@ -1,6 +1,6 @@
 '''
  ====================================================================
- Copyright (c) 2003-2006 Barry A Scott.  All rights reserved.
+ Copyright (c) 2003-2008 Barry A Scott.  All rights reserved.
 
  This software is licensed as described in the file LICENSE.txt,
  which you should have received as part of this distribution.
@@ -62,7 +62,7 @@ def parse_time( time_string ):
 		atime rdate	- absolute time followed by relative date
 	
 	"""
-	if _debug_parse_time: print '* parse_time: time_string=',time_string
+	if _debug_parse_time: print( '* parse_time: time_string=',time_string )
 
 	date = DateConversions()
 
@@ -77,20 +77,20 @@ def parse_time( time_string ):
 		day_time = convert_time( time_list[0] )
 		time_list = time_list[1:]
 		if _debug_parse_time:
-			print '* parse_time: Time_list[0] is a time'
+			print( '* parse_time: Time_list[0] is a time' )
 	except TimeSyntaxError:
 		try:
 			day_time = convert_time( time_list[-1] )
 			time_list = time_list[:-1]
 			if _debug_parse_time:
-				print '* parse_time: Time_list[-1] is a time'
+				print( '* parse_time: Time_list[-1] is a time' )
 		except TimeSyntaxError:
 			day_time = 0
 			
 	if len(time_list) == 0:
 		# default to today at time
 		result = date.midnight + day_time
-		if _debug_parse_time: print '* parse_time: 1 return',format_time(result)
+		if _debug_parse_time: print( '* parse_time: 1 return',format_time(result) )
 		return result
 
 	match_type = date.numeric_type
@@ -98,37 +98,37 @@ def parse_time( time_string ):
 	for word in time_list:
 		day_matches = date.findMatchingDateName( word )
 		if len(day_matches) == 0:
-			raise DateSyntaxError, "%s unknown date word" % word
+			raise DateSyntaxError( "%s unknown date word" % word )
 
 		if date.isAmbiguous( day_matches ):
-			raise DateSyntaxError, date.reportAmbiguity( word, day_matches )
+			raise DateSyntaxError( date.reportAmbiguity( word, day_matches ) )
 
 		this_type = date.typeOfMatch( day_matches )
 		if this_type != date.numeric_type:
 			if match_type == date.numeric_type:
 				match_type = this_type
 			elif match_type != this_type:
-				raise DateSyntaxError,  "ambiguous mix of unit and month names"
+				raise DateSyntaxError( "ambiguous mix of unit and month names" )
 
 		matches.append( day_matches[0] )
-	if _debug_parse_time: print '* parse_time: matches=',matches	
+	if _debug_parse_time: print( '* parse_time: matches=',matches )
 
 	if match_type == date.day_type:
 		if len(matches) != 1:
-			raise DateSyntaxError, "too many day words"
+			raise DateSyntaxError( "too many day words" )
 
 		day_matches = matches[0]
 
 		result = date.convertDay( day_matches[2] ) + day_time
-		if _debug_parse_time: print '* parse_time: 2 return',format_time(result)
+		if _debug_parse_time: print( '* parse_time: 2 return',format_time(result) )
 		return result
 
 	if match_type == date.unit_type:
 		# expect a set of pair of <num> <unit>
 		if _debug_parse_time >= 2:
-			print 'matches',matches
+			print( 'matches',matches )
 		if (len(matches)&1) == 1:
-			raise DateSyntaxError, 'must have an even number parameters when using time units'
+			raise DateSyntaxError( 'must have an even number parameters when using time units' )
 
 		time_offset = 0
 		for index in range( 0, len(matches), 2 ):
@@ -136,22 +136,22 @@ def parse_time( time_string ):
 			unit_tuple = matches[index+1]
 
 			if value_tuple[1] != date.numeric_type:
-				raise DateSyntaxError, 'Expecting a number of units'
+				raise DateSyntaxError( 'Expecting a number of units' )
 			if unit_tuple[1] != date.unit_type:
-				raise DateSyntaxError, 'Expecting a unit name'
+				raise DateSyntaxError( 'Expecting a unit name' )
 
 			value = value_tuple[2]
 			unit = unit_tuple[2]
 			time_offset = time_offset + value*unit
 
 		result = date.now - time_offset
-		if _debug_parse_time: print '* parse_time: 3 return',format_time(result)
+		if _debug_parse_time: print( '* parse_time: 3 return',format_time(result) )
 		return result
 
 	if match_type == date.month_type:
 		# absolute date
 		if len(matches) < 1 or len(matches) > 3:
-			raise DateSyntaxError, 'too many date parts'
+			raise DateSyntaxError( 'too many date parts' )
 		
 		day = -1
 		month = -1
@@ -163,7 +163,7 @@ def parse_time( time_string ):
 				num_month_types = num_month_types + 1
 
 		if num_month_types != 1:
-			raise DateSyntaxError,'too many months in the date string' 
+			raise DateSyntaxError( 'too many months in the date string' )
 
 
 		if date.isMonth( matches[0] ):
@@ -174,7 +174,7 @@ def parse_time( time_string ):
 		else:
 			day = matches[0][2]
 			if matches[1][1] != date.month_type:
-				raise DateSyntaxError,'expecting month as first or second part of date'	
+				raise DateSyntaxError( 'expecting month as first or second part of date' )
 			month = matches[1][2]
 			if len(matches) == 3:
 				year = matches[2][2]
@@ -184,7 +184,7 @@ def parse_time( time_string ):
 		hours = day_time/60/60
 
 		result = date.absDate( day, month, year, hours, minutes, seconds )
-		if _debug_parse_time: print '* parse_time: 4 return',format_time(result)
+		if _debug_parse_time: print( '* parse_time: 4 return',format_time(result) )
 		return result
 
 	if match_type == date.numeric_type and len(matches) == 3:
@@ -198,20 +198,20 @@ def parse_time( time_string ):
 		hours = day_time/60/60
 
 		result = date.absDate( day, month, year, hours, minutes, seconds )
-		if _debug_parse_time: print '* parse_time: 4 return',format_time(result)
+		if _debug_parse_time: print( '* parse_time: 4 return',format_time(result) )
 		return result
 
-	raise DateSyntaxError,'cannot understand date and time string ' + time_string
+	raise DateSyntaxError( 'cannot understand date and time string ' + time_string )
 
 
 def convert_time( time_str ):
 	time_list = string.split( time_str, ':' )
 	if len(time_list) < 2:
 		# not a time - no ":"
-		raise TimeSyntaxError, "Not a time"
+		raise TimeSyntaxError( "Not a time" )
 
 	if len(time_list) > 3:
-		raise TimeSyntaxError, "Too many time parts"
+		raise TimeSyntaxError( "Too many time parts" )
 
 	hour = time_list[0]
 	minute = time_list[1]
@@ -227,11 +227,11 @@ def convert_time( time_str ):
 		return -1
 
 	if( hour < 0 or hour > 23 ):
-		raise TimeSyntaxError, "hour value of %d invalid" % hour
+		raise TimeSyntaxError( "hour value of %d invalid" % hour )
 	if( minute < 0 or minute > 59 ):
-		raise TimeSyntaxError, "minutes value of %d invalid" % hour
+		raise TimeSyntaxError( "minutes value of %d invalid" % hour )
 	if( second < 0 or second > 59 ):
-		raise TimeSyntaxError, "seconds value of %d invalid" % hour
+		raise TimeSyntaxError( "seconds value of %d invalid" % hour )
 
 	day_time = (hour*60 + minute)*60 + second
 
@@ -320,8 +320,8 @@ class DateConversions:
 				hour, minute, second,
 				self.weekday, self.julian, -1) )
 		except OverflowError:
-			raise DateSyntaxError,'cannot convert date and time year=%d/month=%d/day=%d %d:%d:%d' % (
-				year, month, day, hour, minute, second )
+			raise DateSyntaxError( 'cannot convert date and time year=%d/month=%d/day=%d %d:%d:%d' %
+       					(year, month, day, hour, minute, second) )
 
 		if date > self.now and future_check:
 			year = year - 1
@@ -332,8 +332,8 @@ class DateConversions:
 					hour, minute, second,
 					self.weekday, self.julian, -1) )
 			except OverflowError:
-				raise DateSyntaxError,'cannot convert date and time %d/%d/%d %d:%d:%d' % (
-					year, month, day, hour, minute, second )
+				raise DateSyntaxError( 'cannot convert date and time %d/%d/%d %d:%d:%d' %
+					(year, month, day, hour, minute, second) )
 
 		return date
 

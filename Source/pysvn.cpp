@@ -346,6 +346,20 @@ PythonDisallowThreads::~PythonDisallowThreads()
 
 //--------------------------------------------------------------------------------
 static pysvn_module* the_pysvn_module = NULL;
+#if PY_MAJOR_VERSION >= 3
+extern "C" PyObject *PyInit__pysvn()
+{
+    the_pysvn_module = new pysvn_module;
+    return the_pysvn_module->module().ptr();
+}
+
+// symbol required for the debug version
+extern "C" PyObject *PyInit__pysvn_d()
+{ 
+    return PyInit__pysvn_3_0();
+}
+
+#else
 extern "C" void init_pysvn()
 {
     the_pysvn_module = new pysvn_module;
@@ -356,3 +370,4 @@ extern "C" void init_pysvn_d()
 {
     init_pysvn();
 }
+#endif

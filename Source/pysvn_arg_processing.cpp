@@ -117,7 +117,7 @@ void FunctionArguments::check()
     {
         bool found = false;
         Py::String py_name( names[l_i] );
-        std::string name( py_name );
+        std::string name( py_name.as_std_string( g_utf_8 ) );
 
         for( t_i=0; t_i<m_max_args; t_i++ )
         {
@@ -201,8 +201,7 @@ Py::Object FunctionArguments::getArg( const char *arg_name )
 
 bool FunctionArguments::getBoolean( const char *name )
 {
-    Py::Int boolean_val( getArg( name ) );
-    return boolean_val != 0;
+    return getArg( name ).isTrue();
 }
 
 bool FunctionArguments::getBoolean( const char *name, bool default_value )
@@ -256,15 +255,7 @@ long FunctionArguments::getLong( const char *name, long default_value )
 std::string FunctionArguments::getUtf8String( const char *name )
 {
     Py::String any( getArg( name ) );
-    if( any.isUnicode() )
-    {
-        Py::String utf8( any.encode( g_utf_8 ) );
-        return utf8.as_std_string();
-    }
-    else
-    {
-        return any.as_std_string();
-    }
+    return any.as_std_string( g_utf_8 );
 }
 
 std::string FunctionArguments::getUtf8String( const char *name, const std::string &default_value )
@@ -279,17 +270,17 @@ std::string FunctionArguments::getUtf8String( const char *name, const std::strin
     }
 }
 
-std::string FunctionArguments::getString( const char *name )
+std::string FunctionArguments::getBytes( const char *name )
 {
     Py::String any( getArg( name ) );
-    return any.as_std_string();
+    return any.as_std_string( g_utf_8 );
 }
 
-std::string FunctionArguments::getString( const char *name, const std::string &default_value )
+std::string FunctionArguments::getBytes( const char *name, const std::string &default_value )
 {
     if( hasArg( name ) )
     {
-        return getString( name );
+        return getBytes( name );
     }
     else
     {

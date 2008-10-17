@@ -23,6 +23,8 @@
 #include "svn_sorts.h"
 #include "pysvn_static_strings.hpp"
 
+static const char *g_utf_8 = "utf-8";
+
 Py::Object pysvn_client::cmd_merge( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
     static argument_description args_desc[] =
@@ -86,7 +88,7 @@ Py::Object pysvn_client::cmd_merge( const Py::Tuple &a_args, const Py::Dict &a_k
         for( size_t i=0; i<merge_options_list.length(); i++ )
         {
             Py::String py_option( merge_options_list[i] );
-            std::string option( py_option.as_std_string() );
+            std::string option( py_option.as_std_string( g_utf_8 ) );
             
             *((const char **) apr_array_push(merge_options)) = apr_pstrdup( pool, option.c_str() );
         }
@@ -218,7 +220,7 @@ Py::Object pysvn_client::cmd_merge_peg2( const Py::Tuple &a_args, const Py::Dict
         for( size_t i=0; i<merge_options_list.length(); i++ )
         {
             Py::String py_option( merge_options_list[i] );
-            std::string option( py_option.as_std_string() );
+            std::string option( py_option.as_std_string( g_utf_8 ) );
             
             *((const char **) apr_array_push(merge_options)) = apr_pstrdup( pool, option.c_str() );
         }
@@ -376,7 +378,7 @@ Py::Object pysvn_client::cmd_merge_peg( const Py::Tuple &a_args, const Py::Dict 
         for( size_t i=0; i<merge_options_list.length(); i++ )
         {
             Py::String py_option( merge_options_list[i] );
-            std::string option( py_option.as_std_string() );
+            std::string option( py_option.as_std_string( g_utf_8 ) );
             
             *((const char **) apr_array_push(merge_options)) = apr_pstrdup( pool, option.c_str() );
         }

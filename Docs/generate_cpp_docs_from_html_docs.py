@@ -9,24 +9,24 @@ def main( argv ):
     cpp_header_filename = argv[3]
     cpp_module_filename = argv[4]
 
-    print 'Info: svn_include',svn_include
-    print 'Info: html_doc',html_doc
-    print 'Info: cpp_header_filename',cpp_header_filename
-    print 'Info: cpp_module_filename',cpp_module_filename
+    print( 'Info: svn_include',svn_include )
+    print( 'Info: html_doc',html_doc )
+    print( 'Info: cpp_header_filename',cpp_header_filename )
+    print( 'Info: cpp_module_filename',cpp_module_filename )
 
     debug.enable( '--debug' in argv )
     try:
-        parser = XhtmlParser( file( html_doc ).read() )
-    except ParseException, e:
-        print repr(e)
-        print str(e)
+        parser = XhtmlParser( open( html_doc ).read() )
+    except ParseException as e:
+        print( repr(e) )
+        print( str(e) )
         return 1
 
     parser.setSvnVersion( svn_include )
     parser.htmlToCpp()
 
-    cpp_header = file( cpp_header_filename, 'w' )
-    cpp_module = file( cpp_module_filename, 'w' )
+    cpp_header = open( cpp_header_filename, 'w' )
+    cpp_module = open( cpp_module_filename, 'w' )
 
     cpp_header.write( '// Created by %s\n\n' % argv[0] )
     cpp_module.write( '// Created by %s\n' % argv[0] )
@@ -46,7 +46,7 @@ class DebugTrace:
     def __call__( self, *args ):
         if self.isEnabled():
             for s in args:
-                print s,
+                print( s, )
             print
 
     def enable( self, enable ):
@@ -78,8 +78,8 @@ class XhtmlParser:
         try:
             self.dom = xml.dom.minidom.parseString( definition_text )
 
-        except xml.parsers.expat.ExpatError, details:
-            raise ParseException( 'Ln:%d Col:%d %s' % (details.lineno, details.offset, details.args[0]) )
+        except xml.parsers.expat.ExpatError as e:
+            raise ParseException( 'Ln:%d Col:%d %s' % (e.lineno, e.offset, e.args[0]) )
 
     def htmlToCpp( self ):
         all_anchors = self.dom.getElementsByTagName("a")
@@ -107,8 +107,7 @@ class XhtmlParser:
 
     def writeCppDocs( self, cpp_header, cpp_module ):
         all_names = self.all_docs.keys()
-        all_names.sort()
-        for name in all_names:
+        for name in sorted( all_names ):
             docs = self.all_docs[ name ]
             cpp_header.write( 'extern const char %s_doc[];\n' % name )
             cpp_module.write( '\nconst char %s_doc[] =\n' % name )
@@ -194,7 +193,7 @@ class XhtmlParser:
         return
 
     def setSvnVersion( self, svn_include ):
-        all_svn_version_lines = file( os.path.join( svn_include, 'svn_version.h' ) ).readlines()
+        all_svn_version_lines = open( os.path.join( svn_include, 'svn_version.h' ) ).readlines()
         major = None
         minor = None
         patch = None
@@ -211,7 +210,7 @@ class XhtmlParser:
         self.svn_version = ((major * 1000) + minor) * 1000 + patch
         # force to the version to test with
         #self.svn_version = 1001000
-        print 'Info: Building against SVN %d.%d.%d code %d' % (major, minor, patch, self.svn_version)
+        print( 'Info: Building against SVN %d.%d.%d code %d' % (major, minor, patch, self.svn_version) )
 
 class Documentation:
     def __init__( self, name ):

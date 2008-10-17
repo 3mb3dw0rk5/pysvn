@@ -151,10 +151,10 @@ Py::Object path_string_or_none( const char *str, SvnPool &pool )
 
 Py::Object utf8_string_or_none( const std::string &str )
 {
-    if( !str.empty() )
-        return Py::String( str, name_utf8 );
-    else
+    if( str.empty() )
         return Py::None();
+    else
+        return Py::String( str, name_utf8 );
 }
 
 apr_time_t convertStringToTime( const std::string &text, apr_time_t now, SvnPool &pool )
@@ -221,7 +221,6 @@ Py::Object toObject
     }
     else
     {
-        //status[ str_entry ] = Py::asObject( new pysvn_entry( svn_status.entry, m_context ) );
         status[ str_entry ] = toObject( *svn_status.entry, pool, wrapper_entry );
     }
     if( svn_status.repos_lock == NULL )
@@ -479,13 +478,12 @@ Py::Object revnumListToObject( apr_array_header_t *revs, SvnPool &pool )
     return py_list;
 }
 
-Py::String asUtf8String( Py::Object obj )
+Py::Bytes asUtf8Bytes( Py::Object obj )
 {
     Py::String any( obj );
-    Py::String utf8( any.encode( name_utf8 ) );
+    Py::Bytes utf8( any.encode( name_utf8 ) );
     return utf8;
 }
-
 
 apr_array_header_t *targetsFromStringOrList( Py::Object arg, SvnPool &pool )
 {
@@ -509,7 +507,7 @@ apr_array_header_t *targetsFromStringOrList( Py::Object arg, SvnPool &pool )
             {
                 type_error_message = "expecting path list members to be strings (arg 1)";
 
-                Py::String path_str( asUtf8String( path_list[i] ) );
+                Py::Bytes path_str( asUtf8Bytes( path_list[i] ) );
                 std::string norm_path( svnNormalisedIfPath( path_str.as_std_string(), pool ) );
 
                 *(char **)apr_array_push( targets ) = apr_pstrdup( pool, norm_path.c_str() );
@@ -518,7 +516,7 @@ apr_array_header_t *targetsFromStringOrList( Py::Object arg, SvnPool &pool )
         else
         {
             type_error_message = "expecting path to be a string (arg 1)";
-            Py::String path_str( asUtf8String( arg ) );
+            Py::Bytes path_str( asUtf8Bytes( arg ) );
 
             std::string norm_path( svnNormalisedIfPath( path_str.as_std_string(), pool ) );
 
@@ -549,7 +547,7 @@ apr_array_header_t *arrayOfStringsFromListOfStrings( Py::Object arg, SvnPool &po
         {
             type_error_message = "expecting list members to be strings";
 
-            Py::String str( asUtf8String( path_list[i] ) );
+            Py::Bytes str( asUtf8Bytes( path_list[i] ) );
             *(char **)apr_array_push( array ) = apr_pstrdup( pool, str.as_std_string().c_str() );
         }
     }
@@ -592,10 +590,10 @@ apr_hash_t *hashOfStringsFromDistOfStrings( Py::Object arg, SvnPool &pool )
         for( Py::List::size_type i=0; i<all_keys.length(); i++ )
         {
             type_error_message = "expecting string key in dict";
-            Py::String key( asUtf8String( all_keys[i] ) );
+            Py::Bytes key( asUtf8Bytes( all_keys[i] ) );
 
             type_error_message = "expecting string value in dict";
-            Py::String value( asUtf8String( dict[ key ] ) );
+            Py::Bytes value( asUtf8Bytes( dict[ key ] ) );
 
             char *hash_key = apr_pstrdup( pool, key.as_std_string().c_str() );
             svn_string_t *hash_value = svn_string_create( value.as_std_string().c_str(), pool );

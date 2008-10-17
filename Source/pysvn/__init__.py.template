@@ -8,14 +8,20 @@
  ====================================================================
 '''
 import sys
-import UserDict
+try:
+    import UserDict
+    user_dict_base = UserDict.IterableUserDict
 
-class PysvnDictBase(UserDict.IterableUserDict):
+except ImportError:
+    import collections
+    user_dict_base = collections.UserDict
+
+class PysvnDictBase(user_dict_base):
     def __init__( self, value_dict, name='' ):
-        UserDict.IterableUserDict.__init__( self, value_dict )
+        user_dict_base.__init__( self, value_dict )
         self.__name = name
         if self.__name is None:
-            print '%s given None as name' % self.__class__.__name__
+            print( '%s given None as name' % self.__class__.__name__ )
 
     def __getattr__( self, name ):
         if name in self.data:
@@ -85,7 +91,7 @@ SVN_DIRENT_TIME        = 0x00010
 SVN_DIRENT_LAST_AUTHOR = 0x00020
 
 # A combination of all the dirent fields
-SVN_DIRENT_ALL         = 0xffffffffl
+SVN_DIRENT_ALL         = 0xffffffff
 
 try:
     maj_min = sys.version_info[:2]
@@ -131,10 +137,10 @@ try:
         if not key.startswith( '__' ):
             globals()[ key ] = value
 
-except ImportError, e:
+except ImportError as e:
     # check for common installation errors that show up as ImportError
     if ': undefined symbol:' in str(e):
-        raise ImportError, 'pysvn was built against newer (svn, apr, etc.) libraries then the ones installed on this system. %s' % str(e)
+        raise ImportError( 'pysvn was built against newer (svn, apr, etc.) libraries then the ones installed on this system. %s' % str(e) )
     else:
         raise
 
