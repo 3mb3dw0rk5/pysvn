@@ -12,7 +12,8 @@ for name, value in all_props.items():
 
 print(  'Info: changed() ...' )
 changes = t.changed()
-change_list = sorted( changes.items() )
+change_list = list( changes.items() )
+change_list.sort()
 for name, (action, kind, text_mod, prop_mod) in change_list:
     print( '%s: action=%r, kind=%r, text_mod=%r, prop_mod=%r' % (name, action, kind, text_mod, prop_mod) )
     if action != 'D':
@@ -24,7 +25,8 @@ for name, (action, kind, text_mod, prop_mod) in change_list:
 
 print( 'Info: changed( copy_info=True ) ...' )
 changes = t.changed( copy_info=True )
-change_list = sorted( changes.items() )
+change_list = list( changes.items() )
+change_list.sort()
 for name, (action, kind, text_mod, prop_mod, copyfrom_rev, copyfrom_path) in change_list:
     print( '%s: action=%r, kind=%r, text_mod=%r, prop_mod=%r copyfrom_rev=%r copyfrom_path=%r' %
             (name, action, kind, text_mod, prop_mod, copyfrom_rev, copyfrom_path) )

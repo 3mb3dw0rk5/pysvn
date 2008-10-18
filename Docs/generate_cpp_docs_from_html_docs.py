@@ -106,8 +106,9 @@ class XhtmlParser:
         self.all_docs[ docs.getName() ] = docs
 
     def writeCppDocs( self, cpp_header, cpp_module ):
-        all_names = self.all_docs.keys()
-        for name in sorted( all_names ):
+        all_names = list( self.all_docs.keys() )
+        all_names.sort()
+        for name in all_names:
             docs = self.all_docs[ name ]
             cpp_header.write( 'extern const char %s_doc[];\n' % name )
             cpp_module.write( '\nconst char %s_doc[] =\n' % name )

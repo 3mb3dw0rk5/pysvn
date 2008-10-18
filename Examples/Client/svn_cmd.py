@@ -15,6 +15,14 @@ import parse_datetime
 import glob
 import locale
 
+try:
+    sorted( [] )
+except NameError:
+    def sorted( list_in ):
+        list_out = list( list_in )
+        list_out.sort()
+        return list_out
+
 class CommandError( Exception ):
     def __init__( self, reason ):
         Exception.__init__( self )
