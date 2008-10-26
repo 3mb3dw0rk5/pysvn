@@ -93,7 +93,7 @@ class MakeFileCreater:
 
                     self.mac_os_x_version_string = self.node_text( value_node.childNodes )
                     if self.verbose:
-                        print( 'Info: Mac OS X Version',self.mac_os_x_version_string )
+                        print( 'Info: Mac OS X Version %s' % self.mac_os_x_version_string )
                     self.mac_os_x_version = [int(s) for s in self.mac_os_x_version_string.split('.')]
                     self.is_mac_os_x = True
 
@@ -118,7 +118,7 @@ class MakeFileCreater:
             self.mac_os_x_universal = False
 
         if self.verbose:
-            print( 'Info: Creating makefile for python %r' % (sys.version_info, self.platform) )
+            print( 'Info: Creating makefile for python %r on %s' % (sys.version_info, self.platform) )
 
         debug_cflags_list = []
         if '--enable-debug' in argv:
@@ -159,6 +159,9 @@ class MakeFileCreater:
         # add platform specific defines
         if self.is_mac_os_x:
             py_cflags_list.append( '-DDARWIN' )
+
+        # need PyCXX to 2TO3 backwards compatibility mode
+        py_cflags_list.append( '-DPYCXX_PYTHON_2TO3' )
 
         # get user supplied defines
         for arg in argv:
@@ -683,15 +686,36 @@ LDLIBS= \
 '''
 
     def find_pycxx( self, argv ):
-        return self.find_dir( argv,
+        if sys.version_info[0] >= 3:
+            pycxx_version = (6, 0, 0)
+        else:
+            pycxx_version = (5, 5, 0)
+
+        pycxx_dir = self.find_dir( argv,
                     'PyCXX include',
                     '--pycxx-dir=',
                     None,
                     [
-                        '../Import/pycxx-5.4.2',
+                        '../Import/pycxx-%d.%d.%d' % pycxx_version,
                         distutils.sysconfig.get_python_inc() # typical Linux
                     ],
                     'CXX/Version.hxx' )
+
+        major_match = False
+        minor_match = False
+        f = open( os.path.join( pycxx_dir, 'CXX/Version.hxx' ) )
+        for line in f:
+            words = line.split()
+            if 'PYCXX_VERSION_MAJOR' in words:
+                major_match = int( words[2] ) == pycxx_version[0]
+            if 'PYCXX_VERSION_MINOR' in words:
+                minor_match = int( words[2] ) == pycxx_version[0]
+
+        if not major_match and not minor_match:
+            raise SetupError( 'PyCXX version not as required.' )
+
+        return pycxx_dir
+
 
     def find_pycxx_src( self, argv, pycxx_dir ):
         return self.find_dir( argv,
