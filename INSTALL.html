@@ -30,7 +30,8 @@ code {background-color: #dddddd; }
 <li>Subversion development package
 </ul>
 </li>
-<li><a href="http://sourceforge.net/project/showfiles.php?group_id=3180">PyCXX V5.4.2</a> which is included in the pysvn source kit.</li>
+<li><a href="http://sourceforge.net/project/showfiles.php?group_id=3180">PyCXX V5.5.0</a> to build against Python 2 which is included in the pysvn source kit.</li>
+<li><a href="http://sourceforge.net/project/showfiles.php?group_id=3180">PyCXX V6.0.0</a> to build against Python 3 which is included in the pysvn source kit.</li>
 </ul>
 <p>Some distributions will split python and subversion into more the one package.</p>
 <p>You will need to find all the packages that give you the options listed above.</p>
@@ -39,13 +40,14 @@ code {background-color: #dddddd; }
 <p>These instructions assume you have Microsoft Visual C++ 6.0 to compile the code
 and <a href="http://www.jrsoftware.org/">INNO</a> 4.0.10 to create the installation kit.</p>
 <p>Note: You must build with MSVC 6.0 as python 2.3 and earlier was built with that version.</p>
-<p>Note: You must build with MSVC 2003.NET for python 2.4, Python 2.5 or later.</p>
+<p>Note: You must build with MSVC 2003.NET for python 2.4, Python 2.5 or Python 2.6.</p>
+<p>Note: You must build with MSVC <b>TBD</b> for python 3.0 or later.</p>
 
 <ol>
-<li>build subversion (tested with SVN 1.4.6 and svn 1.5.0)</li>
-<li>fetch and expand the pysvn source code into <em>extdir</em></li>
+<li>Build subversion (tested with SVN 1.4.6 and svn 1.5.4)</li>
+<li>Fetch and expand the pysvn source code into <em>extdir</em></li>
 <li>Expand pycxx-5.4.2.tar.gz into <em>extdir</em>\Import if not using a source kit</li>
-<li>edit Builder\builder_custom_init.cmd to match the locations of the sources.</li>
+<li>Edit Builder\builder_custom_init.cmd to match the locations of the sources.</li>
 <li><code>cd Builder</code></li>
 <li><code>builder_custom_init.cmd</code></li>
 <li><code>nmake -f win32.mak build</code></li>
@@ -62,9 +64,11 @@ and <a href="http://www.jrsoftware.org/">INNO</a> 4.0.10 to create the installat
 
 <ol>
 <li>Install subversion</li>
-<li>get the pysvn source code</li>
-<li><code>tar xzf pycxx-5.4.2.tar.gz</code> into <em>extdir</em>/Import if not using a source kit</li>
+<li>Get the pysvn source code</li>
+<li>For Python 2 builds: <code>tar xzf pycxx-5.5.0.tar.gz</code> into <em>extdir</em>/Import if not using a source kit</li>
+<li>For Python 3 builds: <code>tar xzf pycxx-6.0.0.tar.gz</code> into <em>extdir</em>/Import if not using a source kit</li>
 <li><code>cd Source</code></li>
+<li>For Python 2 builds: backport the PySVN code using <code>python setup.py backport</code></li>
 <li>Create the Makefile using <code>python setup.py configure</code></li>
 <li><code>make</code></li>
 <li><code>cd Tests</code></li>
