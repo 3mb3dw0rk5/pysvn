@@ -10,7 +10,10 @@
 //
 //	pysvn_version.hpp.template
 //
+#ifndef __PYSVN_VERSION_HPP__
+#define __PYSVN_VERSION_HPP__
 const int version_major( %(MAJOR)s );
 const int version_minor( %(MINOR)s );
 const int version_patch( %(PATCH)s );
 const int version_build( %(BUILD)s );
+#endif

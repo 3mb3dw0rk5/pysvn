@@ -18,6 +18,8 @@
 
 #include "pysvn.hpp"
 
+#undef PYSVN_STATIC_PY_STRINGS_HPP
+
 #define PYSVN_STATIC_STRING( name, value ) const char name[] = value;
 #define PYSVN_STATIC_PY_STRING_P( name ) Py::String *name;
 #include "pysvn_static_strings.hpp"

@@ -10,7 +10,11 @@
 //
 //  pysvn_static_strings.hpp
 //
-#ifndef PYSVN_STATIC_PY_STRING_P
+#ifndef PYSVN_STATIC_PY_STRINGS_HPP
+#define PYSVN_STATIC_PY_STRINGS_HPP 1
+
+
+#ifndef PYSVN_STATIC_STRING
 #define PYSVN_STATIC_STRING( name, value ) const char name[] = value;
 #define PYSVN_STATIC_PY_STRING_P( name ) extern Py::String *name;
 #endif
@@ -122,6 +126,10 @@ PYSVN_STATIC_STRING( name_url_or_path2, "url_or_path2" )
 PYSVN_STATIC_STRING( name_url_or_path, "url_or_path" )
 PYSVN_STATIC_STRING( name_username, "username" )
 PYSVN_STATIC_STRING( name_utf8, "utf-8" )
+PYSVN_STATIC_STRING( name_transaction_name, "transaction_name" )
+PYSVN_STATIC_STRING( name_config_dir, "config_dir" )
+PYSVN_STATIC_STRING( name_result_wrappers, "result_wrappers" )
+PYSVN_STATIC_STRING( name_copy_info, "copy_info" )
 
 PYSVN_STATIC_PY_STRING_P( py_name_callback_cancel )
 PYSVN_STATIC_PY_STRING_P( py_name_callback_get_log_message )
@@ -147,3 +155,5 @@ PYSVN_STATIC_PY_STRING_P( py_name_time )
 
 #undef PYSVN_STATIC_STRING
 #undef PYSVN_STATIC_PY_STRING_P
+
+#endif

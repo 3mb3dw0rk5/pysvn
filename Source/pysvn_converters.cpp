@@ -18,7 +18,8 @@
 #include "svn_config.h"
 #include "svn_time.h"
 
-static const char name_utf8[] = "utf-8";
+#include "pysvn_static_strings.hpp"
+
 static const std::string str_URL( "URL" );
 static const std::string str_changelist( "changelist" );
 static const std::string str_depth( "depth" );

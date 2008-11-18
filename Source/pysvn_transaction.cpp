@@ -23,14 +23,7 @@
 #include "svn_path.h"
 #include "svn_sorts.h"
 
-static const char empty_string[] = "";
-static const char name___members__[] = "__members__";
-static const char name_copy_info[] = "copy_info";
-static const char name_exception_style[] = "exception_style";
-static const char name_path[] = "path";
-static const char name_prop_name[] = "prop_name";
-static const char name_prop_value[] = "prop_value";
-static const char name_utf8[] = "UTF-8";
+#include "pysvn_static_strings.hpp"
 
 static void convertReposTree
     (

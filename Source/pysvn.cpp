@@ -22,6 +22,7 @@
 #include "pysvn_version.hpp"
 #include "svn_version.h"
 
+#include "pysvn_static_strings.hpp"
 
 pysvn_module::pysvn_module()
 : Py::ExtensionModule<pysvn_module>( "pysvn" )
@@ -142,8 +143,6 @@ pysvn_module::~pysvn_module()
 {
 }
 
-static const char name_config_dir[] = "config_dir";
-static const char name_result_wrappers[] = "result_wrappers";
 
 Py::Object pysvn_module::new_client( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
@@ -166,8 +165,6 @@ Py::Object pysvn_module::new_client( const Py::Tuple &a_args, const Py::Dict &a_
     return Py::asObject( new pysvn_client( *this, config_dir, result_wrappers_dict ) );
 }
 
-static const char name_repos_path[] = "repos_path";
-static const char name_transaction_name[] = "transaction_name";
 
 
 Py::Object pysvn_module::new_transaction( const Py::Tuple &a_args, const Py::Dict &a_kws )
@@ -196,9 +193,6 @@ Py::Object pysvn_module::new_transaction( const Py::Tuple &a_args, const Py::Dic
     return result;
 }
 
-static const char name_kind[] = "kind";
-static const char name_number[] = "number";
-static const char name_date[] = "date";
 
 Py::Object pysvn_module::new_revision( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {

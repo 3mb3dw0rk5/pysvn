@@ -57,7 +57,7 @@ Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_
          revision = args.getRevision( name_revision, svn_opt_revision_working );
 
 #if defined( PYSVN_HAS_CLIENT_EXPORT2 )
-    char *native_eol = NULL;
+    const char *native_eol = NULL;
     if( args.hasArg( name_native_eol ) )
     {
         Py::Object native_eol_obj = args.getArg( name_native_eol );
