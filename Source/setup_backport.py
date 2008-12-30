@@ -73,13 +73,13 @@ def fixup_source( filename ):
         if( all_lines[ index ].strip().startswith( 'except ' )
         and ' as e:' in all_lines[ index ] ):
             replaced = True
-            print( filename )
-            print( 'Before: %r' % all_lines[ index ] )
+            print( 'Info: processing %s' % filename )
+            print( 'Info: Before: %r' % all_lines[ index ] )
             all_lines[ index ] = all_lines[ index ].replace( ' as e:', ', e:' )
-            print( ' After: %r' % all_lines[ index ] )
+            print( 'Info:  After: %r' % all_lines[ index ] )
 
     if replaced:
-        print( 'Updating %s' % filename )
+        print( 'Info: Updating %s' % filename )
         f = open( filename, 'w' )
         f.write( ''.join( all_lines ) )
         f.close()
