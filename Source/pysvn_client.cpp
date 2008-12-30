@@ -815,6 +815,9 @@ void pysvn_client::init_type()
 #if defined( PYSVN_HAS_CLIENT_MERGE_PEG3 )
     add_keyword_method("merge_peg2", &pysvn_client::cmd_merge_peg2, pysvn_client_merge_peg2_doc );
 #endif
+#if defined( PYSVN_HAS_CLIENT_MERGE_REINTEGRATE )
+    add_keyword_method("merge_reintegrate", &pysvn_client::cmd_merge_reintegrate, pysvn_client_merge_reintegrate_doc );
+#endif
     add_keyword_method("mkdir", &pysvn_client::cmd_mkdir, pysvn_client_mkdir_doc );
 #if defined( PYSVN_HAS_CLIENT_MOVE5 )
     add_keyword_method("move2", &pysvn_client::cmd_move2, pysvn_client_move2_doc );

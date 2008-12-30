@@ -244,6 +244,9 @@ public:
 #if defined( PYSVN_HAS_CLIENT_MERGE_PEG3 )
     Py::Object cmd_merge_peg2( const Py::Tuple& args, const Py::Dict &kws );
 #endif
+#if defined( PYSVN_HAS_CLIENT_MERGE_REINTEGRATE )
+    Py::Object cmd_merge_reintegrate( const Py::Tuple& args, const Py::Dict &kws );
+#endif
     Py::Object cmd_mkdir( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_move( const Py::Tuple& args, const Py::Dict &kws );
 #if defined( PYSVN_HAS_CLIENT_MOVE4 )

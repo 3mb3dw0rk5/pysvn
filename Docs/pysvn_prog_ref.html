@@ -465,45 +465,45 @@ a tuple of three values (retcode, accepted_failures, save).
 <td><a href="#pysvn_client_merge">merge</a></td>
 <td><span class="svn_1001000"><a href="#pysvn_client_merge_peg">merge_peg</a></span></td>
 <td><span class="svn_1005000"><a href="#pysvn_client_merge_peg2">merge_peg2</a></span></td>
+<td><span class="svn_1005000"><a href="#pysvn_client_merge_reintegrate">merge_peg2</a></span></td>
 <td><a href="#pysvn_client_mkdir">mkdir</a></td>
-<td><a href="#pysvn_client_move">move</a></td>
 </tr>
 <tr>
+<td><a href="#pysvn_client_move">move</a></td>
 <td><span class="svn_1005000"><a href="#pysvn_client_copy2">copy2</a></span></td>
 <td><a href="#pysvn_client_propdel">propdel</a></td>
 <td><a href="#pysvn_client_propget">propget</a></td>
 <td><a href="#pysvn_client_proplist">proplist</a></td>
 <td><a href="#pysvn_client_propset">propset</a></td>
-<td><a href="#pysvn_client_relocate">relocate</a></td>
 </tr>
 <tr bgcolor="#e0e0e0">
+<td><a href="#pysvn_client_relocate">relocate</a></td>
 <td><a href="#pysvn_client_remove">remove</a></td>
 <td><span class="svn_1005000"><a href="#pysvn_client_remove_from_changelists">remove_from_changelists</a></span></td>
 <td><a href="#pysvn_client_resolved">resolved</a></td>
 <td><a href="#pysvn_client_revert">revert</a></td>
 <td><a href="#pysvn_client_revpropdel">revpropdel</a></td>
-<td><a href="#pysvn_client_revpropget">revpropget</a></td>
 </tr>
 <tr>
+<td><a href="#pysvn_client_revpropget">revpropget</a></td>
 <td><a href="#pysvn_client_revproplist">revproplist</a></td>
 <td><a href="#pysvn_client_revpropset">revpropset</a></td>
 <td><span class="svn_1005000"><a href="#pysvn_client_root_url_from_path">root_url_from_path</a></span></td>
 <td><span class="svn_1003000"><a href="#pysvn_client_set_adm_dir">set_adm_dir</a></span></td>
 <td><a href="#pysvn_client_set_auth_cache">set_auth_cache</a></td>
-<td><a href="#pysvn_client_set_auto_props">set_auto_props</a></td>
 </tr>
 <tr bgcolor="#e0e0e0">
+<td><a href="#pysvn_client_set_auto_props">set_auto_props</a></td>
 <td><a href="#pysvn_client_set_default_password">set_default_password</a></td>
 <td><a href="#pysvn_client_set_default_username">set_default_username</a></td>
 <td><a href="#pysvn_client_set_interactive">set_interactive</a></td>
 <td><a href="#pysvn_client_set_store_passwords">set_store_passwords</a></td>
 <td><a href="#pysvn_client_status">status</a></td>
-<td><a href="#pysvn_client_switch">switch</a></td>
 </tr>
 <tr>
+<td><a href="#pysvn_client_switch">switch</a></td>
 <td><span class="svn_1002000"><a href="#pysvn_client_unlock">unlock</a></span></td>
 <td><a href="#pysvn_client_update">update</a></td>
-<td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
@@ -1391,6 +1391,19 @@ opt_revision_kind.head for URLs or opt_revision_kind.working for
 WC targets.
 </p>
 <p>The depth is one of the pysvn.depth enums.
+</p>
+</div>
+
+<div class="svn_1005000">
+<h4><a name="pysvn_client_merge_reintegrate"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.merge_reintegrate</a></h4>
+<pre>
+merge_reintegrate( url_or_path,
+                   revision,
+                   local_path,
+                   dry_run=False,
+                   merge_options=[] )
+</pre>
+<p>Lump-merge all of url_or_path unmerged changes into local_path.
 </p>
 </div>
 

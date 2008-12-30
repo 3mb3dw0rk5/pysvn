@@ -441,3 +441,85 @@ Py::Object pysvn_client::cmd_merge_peg( const Py::Tuple &a_args, const Py::Dict 
     return Py::None();
 }
 #endif
+
+
+#if defined( PYSVN_HAS_CLIENT_MERGE_REINTEGRATE )
+Py::Object pysvn_client::cmd_merge_reintegrate( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_url_or_path },
+    { true,  name_revision },
+    { true,  name_local_path },
+    { false, name_dry_run },
+    { false, name_merge_options },
+    { false, NULL }
+    };
+    FunctionArguments args( "merge", args_desc, a_args, a_kws );
+    args.check();
+
+    std::string path( args.getUtf8String( name_url_or_path ) );
+    svn_opt_revision_t revision = args.getRevision( name_revision, svn_opt_revision_head );
+    std::string local_path( args.getUtf8String( name_local_path ) );
+
+    bool dry_run = args.getBoolean( name_dry_run, false );
+
+    Py::List merge_options_list;
+    if( args.hasArg( name_merge_options ) )
+    {
+        merge_options_list = args.getArg( name_merge_options );
+        for( size_t i=0; i<merge_options_list.length(); i++ )
+        {
+            Py::String check_is_string( merge_options_list[i] );
+        }
+    }
+
+    SvnPool pool( m_context );
+
+    apr_array_header_t *merge_options = NULL;
+    if( merge_options_list.length() > 0 )
+    {
+        merge_options = apr_array_make( pool, merge_options_list.length(), sizeof( const char * ) );
+        for( size_t i=0; i<merge_options_list.length(); i++ )
+        {
+            Py::String py_option( merge_options_list[i] );
+            std::string option( py_option.as_std_string( g_utf_8 ) );
+            
+            *((const char **) apr_array_push(merge_options)) = apr_pstrdup( pool, option.c_str() );
+        }
+    }
+
+    try
+    {
+        std::string norm_path( svnNormalisedIfPath( path, pool ) );
+        std::string norm_local_path( svnNormalisedIfPath( local_path, pool ) );
+
+        checkThreadPermission();
+
+        PythonAllowThreads permission( m_context );
+
+        svn_error_t *error = svn_client_merge_reintegrate
+            (
+            norm_path.c_str(),
+            &revision,
+            norm_local_path.c_str(),
+            dry_run,
+            merge_options,
+            m_context,
+            pool
+            );
+        permission.allowThisThread();
+        if( error != 0 )
+            throw SvnException( error );
+    }
+    catch( SvnException &e )
+    {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
+        throw_client_error( e );
+    }
+
+    return Py::None();
+}
+#endif
