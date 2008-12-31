@@ -24,7 +24,7 @@
 				Optimization="0"
 				InlineFunctionExpansion="2"
 				AdditionalIncludeDirectories="$(PY)\include,.,$(PYCXX),$(APR)/apr/include,$(APR)/apr-util/include,$(APR)/apr-util/xml/expat/lib,$(SUBVERSION)/subversion/include"
-				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="2"
@@ -90,7 +90,7 @@
 				AdditionalOptions="/Zm200 "
 				Optimization="0"
 				AdditionalIncludeDirectories="$(PY)\include,.,$(PYCXX),$(APR)/apr/include,$(APR)/apr-util/include,$(APR)/apr-util/xml/expat/lib,$(SUBVERSION)/subversion/include"
-				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="2"
@@ -158,7 +158,7 @@
 				Optimization="0"
 				InlineFunctionExpansion="2"
 				AdditionalIncludeDirectories="$(PY)\include,.,$(PYCXX),$(APR)/apr/include,$(APR)/apr-util/include,$(APR)/apr-util/xml/expat/lib,$(SUBVERSION)/subversion/include"
-				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="2"
@@ -262,7 +262,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -272,7 +272,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -282,7 +282,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -295,7 +295,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -305,7 +305,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -315,7 +315,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -328,7 +328,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -338,7 +338,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -348,7 +348,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -361,7 +361,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -371,7 +371,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -381,7 +381,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -394,7 +394,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;init_pysvn=init_pysvn_$(PY_MAJ)_$(PY_MIN);init_pysvn_d=init_pysvn_$(PY_MAJ)_$(PY_MIN)_d;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;init_pysvn=init_pysvn_$(PY_MAJ)_$(PY_MIN);init_pysvn_d=init_pysvn_$(PY_MAJ)_$(PY_MIN)_d;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -404,7 +404,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;init_pysvn=init_pysvn_$(PY_MAJ)_$(PY_MIN);init_pysvn_d=init_pysvn_$(PY_MAJ)_$(PY_MIN)_d;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;init_pysvn=init_pysvn_$(PY_MAJ)_$(PY_MIN);init_pysvn_d=init_pysvn_$(PY_MAJ)_$(PY_MIN)_d;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -414,7 +414,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;init_pysvn=init_pysvn_$(PY_MAJ)_$(PY_MIN);init_pysvn_d=init_pysvn_$(PY_MAJ)_$(PY_MIN)_d;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;init_pysvn=init_pysvn_$(PY_MAJ)_$(PY_MIN);init_pysvn_d=init_pysvn_$(PY_MAJ)_$(PY_MIN)_d;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -459,7 +459,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -469,7 +469,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -479,7 +479,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -492,7 +492,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -502,7 +502,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -512,7 +512,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -525,7 +525,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -535,7 +535,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -545,7 +545,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -558,7 +558,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -568,7 +568,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -578,7 +578,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -591,7 +591,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -601,7 +601,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -611,7 +611,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -624,7 +624,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -634,7 +634,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -644,7 +644,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -657,7 +657,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -667,7 +667,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -677,7 +677,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -690,7 +690,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -700,7 +700,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -710,7 +710,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -723,7 +723,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -733,7 +733,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -743,7 +743,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -756,7 +756,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -766,7 +766,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -776,7 +776,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -789,7 +789,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -799,7 +799,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -809,7 +809,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -822,7 +822,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -832,7 +832,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -842,7 +842,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -855,7 +855,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -865,7 +865,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -875,7 +875,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -888,7 +888,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -898,7 +898,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -908,7 +908,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -921,7 +921,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -931,7 +931,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -941,7 +941,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -954,7 +954,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -964,7 +964,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -974,7 +974,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -987,7 +987,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -997,7 +997,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1007,7 +1007,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1020,7 +1020,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1030,7 +1030,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1040,7 +1040,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1053,7 +1053,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1063,7 +1063,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1073,7 +1073,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1086,7 +1086,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1096,7 +1096,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1106,7 +1106,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1119,7 +1119,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1129,7 +1129,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1139,7 +1139,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1185,7 +1185,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1195,7 +1195,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1205,7 +1205,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1218,7 +1218,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1228,7 +1228,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1238,7 +1238,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1251,7 +1251,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1261,7 +1261,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1271,7 +1271,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1284,7 +1284,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1294,7 +1294,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
@@ -1304,7 +1304,7 @@
 					Name="VCCLCompilerTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;noPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
+					PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PYCXX_PYTHON_2TO3;NOPY_WIN32_DELAYLOAD_PYTHON_DLL;$(NoInherit)"
 					BrowseInformation="1"
 					CompileAs="2"/>
 			</FileConfiguration>
