@@ -4,7 +4,7 @@
 <!--
 
  ====================================================================
- Copyright (c) 2004-2008 Barry A. Scott.  All rights reserved.
+ Copyright (c) 2004-2009 Barry A. Scott.  All rights reserved.
 
  This software is licensed as described in the file LICENSE.txt,
  which you should have received as part of this distribution.
@@ -1338,6 +1338,20 @@ merge( url_or_path1,
 </p>
 </div>
 
+<p>merge_options (a list of strings),
+is used to pass additional command line arguments to the merge
+processes (internal or external).</p>
+
+<p>The internal subversion diff supports the following options:
+</p>
+
+<ul>
+<li>--ignore-space-change, -b
+<li>--ignore-all-space, -w
+<li>--ignore-eol-style
+<li>--unified, -u (for compatibility, does nothing).
+</ul>
+
 <div class="svn_1001000">
 <h4><a name="pysvn_client_merge_peg"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.merge_peg</a></h4>
 <pre>
@@ -1366,6 +1380,22 @@ WC targets.
 <p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
 </div>
+
+<p>merge_options (a list of strings),
+is used to pass additional command line arguments to the merge
+processes (internal or external).</p>
+
+<p>The internal subversion diff supports the following options:
+</p>
+
+<ul>
+<li>--ignore-space-change, -b
+<li>--ignore-all-space, -w
+<li>--ignore-eol-style
+<li>--unified, -u (for compatibility, does nothing).
+</ul>
+
+
 </div>
 
 <div class="svn_1005000">
@@ -1392,6 +1422,21 @@ WC targets.
 </p>
 <p>The depth is one of the pysvn.depth enums.
 </p>
+
+<p>merge_options (a list of strings),
+is used to pass additional command line arguments to the merge
+processes (internal or external).</p>
+
+<p>The internal subversion diff supports the following options:
+</p>
+
+<ul>
+<li>--ignore-space-change, -b
+<li>--ignore-all-space, -w
+<li>--ignore-eol-style
+<li>--unified, -u (for compatibility, does nothing).
+</ul>
+
 </div>
 
 <div class="svn_1005000">
@@ -1405,6 +1450,21 @@ merge_reintegrate( url_or_path,
 </pre>
 <p>Lump-merge all of url_or_path unmerged changes into local_path.
 </p>
+
+<p>merge_options (a list of strings),
+is used to pass additional command line arguments to the merge
+processes (internal or external).</p>
+
+<p>The internal subversion diff supports the following options:
+</p>
+
+<ul>
+<li>--ignore-space-change, -b
+<li>--ignore-all-space, -w
+<li>--ignore-eol-style
+<li>--unified, -u (for compatibility, does nothing).
+</ul>
+
 </div>
 
 <h4><a name="pysvn_client_mkdir"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.mkdir</a></h4>
@@ -2337,7 +2397,7 @@ file was either absent or not under version control.</li>
 <li>unknown - Depth undetermined or ignored</li>
 </ul>
 
-<p>Copyright &copy; 2004-2008 Barry A. Scott. All rigths reserved.</p>
+<p>Copyright &copy; 2004-2009 Barry A. Scott. All rigths reserved.</p>
 <script type="text/javascript">
 // expect this to fail on IE and other browsers that don't support
 changeDisplay( 1005000 );
