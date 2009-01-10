@@ -17,9 +17,10 @@ pushd .
 
 rem in development the version info can be found
 rem otherwise the builder will have run it already
-if "%PY_MIN%" == "4" set COMPILER=msvc71
-if "%PY_MIN%" == "5" set COMPILER=msvc71
-if "%PY_MIN%" == "6" set COMPILER=msvc71
+if "%PY_MAJ%.%PY_MIN%" == "2.4" set COMPILER=msvc71
+if "%PY_MAJ%.%PY_MIN%" == "2.5" set COMPILER=msvc71
+if "%PY_MAJ%.%PY_MIN%" == "2.6" set COMPILER=msvc90
+if "%PY_MAJ%.%PY_MIN%" == "3.0" set COMPILER=msvc90
 
 if exist ..\..\ReleaseEngineering\win32-%COMPILER%\software-versions-%SVN_VER_MAJ_MIN%.cmd (
     pushd ..\..\ReleaseEngineering\win32-%COMPILER%
