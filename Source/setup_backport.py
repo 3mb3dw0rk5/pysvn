@@ -83,3 +83,5 @@ def fixup_source( filename ):
         f = open( filename, 'w' )
         f.write( ''.join( all_lines ) )
         f.close()
+
+    return replaced
