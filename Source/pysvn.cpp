@@ -350,7 +350,7 @@ extern "C" PyObject *PyInit__pysvn()
 // symbol required for the debug version
 extern "C" PyObject *PyInit__pysvn_d()
 { 
-    return PyInit__pysvn_3_0();
+    return PyInit__pysvn();
 }
 
 #else

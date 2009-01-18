@@ -37,12 +37,14 @@ set PYLIB=python%PY_MAJ%%PY_MIN%
 set PYTHONPATH=%WORKDIR%\Source
 set PYTHON=%PY%\python.exe
 set PYSVNMODULE=_pysvn_%PY_MAJ%_%PY_MIN%.pyd
+if "%PY_MAJ%" == "2" set PYSVN_INIT_FUNCTION=init_pysvn
+if "%PY_MAJ%" == "3" set PYSVN_INIT_FUNCTION=PyInit__pysvn
 
 rem Need python and SVN on the path
 PATH %PY%;%SUBVERSION%\%BUILD_TYPE%\bin;%PATH%
 
 rem prove the python version selected
-python -c "import sys;print 'Info: Python Version',sys.version"
+python -c "import sys;print( 'Info: Python Version %%s' %% sys.version )"
 
 rem restore original CWD
 popd
