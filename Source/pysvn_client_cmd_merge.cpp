@@ -237,7 +237,7 @@ Py::Object pysvn_client::cmd_merge_peg2( const Py::Tuple &a_args, const Py::Dict
 
         svn_opt_revision_range_t *range = reinterpret_cast<svn_opt_revision_range_t *>( apr_palloc( pool, sizeof(*range) ) );
 
-        if( tuple_range.length() != 3 )
+        if( tuple_range.length() != 2 )
         {
             std::string msg = "merge_peg2() expecting tuple with 2 values in ranges_to_merge list";
             throw Py::AttributeError( msg );
