@@ -77,8 +77,8 @@ class MakeFileCreater:
                 all_text.append( node.data )
         return ''.join( all_text )
 
-    def cmp_mac_os_x_version( self, version ):
-        return cmp( self.mac_os_x_version[0:len(version)], list(version) )
+    def is_atleast_mac_os_x_version( self, version ):
+        return self.mac_os_x_version[0:len(version)] >= list(version)
 
     def detectMacVersion( self ):
         if os.path.exists( '/System/Library/CoreServices/SystemVersion.plist' ):
@@ -235,7 +235,7 @@ class MakeFileCreater:
             var_ldlibrary = distutils.sysconfig.get_config_var('LDLIBRARY')
             framework_lib = os.path.join( var_prefix, os.path.basename( var_ldlibrary ) )
 
-            if self.cmp_mac_os_x_version( (10,4) ) >= 0:
+            if self.is_atleast_mac_os_x_version( (10,4) ) >= 0:
                 if self.verbose:
                     print( 'Info: Using Mac OS X 10.4 makefile template' )
 
@@ -685,9 +685,9 @@ LDLIBS= \
 
     def find_pycxx( self, argv ):
         if sys.version_info[0] >= 3:
-            pycxx_version = (6, 0, 0)
+            pycxx_version = (6, 1, 0)
         else:
-            pycxx_version = (5, 5, 0)
+            pycxx_version = (6, 1, 0)
 
         pycxx_dir = self.find_dir( argv,
                     'PyCXX include',
