@@ -22,7 +22,7 @@ clean-1.4:
 	cd ..\kit\Win32-1.4 & $(MAKE) clean
 
 clean-1.5:
-	cd ..\Source & vcexpress pysvn-for-svn-1-5.sln /useenv /clean "$(BUILD_TYPE)"  /project "pysvn"
+	cd ..\Source & vcexpress pysvn-for-svn-1-5.sln /useenv /clean "$(BUILD_TYPE)"  /project "pysvn" & echo Done
 	cd ..\Source & del sept
 	cd ..\Tests & $(MAKE) -f win32.mak SVN_VER_MAJ_MIN=1.5 clean
 	cd ..\kit\Win32-1.5 & $(MAKE) clean
@@ -30,10 +30,10 @@ clean-1.5:
 kit: kit-$(SVN_VER_MAJ_MIN)
 
 kit-1.4:
-	cd ..\kit\Win32-1.4 & $(MAKE) all_msvc71
+	cd ..\kit\Win32-1.4 & $(MAKE) all_msvc90
 
 kit-1.5:
-	cd ..\kit\Win32-1.5 & $(MAKE) all_msvc71
+	cd ..\kit\Win32-1.5 & $(MAKE) all_msvc90
 
 install: install-$(SVN_VER_MAJ_MIN)
 

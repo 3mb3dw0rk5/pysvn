@@ -1,6 +1,11 @@
-all_msvc71: kit_msvc71
+#
+#	makefile - make the windows kit
+#
+all_msvc71: kit_msvc
 
-kit_msvc71: pysvn-branded.iss info_before.txt copy_setup.cmd
+all_msvc90: kit_msvc
+
+kit_msvc: pysvn-branded.iss info_before.txt copy_setup.cmd
 	copy ..\..\LICENSE.txt tmp\LICENSE.txt
 	copy $(SUBVERSION)\svn-win32-libintl\bin\intl3_svn.dll tmp
 	copy $(SUBVERSION)\db4-win\bin\libdb44.dll tmp
@@ -23,9 +28,9 @@ kit_msvc71: pysvn-branded.iss info_before.txt copy_setup.cmd
 	copy $(SUBVERSION)\Release\bin\libsvn_repos-1.dll tmp
 	copy $(SUBVERSION)\Release\bin\libsvn_subr-1.dll tmp
 	copy $(SUBVERSION)\Release\bin\libsvn_wc-1.dll tmp
-	copy tmp\msvc71_system_files.iss tmp\msvc_system_files.iss
 	"c:\Program Files\Inno Setup 5\ISCC.exe" tmp\pysvn-branded.iss
 	tmp\setup_copy.cmd
+
 
 info_before.txt: pysvn-branded.iss
 
