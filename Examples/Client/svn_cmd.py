@@ -134,6 +134,17 @@ if hasattr( pysvn.wc_notify_action, 'exists' ):
     wc_notify_action_map[ pysvn.wc_notify_action.update_replace ] = 'update_replace'
 
 
+if hasattr( pysvn.wc_notify_action, 'property_added' ):
+    wc_notify_action_map[ pysvn.wc_notify_action.property_added ] = 'property_added'
+    wc_notify_action_map[ pysvn.wc_notify_action.property_modified ] = 'property_modified'
+    wc_notify_action_map[ pysvn.wc_notify_action.property_deleted ] = 'property_deleted'
+    wc_notify_action_map[ pysvn.wc_notify_action.property_deleted_nonexistent ] = 'property_deleted_nonexistent'
+    wc_notify_action_map[ pysvn.wc_notify_action.revprop_set ] = 'revprop_set'
+    wc_notify_action_map[ pysvn.wc_notify_action.revprop_deleted ] = 'revprop_deleted'
+    wc_notify_action_map[ pysvn.wc_notify_action.merge_completed ] = 'merge_completed'
+    wc_notify_action_map[ pysvn.wc_notify_action.tree_conflict ] = 'tree_conflict'
+    wc_notify_action_map[ pysvn.wc_notify_action.failed_external ] = 'failed_external'
+
 class SvnCommand:
     def __init__( self, progname ):
         self.progname = progname

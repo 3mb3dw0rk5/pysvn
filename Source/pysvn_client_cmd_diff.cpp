@@ -38,6 +38,27 @@ public:
 
     void open_unique_file( const std::string &tmp_dir )
     {
+#if defined( PYSVN_HAS_IO_OPEN_UNIQUE_FILE3 )
+        svn_error_t *error = svn_io_open_unique_file3
+            (
+            &m_apr_file,
+            &m_filename,
+            tmp_dir.c_str(),
+            svn_io_file_del_none,
+            m_pool,
+            m_pool
+            );
+#elif defined( PYSVN_HAS_IO_OPEN_UNIQUE_FILE2 )
+        svn_error_t *error = svn_io_open_unique_file2
+            (
+            &m_apr_file,
+            &m_filename,
+            tmp_dir.c_str(),
+            ".tmp",
+            svn_io_file_del_none,
+            m_pool
+            );
+#else
         svn_error_t *error = svn_io_open_unique_file
             (
             &m_apr_file,
@@ -47,6 +68,7 @@ public:
             false,
             m_pool
             );
+#endif
         if( error != NULL )
             throw SvnException( error );
     }
@@ -114,6 +136,8 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
 #endif
 #if defined( PYSVN_HAS_CLIENT_DIFF4 )
     { false, name_depth },
+    { false, name_relative_to_dir },
+    { false, name_changelists },
 #endif
     { false, NULL }
     };
@@ -157,6 +181,23 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
     apr_array_header_t *options = apr_array_make( pool, 0, sizeof( const char * ) );
 #endif
 
+#if defined( PYSVN_HAS_CLIENT_DIFF4 )
+    std::string std_relative_to_dir;
+    const char *relative_to_dir = NULL;
+    if( args.hasArg( name_relative_to_dir ) )
+    {
+        std_relative_to_dir = args.getUtf8String( name_relative_to_dir );
+        relative_to_dir = std_relative_to_dir.c_str();
+    }
+
+    apr_array_header_t *changelists = NULL;
+
+    if( args.hasArg( name_changelists ) )
+    {
+        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
+    }
+#endif
+
     svn_stringbuf_t *stringbuf = NULL;
 
     try
@@ -176,11 +217,12 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
         PythonAllowThreads permission( m_context );
 
 #if defined( PYSVN_HAS_CLIENT_DIFF4 )
-        svn_error_t *error = svn_client_diff3
+        svn_error_t *error = svn_client_diff4
             (
             options,
             norm_path1.c_str(), &revision1,
             norm_path2.c_str(), &revision2,
+            relative_to_dir,
             depth,
             ignore_ancestry,
             !diff_deleted,
@@ -188,6 +230,7 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
             header_encoding_ptr,
             output_file.file(),
             error_file.file(),
+            changelists,
             m_context,
             pool
             );

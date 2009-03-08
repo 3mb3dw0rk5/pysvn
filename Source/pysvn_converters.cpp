@@ -234,6 +234,7 @@ Py::Object toObject
         status[ str_repos_lock ] = toObject( *svn_status.repos_lock, wrapper_lock );
     }
 #endif
+
     long is_versioned = (long)(svn_status.text_status > svn_wc_status_unversioned);
     status[ str_is_versioned ] = Py::Int( is_versioned );
     status[ str_is_locked ] = Py::Int( svn_status.locked );

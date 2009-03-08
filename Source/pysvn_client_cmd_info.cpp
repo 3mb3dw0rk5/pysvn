@@ -751,6 +751,31 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
         baton.m_wrapper_log = &m_wrapper_log;
         baton.m_wrapper_log_changed_path = &m_wrapper_log_changed_path;
 
+#if defined( PYSVN_HAS_CLIENT_LOG5 )
+        apr_array_header_t *revision_ranges = apr_array_make( pool, 0, sizeof(svn_opt_revision_range_t *) );
+        svn_opt_revision_range_t *range = reinterpret_cast<svn_opt_revision_range_t *>( apr_palloc( pool, sizeof(*range) ) );
+
+        range->start = revision_start;
+        range->end = revision_end;
+
+        APR_ARRAY_PUSH( revision_ranges, svn_opt_revision_range_t * ) = range;
+
+        svn_error_t *error = svn_client_log5
+            (
+            targets,
+            &peg_revision,
+            revision_ranges,
+            limit,
+            discover_changed_paths,
+            strict_node_history,
+            include_merged_revisions,
+            revprops,
+            log4Receiver,
+            reinterpret_cast<void *>( &baton ),
+            m_context,
+            pool
+            );
+#else
         svn_error_t *error = svn_client_log4
             (
             targets,
@@ -767,6 +792,7 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
             m_context,
             pool
             );
+#endif
         permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
@@ -1107,7 +1133,24 @@ struct StatusEntriesBaton
     apr_hash_t* hash;
 };
 
-#if defined( PYSVN_HAS_CLIENT_STATUS2 )
+#if defined( PYSVN_HAS_CLIENT_STATUS4 )
+static svn_error_t *StatusEntriesFunc
+    (
+    void *baton,
+    const char *path,
+    svn_wc_status2_t *status,
+    apr_pool_t *pool
+    )
+{
+    svn_wc_status2_t *stat;
+    StatusEntriesBaton *seb = reinterpret_cast<StatusEntriesBaton *>( baton );
+
+    path = apr_pstrdup( seb->pool, path );
+    stat = svn_wc_dup_status2( status, seb->pool );
+    apr_hash_set( seb->hash, path, APR_HASH_KEY_STRING, stat );
+    return SVN_NO_ERROR;
+}
+#elif defined( PYSVN_HAS_CLIENT_STATUS2 )
 static void StatusEntriesFunc
     (
     void *baton,
@@ -1116,7 +1159,7 @@ static void StatusEntriesFunc
     )
 {
     svn_wc_status2_t *stat;
-    StatusEntriesBaton* seb = (StatusEntriesBaton*)baton;
+    StatusEntriesBaton *seb = reinterpret_cast<StatusEntriesBaton *>( baton );
 
     path = apr_pstrdup( seb->pool, path );
     stat = svn_wc_dup_status2( status, seb->pool );
@@ -1131,7 +1174,7 @@ static void StatusEntriesFunc
     )
 {
     svn_wc_status_t *stat;
-    StatusEntriesBaton* seb = (StatusEntriesBaton*)baton;
+    StatusEntriesBaton *seb = reinterpret_cast<StatusEntriesBaton *>( baton );
 
     path = apr_pstrdup( seb->pool, path );
     stat = svn_wc_dup_status( status, seb->pool );
@@ -1203,7 +1246,24 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
         baton.hash = status_hash;
         baton.pool = pool;
 
-#if defined( PYSVN_HAS_CLIENT_STATUS3 )
+#if defined( PYSVN_HAS_CLIENT_STATUS4 )
+        svn_error_t *error = svn_client_status4
+            (
+            &revnum,            // revnum
+            norm_path.c_str(),  // path
+            &rev,
+            StatusEntriesFunc,  // status func
+            &baton,             // status baton
+            depth,
+            get_all,
+            update,
+            !ignore,
+            ignore_externals,
+            changelists,
+            m_context,
+            pool
+            );
+#elif defined( PYSVN_HAS_CLIENT_STATUS3 )
         svn_error_t *error = svn_client_status3
             (
             &revnum,            // revnum
@@ -1283,4 +1343,3 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
 
     return entries_list;
 }
-

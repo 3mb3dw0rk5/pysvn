@@ -91,6 +91,7 @@
 #define PYSVN_HAS_CLIENT_MOVE4
 #define PYSVN_HAS_DIFF_FILE_IGNORE_SPACE
 #define PYSVN_HAS_SVN_AUTH_PROVIDERS
+#define PYSVN_HAS_IO_OPEN_UNIQUE_FILE2
 #endif
 
 // SVN 1.5 or later
@@ -143,8 +144,17 @@
 #define PYSVN_HAS_SVN_WC_CONFLICT_CHOICE_T QQQ
 #endif
 
+#if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 6) || SVN_VER_MAJOR > 1
+#define PYSVN_HAS_SVN_1_6
+#define PYSVN_HAS_CLIENT_COPY5
+#define PYSVN_HAS_IO_OPEN_UNIQUE_FILE3
+#define PYSVN_HAS_CLIENT_LOG5
+#define PYSVN_HAS_CLIENT_STATUS4
+#endif
 
-#if defined( PYSVN_HAS_CLIENT_STATUS2 )
+#if defined( PYSVN_HAS_CLIENT_STATUS3 )
+typedef svn_wc_status2_t pysvn_wc_status_t;
+#elif defined( PYSVN_HAS_CLIENT_STATUS2 )
 typedef svn_wc_status2_t pysvn_wc_status_t;
 #else
 typedef svn_wc_status_t pysvn_wc_status_t;

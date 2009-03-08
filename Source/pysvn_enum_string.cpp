@@ -133,6 +133,19 @@ template <> EnumString< svn_wc_notify_action_t >::EnumString()
     add( svn_wc_notify_foreign_merge_begin, "foreign_merge_begin" );
     add( svn_wc_notify_update_replace, "update_replace" );
 #endif
+
+#if defined( PYSVN_HAS_SVN_1_6 )
+    add( svn_wc_notify_property_added, "property_added" );
+    add( svn_wc_notify_property_modified, "property_modified" );
+    add( svn_wc_notify_property_deleted, "property_deleted" );
+    add( svn_wc_notify_property_deleted_nonexistent, "property_deleted_nonexistent" );
+    add( svn_wc_notify_revprop_set, "revprop_set" );
+    add( svn_wc_notify_revprop_deleted, "revprop_deleted" );
+    add( svn_wc_notify_merge_completed, "merge_completed" );
+    add( svn_wc_notify_tree_conflict, "tree_conflict" );
+    add( svn_wc_notify_failed_external, "failed_external" );
+#endif
+
 }
 
 template <> EnumString< svn_wc_status_kind >::EnumString()

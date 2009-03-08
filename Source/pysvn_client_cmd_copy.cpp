@@ -19,7 +19,7 @@
 #include "pysvn.hpp"
 #include "pysvn_static_strings.hpp"
 
-#if defined( PYSVN_HAS_CLIENT_COPY4 )
+#if defined( PYSVN_HAS_CLIENT_COPY4 ) || defined( PYSVN_HAS_CLIENT_COPY5 ) 
 Py::Object pysvn_client::cmd_copy2( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
     static argument_description args_desc[] =
@@ -29,6 +29,9 @@ Py::Object pysvn_client::cmd_copy2( const Py::Tuple &a_args, const Py::Dict &a_k
     { false, name_copy_as_child },
     { false, name_make_parents },
     { false, name_revprops },
+#if defined( PYSVN_HAS_CLIENT_COPY5 )
+    { false, name_ignore_externals },
+#endif
     { false, NULL }
     };
     FunctionArguments args( "copy2", args_desc, a_args, a_kws );
@@ -146,6 +149,10 @@ Py::Object pysvn_client::cmd_copy2( const Py::Tuple &a_args, const Py::Dict &a_k
             }
         }
 
+#if defined( PYSVN_HAS_CLIENT_COPY5 )
+        type_error_message = "expecting boolean for keyword ignore_externals";
+        bool ignore_externals = args.getBoolean( name_ignore_externals, false );
+#endif
         try
         {
             std::string norm_dest_path( svnNormalisedIfPath( dest_path, pool ) );
@@ -154,7 +161,20 @@ Py::Object pysvn_client::cmd_copy2( const Py::Tuple &a_args, const Py::Dict &a_k
 
             PythonAllowThreads permission( m_context );
 
-            // behavior changed
+#if defined( PYSVN_HAS_CLIENT_COPY5 )
+            svn_error_t *error = svn_client_copy5
+                (
+                &commit_info,
+                all_sources,
+                norm_dest_path.c_str(),
+                copy_as_child,
+                make_parents,
+                ignore_externals,
+                revprops,
+                m_context,
+                pool
+                );
+#else
             svn_error_t *error = svn_client_copy4
                 (
                 &commit_info,
@@ -166,6 +186,7 @@ Py::Object pysvn_client::cmd_copy2( const Py::Tuple &a_args, const Py::Dict &a_k
                 m_context,
                 pool
                 );
+#endif
             permission.allowThisThread();
             if( error != NULL )
             {

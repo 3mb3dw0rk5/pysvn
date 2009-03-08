@@ -68,6 +68,7 @@ class MakeFileCreater:
         self.is_mac_os_x_darwin_ports = False
         self.mac_os_x_version = None
         self.mac_os_x_universal = False
+        self.mac_os_x_sdk = None
         self.platform = sys.platform
 
     def node_text( self, all_nodes ):
@@ -98,10 +99,11 @@ class MakeFileCreater:
                     self.is_mac_os_x = True
 
                     # look for the universal SDK
-                    self.mac_os_x_universal = os.path.exists( '/Developer/SDKs/MacOSX%d.%du.sdk' %
-                                                (self.mac_os_x_version[0], self.mac_os_x_version[1]) )
-                    if self.mac_os_x_universal:
-                        print( 'Info: Mac OS X Universal SDKs found' )
+                    for mac_ver in ['10.4', '%d.%d' % (self.mac_os_x_version[0], self.mac_os_x_version[1])]:
+                        self.mac_os_x_sdk = '/Developer/SDKs/MacOSX%su.sdk' % mac_ver
+                        if os.path.exists( self.mac_os_x_sdk ):
+                            print( 'Info: Mac OS X Universal SDKs found (%s)' % self.mac_os_x_sdk )
+                            break
 
     def createMakefile( self, argv ):
         for arg in argv:
@@ -111,7 +113,7 @@ class MakeFileCreater:
 
         self.verbose = '--verbose' in argv
         self.detectMacVersion()
-        if '--universal' in argv and self.mac_os_x_universal:
+        if '--universal' in argv and self.mac_os_x_sdk is not None:
             print( 'Info: turning on universal support' )
             self.mac_os_x_universal = True
         else:
@@ -256,7 +258,11 @@ class MakeFileCreater:
                 makefile.write( self.makefile_template_macosx_darwin_ports % template_values )
 
             elif self.mac_os_x_universal:
-                makefile.write( self.makefile_template_macosx_universal % template_values )
+                template_values[ 'mac_os_x_sdk' ] = self.mac_os_x_sdk
+                if sys.version_info[0] >= 3:
+                    makefile.write( self.makefile_template_macosx_universal_py3 % template_values )
+                else:
+                    makefile.write( self.makefile_template_macosx_universal_py2 % template_values )
             else:
                 if sys.version_info[0] >= 3:
                     makefile.write( self.makefile_template_macosx_one_arch_py3 % template_values )
@@ -575,19 +581,19 @@ LDLIBS=-L%(svn_lib_dir)s \
 #include pysvn_common.mak
 '''
 
-    makefile_template_macosx_universal = '''#
+    makefile_template_macosx_universal_py2 = '''#
 #	Created by pysvn Extension/Source/setup.py
 #       -- makefile_template_macosx_universal --
 #
 PYTHON=%(python_exe)s
 SVN_INCLUDE=%(svn_include)s
 CCC=g++
-CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s -isysroot /Developer/SDKs/MacOSX10.4u.sdk -arch ppc -arch i386
+CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s -isysroot %(mac_os_x_sdk)s -arch ppc -arch i386
 CC=gcc
-CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s %(debug_cflags)s -isysroot /Developer/SDKs/MacOSX10.4u.sdk -arch ppc -arch i386
+CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s %(debug_cflags)s -isysroot %(mac_os_x_sdk)s -arch ppc -arch i386
 PYCXX=%(pycxx_dir)s
 PYCXXSRC=%(pycxx_src_dir)s
-LDSHARED=g++ -bundle -twolevel_namespace %(debug_cflags)s -u _PyMac_Error %(frameworks)s -Wl,-syslibroot,/Developer/SDKs/MacOSX10.4u.sdk -arch ppc -arch i386
+LDSHARED=g++ -bundle -twolevel_namespace %(debug_cflags)s -u _PyMac_Error %(frameworks)s -Wl,-syslibroot,%(mac_os_x_sdk)s -arch ppc -arch i386
 LDLIBS=-L%(svn_lib_dir)s \
 -L%(apr_lib_dir)s \
 -lsvn_client-1 \
@@ -596,7 +602,31 @@ LDLIBS=-L%(svn_lib_dir)s \
 -lsvn_fs-1 \
 -lsvn_subr-1 \
 -lsvn_diff-1 \
--lsvn_ra_dav-1 \
+-l%(lib_apr)s
+#include pysvn_common.mak
+'''
+
+    makefile_template_macosx_universal_py3 = '''#
+#	Created by pysvn Extension/Source/setup.py
+#       -- makefile_template_macosx_universal --
+#
+PYTHON=%(python_exe)s
+SVN_INCLUDE=%(svn_include)s
+CCC=g++
+CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s -isysroot %(mac_os_x_sdk)s -arch ppc -arch i386
+CC=gcc
+CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s %(debug_cflags)s -isysroot %(mac_os_x_sdk)s -arch ppc -arch i386
+PYCXX=%(pycxx_dir)s
+PYCXXSRC=%(pycxx_src_dir)s
+LDSHARED=g++ -bundle -twolevel_namespace %(debug_cflags)s %(frameworks)s -Wl,-syslibroot,%(mac_os_x_sdk)s -arch ppc -arch i386
+LDLIBS=-L%(svn_lib_dir)s \
+-L%(apr_lib_dir)s \
+-lsvn_client-1 \
+-lsvn_repos-1 \
+-lsvn_wc-1 \
+-lsvn_fs-1 \
+-lsvn_subr-1 \
+-lsvn_diff-1 \
 -l%(lib_apr)s
 #include pysvn_common.mak
 '''
@@ -687,7 +717,7 @@ LDLIBS= \
         if sys.version_info[0] >= 3:
             pycxx_version = (6, 1, 0)
         else:
-            pycxx_version = (6, 1, 0)
+            pycxx_version = (5, 5, 0)
 
         pycxx_dir = self.find_dir( argv,
                     'PyCXX include',
