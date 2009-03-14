@@ -370,7 +370,11 @@ SvnContext::SvnContext( const std::string &config_dir_str )
     svn_auth_get_keychain_simple_provider(&provider, m_pool);
     *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
 #endif
+#if defined( PYSVN_HAS_AUTH_GET_SIMPLE_PROVIDER2 )
+    svn_auth_get_simple_provider2( &provider, NULL, NULL, m_pool );
+#else
     svn_auth_get_simple_provider( &provider, m_pool );
+#endif
     *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
 
     svn_auth_get_username_provider( &provider, m_pool );
@@ -388,7 +392,11 @@ SvnContext::SvnContext( const std::string &config_dir_str )
     svn_auth_get_ssl_client_cert_file_provider( &provider, m_pool );
     *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
 
+#if defined( PYSVN_HAS_AUTH_GET_SSL_CLIENT_CERT_PW_FILE_PROVIDER2 )
+    svn_auth_get_ssl_client_cert_pw_file_provider2( &provider, NULL, NULL, m_pool );
+#else
     svn_auth_get_ssl_client_cert_pw_file_provider( &provider, m_pool );
+#endif
     *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
 
     svn_auth_get_ssl_server_trust_prompt_provider( &provider, handlerSslServerTrustPrompt, this, m_pool );

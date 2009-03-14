@@ -249,7 +249,6 @@ Py::Object pysvn_client::cmd_copy( const Py::Tuple &a_args, const Py::Dict &a_kw
             checkThreadPermission();
 
             PythonAllowThreads permission( m_context );
-
 #if defined( PYSVN_HAS_CLIENT_COPY3 )
             // behavior changed
             svn_error_t *error = svn_client_copy3
