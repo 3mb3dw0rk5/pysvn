@@ -40,7 +40,7 @@ def cmd_help( argv ):
     progname = os.path.basename( argv[0] )
     print( '''    Create a makefile for this python and platform
 
-        python %{progname} configure <options>
+        python %(progname)s configure <options>
 
     where <options> is one or more of:
         --verbose
