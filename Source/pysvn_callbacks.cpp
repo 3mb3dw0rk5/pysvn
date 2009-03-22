@@ -17,6 +17,14 @@
 #endif
 
 #include "pysvn.hpp"
+#include "pysvn_static_strings.hpp"
+
+#if defined( PYSVN_TRACE_CALLBACK )
+#define TRACE_CALLBACK( name ) do { std::cerr << "Debug: Callback " << #name << std::endl; } while( false )
+#else
+#define TRACE_CALLBACK( name ) do { } while( false )
+#endif
+
 
 static const char *g_utf_8 = "utf-8";
 
@@ -88,6 +96,8 @@ bool pysvn_context::contextGetLogin
     bool &_may_save
     )
 {
+    TRACE_CALLBACK( contextGetLogin );
+
     PythonDisallowThreads callback_permission( m_permission );
 
     // make sure we can call the users object
@@ -150,6 +160,8 @@ void pysvn_context::contextProgress
     apr_off_t total
     )
 {
+    TRACE_CALLBACK( contextProgress );
+
     PythonDisallowThreads callback_permission( m_permission );
 
     // make sure we can call the users object
@@ -179,6 +191,108 @@ void pysvn_context::contextProgress
 }
 #endif
 
+
+#if defined( PYSVN_HAS_SVN_CLIENT_CTX_T__CONFLICT_FUNC )
+
+#if defined( PYSVN_HAS_SVN_CLIENT_CTX_T__CONFLICT_FUNC_1_6 )
+Py::Object toConflictVersion( const svn_wc_conflict_version_t *version )
+{
+    Py::Dict ver;
+
+    ver["repos_url"] = utf8_string_or_none( version->repos_url );
+    ver["peg_rev"] = asObject( new pysvn_revision( svn_opt_revision_number, 0, version->peg_rev ) );
+    ver["path_in_repos"] = utf8_string_or_none( version->path_in_repos );
+    ver["node_kind"] = toEnumValue( version->node_kind );
+
+    return ver;
+}
+#endif
+
+Py::Object toConflictDescription( const svn_wc_conflict_description_t *description, SvnPool &pool )
+{
+    if( description == NULL )
+        return Py::None();
+
+    Py::Dict desc;
+    desc["path"] = Py::String( description->path );
+    desc["node_kind"] = toEnumValue( description->node_kind );
+    desc["kind"] = toEnumValue( description->kind );
+    desc["property_name"] = utf8_string_or_none( description->property_name );
+    desc["is_binary"] = Py::Boolean( description->is_binary );
+    desc["mime_type"] = utf8_string_or_none( description->mime_type );
+    desc["action"] = toEnumValue( description->action );
+    desc["reason"] = toEnumValue( description->reason );
+    desc["base_file"] = path_string_or_none( description->base_file, pool );
+    desc["their_file"] = path_string_or_none( description->their_file, pool );
+    desc["my_file"] = path_string_or_none( description->my_file, pool );
+    desc["merged_file"] = path_string_or_none( description->merged_file, pool );
+
+#if defined( PYSVN_HAS_SVN_CLIENT_CTX_T__CONFLICT_FUNC_1_6 )
+    desc["operation"] = toEnumValue( description->operation );
+    desc["src_left_version"] =  toConflictVersion( description->src_left_version );
+    desc["src_right_version"] = toConflictVersion( description->src_right_version );
+#endif
+
+    return desc;
+}
+
+bool pysvn_context::contextConflictResolver
+    (
+    svn_wc_conflict_result_t **result,
+    const svn_wc_conflict_description_t *description,
+    apr_pool_t *conflict_resolver_pool
+    )
+{
+    TRACE_CALLBACK( contextConflictResolver );
+
+    PythonDisallowThreads callback_permission( m_permission );
+
+    // make sure we can call the users object
+    if( !m_pyfn_ConflictResolver.isCallable() )
+        return false;
+
+    Py::Callable callback( m_pyfn_ConflictResolver );
+
+    SvnPool pool( *this );
+
+    Py::Tuple args( 1 );
+    args[0] = toConflictDescription( description, pool );
+
+    try
+    {
+        Py::Tuple py_result( callback.apply( args ) );
+
+        Py::ExtensionObject< pysvn_enum_value<svn_wc_conflict_choice_t> > py_kind( py_result[0] );
+        svn_wc_conflict_choice_t choice( py_kind.extensionObject()->m_value );
+
+        Py::Object py_merge_file( py_result[1] );
+        const char *merged_file = NULL;
+        if( !py_merge_file.isNone() )
+        {
+            Py::String pystr_merge_file( py_merge_file );
+            std::string std_merged_file( pystr_merge_file.as_std_string( name_utf8 ) );
+            merged_file = svn_string_ncreate( std_merged_file.data(), std_merged_file.length(), getContextPool() )->data;
+        }
+
+        svn_boolean_t save_merged = py_result[2].isTrue() ? TRUE : FALSE;
+
+        *result = svn_wc_create_conflict_result( choice, merged_file, conflict_resolver_pool );
+        (*result)->save_merged = save_merged;
+
+        return true;
+    }
+    catch( Py::Exception &e )
+    {
+        PyErr_Print();
+        e.clear();
+
+        m_error_message = "unhandled exception in callback_conflict_resolver";
+        return false;
+    }
+}
+#endif
+
+
 // 
 // this method will be called to notify about
 // the progress of an ongoing action
@@ -191,6 +305,8 @@ void pysvn_context::contextNotify2
     apr_pool_t *pool
     )
 {
+    TRACE_CALLBACK( contextNotify2 );
+
     PythonDisallowThreads callback_permission( m_permission );
 
     // make sure we can call the users object
@@ -206,10 +322,7 @@ void pysvn_context::contextNotify2
     info["path"] = Py::String( notify->path );
     info["action"] = toEnumValue( notify->action );
     info["kind"] = toEnumValue( notify->kind );
-    if( notify->mime_type == NULL )
-        info["mime_type"] = Py::None();
-    else
-        info["mime_type"] = Py::String( notify->mime_type );
+    info["mime_type"] = utf8_string_or_none( notify->mime_type );
     info["content_state"] = toEnumValue( notify->content_state );
     info["prop_state"] = toEnumValue( notify->prop_state );
     info["revision"] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, notify->revision ) );
@@ -249,6 +362,8 @@ void pysvn_context::contextNotify
     svn_revnum_t revnum
     )
 {
+    TRACE_CALLBACK( contextNotify );
+
     PythonDisallowThreads callback_permission( m_permission );
 
     // make sure we can call the users object
@@ -293,6 +408,8 @@ void pysvn_context::contextNotify
 //
 bool pysvn_context::contextCancel()
 {
+    TRACE_CALLBACK( contextCancel );
+
     PythonDisallowThreads callback_permission( m_permission );
 
     // make sure we can call the users object
@@ -337,6 +454,8 @@ void pysvn_context::setLogMessage( const std::string & a_msg )
 //
 bool pysvn_context::contextGetLogMessage( std::string & a_msg )
 {
+    TRACE_CALLBACK( contextGetLogMessage );
+
     if( !m_log_message.empty() )
     {
         a_msg = m_log_message;
@@ -384,6 +503,8 @@ bool pysvn_context::contextSslServerTrustPrompt
         bool &accept_permanent
         )
 {
+    TRACE_CALLBACK( contextSslServerTrustPrompt );
+
     PythonDisallowThreads callback_permission( m_permission );
 
     // make sure we can call the users object
@@ -446,6 +567,8 @@ bool pysvn_context::contextSslServerTrustPrompt
 //
 bool pysvn_context::contextSslClientCertPrompt( std::string &_cert_file, const std::string &_realm, bool &_may_save )
 {
+    TRACE_CALLBACK( contextSslClientCertPrompt );
+
     PythonDisallowThreads callback_permission( m_permission );
 
     if( !m_pyfn_SslClientCertPrompt.isCallable() )
@@ -507,6 +630,8 @@ bool pysvn_context::contextSslClientCertPwPrompt
     bool &_may_save
     )
 {
+    TRACE_CALLBACK( contextSslClientCertPwPrompt );
+
     PythonDisallowThreads callback_permission( m_permission );
 
     // make sure we can call the users object

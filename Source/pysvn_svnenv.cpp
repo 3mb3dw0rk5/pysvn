@@ -170,6 +170,8 @@ extern "C" void handlerNotify
     svn_revnum_t revision
     )
 {
+    pysvn_bpt();
+
     SvnContext *context = reinterpret_cast<SvnContext *>( baton );
 
     context->contextNotify( path, action, kind, mime_type, content_state, prop_state, revision );
@@ -188,6 +190,24 @@ extern "C" void handlerProgress
     SvnContext *context = reinterpret_cast<SvnContext *>( baton );
 
     context->contextProgress( progress, total );
+}
+#endif
+
+#if defined( PYSVN_HAS_SVN_CLIENT_CTX_T__CONFLICT_FUNC )
+extern "C" svn_error_t *handlerConflictResolver
+    (
+    svn_wc_conflict_result_t **result,
+    const svn_wc_conflict_description_t *description,
+    void *baton,
+    apr_pool_t *pool
+    )
+{
+    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+
+    if( context->contextConflictResolver( result, description, pool ) )
+        return SVN_NO_ERROR;
+    else
+        return svn_error_create( SVN_ERR_CANCELLED, NULL, "cancelled by user" );
 }
 #endif
 
@@ -343,11 +363,14 @@ extern "C" svn_error_t *handlerSslClientCertPwPrompt
 
 SvnContext::SvnContext( const std::string &config_dir_str )
 : m_pool( NULL )
+, m_context( NULL )
 , m_config_dir( NULL )
 {
     memset( &m_context, 0, sizeof( m_context ) );
 
     apr_pool_create( &m_pool, NULL );
+
+    svn_client_create_context( &m_context, m_pool );
 
     if( !config_dir_str.empty() )
     {
@@ -448,41 +471,91 @@ SvnContext::SvnContext( const std::string &config_dir_str )
     svn_auth_open( &auth_baton, providers, m_pool );
 
     // get the config based on the config dir passed in
-    svn_config_get_config( &m_context.config, m_config_dir, m_pool );
+    svn_config_get_config( &m_context->config, m_config_dir, m_pool );
 
     // tell the auth functions where the config dir is
     svn_auth_set_parameter( auth_baton, SVN_AUTH_PARAM_CONFIG_DIR, m_config_dir );
 
-    m_context.auth_baton = auth_baton;
+    m_context->auth_baton = auth_baton;
+
 #if defined( PYSVN_HAS_CONTEXT_LOG_MSG2 )
-    m_context.log_msg_func2 = handlerLogMsg2;
-    m_context.log_msg_baton2 = this;
-    m_context.log_msg_func = NULL;
-    m_context.log_msg_baton = NULL;
+    m_context->log_msg_func2 = handlerLogMsg2;
+    m_context->log_msg_baton2 = this;
 #else
-    m_context.log_msg_func = handlerLogMsg;
-    m_context.log_msg_baton = this;
+    m_context->log_msg_func = handlerLogMsg;
+    m_context->log_msg_baton = this;
 #endif
+}
 
-    m_context.cancel_func = handlerCancel;
-    m_context.cancel_baton = this;
+void SvnContext::installCancel( bool install )
+{
+    if( install )
+    {
+        m_context->cancel_func = handlerCancel;
+        m_context->cancel_baton = this;
+    }
+    else
+    {
+        m_context->cancel_func = NULL;
+        m_context->cancel_baton = NULL;
+    }
+}
 
+void SvnContext::installNotify( bool install )
+{
+    if( install )
+    {
 #if defined( PYSVN_HAS_CONTEXT_NOTIFY2 )
-    m_context.notify_func2 = handlerNotify2;
-    m_context.notify_baton2 = this;
-    m_context.notify_func = NULL;
-    m_context.notify_baton = NULL;
+        m_context->notify_func2 = handlerNotify2;
+        m_context->notify_baton2 = this;
 #else
-    m_context.notify_func = handlerNotify;
-    m_context.notify_baton = this;
+        m_context->notify_func = handlerNotify;
+        m_context->notify_baton = this;
 #endif
+    }
+    else
+    {
+#if defined( PYSVN_HAS_CONTEXT_NOTIFY2 )
+        m_context->notify_func2 = NULL;
+        m_context->notify_baton2 = NULL;
+#else
+        m_context->notify_func = NULL;
+        m_context->notify_baton = NULL;
+#endif
+    }
+}
 
 #if defined( PYSVN_HAS_CONTEXT_PROGRESS )
-    m_context.progress_func = handlerProgress;
-    m_context.progress_baton = this;
+void SvnContext::installProgress( bool install )
+{
+    if( install )
+    {
+        m_context->progress_func = handlerProgress;
+        m_context->progress_baton = this;
+    }
+    else
+    {
+        m_context->progress_func = handlerProgress;
+        m_context->progress_baton = this;
+    }
+}
 #endif
 
+#if defined( PYSVN_HAS_SVN_CLIENT_CTX_T__CONFLICT_FUNC )
+void SvnContext::installConflictResolver( bool install )
+{
+    if( install )
+    {
+        m_context->conflict_func = handlerConflictResolver;
+        m_context->conflict_baton = this;
+    }
+    else
+    {
+        m_context->conflict_func = NULL;
+        m_context->conflict_baton = NULL;
+    }
 }
+#endif
 
 SvnContext::~SvnContext()
 {
@@ -496,12 +569,12 @@ SvnContext::~SvnContext()
 
 SvnContext::operator svn_client_ctx_t *()
 {
-    return &m_context;
+    return m_context;
 }
 
 svn_client_ctx_t *SvnContext::ctx()
 {
-    return &m_context;
+    return m_context;
 }
 
 // only use this pool for data that has a life time

@@ -3,7 +3,7 @@
 #
 #	include this mak file after defining the variables it needs
 #
-all: test-01.unix.new.log test-04.unix.new.log test-05.unix.new.log test-06.unix.new.log test-07.unix.new.log
+all: test-01.unix.new.log.clean test-04.unix.new.log test-05.unix.new.log test-06.unix.new.log test-07.unix.new.log
 
 # the extra tests rely on having a repos over HTTP.
 extratests: test-03.unix.new.log
@@ -23,6 +23,8 @@ clean: clean-01 clean-03 clean-04 clean-05 clean-06 clean-07
 test-01.unix.new.log: test-01.sh test-01.unix.known_good-$(SVN_VERSION_MAJ_MIN).log
 	-rm -rf testroot-01
 	PATH=$(SVN_BIN_DIR):$(PATH) PYTHON=$(PYTHON) ./test-01.sh >test-01.unix.new.log 2>&1
+
+test-01.unix.new.log.clean: test-01.unix.new.log
 	$(PYTHON) benchmark_diff.py test-01.unix.known_good-$(SVN_VERSION_MAJ_MIN).log test-01.unix.new.log
 
 clean-01:
@@ -30,7 +32,7 @@ clean-01:
 	-rm -f test-01.unix.new.log.clean
 	-rm -rf testroot-01
 
-diff-01: test-01.unix.new.log
+diff-01: test-01.unix.new.log.clean
 	wb-diff test-01.unix.known_good-$(SVN_VERSION_MAJ_MIN).log.clean test-01.unix.new.log.clean
 
 new-01: test-01.unix.new.log

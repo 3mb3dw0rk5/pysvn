@@ -105,7 +105,7 @@
 #define PYSVN_HAS_CLIENT_CHECKOUT3
 #define PYSVN_HAS_CLIENT_COMMIT4
 #define PYSVN_HAS_CLIENT_COPY4
-#define PYSVN_HAS_SVN_CLIENT_CTX_T__CONFLICT_FUNC QQQ
+#define PYSVN_HAS_SVN_CLIENT_CTX_T__CONFLICT_FUNC
 #define PYSVN_HAS_SVN_CLIENT_CTX_T__LOG_MSG_FUNC3 QQQ
 #define PYSVN_HAS_SVN_CLIENT_CTX_T__MIMETYPES_MAP QQQ
 #define PYSVN_HAS_CLIENT_DELETE3
@@ -142,9 +142,10 @@
 #define PYSVN_HAS_SVN_INFO_T__CHANGELIST
 #define PYSVN_HAS_SVN_INFO_T__SIZES
 #define PYSVN_HAS_SVN_WC_NOTIFY_ACTION_T__1_5 QQQ
-#define PYSVN_HAS_SVN_WC_CONFLICT_CHOICE_T QQQ
+#define PYSVN_HAS_SVN_WC_CONFLICT_CHOICE_T
 #endif
 
+// SVn 1.6 or later
 #if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 6) || SVN_VER_MAJOR > 1
 #define PYSVN_HAS_SVN_1_6
 #define PYSVN_HAS_CLIENT_COPY5
@@ -153,6 +154,8 @@
 #define PYSVN_HAS_CLIENT_STATUS4
 #define PYSVN_HAS_AUTH_GET_SIMPLE_PROVIDER2
 #define PYSVN_HAS_AUTH_GET_SSL_CLIENT_CERT_PW_FILE_PROVIDER2
+#define PYSVN_HAS_SVN_CLIENT_CTX_T__CONFLICT_FUNC_16
+#define PYSVN_HAS_SVN_WC_OPERATION_T
 #endif
 
 #if defined( PYSVN_HAS_CLIENT_STATUS3 )
@@ -232,11 +235,12 @@ public:
     //
     // @retval true continue
     //
+    void installGetLogin( bool install );
     virtual bool contextGetLogin
         (
-        const std::string & realm,
-        std::string & username, 
-        std::string & password,
+        const std::string &realm,
+        std::string &username, 
+        std::string &password,
         bool &may_save
         ) = 0;
 
@@ -244,6 +248,7 @@ public:
     // this method will be called to notify about
     // the progress of an ongoing action
     //
+    void installNotify( bool install );
 #if defined( PYSVN_HAS_CONTEXT_NOTIFY2 )
     virtual void contextNotify2
         (
@@ -265,10 +270,21 @@ public:
 
 
 #if defined( PYSVN_HAS_CONTEXT_PROGRESS )
+    void installProgress( bool install );
     virtual void contextProgress
         (
         apr_off_t progress,
         apr_off_t total
+        ) = 0;
+#endif
+
+#if defined( PYSVN_HAS_SVN_CLIENT_CTX_T__CONFLICT_FUNC )
+    void installConflictResolver( bool install );
+    virtual bool contextConflictResolver
+        (
+        svn_wc_conflict_result_t **result,
+        const svn_wc_conflict_description_t *description,
+        apr_pool_t *pool
         ) = 0;
 #endif
 
@@ -279,6 +295,7 @@ public:
     // @return cancel action?
     // @retval true cancel
     //
+    void installCancel( bool install );
     virtual bool contextCancel
         (
         ) = 0;
@@ -289,7 +306,7 @@ public:
     //
     virtual bool contextGetLogMessage
         (
-        std::string & msg
+        std::string &msg
         ) = 0;
 
     //
@@ -303,7 +320,7 @@ public:
         (
         const svn_auth_ssl_server_cert_info_t &info, 
         const std::string &relam,
-        apr_uint32_t & acceptedFailures,
+        apr_uint32_t &acceptedFailures,
         bool &accept_permanent
         ) = 0;
 
@@ -324,111 +341,15 @@ public:
     //
     virtual bool contextSslClientCertPwPrompt
         (
-        std::string & password,
+        std::string &password,
         const std::string &realm,
         bool &may_save
         ) = 0;
 
 private:
-#if 0
-#if defined( PYSVN_HAS_CONTEXT_LOG_MSG2 )
-    extern "C" static svn_error_t *handlerLogMsg2
-        (
-        const char **log_msg,
-        const char **tmp_file,
-        const apr_array_header_t *commit_items,
-        void *baton,
-        apr_pool_t *pool
-        );
-#else
-    extern "C" static svn_error_t *handlerLogMsg
-        (
-        const char **log_msg,
-        const char **tmp_file,
-        apr_array_header_t *commit_items,
-        void *baton,
-        apr_pool_t *pool
-        );
-#endif
-
-#if defined( PYSVN_HAS_CONTEXT_PROGRESS )
-    extern "C" static void handlerProgress
-        (
-        apr_off_t progress,
-        apr_off_t total,
-        void *baton,
-        apr_pool_t *pool
-        );
-#endif
-
-#if defined( PYSVN_HAS_CONTEXT_NOTIFY2 )
-    extern "C" static void handlerNotify2
-        (
-        void * baton,
-	const svn_wc_notify_t *notify,
-	apr_pool_t *pool        
-        );
-#else
-    extern "C" static void handlerNotify
-        (
-        void * baton,
-        const char *path,
-        svn_wc_notify_action_t action,
-        svn_node_kind_t kind,
-        const char *mime_type,
-        svn_wc_notify_state_t content_state,
-        svn_wc_notify_state_t prop_state,
-        svn_revnum_t revision
-        );
-#endif
-    extern "C" static svn_error_t *handlerCancel
-        (
-        void * baton
-        );
-
-    extern "C" static svn_error_t *handlerSimplePrompt
-        (
-        svn_auth_cred_simple_t **cred,
-        void *baton,
-        const char *realm,
-        const char *username, 
-        svn_boolean_t _may_save,
-        apr_pool_t *pool
-        );
-
-    extern "C" static svn_error_t *handlerSslServerTrustPrompt 
-        (
-        svn_auth_cred_ssl_server_trust_t **cred, 
-        void *baton,
-        const char *realm,
-        apr_uint32_t failures,
-        const svn_auth_ssl_server_cert_info_t *info,
-        svn_boolean_t may_save,
-        apr_pool_t *pool
-        );
-
-    extern "C" static svn_error_t *handlerSslClientCertPrompt 
-        (
-        svn_auth_cred_ssl_client_cert_t **cred, 
-        void *baton, 
-        const char *realm,
-        svn_boolean_t may_save,
-        apr_pool_t *pool
-        );
-
-    extern "C" static svn_error_t *handlerSslClientCertPwPrompt
-        (
-        svn_auth_cred_ssl_client_cert_pw_t **cred, 
-        void *baton, 
-        const char *realm,
-        svn_boolean_t maySave,
-        apr_pool_t *pool
-        );
-#endif
-private:
     apr_pool_t          *m_pool;
-    svn_client_ctx_t    m_context;
-    char *              m_config_dir;
+    svn_client_ctx_t    *m_context;
+    char                *m_config_dir;
 };
 
 class SvnTransaction

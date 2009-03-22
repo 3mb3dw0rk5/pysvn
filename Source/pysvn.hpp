@@ -62,6 +62,10 @@ public:     // data
 #if defined( PYSVN_HAS_CONTEXT_PROGRESS )
     Py::Object  m_pyfn_Progress;
 #endif
+#if defined( PYSVN_HAS_SVN_CLIENT_CTX_T__CONFLICT_FUNC )
+    Py::Object  m_pyfn_ConflictResolver;
+#endif
+
     Py::Object  m_pyfn_Cancel;
     Py::Object  m_pyfn_GetLogMessage;
     Py::Object  m_pyfn_SslServerPrompt;
@@ -118,6 +122,16 @@ private:    // methods
         apr_off_t total
         );
 #endif
+
+#if defined( PYSVN_HAS_SVN_CLIENT_CTX_T__CONFLICT_FUNC )
+    bool contextConflictResolver
+        (
+        svn_wc_conflict_result_t **result,
+        const svn_wc_conflict_description_t *description,
+        apr_pool_t *pool
+        );
+#endif
+
 
     //
     // this method will be called periodically to allow

@@ -36,6 +36,7 @@ static void init_py_names()
     }
 
     py_name_callback_cancel = new Py::String( name_callback_cancel );
+    py_name_callback_conflict_resolver = new Py::String( name_callback_conflict_resolver );
     py_name_callback_get_log_message = new Py::String( name_callback_get_log_message );
     py_name_callback_get_login = new Py::String( name_callback_get_login );
     py_name_callback_notify = new Py::String( name_callback_notify );
@@ -113,6 +114,7 @@ Py::Object pysvn_client::getattr( const char *_name )
         members.append( *py_name_callback_get_login );
         members.append( *py_name_callback_notify );
         members.append( *py_name_callback_cancel );
+        members.append( *py_name_callback_conflict_resolver );
         members.append( *py_name_callback_get_log_message );
         members.append( *py_name_callback_ssl_server_prompt );
         members.append( *py_name_callback_ssl_server_trust_prompt );
@@ -126,35 +128,63 @@ Py::Object pysvn_client::getattr( const char *_name )
 
     if( name == name_callback_get_login )
         return m_context.m_pyfn_GetLogin;
+
     if( name == name_callback_notify )
         return m_context.m_pyfn_Notify;
+
 #if defined( PYSVN_HAS_CONTEXT_PROGRESS )
     if( name == name_callback_progress )
         return m_context.m_pyfn_Progress;
 #endif
+
+#if defined( PYSVN_HAS_SVN_CLIENT_CTX_T__CONFLICT_FUNC )
+    if( name == name_callback_conflict_resolver )
+        return m_context.m_pyfn_ConflictResolver;
+#endif
+
     if( name == name_callback_cancel )
         return m_context.m_pyfn_Cancel;
+
     if( name == name_callback_get_log_message )
         return m_context.m_pyfn_GetLogMessage;
+
     if( name == name_callback_ssl_server_prompt )
         return m_context.m_pyfn_SslServerPrompt;
+
     if( name == name_callback_ssl_server_trust_prompt )
         return m_context.m_pyfn_SslServerTrustPrompt;
+
     if( name == name_callback_ssl_client_cert_prompt )
         return m_context.m_pyfn_SslClientCertPrompt;
+
     if( name == name_callback_ssl_client_cert_password_prompt )
         return m_context.m_pyfn_SslClientCertPwPrompt;
+
     if( name == name_exception_style )
         return Py::Int( m_exception_style );
+
     return getattr_default( _name );
 }
 
-static void set_callable( Py::Object &callback, const Py::Object &value )
+static bool set_callable( Py::Object &callback, const Py::Object &value )
 {
-    if( value.is( Py::None() ) || value.isCallable() )
+    if( value.isCallable() )
+    {
         callback = value;
+        return true;
+    }
+
     else
+    if( value.is( Py::None() ) )
+    {
+        callback = value;
+        return false;
+    }
+
+    else
+    {
         throw Py::AttributeError( "expecting None or a callable object" );
+    }
 }
 
 int pysvn_client::setattr( const char *_name, const Py::Object &value )
@@ -162,24 +192,38 @@ int pysvn_client::setattr( const char *_name, const Py::Object &value )
     std::string name( _name );
     if( name == name_callback_get_login )
         set_callable( m_context.m_pyfn_GetLogin, value );
+
     else if( name == name_callback_notify )
-        set_callable( m_context.m_pyfn_Notify, value );
+        m_context.installNotify( set_callable( m_context.m_pyfn_Notify, value ) );
+
 #if defined( PYSVN_HAS_CONTEXT_PROGRESS )
     else if( name == name_callback_progress )
-        set_callable( m_context.m_pyfn_Progress, value );
+        m_context.installProgress( set_callable( m_context.m_pyfn_Progress, value ) );
 #endif
+
+#if defined( PYSVN_HAS_SVN_CLIENT_CTX_T__CONFLICT_FUNC )
+    else if( name == name_callback_conflict_resolver )
+        m_context.installConflictResolver( set_callable( m_context.m_pyfn_ConflictResolver, value ) );
+#endif
+
     else if( name == name_callback_cancel )
-        set_callable( m_context.m_pyfn_Cancel, value );
+        m_context.installCancel( set_callable( m_context.m_pyfn_Cancel, value ) );
+
     else if( name == name_callback_get_log_message )
         set_callable( m_context.m_pyfn_GetLogMessage, value );
+
     else if( name == name_callback_ssl_server_prompt )
         set_callable( m_context.m_pyfn_SslServerPrompt, value );
+
     else if( name == name_callback_ssl_server_trust_prompt )
         set_callable( m_context.m_pyfn_SslServerTrustPrompt, value );
+
     else if( name == name_callback_ssl_client_cert_prompt )
         set_callable( m_context.m_pyfn_SslClientCertPrompt, value );
+
     else if( name == name_callback_ssl_client_cert_password_prompt )
         set_callable( m_context.m_pyfn_SslClientCertPwPrompt, value );
+
     else if( name == name_exception_style )
     {
         Py::Int style( value );
@@ -192,12 +236,14 @@ int pysvn_client::setattr( const char *_name, const Py::Object &value )
             throw Py::AttributeError( "exception_style value must be 0 or 1" );
         }
     }
+
     else
     {
         std::string msg( "Unknown attribute: " );
         msg += name;
         throw Py::AttributeError( msg );
     }
+
     return 0;
 }
 

@@ -18,8 +18,8 @@ Info: pysvn command: mkdir file:///Users/barry/wc/svn/pysvn/Extension/Tests/test
 Info: Testing - ls
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01
 Info: pysvn command: ls file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos -v -R
-      2 barry           0 01-Mar-2009 14:55:44 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk
-      2 barry           0 01-Mar-2009 14:55:44 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test
+      2 barry           0 22-Mar-2009 17:47:36 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk
+      2 barry           0 22-Mar-2009 17:47:36 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test
 Info: Testing - checkout
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01
 Info: pysvn command: checkout file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc1
@@ -101,14 +101,14 @@ Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc1/test
 Info: pysvn command: annotate /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file1.txt
 A /trunk/test/file1.txt
 A /trunk/test/file1.txt
-0| r3 | barry | 2009-03-01T14:55:46.705097Z | test add file 1
-1| r6 | barry | 2009-03-01T14:55:50.124342Z | line 2
+0| r3 | barry | 2009-03-22T17:47:37.718370Z | test add file 1
+1| r6 | barry | 2009-03-22T17:47:41.124077Z | line 2
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc1/test
 Info: pysvn command: annotate -r 3:4 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file6.txt
 A /trunk/test/file6.txt
 A /trunk/test/file6.txt
-0| r3 | barry | 2009-03-01T14:55:46.705097Z | test add file 6
-1| r4 | barry | 2009-03-01T14:55:47.128937Z | test mod file 6
+0| r3 | barry | 2009-03-22T17:47:37.718370Z | test add file 6
+1| r4 | barry | 2009-03-22T17:47:38.127278Z | test mod file 6
 Info: Testing - cat
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc1/test
 Info: pysvn command: cat -r head file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file1.txt
@@ -130,7 +130,7 @@ Log message
 --- -------
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc1/test
 Info: pysvn command: ls -v file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/tags
-      8 barry           0 01-Mar-2009 14:55:52 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/tags/version1
+      8 barry           0 22-Mar-2009 17:47:43 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/tags/version1
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc1/test
 Info: pysvn command: copy /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file1.txt /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file1b.txt
 A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file1b.txt
@@ -221,50 +221,50 @@ Info: pysvn command: info /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/
 Path: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test
 Name: .
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test
-Repository UUID: 8da29b93-4fef-4aab-a096-6c766137bd7e
+Repository UUID: d659f0d9-6a05-4864-bd42-5cbca54b391a
 Revision: 6
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 6
-Last Changed Date: 01-Mar-2009 14:55:50
+Last Changed Date: 22-Mar-2009 17:47:41
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc1/test
 Info: pysvn command: info /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file1.txt
 Path: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file1.txt
 Name: file1.txt
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file1.txt
-Repository UUID: 8da29b93-4fef-4aab-a096-6c766137bd7e
+Repository UUID: d659f0d9-6a05-4864-bd42-5cbca54b391a
 Revision: 6
 Node kind: file
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 6
-Last Changed Date: 01-Mar-2009 14:55:50
-Text Last Updated: 01-Mar-2009 14:55:51
+Last Changed Date: 22-Mar-2009 17:47:41
+Text Last Updated: 22-Mar-2009 17:47:42
 Checksum: d17a5219a23a23ce7f363b75e09ec043
 Info: Testing - log
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc1/test
 Info: pysvn command: log /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2
 ------------------------------------------------------------
-rev 9: barry | 01-Mar-2009 14:55:53 | 1 lines
+rev 9: barry | 22-Mar-2009 17:47:44 | 1 lines
 copy test
 ------------------------------------------------------------
-rev 6: barry | 01-Mar-2009 14:55:50 | 1 lines
+rev 6: barry | 22-Mar-2009 17:47:41 | 1 lines
 commit modified file
 ------------------------------------------------------------
-rev 5: barry | 01-Mar-2009 14:55:48 | 1 lines
+rev 5: barry | 22-Mar-2009 17:47:39 | 1 lines
 commit delete file
 ------------------------------------------------------------
-rev 4: barry | 01-Mar-2009 14:55:47 | 1 lines
+rev 4: barry | 22-Mar-2009 17:47:38 | 1 lines
 commit mod file
 ------------------------------------------------------------
-rev 3: barry | 01-Mar-2009 14:55:46 | 1 lines
+rev 3: barry | 22-Mar-2009 17:47:37 | 1 lines
 commit added files
 ------------------------------------------------------------
-rev 2: barry | 01-Mar-2009 14:55:44 | 1 lines
+rev 2: barry | 22-Mar-2009 17:47:36 | 1 lines
 test-01 add test
 ------------------------------------------------------------
-rev 1: barry | 01-Mar-2009 14:55:44 | 1 lines
+rev 1: barry | 22-Mar-2009 17:47:36 | 1 lines
 test-01 add trunk
 ------------------------------------------------------------
 Info: Testing - ls
@@ -278,12 +278,12 @@ file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/fi
 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file5.txt
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc1/test
 Info: pysvn command: ls -v file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test
-      6 barry          23 01-Mar-2009 14:55:50 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file1.txt
-      9 barry          23 01-Mar-2009 14:55:53 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file1b.txt
-      3 barry          16 01-Mar-2009 14:55:46 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file2.txt
-      3 barry          16 01-Mar-2009 14:55:46 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file3.txt
-      3 barry          16 01-Mar-2009 14:55:46 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file4.txt
-      3 barry          16 01-Mar-2009 14:55:46 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file5.txt
+      6 barry          23 22-Mar-2009 17:47:41 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file1.txt
+      9 barry          23 22-Mar-2009 17:47:44 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file1b.txt
+      3 barry          16 22-Mar-2009 17:47:37 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file2.txt
+      3 barry          16 22-Mar-2009 17:47:37 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file3.txt
+      3 barry          16 22-Mar-2009 17:47:37 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file4.txt
+      3 barry          16 22-Mar-2009 17:47:37 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk/test/file5.txt
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc1/test
 Info: pysvn command: ls /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test
 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file1.txt
@@ -294,12 +294,12 @@ Info: pysvn command: ls /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc
 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file5.txt
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc1/test
 Info: pysvn command: ls -v /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test
-      6 barry          23 01-Mar-2009 14:55:50 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file1.txt
-      9 barry          23 01-Mar-2009 14:55:53 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file1b.txt
-      3 barry          16 01-Mar-2009 14:55:46 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file2.txt
-      3 barry          16 01-Mar-2009 14:55:46 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file3.txt
-      3 barry          16 01-Mar-2009 14:55:46 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file4.txt
-      3 barry          16 01-Mar-2009 14:55:46 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file5.txt
+      6 barry          23 22-Mar-2009 17:47:41 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file1.txt
+      9 barry          23 22-Mar-2009 17:47:44 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file1b.txt
+      3 barry          16 22-Mar-2009 17:47:37 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file2.txt
+      3 barry          16 22-Mar-2009 17:47:37 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file3.txt
+      3 barry          16 22-Mar-2009 17:47:37 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file4.txt
+      3 barry          16 22-Mar-2009 17:47:37 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file5.txt
 Info: Testing - merge - done below
 Info: Testing - mkdir - done above
 Info: Testing - move
@@ -429,6 +429,19 @@ M /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc1/test/file4.txt
 Revision 13
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test
 Info: pysvn command: update /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test
+callback_conflict_resolver
+  action: <conflict_action.edit>
+  base_file: u'/Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/.svn/text-base/file4.txt.svn-base'
+  is_binary: False
+  kind: <conflict_kind.text>
+  merged_file: u'/Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/.svn/tmp/file4.txt.tmp'
+  mime_type: None
+  my_file: u'/Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/.svn/tmp/tempfile.2.tmp'
+  node_kind: <node_kind.file>
+  path: '/Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file4.txt'
+  property_name: None
+  reason: <conflict_reason.edited>
+  their_file: u'/Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/.svn/tmp/text-base/file4.txt.svn-base'
 A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file2b.txt
 D /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file2.txt
 U /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2
@@ -462,7 +475,7 @@ Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test
 Info: pysvn command: revproplist file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk
 Revision: 14
 svn:author: barry
-svn:date: 2009-03-01T14:56:02.307721Z
+svn:date: 2009-03-22T17:47:53.313042Z
 svn:log: resolve a confict part 2
 Info: Testing - revpropget
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test
@@ -494,13 +507,13 @@ Info: pysvn command: info /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/
 Path: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc1
 Name: .
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk
-Repository UUID: 8da29b93-4fef-4aab-a096-6c766137bd7e
+Repository UUID: d659f0d9-6a05-4864-bd42-5cbca54b391a
 Revision: 2
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 2
-Last Changed Date: 01-Mar-2009 14:55:44
+Last Changed Date: 22-Mar-2009 17:47:36
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test
 Info: pysvn command: relocate file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/root/repos/trunk /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc1
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test
@@ -508,25 +521,25 @@ Info: pysvn command: info /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/
 Path: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc1
 Name: .
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/root/repos/trunk
-Repository UUID: 8da29b93-4fef-4aab-a096-6c766137bd7e
+Repository UUID: d659f0d9-6a05-4864-bd42-5cbca54b391a
 Revision: 2
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 2
-Last Changed Date: 01-Mar-2009 14:55:44
+Last Changed Date: 22-Mar-2009 17:47:36
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test
 Info: pysvn command: info /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2
 Path: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2
 Name: .
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk
-Repository UUID: 8da29b93-4fef-4aab-a096-6c766137bd7e
+Repository UUID: d659f0d9-6a05-4864-bd42-5cbca54b391a
 Revision: 6
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 6
-Last Changed Date: 01-Mar-2009 14:55:50
+Last Changed Date: 22-Mar-2009 17:47:41
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test
 Info: pysvn command: relocate file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/root/repos/trunk /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test
@@ -534,26 +547,26 @@ Info: pysvn command: info /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/
 Path: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2
 Name: .
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/root/repos/trunk
-Repository UUID: 8da29b93-4fef-4aab-a096-6c766137bd7e
+Repository UUID: d659f0d9-6a05-4864-bd42-5cbca54b391a
 Revision: 6
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 6
-Last Changed Date: 01-Mar-2009 14:55:50
+Last Changed Date: 22-Mar-2009 17:47:41
 Info: Testing - switch
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test
 Info: pysvn command: info /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2
 Path: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2
 Name: .
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/root/repos/trunk
-Repository UUID: 8da29b93-4fef-4aab-a096-6c766137bd7e
+Repository UUID: d659f0d9-6a05-4864-bd42-5cbca54b391a
 Revision: 6
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 6
-Last Changed Date: 01-Mar-2009 14:55:50
+Last Changed Date: 22-Mar-2009 17:47:41
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test
 Info: pysvn command: switch /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/root/repos/tags/version1
 A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test/file2.txt
@@ -569,13 +582,13 @@ Info: pysvn command: info /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/
 Path: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2
 Name: .
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/root/repos/tags/version1
-Repository UUID: 8da29b93-4fef-4aab-a096-6c766137bd7e
+Repository UUID: d659f0d9-6a05-4864-bd42-5cbca54b391a
 Revision: 14
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 8
-Last Changed Date: 01-Mar-2009 14:55:52
+Last Changed Date: 22-Mar-2009 17:47:43
 Info: Testing - update - see above
 Info: Testing - merge
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test

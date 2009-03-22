@@ -70,7 +70,9 @@ public:
             );
 #endif
         if( error != NULL )
+        {
             throw SvnException( error );
+        }
     }
 
     

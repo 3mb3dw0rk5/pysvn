@@ -286,28 +286,51 @@ template <> EnumString< svn_diff_file_ignore_space_t >::EnumString()
 template <> EnumString< svn_client_diff_summarize_kind_t >::EnumString()
 : m_type_name( "diff_summarize" )
 {
-  /** An item with no text modifications */
-  add( svn_client_diff_summarize_kind_normal, "normal" );
+    /** An item with no text modifications */
+    add( svn_client_diff_summarize_kind_normal, "normal" );
 
-  /** An added item */
-  add( svn_client_diff_summarize_kind_added, "added" );
+    /** An added item */
+    add( svn_client_diff_summarize_kind_added, "added" );
 
-  /** An item with text modifications */
-  add( svn_client_diff_summarize_kind_modified, "modified" );
+    /** An item with text modifications */
+    add( svn_client_diff_summarize_kind_modified, "modified" );
 
-  /** A deleted item */
-  add( svn_client_diff_summarize_kind_deleted, "delete" );
+    /** A deleted item */
+    add( svn_client_diff_summarize_kind_deleted, "delete" );
 }
 #endif
 
-#if defined( QQQ )
+#if defined( PYSVN_HAS_SVN_WC_CONFLICT_CHOICE_T )
 template <> EnumString< svn_wc_conflict_action_t >::EnumString()
 : m_type_name( "conflict_action" )
 {
-  add( svn_wc_conflict_action_edit, "edit" );
-  add( svn_wc_conflict_action_add, "add" );
-  add( svn_wc_conflict_action_delete, "delete" );
+    add( svn_wc_conflict_action_edit, "edit" );
+    add( svn_wc_conflict_action_add, "add" );
+    add( svn_wc_conflict_action_delete, "delete" );
 }
+
+template <> EnumString< svn_wc_conflict_kind_t >::EnumString()
+: m_type_name( "conflict_kind" )
+{
+    add( svn_wc_conflict_kind_text, "text" );
+    add( svn_wc_conflict_kind_property, "property" );
+}
+
+template <> EnumString< svn_wc_conflict_reason_t >::EnumString()
+: m_type_name( "conflict_reason" )
+{
+    // local edits are already present
+    add( svn_wc_conflict_reason_edited, "edited" );
+    // another object is in the way
+    add( svn_wc_conflict_reason_obstructed, "obstructed" );
+    // object is already schedule-delete
+    add( svn_wc_conflict_reason_deleted, "deleted" );
+    // object is unknown or missing
+    add( svn_wc_conflict_reason_missing, "missing" );
+    // object is unversioned
+    add( svn_wc_conflict_reason_unversioned, "unversioned" );
+}
+
 #endif
 
 #if defined( PYSVN_HAS_SVN__DEPTH_PARAMETER )
@@ -327,19 +350,29 @@ template <> EnumString< svn_depth_t >::EnumString()
 #if defined( PYSVN_HAS_SVN_WC_CONFLICT_CHOICE_T )
 template <> EnumString< svn_wc_conflict_choice_t >::EnumString()
 {
-  // Don't resolve the conflict now.  Let libsvn_wc mark the path
-  // 'conflicted', so user can run 'svn resolved' later.
-  add( svn_wc_conflict_choose_postpone, "postpone" );
+    // Don't resolve the conflict now.  Let libsvn_wc mark the path
+    // 'conflicted', so user can run 'svn resolved' later.
+    add( svn_wc_conflict_choose_postpone, "postpone" );
 
-  // If their were files to choose from, select one as a way of
-  // resolving the conflict here and now.  libsvn_wc will then do the
-  // work of "installing" the chosen file.
-  add( svn_wc_conflict_choose_base, "base" );   // user chooses the original version
-  add( svn_wc_conflict_choose_theirs_full, "theirs_full" ); // user chooses incoming version
-  add( svn_wc_conflict_choose_mine_full, "mine_full" );   // user chooses own version
-  add( svn_wc_conflict_choose_theirs_conflict, "theirs_conflict" ); // user chooses incoming (for conflicted hunks)
-  add( svn_wc_conflict_choose_mine_conflict, "mine_conflict" );   // user chooses own (for conflicted hunks)
-  add( svn_wc_conflict_choose_merged, "merged" ); // user chooses the merged version
+    // If their were files to choose from, select one as a way of
+    // resolving the conflict here and now.  libsvn_wc will then do the
+    // work of "installing" the chosen file.
+    add( svn_wc_conflict_choose_base, "base" );   // user chooses the original version
+    add( svn_wc_conflict_choose_theirs_full, "theirs_full" ); // user chooses incoming version
+    add( svn_wc_conflict_choose_mine_full, "mine_full" );   // user chooses own version
+    add( svn_wc_conflict_choose_theirs_conflict, "theirs_conflict" ); // user chooses incoming (for conflicted hunks)
+    add( svn_wc_conflict_choose_mine_conflict, "mine_conflict" );   // user chooses own (for conflicted hunks)
+    add( svn_wc_conflict_choose_merged, "merged" ); // user chooses the merged version
+}
+#endif
+
+#if defined( PYSVN_HAS_SVN_WC_OPERATION_T )
+template <> EnumString< svn_wc_operation_t >::EnumString()
+{
+    add( svn_wc_operation_none, "none" );
+    add( svn_wc_operation_update, "update" );
+    add( svn_wc_operation_switch, "switch" );
+    add( svn_wc_operation_merge, "merge" );
 }
 #endif
 
@@ -529,6 +562,7 @@ template <> void pysvn_enum_value< svn_depth_t >::init_type(void)
     behaviors().supportHash();
 }
 #endif
+
 #if defined( PYSVN_HAS_SVN_WC_CONFLICT_CHOICE_T )
 template <> void pysvn_enum< svn_wc_conflict_choice_t >::init_type(void)
 {
@@ -541,6 +575,75 @@ template <> void pysvn_enum_value< svn_wc_conflict_choice_t >::init_type(void)
 {
     behaviors().name("wc_conflict_choice");
     behaviors().doc("wc_conflict_choice value");
+    behaviors().supportCompare();
+    behaviors().supportRichCompare();
+    behaviors().supportRepr();
+    behaviors().supportStr();
+    behaviors().supportHash();
+}
+
+
+template <> void pysvn_enum< svn_wc_conflict_action_t >::init_type(void)
+{
+    behaviors().name("wc_conflict_action");
+    behaviors().doc("wc_conflict_action enumeration");
+    behaviors().supportGetattr();
+}
+
+template <> void pysvn_enum_value< svn_wc_conflict_action_t >::init_type(void)
+{
+    behaviors().name("wc_conflict_action");
+    behaviors().doc("wc_conflict_action value");
+    behaviors().supportCompare();
+    behaviors().supportRichCompare();
+    behaviors().supportRepr();
+    behaviors().supportStr();
+    behaviors().supportHash();
+}
+
+
+template <> void pysvn_enum< svn_wc_conflict_kind_t >::init_type(void)
+{
+    behaviors().name("wc_conflict_kind");
+    behaviors().doc("wc_conflict_kind enumeration");
+    behaviors().supportGetattr();
+}
+
+template <> void pysvn_enum_value< svn_wc_conflict_kind_t >::init_type(void)
+{
+    behaviors().name("wc_conflict_kind");
+    behaviors().doc("wc_conflict_kind value");
+    behaviors().supportCompare();
+    behaviors().supportRichCompare();
+    behaviors().supportRepr();
+    behaviors().supportStr();
+    behaviors().supportHash();
+}
+
+template <> void pysvn_enum< svn_wc_conflict_reason_t >::init_type(void)
+{
+    behaviors().name("wc_conflict_reason");
+    behaviors().doc("wc_conflict_reason enumeration");
+    behaviors().supportGetattr();
+}
+
+template <> void pysvn_enum_value< svn_wc_conflict_reason_t >::init_type(void)
+{
+    behaviors().name("wc_conflict_reason");
+    behaviors().doc("wc_conflict_reason value");
+    behaviors().supportCompare();
+    behaviors().supportRichCompare();
+    behaviors().supportRepr();
+    behaviors().supportStr();
+    behaviors().supportHash();
+}
+#endif
+
+#if defined( PYSVN_HAS_SVN_WC_OPERATION_T )
+template <> void pysvn_enum_value< svn_wc_operation_t >::init_type(void)
+{
+    behaviors().name("wc_operation");
+    behaviors().doc("wc_operation value");
     behaviors().supportCompare();
     behaviors().supportRichCompare();
     behaviors().supportRepr();

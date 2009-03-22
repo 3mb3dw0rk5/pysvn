@@ -165,6 +165,9 @@ class SvnCommand:
         self.client.callback_get_log_message = self.callback_getLogMessage
         self.client.callback_notify = self.callback_notify
         self.client.callback_cancel = self.callback_cancel
+        if hasattr( self.client, 'callback_conflict_resolver' ):
+            self.client.callback_conflict_resolver = self.callback_conflict_resolver
+        self.client.callback_cancel = self.callback_cancel
         self.client.callback_ssl_client_cert_password_prompt = self.callback_ssl_client_cert_password_prompt
         self.client.callback_ssl_client_cert_prompt = self.callback_ssl_client_cert_prompt
         self.client.callback_ssl_server_prompt = self.callback_ssl_server_prompt
@@ -205,6 +208,13 @@ class SvnCommand:
                 self.notify_message_list.append( msg )
             else:
                 print( msg )
+
+    def callback_conflict_resolver( self, arg_dict ):
+        print( 'callback_conflict_resolver' )
+        for key in sorted( arg_dict.keys() ):
+            print( '  %s: %r' % (key, arg_dict[ key ]) )
+
+        return pysvn.wc_conflict_choice.postpone, None, False
 
     def callback_getLogin( self, realm, username, may_save ):
         print( 'May save: %s ' % may_save )
@@ -396,7 +406,6 @@ class SvnCommand:
             print( 'No tmp dir!' )
             return
 
-        tmpdir = os.path.join( tmpdir, 'svn_tmp' )
         self.debug( 'cmd_diff %r, %r, %r, %r, %r' % (tmpdir, positional_args[0], recurse, revision1, revision2) )
         diff_text = self.client.diff( tmpdir, positional_args[0], recurse=recurse,
                                             revision1=revision1, revision2=revision2,

@@ -80,11 +80,20 @@ pysvn_module::pysvn_module()
 #if defined( PYSVN_HAS_SVN_WC_CONFLICT_CHOICE_T )
     pysvn_enum< svn_wc_conflict_choice_t >::init_type();
     pysvn_enum_value< svn_wc_conflict_choice_t >::init_type();
+
+    pysvn_enum< svn_wc_conflict_action_t >::init_type();
+    pysvn_enum_value< svn_wc_conflict_action_t >::init_type();
+
+    pysvn_enum< svn_wc_conflict_kind_t >::init_type();
+    pysvn_enum_value< svn_wc_conflict_kind_t >::init_type();
+
+    pysvn_enum< svn_wc_conflict_reason_t >::init_type();
+    pysvn_enum_value< svn_wc_conflict_reason_t >::init_type();
 #endif
 
-    add_keyword_method("_Client", &pysvn_module::new_client, pysvn_client_doc);
-    add_keyword_method("Revision", &pysvn_module::new_revision, pysvn_revision_doc);
-    add_keyword_method("_Transaction", &pysvn_module::new_transaction, pysvn_transaction_doc);
+    add_keyword_method( "_Client", &pysvn_module::new_client, pysvn_client_doc );
+    add_keyword_method( "Revision", &pysvn_module::new_revision, pysvn_revision_doc );
+    add_keyword_method( "_Transaction", &pysvn_module::new_transaction, pysvn_transaction_doc );
 
     initialize( pysvn_module_doc );
 
@@ -136,6 +145,12 @@ pysvn_module::pysvn_module()
 #endif
 #if defined( PYSVN_HAS_SVN_WC_CONFLICT_CHOICE_T )
     d["wc_conflict_choice"] = Py::asObject( new pysvn_enum< svn_wc_conflict_choice_t >() );
+    d["wc_conflict_action"] = Py::asObject( new pysvn_enum< svn_wc_conflict_action_t >() );
+    d["wc_conflict_kind"] = Py::asObject( new pysvn_enum< svn_wc_conflict_kind_t >() );
+    d["wc_conflict_reason"] = Py::asObject( new pysvn_enum< svn_wc_conflict_reason_t >() );
+#endif
+#if defined( PYSVN_HAS_SVN_WC_OPERATION_T )
+    d["wc_operation"] = Py::asObject( new pysvn_enum< svn_wc_operation_t >() );
 #endif
 }
 
