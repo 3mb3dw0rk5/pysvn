@@ -274,10 +274,15 @@ bool pysvn_context::contextConflictResolver
             merged_file = svn_string_ncreate( std_merged_file.data(), std_merged_file.length(), getContextPool() )->data;
         }
 
+#if defined( PYSVN_HAS_SVN_WC_CONFLICT_RESULT_T__SAVE_MERGED )
         svn_boolean_t save_merged = py_result[2].isTrue() ? TRUE : FALSE;
+#endif
 
         *result = svn_wc_create_conflict_result( choice, merged_file, conflict_resolver_pool );
+
+#if defined( PYSVN_HAS_SVN_WC_CONFLICT_RESULT_T__SAVE_MERGED )
         (*result)->save_merged = save_merged;
+#endif
 
         return true;
     }
