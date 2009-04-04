@@ -218,7 +218,7 @@ Py::Object toConflictDescription( const svn_wc_conflict_description_t *descripti
     desc["node_kind"] = toEnumValue( description->node_kind );
     desc["kind"] = toEnumValue( description->kind );
     desc["property_name"] = utf8_string_or_none( description->property_name );
-    desc["is_binary"] = Py::Boolean( description->is_binary );
+    desc["is_binary"] = Py::Boolean( description->is_binary != 0 );
     desc["mime_type"] = utf8_string_or_none( description->mime_type );
     desc["action"] = toEnumValue( description->action );
     desc["reason"] = toEnumValue( description->reason );
