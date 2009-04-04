@@ -1981,7 +1981,9 @@ revision. Set recurse to True to recursively update a directory's
 children. <span class="svn_1002000">Set ignore_externals to True to ignore externals definitions.</span>
 </p>
 <div class="svn_1005000">
-<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
+<p>The depth can be used in place of recurse. depth is one of the pysvn.depth enums.
+Use pysvn.depth.unknown to update all files and folders in the working copy honoring the current depths.
+Use pysvn.depth.infinity to upadate all files and folders adding any that are missing ignoring the current depths.
 </p>
 </div>
 <p>update returns a pysvn.Revision containing the number of the
