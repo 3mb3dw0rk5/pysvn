@@ -129,18 +129,22 @@ class MakeFileCreater:
 
         include_dir_list = []
 
-        # add python include dirs
-        include_dir_list.append( distutils.sysconfig.get_python_inc() )
-        if distutils.sysconfig.get_python_inc() != distutils.sysconfig.get_python_inc( True ):
-            include_dir_list.append( distutils.sysconfig.get_python_inc( True ) )
-        print( 'Info: Found Python include in %s' % ' '.join( include_dir_list ) )
-
         # add pycxx include
         pycxx_dir = self.find_pycxx( argv )
         include_dir_list.append( pycxx_dir )
         # add pycxx source
         pycxx_src_dir = self.find_pycxx_src( argv, pycxx_dir )
         include_dir_list.append( pycxx_src_dir )
+
+        # must add python after pyxx because some distributions have pycxx inside of the
+        # python include dir
+
+        # add python include dirs
+        include_dir_list.append( distutils.sysconfig.get_python_inc() )
+        if distutils.sysconfig.get_python_inc() != distutils.sysconfig.get_python_inc( True ):
+            include_dir_list.append( distutils.sysconfig.get_python_inc( True ) )
+        print( 'Info: Found Python include in %s' % ' '.join( include_dir_list ) )
+
         # add SVN include
         svn_include = self.find_svn_inc( argv )
         include_dir_list.append( svn_include )
