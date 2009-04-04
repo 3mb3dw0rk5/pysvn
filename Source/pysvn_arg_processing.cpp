@@ -348,6 +348,7 @@ svn_depth_t FunctionArguments::getDepth
     const char *depth_name,
     const char *recursive_name,
     svn_depth_t default_value,
+    svn_depth_t recursive_true_value,
     svn_depth_t recursive_false_value
     )
 {
@@ -365,7 +366,7 @@ svn_depth_t FunctionArguments::getDepth
     {
         if( getBoolean( recursive_name ) )
         {
-            return svn_depth_infinity;
+            return recursive_true_value;
         }
         else
         {

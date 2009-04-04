@@ -497,7 +497,7 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
         changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
     }
 
-    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity, svn_depth_empty );
+    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity, svn_depth_infinity, svn_depth_empty );
 #else
     bool recurse = args.getBoolean( name_recurse, true );
 #endif
@@ -1220,7 +1220,7 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
         changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
     }
 
-    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity, svn_depth_immediates );
+    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity, svn_depth_infinity, svn_depth_immediates );
 #else
     bool recurse = args.getBoolean( name_recurse, true );
 #endif

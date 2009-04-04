@@ -264,7 +264,7 @@ Py::Object pysvn_client::cmd_list( const Py::Tuple &a_args, const Py::Dict &a_kw
     else
          revision = args.getRevision( name_revision, svn_opt_revision_working );
 #if defined( PYSVN_HAS_CLIENT_LIST2 )
-    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files, svn_depth_immediates );
+    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files, svn_depth_infinity, svn_depth_immediates );
 #else
     bool recurse = args.getBoolean( name_recurse, false );
 #endif

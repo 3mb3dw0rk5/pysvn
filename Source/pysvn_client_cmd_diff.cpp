@@ -152,7 +152,7 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
     std::string path2( args.getUtf8String( name_url_or_path2, path1 ) );
     svn_opt_revision_t revision2 = args.getRevision( name_revision2, svn_opt_revision_working );
 #if defined( PYSVN_HAS_CLIENT_DIFF4 )
-    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity );
+    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity, svn_depth_infinity, svn_depth_files );
 #else
     bool recurse = args.getBoolean( name_recurse, true );
 #endif
@@ -344,7 +344,7 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
     SvnPool pool( m_context );
 
 #if defined( PYSVN_HAS_CLIENT_DIFF_PEG4 )
-    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity );
+    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity, svn_depth_infinity, svn_depth_files );
     std::string std_relative_to_dir;
     const char *relative_to_dir = NULL;
     if( args.hasArg( name_relative_to_dir ) )
@@ -578,7 +578,7 @@ Py::Object pysvn_client::cmd_diff_summarize( const Py::Tuple &a_args, const Py::
     SvnPool pool( m_context );
 
 #if defined( PYSVN_HAS_CLIENT_DIFF_SUMMARIZE2 )
-    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity );
+    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity, svn_depth_infinity, svn_depth_files );
 
     apr_array_header_t *changelists = NULL;
 
@@ -678,7 +678,7 @@ Py::Object pysvn_client::cmd_diff_summarize_peg( const Py::Tuple &a_args, const 
     SvnPool pool( m_context );
 
 #if defined( PYSVN_HAS_CLIENT_DIFF_SUMMARIZE_PEG2 )
-    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity );
+    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity, svn_depth_infinity, svn_depth_files );
     apr_array_header_t *changelists = NULL;
 
     if( args.hasArg( name_changelists ) )

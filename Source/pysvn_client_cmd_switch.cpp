@@ -91,7 +91,7 @@ Py::Object pysvn_client::cmd_switch( const Py::Tuple &a_args, const Py::Dict &a_
     std::string url( args.getUtf8String( name_url ) );
     svn_opt_revision_t revision = args.getRevision( name_revision, svn_opt_revision_head );
 #if defined( PYSVN_HAS_CLIENT_SWITCH2 )
-    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity );
+    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity, svn_depth_infinity, svn_depth_files );
 #else
     bool recurse = args.getBoolean( name_recurse, true );
 #endif

@@ -64,7 +64,7 @@ Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a
 #endif
 #if defined( PYSVN_HAS_CLIENT_COMMIT4 )
         type_error_message = "expecting recurse or depth keyword arg";
-        svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity );
+        svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity, svn_depth_infinity, svn_depth_files );
 
         bool keep_changelist = args.getBoolean( name_keep_changelist, false );
         apr_array_header_t *changelists = NULL;
@@ -181,7 +181,7 @@ Py::Object pysvn_client::cmd_checkout( const Py::Tuple &a_args, const Py::Dict &
     std::string path( args.getUtf8String( name_path ) );
 #if defined( PYSVN_HAS_CLIENT_CHECKOUT3 )
     bool allow_unver_obstructions = args.getBoolean( name_allow_unver_obstructions, false );
-    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity );
+    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity, svn_depth_infinity, svn_depth_files );
 #else
     bool recurse = args.getBoolean( name_recurse, true );
 #endif
@@ -320,7 +320,7 @@ Py::Object pysvn_client::cmd_resolved( const Py::Tuple &a_args, const Py::Dict &
 
     std::string path( args.getUtf8String( name_path ) );
 #if defined( PYSVN_HAS_CLIENT_RESOLVE )
-    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files );
+    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files, svn_depth_infinity, svn_depth_files );
     svn_wc_conflict_choice_t conflict_choice = args.getWcConflictChoice(
                                 name_conflict_choice, svn_wc_conflict_choose_merged );
 #else
@@ -395,7 +395,7 @@ Py::Object pysvn_client::cmd_update( const Py::Tuple &a_args, const Py::Dict &a_
 
     svn_opt_revision_t revision = args.getRevision( name_revision, svn_opt_revision_head );
 #if defined( PYSVN_HAS_CLIENT_UPDATE3 )
-    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity );
+    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_unknown, svn_depth_unknown, svn_depth_files );
     bool depth_is_sticky = args.getBoolean( name_depth_is_sticky, false );
     bool allow_unver_obstructions = args.getBoolean( name_allow_unver_obstructions, false );
 #else

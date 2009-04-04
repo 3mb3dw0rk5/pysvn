@@ -78,7 +78,7 @@ Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_
 #endif
 #if defined( PYSVN_HAS_CLIENT_EXPORT3 )
 #if defined( PYSVN_HAS_CLIENT_EXPORT4 )
-    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity );
+    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity, svn_depth_infinity, svn_depth_files );
 #else
     bool recurse = args.getBoolean( name_recurse, true );
 #endif
@@ -199,7 +199,7 @@ Py::Object pysvn_client::cmd_import( const Py::Tuple &a_args, const Py::Dict &a_
     SvnPool pool( m_context );
 
 #if defined( PYSVN_HAS_CLIENT_IMPORT3 )
-    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity );
+    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity, svn_depth_infinity, svn_depth_files );
     bool ignore_unknown_node_types = args.getBoolean( name_ignore_unknown_node_types, false );
 
     apr_hash_t *revprops = NULL;
