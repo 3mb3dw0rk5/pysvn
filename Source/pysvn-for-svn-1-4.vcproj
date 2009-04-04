@@ -440,8 +440,7 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Info: Brand version info"
-					CommandLine="PATH=L:\BuildRoot\Win32-MSVC71-1.4.6\subversion-1.4.6\Release\bin;%PATH%
-%PY%\python ..\Builder\brand_version.py ..\Builder\version.info &quot;$(InputPath)&quot;
+					CommandLine="%PY%\python ..\Builder\brand_version.py ..\Builder\version.info &quot;$(InputPath)&quot;
 "
 					Outputs=".\pysvn.rc"/>
 			</FileConfiguration>
@@ -1330,8 +1329,7 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Info: Brand version info"
-					CommandLine="PATH=L:\BuildRoot\Win32-MSVC71-1.4.6\subversion-1.4.6\Release\bin;%PATH%
-%PY%\python ..\Builder\brand_version.py ..\Builder\version.info &quot;$(InputPath)&quot;
+					CommandLine="%PY%\python ..\Builder\brand_version.py ..\Builder\version.info &quot;$(InputPath)&quot;
 "
 					Outputs=".\pysvn_version.hpp"/>
 			</FileConfiguration>
