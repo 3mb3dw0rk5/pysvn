@@ -1,5 +1,6 @@
 WorkDir: L:\wc\pysvn\trunk\pysvn\Extension
 PYTHON: c:\python23\python.exe
+Username: barry
 
 L:\wc\pysvn\trunk\pysvn\Extension\Tests >setlocal
 

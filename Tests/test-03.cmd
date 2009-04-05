@@ -1,6 +1,7 @@
 @prompt $P$S$G
 @echo WorkDir: %WORKDIR%
 @echo PYTHON: %PYTHON%
+@echo Username: %USERNAME%
 
 setlocal
 mkdir testroot-03
