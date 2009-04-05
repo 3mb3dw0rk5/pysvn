@@ -46,7 +46,7 @@ kit-1.5:
 	cd ..\kit\Win32-1.5 & $(MAKE) all_msvc90
 
 kit-1.6:
-	cd ..\kit\Win32-1.6 & $(MAKE) all_msvc90
+	cd ..\kit\Win32-1.5 & $(MAKE) all_msvc90
 
 install: install-$(SVN_VER_MAJ_MIN)
 
