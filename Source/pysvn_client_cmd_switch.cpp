@@ -43,20 +43,24 @@ Py::Object pysvn_client::cmd_relocate( const Py::Tuple &a_args, const Py::Dict &
     try
     {
         std::string norm_path( svnNormalisedIfPath( path, pool ) );
+        std::string norm_to_url( svnNormalisedIfPath( to_url, pool ) );
+        std::string norm_from_url( svnNormalisedIfPath( from_url, pool ) );
 
         checkThreadPermission();
 
         PythonAllowThreads permission( m_context );
-        svn_error_t * error = svn_client_relocate
+
+        svn_error_t *error = svn_client_relocate
             (
             norm_path.c_str(),
-            from_url.c_str(),
-            to_url.c_str(),
+            norm_from_url.c_str(),
+            norm_to_url.c_str(),
             recurse,
             m_context,
             pool
             );
         permission.allowThisThread();
+
         if( error != NULL )
             throw SvnException( error );
     }
@@ -101,6 +105,7 @@ Py::Object pysvn_client::cmd_switch( const Py::Tuple &a_args, const Py::Dict &a_
     try
     {
         std::string norm_path( svnNormalisedIfPath( path, pool ) );
+        std::string norm_url( svnNormalisedIfPath( url, pool ) );
 
         checkThreadPermission();
 
@@ -111,7 +116,7 @@ Py::Object pysvn_client::cmd_switch( const Py::Tuple &a_args, const Py::Dict &a_
             (
             &revnum,
             norm_path.c_str(),
-            url.c_str(),
+            norm_url.c_str(),
             &revision,
             depth,
             m_context,
@@ -122,7 +127,7 @@ Py::Object pysvn_client::cmd_switch( const Py::Tuple &a_args, const Py::Dict &a_
             (
             &revnum,
             norm_path.c_str(),
-            url.c_str(),
+            norm_url.c_str(),
             &revision,
             recurse,
             m_context,
