@@ -282,11 +282,11 @@ class SvnCommand:
             self.notify_message_list = []
 
     def cmd_version( self, args ):
-        print( 'PYSVN Version: %s' % pysvn.version )
-        print( 'SVN Version: %s' % pysvn.svn_version )
+        print( 'PYSVN Version: %r' % (pysvn.version,) )
+        print( 'SVN Version: %r' % (pysvn.svn_version,) )
         if hasattr( pysvn, 'svn_api_version' ):
-            print( 'SVN API Version: %s' % pysvn.svn_api_version )
-        print( 'pysvn._pysvn %s' % pysvn._pysvn )
+            print( 'SVN API Version: %r' % (pysvn.svn_api_version,) )
+        print( 'pysvn._pysvn %r' % (pysvn._pysvn,) )
 
 
     def cmd_is_url( self, args ):

@@ -4,12 +4,16 @@ for %%I in ( %0\..\.. ) do set WORKDIR=%%~fI
 
 set PY_MAJ=2
 if not "%1" == "" set PY_MAJ=%1
-set PY_MIN=5
+set PY_MIN=6
 if not "%2" == "" set PY_MIN=%2
-set BUILD_TYPE=Release
 if not "%3" == "" set BUILD_TYPE=%3
 if not "%4" == "" set SVN_VER_MAJ_MIN=%4
-if "%SVN_VER_MAJ_MIN%" == "" set /p SVN_VER_MAJ_MIN=Build Version:
+
+if "%BUILD_TYPE%" == "" set /p BUILD_TYPE="Build type: "
+if "%BUILD_TYPE%" == "" set BUILD_TYPE=Release
+
+
+if "%SVN_VER_MAJ_MIN%" == "" set /p SVN_VER_MAJ_MIN="Build Version: "
 if "%SVN_VER_MAJ_MIN%" == "" goto :eof
 
 rem Save CWD
@@ -27,6 +31,9 @@ if exist ..\..\ReleaseEngineering\win32-%COMPILER%\software-versions-%SVN_VER_MA
     call software-versions-%SVN_VER_MAJ_MIN%.cmd off
     popd
     )
+
+if "%PY_MAJ%" == "2" set PYCXX_VER=%PY2CXX_VER%
+if "%PY_MAJ%" == "3" set PYCXX_VER=%PY3CXX_VER%
 
 set PYCXX=%WORKDIR%\Import\pycxx-%PYCXX_VER%
 set OPENSSL=%TARGET%\openssl-%OPENSSL_VER%

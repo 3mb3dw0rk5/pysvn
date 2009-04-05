@@ -2,6 +2,7 @@
 @prompt $P$S$G
 @echo WorkDir: %WORKDIR%
 @echo PYTHON: %PYTHON%
+@echo Username: %USERNAME%
 
 setlocal
 set PYTHONPATH=%WORKDIR%\Source;%WORKDIR%\Examples\Client
