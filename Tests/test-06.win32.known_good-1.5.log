@@ -1,5 +1,6 @@
 WorkDir: L:\wc\pysvn\trunk\pysvn\Extension
 PYTHON: c:\python24\python.exe
+Username: barry
 Info: PYSVN CMD c:\python24\python.exe L:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing 01.03.00 --config-dir b:\configdir
 
 Info: CMD mkdir testroot-06
