@@ -43,7 +43,7 @@ kit-1.5:
 	cd ..\kit\Win32-1.5 & $(MAKE) all_msvc71
 
 kit-1.6:
-	cd ..\kit\Win32-1.5 & $(MAKE) all_msvc71
+	cd ..\kit\Win32-1.6 & $(MAKE) all_msvc71
 
 install: install-$(SVN_VER_MAJ_MIN)
 
