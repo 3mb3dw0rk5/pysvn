@@ -3,7 +3,7 @@
 #
 import os
 
-print 'Info: setup_version_handling.py'
+print 'Info: setup vesion info'
 import sys
 sys.path.insert( 0, '../../Source')
 import pysvn
