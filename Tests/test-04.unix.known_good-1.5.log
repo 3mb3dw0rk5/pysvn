@@ -1,51 +1,51 @@
-WorkDir: /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25
-PYTHON: /usr/bin/python2.5
+WorkDir: /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25
+PYTHON: /Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python
 Username: bscott
 Info: Command: mkdir testroot-04
 Info: Command: cd testroot-04
 Info: Command: mkdir tmp
-Info: Command: svnadmin create /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/repos
+Info: Command: svnadmin create /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/repos
 Info: Testing - mkdir
-Info: Command: /usr/bin/python2.5 /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/configdir mkdir file:///home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/repos/trunk -m test-04 add trunk
-Info: Command: /usr/bin/python2.5 /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/configdir mkdir file:///home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/repos/trunk/test -m test-04 add test
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/configdir mkdir file:///Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/repos/trunk -m test-04 add trunk
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/configdir mkdir file:///Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/repos/trunk/test -m test-04 add test
 Info: Install hooks
-Info: Command: /usr/bin/python2.5 /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/configdir mkdir file:///home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/repos/trunk/test/a -m pre-commit test 1
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/configdir mkdir file:///Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/repos/trunk/test/a -m pre-commit test 1
 Info: test_1.output start ----------------------------------------
-/usr/bin/python2.5 /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/test_04_pre_commit_test_1.py /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/repos 2-2
+/Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/test_04_pre_commit_test_1.py /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/repos 2-2
 Info: pre commit test 1
-Info: Transaction( /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/repos, 2-2) ...
+Info: Transaction( /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/repos, 2-2) ...
 Info: revproplist() ...
 svn:log: pre-commit test 1
 svn:check-locks: true
 svn:author: bscott
-svn:date: 2009-04-14T10:43:13.928444Z
+svn:date: 2009-04-17T15:22:53.727841Z
 Info: changed() ...
 trunk/test/a: action='A', kind=<node_kind.dir>, text_mod=0, prop_mod=0
 Info: changed( copy_info=True ) ...
 trunk/test/a: action='A', kind=<node_kind.dir>, text_mod=0, prop_mod=0 copyfrom_rev=0 copyfrom_path=None
 Info: test_1.output end ------------------------------------------
 Info: Add two files
-Info: Command: /usr/bin/python2.5 /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/configdir checkout file:///home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/repos/trunk/test /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/wc
-A /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/wc/a
-U /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/wc
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/configdir checkout file:///Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/repos/trunk/test /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/wc
+A /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/wc/a
+U /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/wc
 Checked out revision 3
-Info: Command: /usr/bin/python2.5 /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/configdir add /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/wc/file1.txt
-A /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/wc/file1.txt
-Info: Command: /usr/bin/python2.5 /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/configdir add /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/wc/a/file1.txt
-A /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/wc/a/file1.txt
-Info: Command: /usr/bin/python2.5 /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/configdir checkin -m Add two files /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/wc
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/configdir add /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/wc/file1.txt
+A /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/wc/file1.txt
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/configdir add /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/wc/a/file1.txt
+A /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/wc/a/file1.txt
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/configdir checkin -m Add two files /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/wc
 A wc/a/file1.txt
 A wc/file1.txt
 Revision 4
 Info: test_1.output start ----------------------------------------
-/usr/bin/python2.5 /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/test_04_pre_commit_test_1.py /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/repos 3-3
+/Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/test_04_pre_commit_test_1.py /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/repos 3-3
 Info: pre commit test 1
-Info: Transaction( /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/repos, 3-3) ...
+Info: Transaction( /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/repos, 3-3) ...
 Info: revproplist() ...
 svn:log: Add two files
 svn:check-locks: true
 svn:author: bscott
-svn:date: 2009-04-14T10:43:15.345876Z
+svn:date: 2009-04-17T15:22:55.621602Z
 Info: changed() ...
 trunk/test/a/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0
      contents: 'file1 A\n'
@@ -58,20 +58,20 @@ trunk/test/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0 
      contents: 'file1 ROOT\n'
 Info: test_1.output end ------------------------------------------
 Info: Mod one file Mod one prop
-Info: Command: /usr/bin/python2.5 /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/configdir propset svn:eol-style native /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/wc/a/file1.txt
-Info: Command: /usr/bin/python2.5 /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/configdir checkin -m Mod one file Mod one prop /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/wc
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/configdir propset svn:eol-style native /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/wc/a/file1.txt
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/configdir checkin -m Mod one file Mod one prop /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/wc
 M wc/a/file1.txt
 M wc/file1.txt
 Revision 5
 Info: test_1.output start ----------------------------------------
-/usr/bin/python2.5 /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/test_04_pre_commit_test_1.py /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/repos 4-4
+/Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/test_04_pre_commit_test_1.py /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/repos 4-4
 Info: pre commit test 1
-Info: Transaction( /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/repos, 4-4) ...
+Info: Transaction( /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/repos, 4-4) ...
 Info: revproplist() ...
 svn:log: Mod one file Mod one prop
 svn:check-locks: true
 svn:author: bscott
-svn:date: 2009-04-14T10:43:16.290871Z
+svn:date: 2009-04-17T15:22:56.483707Z
 Info: changed() ...
 trunk/test/a/file1.txt: action='R', kind=<node_kind.file>, text_mod=0, prop_mod=1
      svn:eol-style: native
@@ -86,46 +86,44 @@ trunk/test/file1.txt: action='R', kind=<node_kind.file>, text_mod=1, prop_mod=0 
      contents: 'file1 ROOT ln 2\n'
 Info: test_1.output end ------------------------------------------
 Info: Delete one file
-Info: Command: /usr/bin/python2.5 /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/configdir rm /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/wc/a/file1.txt
-D /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/wc/a/file1.txt
-Info: Command: /usr/bin/python2.5 /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/configdir checkin -m Delete one file /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/wc
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/configdir rm /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/wc/a/file1.txt
+D /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/wc/a/file1.txt
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/configdir checkin -m Delete one file /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/wc
 D wc/a/file1.txt
 Revision 6
 Info: test_1.output start ----------------------------------------
-/usr/bin/python2.5 /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/test_04_pre_commit_test_1.py /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/repos 5-5
+/Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/test_04_pre_commit_test_1.py /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/repos 5-5
 Info: pre commit test 1
-Info: Transaction( /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/repos, 5-5) ...
+Info: Transaction( /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/repos, 5-5) ...
 Info: revproplist() ...
 svn:log: Delete one file
 svn:check-locks: true
 svn:author: bscott
-svn:date: 2009-04-14T10:43:17.266246Z
+svn:date: 2009-04-17T15:22:57.458015Z
 Info: changed() ...
 trunk/test/a/file1.txt: action='D', kind=<node_kind.file>, text_mod=0, prop_mod=0
 Info: changed( copy_info=True ) ...
 trunk/test/a/file1.txt: action='D', kind=<node_kind.file>, text_mod=0, prop_mod=0 copyfrom_rev=0 copyfrom_path=None
 Info: test_1.output end ------------------------------------------
 Info: Copy one file
-Info: Command: /usr/bin/python2.5 /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/configdir cp /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/wc/file1.txt /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/wc/file1copy.txt
-A /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/wc/file1copy.txt
-Info: Command: /usr/bin/python2.5 /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/configdir checkin -m Copy one file /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/wc
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/configdir cp /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/wc/file1.txt /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/wc/file1copy.txt
+A /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/wc/file1copy.txt
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/configdir checkin -m Copy one file /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/wc
 A wc/file1copy.txt
 Revision 7
 Info: test_1.output start ----------------------------------------
-/usr/bin/python2.5 /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/test_04_pre_commit_test_1.py /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/repos 6-6
+/Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/test_04_pre_commit_test_1.py /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/repos 6-6
 Info: pre commit test 1
-Info: Transaction( /home/bscott/BuildTemp/Linux_f8barry/pysvn/py25/Tests/testroot-04/repos, 6-6) ...
+Info: Transaction( /Users/bscott/BuildTemp/Darwin_macmini/svn-1.5.6/pysvn/py25/Tests/testroot-04/repos, 6-6) ...
 Info: revproplist() ...
 svn:log: Copy one file
 svn:check-locks: true
 svn:author: bscott
-svn:date: 2009-04-14T10:43:19.187849Z
+svn:date: 2009-04-17T15:22:59.276332Z
 Info: changed() ...
-trunk/test/file1copy.txt: action='A', kind=<node_kind.file>, text_mod=0, prop_mod=1
-     svn:mergeinfo: 
+trunk/test/file1copy.txt: action='A', kind=<node_kind.file>, text_mod=0, prop_mod=0
      contents: 'file1 ROOT ln 2\n'
 Info: changed( copy_info=True ) ...
-trunk/test/file1copy.txt: action='A', kind=<node_kind.file>, text_mod=0, prop_mod=1 copyfrom_rev=5 copyfrom_path=u'/trunk/test/file1.txt'
-     svn:mergeinfo: 
+trunk/test/file1copy.txt: action='A', kind=<node_kind.file>, text_mod=0, prop_mod=0 copyfrom_rev=5 copyfrom_path=u'/trunk/test/file1.txt'
      contents: 'file1 ROOT ln 2\n'
 Info: test_1.output end ------------------------------------------
