@@ -824,7 +824,7 @@ extern Py::Object toObject
     const svn_lock_t &lock,
     const DictWrapper &wrapper_lock
     );
-
+#endif
 
 extern void revisionKindCompatibleCheck
     (
@@ -834,5 +834,4 @@ extern void revisionKindCompatibleCheck
     const char *url_or_path_name
     );
 
-#endif
 //--------------------------------------------------------------------------------
