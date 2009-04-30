@@ -329,6 +329,7 @@ private:
     Py::Dict            m_result_wrappers;
     pysvn_context       m_context;
     int                 m_exception_style;
+    int                 m_commit_info_style;
 
     DictWrapper         m_wrapper_status;
     DictWrapper         m_wrapper_entry;
@@ -792,7 +793,7 @@ extern apr_array_header_t *arrayOfStringsFromListOfStrings( Py::Object arg, SvnP
 extern apr_hash_t *hashOfStringsFromDistOfStrings( Py::Object arg, SvnPool &pool );
 
 Py::Object toObject( apr_time_t t );
-Py::Object toObject( pysvn_commit_info_t *commit_info );
+Py::Object toObject( pysvn_commit_info_t *commit_info, int commit_style );
 
 extern Py::Object toObject
     (

@@ -21,10 +21,8 @@
 #include "pysvn_static_strings.hpp"
 
 static const std::string str_URL( "URL" );
+static const std::string str_author( "author" );
 static const std::string str_changelist( "changelist" );
-static const std::string str_depth( "depth" );
-static const std::string str_working_size( "working_size" );
-static const std::string str_size( "size" );
 static const std::string str_checksum( "checksum" );
 static const std::string str_comment( "comment" );
 static const std::string str_commit_author( "commit_author" );
@@ -38,6 +36,8 @@ static const std::string str_copy_from_url( "copy_from_url" );
 static const std::string str_copyfrom_rev( "copyfrom_rev" );
 static const std::string str_copyfrom_url( "copyfrom_url" );
 static const std::string str_creation_date( "creation_date" );
+static const std::string str_date( "date" );
+static const std::string str_depth( "depth" );
 static const std::string str_entry( "entry" );
 static const std::string str_expiration_date( "expiration_date" );
 static const std::string str_is_absent( "is_absent" );
@@ -59,6 +59,7 @@ static const std::string str_lock_token( "lock_token" );
 static const std::string str_name( "name" );
 static const std::string str_owner( "owner" );
 static const std::string str_path( "path" );
+static const std::string str_post_commit_err( "post_commit_err" );
 static const std::string str_prejfile( "prejfile" );
 static const std::string str_prop_status( "prop_status" );
 static const std::string str_prop_time( "prop_time" );
@@ -73,12 +74,14 @@ static const std::string str_repos_text_status( "repos_text_status" );
 static const std::string str_rev( "rev" );
 static const std::string str_revision( "revision" );
 static const std::string str_schedule( "schedule" );
+static const std::string str_size( "size" );
 static const std::string str_text_status( "text_status" );
 static const std::string str_text_time( "text_time" );
 static const std::string str_token( "token" );
 static const std::string str_url( "url" );
 static const std::string str_uuid( "uuid" );
 static const std::string str_wc_info( "wc_info" );
+static const std::string str_working_size( "working_size" );
 
 #include <iostream>
 
@@ -186,12 +189,42 @@ Py::Object toObject( apr_time_t t )
 }
 
 #if defined( PYSVN_HAS_SVN_COMMIT_INFO_T )
-Py::Object toObject( pysvn_commit_info_t *commit_info )
+Py::Object toObject( pysvn_commit_info_t *commit_info, int commit_style )
 {
-    if( commit_info == NULL || !SVN_IS_VALID_REVNUM( commit_info->revision ) )
+    if( commit_info == NULL )
         return Py::None();
 
-    return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, commit_info->revision ) );
+    if( commit_style == 0 )
+    {
+        if( !SVN_IS_VALID_REVNUM( commit_info->revision ) )
+            return Py::None();
+
+        return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, commit_info->revision ) );
+    }
+    else
+    if( commit_style == 1 )
+    {
+        Py::Dict commit_info_dict;
+
+        commit_info_dict[ str_date ] = utf8_string_or_none( commit_info->date );
+        commit_info_dict[ str_author ] = utf8_string_or_none( commit_info->author );
+        commit_info_dict[ str_post_commit_err ] = utf8_string_or_none( commit_info->post_commit_err );
+        if( SVN_IS_VALID_REVNUM( commit_info->revision ) )
+        {
+            commit_info_dict[ str_revision ] =
+                Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, commit_info->revision ) );
+        }
+        else
+        {
+            commit_info_dict[ str_revision ] = Py::None();
+        }
+
+        return commit_info_dict;
+    }
+    else
+    {
+        throw Py::RuntimeError( "commit_style value invalid" );
+    }
 }
 #else
 Py::Object toObject( pysvn_commit_info_t *commit_info )

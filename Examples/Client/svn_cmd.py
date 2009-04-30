@@ -161,6 +161,7 @@ class SvnCommand:
     def initClient( self, config_dir ):
         self.client = pysvn.Client( config_dir )
         self.client.exception_style = 1
+        self.client.commit_info_style = 1
         self.client.callback_get_login = self.callback_getLogin
         self.client.callback_get_log_message = self.callback_getLogMessage
         self.client.callback_notify = self.callback_notify
@@ -367,7 +368,8 @@ class SvnCommand:
         if msg == '':
             msg = self.getLogMessage()
             
-        rev = self.client.checkin( positional_args, msg, recurse=recurse )
+        commit_info = self.client.checkin( positional_args, msg, recurse=recurse )
+        rev = commit_info["revision"]
         self.printNotifyMessages()
 
         if rev is None:

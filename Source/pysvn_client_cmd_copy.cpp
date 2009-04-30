@@ -206,7 +206,7 @@ Py::Object pysvn_client::cmd_copy2( const Py::Tuple &a_args, const Py::Dict &a_k
         throw Py::TypeError( type_error_message );
     }
 
-    return toObject( commit_info );
+    return toObject( commit_info, m_commit_info_style );
 }
 #endif
 
@@ -298,7 +298,7 @@ Py::Object pysvn_client::cmd_copy( const Py::Tuple &a_args, const Py::Dict &a_kw
         throw Py::TypeError( type_error_message );
     }
 
-    return toObject( commit_info );
+    return toObject( commit_info, m_commit_info_style );
 }
 
 #if defined( PYSVN_HAS_CLIENT_MOVE5 )
@@ -404,7 +404,7 @@ Py::Object pysvn_client::cmd_move2( const Py::Tuple &a_args, const Py::Dict &a_k
         throw Py::TypeError( type_error_message );
     }
 
-    return toObject( commit_info );
+    return toObject( commit_info, m_commit_info_style );
 }
 #endif
 
@@ -509,5 +509,5 @@ Py::Object pysvn_client::cmd_move( const Py::Tuple &a_args, const Py::Dict &a_kw
         throw Py::TypeError( type_error_message );
     }
 
-    return toObject( commit_info );
+    return toObject( commit_info, m_commit_info_style );
 }

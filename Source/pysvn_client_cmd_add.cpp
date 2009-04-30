@@ -301,7 +301,7 @@ Py::Object pysvn_client::cmd_mkdir( const Py::Tuple &a_args, const Py::Dict &a_k
         throw_client_error( e );
     }
 
-    return toObject( commit_info );
+    return toObject( commit_info, m_commit_info_style );
 }
 
 Py::Object pysvn_client::cmd_remove( const Py::Tuple &a_args, const Py::Dict &a_kws )
@@ -388,7 +388,7 @@ Py::Object pysvn_client::cmd_remove( const Py::Tuple &a_args, const Py::Dict &a_
         throw_client_error( e );
     }
 
-    return toObject( commit_info );
+    return toObject( commit_info, m_commit_info_style );
 }
 
 Py::Object pysvn_client::cmd_revert( const Py::Tuple &a_args, const Py::Dict &a_kws )

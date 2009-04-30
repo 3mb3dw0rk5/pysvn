@@ -277,5 +277,5 @@ Py::Object pysvn_client::cmd_import( const Py::Tuple &a_args, const Py::Dict &a_
         throw_client_error( e );
     }
 
-    return toObject( commit_info );
+    return toObject( commit_info, m_commit_info_style );
 }

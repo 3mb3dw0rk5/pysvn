@@ -153,7 +153,7 @@ Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a
         throw Py::TypeError( type_error_message );
     }
 
-    return toObject( commit_info );
+    return toObject( commit_info, m_commit_info_style );
 }
 
 Py::Object pysvn_client::cmd_checkout( const Py::Tuple &a_args, const Py::Dict &a_kws )

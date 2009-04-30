@@ -141,7 +141,7 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a
     }
 
 #if defined( PYSVN_HAS_CLIENT_PROPSET3 )
-    return toObject( commit_info );
+    return toObject( commit_info, m_commit_info_style );
 #else
     return Py::None();
 #endif
@@ -599,7 +599,7 @@ Py::Object pysvn_client::cmd_propset( const Py::Tuple &a_args, const Py::Dict &a
     }
 
 #if defined( PYSVN_HAS_CLIENT_PROPSET3 )
-    return toObject( commit_info );
+    return toObject( commit_info, m_commit_info_style );
 #else
     return Py::None();
 #endif

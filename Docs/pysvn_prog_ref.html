@@ -177,6 +177,9 @@ the value 'client in use on another thread'.
 <p><a href="#pysvn_client_exception_style">exception_style</a> allows you to control the style of exception raised by pysvn.
 </p>
 
+<p><a href="#pysvn_client_commit_info_style">commit_info_style</a> allows you to control the style of commit_info returned by pysvn.
+</p>
+
 <h4><a name="pysvn_client_exception_style"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.exception_style</a></h4>
 <p>exception_style is used to control how pysvn raises <a href="#pysvn_clienterror">ClientError</a>
 exceptions.
@@ -188,6 +191,16 @@ to pysvn 1.1.2.
 for details of effect of the style on the exception raised.
 </p>
 
+
+<h4><a name="pysvn_client_commit_info_style"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.commit_info_style</a></h4>
+<p>commit_info_style is used to control how pysvn return commit information.
+</p>
+<p>commit_info_style can be set to 0 or 1.
+The default value, 0, makes pysvn return only the commit revision.
+</p>
+
+<p>When set to 1 pysvn returns a dictionary of commit information including date, author, revision and post_commit_err.
+</p>
 
 <h3><a name="pysvn_client_callbacks">Client callbacks</a></h3>
 

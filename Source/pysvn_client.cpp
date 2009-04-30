@@ -44,6 +44,7 @@ static void init_py_names()
     py_name_callback_ssl_client_cert_prompt = new Py::String( name_callback_ssl_client_cert_prompt );
     py_name_callback_ssl_server_prompt = new Py::String( name_callback_ssl_server_prompt );
     py_name_callback_ssl_server_trust_prompt = new Py::String( name_callback_ssl_server_trust_prompt );
+    py_name_commit_info_style = new Py::String( name_commit_info_style );
     py_name_created_rev = new Py::String( name_created_rev );
     py_name_exception_style = new Py::String( name_exception_style );
     py_name_has_props = new Py::String( name_has_props );
@@ -83,6 +84,7 @@ pysvn_client::pysvn_client
 , m_result_wrappers( result_wrappers )
 , m_context( config_dir )
 , m_exception_style( 0 )
+, m_commit_info_style( 0 )
 , m_wrapper_status( result_wrappers, name_wrapper_status )
 , m_wrapper_entry( result_wrappers, name_wrapper_entry )
 , m_wrapper_info( result_wrappers, name_wrapper_info )
@@ -122,6 +124,7 @@ Py::Object pysvn_client::getattr( const char *_name )
         members.append( *py_name_callback_ssl_client_cert_password_prompt );
 
         members.append( *py_name_exception_style );
+        members.append( *py_name_commit_info_style );
 
         return members;
     }
@@ -160,8 +163,14 @@ Py::Object pysvn_client::getattr( const char *_name )
     if( name == name_callback_ssl_client_cert_password_prompt )
         return m_context.m_pyfn_SslClientCertPwPrompt;
 
+    if( name == name_callback_ssl_client_cert_password_prompt )
+        return m_context.m_pyfn_SslClientCertPwPrompt;
+
     if( name == name_exception_style )
         return Py::Int( m_exception_style );
+
+    if( name == name_commit_info_style )
+        return Py::Int( m_commit_info_style );
 
     return getattr_default( _name );
 }
@@ -234,6 +243,19 @@ int pysvn_client::setattr( const char *_name, const Py::Object &value )
             else
         {
             throw Py::AttributeError( "exception_style value must be 0 or 1" );
+        }
+    }
+
+    else if( name == name_commit_info_style )
+    {
+        Py::Int style( value );
+        if( style == 0l || style == 1l )
+        {
+            m_commit_info_style = style;
+        }
+            else
+        {
+            throw Py::AttributeError( "commit_info_style value must be 0 or 1" );
         }
     }
 
