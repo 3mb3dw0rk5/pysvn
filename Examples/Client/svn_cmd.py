@@ -372,12 +372,16 @@ class SvnCommand:
         rev = commit_info["revision"]
         self.printNotifyMessages()
 
+        if commit_info['post_commit_err'] is not None:
+            print commit_info['post_commit_err']
+
         if rev is None:
             print( 'Nothing to commit' )
         elif rev.number > 0:
             print( 'Revision %s' % rev.number )
         else:
             print( 'Commit failed' )
+
 
     cmd_commit = cmd_checkin
     cmd_ci = cmd_checkin
