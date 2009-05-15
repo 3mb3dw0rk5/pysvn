@@ -718,10 +718,7 @@ LDLIBS= \
 '''
 
     def find_pycxx( self, argv ):
-        if sys.version_info[0] >= 3:
-            pycxx_version = (6, 1, 0)
-        else:
-            pycxx_version = (5, 5, 0)
+        pycxx_version = (6, 1, 0)
 
         pycxx_dir = self.find_dir( argv,
                     'PyCXX include',
