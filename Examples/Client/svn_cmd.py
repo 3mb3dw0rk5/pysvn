@@ -373,7 +373,7 @@ class SvnCommand:
         self.printNotifyMessages()
 
         if commit_info['post_commit_err'] is not None:
-            print commit_info['post_commit_err']
+            print( commit_info['post_commit_err'] )
 
         if rev is None:
             print( 'Nothing to commit' )
