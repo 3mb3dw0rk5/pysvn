@@ -5,7 +5,7 @@ if [ ! -z "$1" ]
 then
     PREF_VER=$1.$2
 else
-    PREF_VER=
+    PREF_VER=3.1
 fi
 
 for PY_VER in ${PREF_VER} 2.7 2.6 2.5 2.4 2.3 2.2
@@ -24,5 +24,5 @@ then
     # prove the python version selected is as expected
     ${PYTHON} -c "import sys;print( 'Info: Python Version %r' % sys.version )"
 else
-    echo "Error: Cannot find python${PY_MAJ}.${PY_MIN} on the PATH"
+    echo "Error: Cannot find python${PREF_VER} on the PATH"
 fi

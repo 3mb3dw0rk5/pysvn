@@ -232,6 +232,7 @@ class MakeFileCreater:
 
         major, minor, patch = self.getSvnVersion( svn_include )
         template_values[ 'svn_version_maj_min' ] = '%d.%d' % (major, minor)
+        template_values[ 'py_version_maj' ] = '%d' % (sys.version_info[0],)
 
         makefile = open( 'Makefile', 'w' )
         if self.platform == 'darwin' and self.is_mac_os_x:
@@ -340,6 +341,7 @@ class MakeFileCreater:
 #
 PYTHON=%(python_exe)s
 SVN_VERSION_MAJ_MIN=%(svn_version_maj_min)s
+PY_VERSION_MAJ=%(py_version_maj)s
 SVN_BIN_DIR=%(svn_bin_dir)s
 #include pysvn_test_common.mak
 '''
