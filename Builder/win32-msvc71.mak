@@ -59,10 +59,11 @@ install-1.6:
 test: test-$(SVN_VER_MAJ_MIN)
 
 test-1.4:
-	cd  ..\Tests & $(MAKE) -f win32.mak SVN_VER_MAJ_MIN=1.4
+	cd  ..\Tests & $(MAKE) -f win32.mak SVN_VER_MAJ_MIN=1.4 KNOWN_GOOD_VERSION=py$(PY_MAJ)-svn$(SVN_VER_MAJ_MIN)
 
 test-1.5:
-	cd  ..\Tests & $(MAKE) -f win32.mak SVN_VER_MAJ_MIN=1.5
+	cd  ..\Tests & $(MAKE) -f win32.mak SVN_VER_MAJ_MIN=1.5 KNOWN_GOOD_VERSION=py$(PY_MAJ)-svn$(SVN_VER_MAJ_MIN)
 
 test-1.6:
-	cd  ..\Tests & $(MAKE) -f win32.mak SVN_VER_MAJ_MIN=1.6
+	cd  ..\Tests & $(MAKE) -f win32.mak SVN_VER_MAJ_MIN=1.6 KNOWN_GOOD_VERSION=py$(PY_MAJ)-svn$(SVN_VER_MAJ_MIN)
+

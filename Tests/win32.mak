@@ -1,5 +1,3 @@
-KNOWN_GOOD_VERSION=py$(PY_VER_MAJ)-svn$(SVN_VER_MAJ_MIN)
-
 all: test-01.win32.new.log test-03.win32.new.log test-04.win32.new.log test-05.win32.new.log test-06.win32.new.log
 
 clean: clean-01 clean-03 clean-04 clean-05 clean-06
@@ -92,4 +90,21 @@ diff-06: test-06.win32.new.log
 
 new-06: test-06.win32.new.log
 	copy test-06.win32.new.log test-06.win32.known_good-$(KNOWN_GOOD_VERSION).log
+
+test-07.win32.new.log: test-07.cmd test-07.win32.known_good-$(KNOWN_GOOD_VERSION).log
+	-subst b: /d >nul 2>&1
+	if exist testroot-07 rmdir /s /q testroot-07
+	test-07.cmd >test-07.win32.new.log 2>&1
+	python benchmark_diff.py test-07.win32.known_good-$(KNOWN_GOOD_VERSION).log test-07.win32.new.log
+
+clean-07:
+	-subst b: /d >nul 2>&1
+	if exist test-07.win32.new.log del test-07.win32.new.log
+	if exist testroot-07 rmdir /s /q testroot-07
+
+diff-07: test-07.win32.new.log
+	$(WB_DIFF) test-07.win32.known_good-$(KNOWN_GOOD_VERSION).log.clean test-07.win32.new.log.clean
+
+new-07: test-07.win32.new.log
+	copy test-07.win32.new.log test-07.win32.known_good-$(KNOWN_GOOD_VERSION).log
 
