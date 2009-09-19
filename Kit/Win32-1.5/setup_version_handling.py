@@ -1,4 +1,4 @@
-print 'Info: setup_version_handling.py'
+print( 'Info: setup_version_handling.py' )
 import sys
 sys.path.insert( 0, '..\\..\\Source')
 import pysvn
@@ -15,7 +15,7 @@ svn_version_string = '%d.%d.%d' % (pysvn.svn_version[0], pysvn.svn_version[1], p
 build_time  = time.time()
 build_time_str = time.strftime( '%d-%b-%Y %H:%M', time.localtime( build_time ) )
 
-print 'Info: Create info_before.txt'
+print( 'Info: Create info_before.txt' )
 
 f = open( 'tmp\\info_before.txt', 'w' )
 f.write(
@@ -28,7 +28,7 @@ f.write(
 ''' % (pysvn_version_string, python_version_string, svn_version_string, build_time_str) )
 f.close()
 
-print 'Info: Creating pysvn-branded.iss from pysvn.iss'
+print( 'Info: Creating pysvn-branded.iss from pysvn.iss' )
 f = open( 'pysvn.iss', 'r' )
 pysvn_iss_text = f.read()
 f.close()
@@ -39,7 +39,7 @@ branding = {
 	'py_min': py_min,
 	'pysvn_version_string': pysvn_version_string,
 	}
-print 'Info:',repr(branding)
+print( 'Info:',repr(branding) )
 f.write( pysvn_iss_text % branding )
 f.close()
 
@@ -54,7 +54,7 @@ else:
 
 
 
-print 'Info: Creating %s from pysvn.iss' % msvc_system_files_iss
+print( 'Info: Creating %s from pysvn.iss' % msvc_system_files_iss )
 f = open( msvc_system_files_iss, 'r' )
 pysvn_iss_text = f.read()
 f.close()
@@ -65,11 +65,11 @@ branding = {
 	'py_min': py_min,
 	'pysvn_version_string': pysvn_version_string,
 	}
-print 'Info:',repr(branding)
+print( 'Info:',repr(branding) )
 f.write( pysvn_iss_text % branding )
 f.close()
 
-print 'Info: Create setup_copy.cmd'
+print( 'Info: Create setup_copy.cmd' )
 f = open( 'tmp\\setup_copy.cmd', 'w' )
 f.write( 'copy tmp\\Output\\setup.exe tmp\\Output\\py%d%d-pysvn-svn%s-%s.exe\n' %
 	(py_maj, py_min, svn_version_package_string, pysvn_version_string) )

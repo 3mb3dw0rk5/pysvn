@@ -1,11 +1,11 @@
-WorkDir: C:\wc\pysvn\trunk\pysvn\Extension
-PYTHON: c:\python26\python.exe
+WorkDir: C:\BuildRoot\Win32-MSVC90-1.6.5\pysvn\py31
+PYTHON: c:\python31\python.exe
 Username: barry
-Info: PYSVN CMD c:\python26\python.exe C:\wc\pysvn\trunk\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing 01.01.00 --config-dir b:\configdir
+Info: PYSVN CMD c:\python31\python.exe C:\BuildRoot\Win32-MSVC90-1.6.5\pysvn\py31\Examples\Client\svn_cmd.py --pysvn-testing 01.01.00 --config-dir b:\configdir
 
 Info: CMD mkdir testroot-01
 
-Info: CMD subst b: C:\wc\pysvn\trunk\pysvn\Extension\Tests\testroot-01
+Info: CMD subst b: C:\BuildRoot\Win32-MSVC90-1.6.5\pysvn\py31\Tests\testroot-01
 
 Info: CMD cd /d b:\
 
@@ -18,8 +18,8 @@ Info: PYSVN CMD mkdir file:///b:/repos/trunk/test -m "test-01 add test"
 Info: Test - ls
 
 Info: PYSVN CMD ls file:///b:/repos -v -R
-      2 barry           0 05-Apr-2009 15:06:04 file:///B:/repos/trunk
-      2 barry           0 05-Apr-2009 15:06:04 file:///B:/repos/trunk/test
+      2 barry           0 19-Sep-2009 08:36:15 file:///B:/repos/trunk
+      2 barry           0 19-Sep-2009 08:36:15 file:///B:/repos/trunk/test
 Info: Test - checkout
 
 Info: PYSVN CMD checkout file:///b:/repos/trunk b:\wc1
@@ -109,8 +109,8 @@ Info: Test - annotate
 Info: PYSVN CMD annotate b:\wc2\test\file1.txt
 A /trunk/test/file1.txt
 A /trunk/test/file1.txt
-0| r3 | barry | 2009-04-05T14:06:08.527546Z | test add file 1
-1| r4 | barry | 2009-04-05T14:06:09.996315Z | line 2
+0| r3 | barry | 2009-09-19T07:36:19.750875Z | test add file 1
+1| r4 | barry | 2009-09-19T07:36:20.954000Z | line 2
 Info: Test - cat
 
 Info: PYSVN CMD cat -r head file:///b:/repos/trunk/test/file1.txt
@@ -128,7 +128,7 @@ Log message
 --- -------
 
 Info: PYSVN CMD ls -v file:///b:/repos/tags
-      6 barry           0 05-Apr-2009 15:06:12 file:///B:/repos/tags/version1
+      6 barry           0 19-Sep-2009 08:36:23 file:///B:/repos/tags/version1
 
 Info: PYSVN CMD copy b:\wc2\test\file1.txt b:\wc2\test\file1b.txt
 A b:/wc2/test/file1b.txt
@@ -228,44 +228,44 @@ Info: PYSVN CMD info b:\wc2\test
 Path: b:\wc2\test
 Name: .
 Url: file:///B:/repos/trunk/test
-Repository UUID: e48f127c-22f6-c447-ab4c-7c6e13123a9e
+Repository UUID: 5eadd729-3d8d-8740-84c6-daa7cd61cf4b
 Revision: 4
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 05-Apr-2009 15:06:09
+Last Changed Date: 19-Sep-2009 08:36:20
 
 Info: PYSVN CMD info b:\wc2\test\file1.txt
 Path: b:\wc2\test\file1.txt
 Name: file1.txt
 Url: file:///B:/repos/trunk/test/file1.txt
-Repository UUID: e48f127c-22f6-c447-ab4c-7c6e13123a9e
+Repository UUID: 5eadd729-3d8d-8740-84c6-daa7cd61cf4b
 Revision: 4
 Node kind: file
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 05-Apr-2009 15:06:09
-Text Last Updated: 05-Apr-2009 15:06:11
+Last Changed Date: 19-Sep-2009 08:36:20
+Text Last Updated: 19-Sep-2009 08:36:21
 Checksum: cb0b37e264ebcc467e9f37a069e034d7
 Info: Test - log
 
 Info: PYSVN CMD log b:\wc2
 ------------------------------------------------------------
-rev 7: barry | 05-Apr-2009 15:06:14 | 1 lines
+rev 7: barry | 19-Sep-2009 08:36:26 | 1 lines
 copy test
 ------------------------------------------------------------
-rev 4: barry | 05-Apr-2009 15:06:09 | 1 lines
+rev 4: barry | 19-Sep-2009 08:36:20 | 1 lines
 commit modified file
 ------------------------------------------------------------
-rev 3: barry | 05-Apr-2009 15:06:08 | 1 lines
+rev 3: barry | 19-Sep-2009 08:36:19 | 1 lines
 commit added files
 ------------------------------------------------------------
-rev 2: barry | 05-Apr-2009 15:06:04 | 1 lines
+rev 2: barry | 19-Sep-2009 08:36:15 | 1 lines
 test-01 add test
 ------------------------------------------------------------
-rev 1: barry | 05-Apr-2009 15:06:03 | 1 lines
+rev 1: barry | 19-Sep-2009 08:36:15 | 1 lines
 test-01 add trunk
 ------------------------------------------------------------
 Info: Test - ls
@@ -279,12 +279,12 @@ file:///B:/repos/trunk/test/file4.txt
 file:///B:/repos/trunk/test/file5.txt
 
 Info: PYSVN CMD ls -v file:///b:/repos/trunk/test
-      4 barry          25 05-Apr-2009 15:06:09 file:///B:/repos/trunk/test/file1.txt
-      7 barry          23 05-Apr-2009 15:06:14 file:///B:/repos/trunk/test/file1b.txt
-      3 barry          17 05-Apr-2009 15:06:08 file:///B:/repos/trunk/test/file2.txt
-      3 barry          17 05-Apr-2009 15:06:08 file:///B:/repos/trunk/test/file3.txt
-      3 barry          17 05-Apr-2009 15:06:08 file:///B:/repos/trunk/test/file4.txt
-      3 barry          17 05-Apr-2009 15:06:08 file:///B:/repos/trunk/test/file5.txt
+      4 barry          25 19-Sep-2009 08:36:20 file:///B:/repos/trunk/test/file1.txt
+      7 barry          23 19-Sep-2009 08:36:26 file:///B:/repos/trunk/test/file1b.txt
+      3 barry          17 19-Sep-2009 08:36:19 file:///B:/repos/trunk/test/file2.txt
+      3 barry          17 19-Sep-2009 08:36:19 file:///B:/repos/trunk/test/file3.txt
+      3 barry          17 19-Sep-2009 08:36:19 file:///B:/repos/trunk/test/file4.txt
+      3 barry          17 19-Sep-2009 08:36:19 file:///B:/repos/trunk/test/file5.txt
 
 Info: PYSVN CMD ls b:\wc2\test
 b:/wc2/test/file1.txt
@@ -295,12 +295,12 @@ b:/wc2/test/file4.txt
 b:/wc2/test/file5.txt
 
 Info: PYSVN CMD ls -v b:\wc2\test
-      4 barry          25 05-Apr-2009 15:06:09 b:/wc2/test/file1.txt
-      7 barry          23 05-Apr-2009 15:06:14 b:/wc2/test/file1b.txt
-      3 barry          17 05-Apr-2009 15:06:08 b:/wc2/test/file2.txt
-      3 barry          17 05-Apr-2009 15:06:08 b:/wc2/test/file3.txt
-      3 barry          17 05-Apr-2009 15:06:08 b:/wc2/test/file4.txt
-      3 barry          17 05-Apr-2009 15:06:08 b:/wc2/test/file5.txt
+      4 barry          25 19-Sep-2009 08:36:20 b:/wc2/test/file1.txt
+      7 barry          23 19-Sep-2009 08:36:26 b:/wc2/test/file1b.txt
+      3 barry          17 19-Sep-2009 08:36:19 b:/wc2/test/file2.txt
+      3 barry          17 19-Sep-2009 08:36:19 b:/wc2/test/file3.txt
+      3 barry          17 19-Sep-2009 08:36:19 b:/wc2/test/file4.txt
+      3 barry          17 19-Sep-2009 08:36:19 b:/wc2/test/file5.txt
 Info: Test - merge - see below
 Info: Test - mkdir - done above
 Info: Test - move
@@ -434,17 +434,17 @@ Revision 11
 Info: PYSVN CMD update b:\wc2\test
 callback_conflict_resolver
   action: <conflict_action.edit>
-  base_file: u'b:\\wc2\\test\\.svn\\text-base\\file4.txt.svn-base'
+  base_file: 'b:\\wc2\\test\\.svn\\text-base\\file4.txt.svn-base'
   is_binary: False
   kind: <conflict_kind.text>
-  merged_file: u'b:\\wc2\\test\\.svn\\tmp\\file4.txt.tmp'
+  merged_file: 'b:\\wc2\\test\\.svn\\tmp\\file4.txt.tmp'
   mime_type: None
-  my_file: u'b:\\wc2\\test\\.svn\\tmp\\tempfile.2.tmp'
+  my_file: 'b:\\wc2\\test\\.svn\\tmp\\tempfile.2.tmp'
   node_kind: <node_kind.file>
   path: 'b:/wc2/test/file4.txt'
   property_name: None
   reason: <conflict_reason.edited>
-  their_file: u'b:\\wc2\\test\\.svn\\tmp\\text-base\\file4.txt.svn-base'
+  their_file: 'b:\\wc2\\test\\.svn\\tmp\\text-base\\file4.txt.svn-base'
 A b:/wc2/test/file2b.txt
 D b:/wc2/test/file2.txt
 U b:/wc2
@@ -479,7 +479,7 @@ Info: Test - revproplist
 Info: PYSVN CMD revproplist file:///b:/repos/trunk
 Revision: 12
 svn:author: barry
-svn:date: 2009-04-05T14:06:34.981009Z
+svn:date: 2009-09-19T07:36:46.827500Z
 svn:log: resolve a confict part 2
 Info: Test - revpropget
 
@@ -511,13 +511,13 @@ Info: PYSVN CMD info b:\wc1
 Path: b:\wc1
 Name: .
 Url: file:///B:/repos/trunk
-Repository UUID: e48f127c-22f6-c447-ab4c-7c6e13123a9e
+Repository UUID: 5eadd729-3d8d-8740-84c6-daa7cd61cf4b
 Revision: 2
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 2
-Last Changed Date: 05-Apr-2009 15:06:04
+Last Changed Date: 19-Sep-2009 08:36:15
 
 Info: PYSVN CMD relocate file:///b:/repos/trunk file:///b:/root/repos/trunk b:\wc1
 
@@ -525,25 +525,25 @@ Info: PYSVN CMD info b:\wc1
 Path: b:\wc1
 Name: .
 Url: file:///B:/root/repos/trunk
-Repository UUID: e48f127c-22f6-c447-ab4c-7c6e13123a9e
+Repository UUID: 5eadd729-3d8d-8740-84c6-daa7cd61cf4b
 Revision: 2
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 2
-Last Changed Date: 05-Apr-2009 15:06:04
+Last Changed Date: 19-Sep-2009 08:36:15
 
 Info: PYSVN CMD info b:\wc2
 Path: b:\wc2
 Name: .
 Url: file:///B:/repos/trunk
-Repository UUID: e48f127c-22f6-c447-ab4c-7c6e13123a9e
+Repository UUID: 5eadd729-3d8d-8740-84c6-daa7cd61cf4b
 Revision: 4
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 05-Apr-2009 15:06:09
+Last Changed Date: 19-Sep-2009 08:36:20
 
 Info: PYSVN CMD relocate file:///b:/repos/trunk file:///b:/root/repos/trunk b:\wc2
 
@@ -551,26 +551,26 @@ Info: PYSVN CMD info b:\wc2
 Path: b:\wc2
 Name: .
 Url: file:///B:/root/repos/trunk
-Repository UUID: e48f127c-22f6-c447-ab4c-7c6e13123a9e
+Repository UUID: 5eadd729-3d8d-8740-84c6-daa7cd61cf4b
 Revision: 4
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 05-Apr-2009 15:06:09
+Last Changed Date: 19-Sep-2009 08:36:20
 Info: Test - switch
 
 Info: PYSVN CMD info b:\wc2
 Path: b:\wc2
 Name: .
 Url: file:///B:/root/repos/trunk
-Repository UUID: e48f127c-22f6-c447-ab4c-7c6e13123a9e
+Repository UUID: 5eadd729-3d8d-8740-84c6-daa7cd61cf4b
 Revision: 4
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 05-Apr-2009 15:06:09
+Last Changed Date: 19-Sep-2009 08:36:20
 
 Info: PYSVN CMD switch b:\wc2 file:///b:/root/repos/tags/version1
 A b:/wc2/test/file2.txt
@@ -586,13 +586,13 @@ Info: PYSVN CMD info b:\wc2
 Path: b:\wc2
 Name: .
 Url: file:///B:/root/repos/tags/version1
-Repository UUID: e48f127c-22f6-c447-ab4c-7c6e13123a9e
+Repository UUID: 5eadd729-3d8d-8740-84c6-daa7cd61cf4b
 Revision: 12
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 6
-Last Changed Date: 05-Apr-2009 15:06:12
+Last Changed Date: 19-Sep-2009 08:36:23
 Info: Test - update - see above
 Info: Test - Info: Testing - merge
 
@@ -749,7 +749,7 @@ Added: svn:mergeinfo
 
 
 
-Info: CMD c:\python26\python.exe C:\wc\pysvn\trunk\pysvn\Extension\Tests\test_01_set_get_tests.py b:\configdir
+Info: CMD c:\python31\python.exe C:\BuildRoot\Win32-MSVC90-1.6.5\pysvn\py31\Tests\test_01_set_get_tests.py b:\configdir
 Info: Initial values
 Info: get_auth_cache() => 1
 Info: get_auto_props() => 0
