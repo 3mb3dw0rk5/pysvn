@@ -1,6 +1,9 @@
-all: test-01.win32.new.log test-03.win32.new.log test-04.win32.new.log test-05.win32.new.log test-06.win32.new.log
+#
+#	PySVN win32 tests - win32.mak
+#
+all: test-01.win32.new.log test-03.win32.new.log test-04.win32.new.log test-05.win32.new.log test-06.win32.new.log test-07.win32.new.log
 
-clean: clean-01 clean-03 clean-04 clean-05 clean-06
+clean: clean-01 clean-03 clean-04 clean-05 clean-06 clean-07
 
 #
 #	Helpers while developing and verifying tests
