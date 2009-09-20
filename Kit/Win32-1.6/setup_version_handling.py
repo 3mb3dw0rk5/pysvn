@@ -39,7 +39,7 @@ branding = {
 	'py_min': py_min,
 	'pysvn_version_string': pysvn_version_string,
 	}
-print( 'Info:',repr(branding) )
+print( 'Info: %r' % (branding,) )
 f.write( pysvn_iss_text % branding )
 f.close()
 
@@ -65,7 +65,7 @@ branding = {
 	'py_min': py_min,
 	'pysvn_version_string': pysvn_version_string,
 	}
-print( 'Info:',repr(branding) )
+print( 'Info: %r' % (branding,) )
 f.write( pysvn_iss_text % branding )
 f.close()
 
