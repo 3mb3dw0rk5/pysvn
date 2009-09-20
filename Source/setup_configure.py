@@ -544,12 +544,12 @@ LDLIBS=-L%(svn_lib_dir)s \
 PYTHON=%(python_exe)s
 SVN_INCLUDE=%(svn_include)s
 CCC=g++
-CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s
+CCCFLAGS=-Wall -no-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s -arch i386
 CC=gcc
-CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s %(debug_cflags)s
+CCFLAGS=-Wall -no-long-double -fPIC %(includes)s %(debug_cflags)s -arch i386
 PYCXX=%(pycxx_dir)s
 PYCXXSRC=%(pycxx_src_dir)s
-LDSHARED=g++ -bundle %(debug_cflags)s -u _PyMac_Error %(frameworks)s
+LDSHARED=g++ -bundle %(debug_cflags)s -u _PyMac_Error %(frameworks)s -arch i386
 LDLIBS=-L%(svn_lib_dir)s \
 -L%(apr_lib_dir)s \
 -lsvn_client-1 \
@@ -569,12 +569,12 @@ LDLIBS=-L%(svn_lib_dir)s \
 PYTHON=%(python_exe)s
 SVN_INCLUDE=%(svn_include)s
 CCC=g++
-CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s
+CCCFLAGS=-Wall -no-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s -arch i386
 CC=gcc
-CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s %(debug_cflags)s
+CCFLAGS=-Wall -no-long-double -fPIC %(includes)s %(debug_cflags)s -arch i386
 PYCXX=%(pycxx_dir)s
 PYCXXSRC=%(pycxx_src_dir)s
-LDSHARED=g++ -bundle %(debug_cflags)s %(frameworks)s
+LDSHARED=g++ -bundle %(debug_cflags)s %(frameworks)s -arch i386
 LDLIBS=-L%(svn_lib_dir)s \
 -L%(apr_lib_dir)s \
 -lsvn_client-1 \
@@ -594,12 +594,12 @@ LDLIBS=-L%(svn_lib_dir)s \
 PYTHON=%(python_exe)s
 SVN_INCLUDE=%(svn_include)s
 CCC=g++
-CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s -isysroot %(mac_os_x_sdk)s -arch ppc -arch i386
+CCCFLAGS=-Wall -no-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s -isysroot %(mac_os_x_sdk)s -arch ppc -arch i386 -arch x86_64
 CC=gcc
-CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s %(debug_cflags)s -isysroot %(mac_os_x_sdk)s -arch ppc -arch i386
+CCFLAGS=-Wall -no-long-double -fPIC %(includes)s %(debug_cflags)s -isysroot %(mac_os_x_sdk)s -arch ppc -arch i386 -arch x86_64
 PYCXX=%(pycxx_dir)s
 PYCXXSRC=%(pycxx_src_dir)s
-LDSHARED=g++ -bundle -twolevel_namespace %(debug_cflags)s -u _PyMac_Error %(frameworks)s -Wl,-syslibroot,%(mac_os_x_sdk)s -arch ppc -arch i386
+LDSHARED=g++ -bundle -twolevel_namespace %(debug_cflags)s -u _PyMac_Error %(frameworks)s -Wl,-syslibroot,%(mac_os_x_sdk)s -arch ppc -arch i386 -arch x86_64
 LDLIBS=-L%(svn_lib_dir)s \
 -L%(apr_lib_dir)s \
 -lsvn_client-1 \
@@ -619,12 +619,12 @@ LDLIBS=-L%(svn_lib_dir)s \
 PYTHON=%(python_exe)s
 SVN_INCLUDE=%(svn_include)s
 CCC=g++
-CCCFLAGS=-Wall -Wno-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s -isysroot %(mac_os_x_sdk)s -arch ppc -arch i386
+CCCFLAGS=-Wall -no-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s -isysroot %(mac_os_x_sdk)s -arch ppc -arch i386 -arch x86_64
 CC=gcc
-CCFLAGS=-Wall -Wno-long-double -fPIC %(includes)s %(debug_cflags)s -isysroot %(mac_os_x_sdk)s -arch ppc -arch i386
+CCFLAGS=-Wall -no-long-double -fPIC %(includes)s %(debug_cflags)s -isysroot %(mac_os_x_sdk)s -arch ppc -arch i386 -arch x86_64
 PYCXX=%(pycxx_dir)s
 PYCXXSRC=%(pycxx_src_dir)s
-LDSHARED=g++ -bundle -twolevel_namespace %(debug_cflags)s %(frameworks)s -Wl,-syslibroot,%(mac_os_x_sdk)s -arch ppc -arch i386
+LDSHARED=g++ -bundle -twolevel_namespace %(debug_cflags)s %(frameworks)s -Wl,-syslibroot,%(mac_os_x_sdk)s -arch ppc -arch i386 -arch x86_64
 LDLIBS=-L%(svn_lib_dir)s \
 -L%(apr_lib_dir)s \
 -lsvn_client-1 \
