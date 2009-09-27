@@ -179,4 +179,4 @@ clean:
 	rm -f generate_svn_error_codes/generate_svn_error_codes.o
 
 test: pysvn/__init__.py pysvn/%(pysvn_module_name)s
-	PYTHONPATH=. $(PYTHON) -c "import pysvn;print( pysvn.version,pysvn.svn_version,pysvn.Client() )"
+	PYTHONPATH=. $(PYTHON) -c "import pysvn;print( pysvn );print( pysvn.version );print( pysvn.svn_version );print( pysvn.Client() )"
