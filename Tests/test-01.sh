@@ -53,6 +53,14 @@ echo test add file 3 >file3.txt
 echo test add file 4 >file4.txt
 echo test add file 5 >file5.txt
 echo test add file 6 >file6.txt
+mkdir folder1
+echo test add file 7 >folder1/file7.txt
+mkdir folder1/folder2
+echo test add file 8 >folder1/folder2/file8.txt
+mkdir folder3
+echo test add file 9 >folder3/file9.txt
+mkdir folder3/folder4
+echo test add file 10 >folder3/folder4/file10.txt
 
 cmd_pysvn add file1.txt
 cmd_pysvn add file2.txt
@@ -60,6 +68,9 @@ cmd_pysvn add file3.txt
 cmd_pysvn add file4.txt
 cmd_pysvn add --force file5.txt
 cmd_pysvn add file6.txt
+
+cmd_pysvn add folder1
+cmd_pysvn add --non-recursive folder3
 
 cmd_pysvn checkin -m "commit added files"
 

@@ -51,7 +51,7 @@ Py::Object pysvn_client::cmd_add( const Py::Tuple &a_args, const Py::Dict &a_kws
     bool ignore = args.getBoolean( name_ignore, true );
 #endif
 #if defined( PYSVN_HAS_CLIENT_ADD4 )
-    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity, svn_depth_infinity, svn_depth_files );
+    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity, svn_depth_infinity, svn_depth_empty );
     bool add_parents = args.getBoolean( name_add_parents, false );
 #else
     bool recurse = args.getBoolean( name_recurse, true );
