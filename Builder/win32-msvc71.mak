@@ -6,30 +6,30 @@ build: all test kit
 all: all-$(SVN_VER_MAJ_MIN)
 
 all-1.4:
-	cd ..\Source & devenv pysvn-for-svn-1-4.sln /useenv /build "$(BUILD_TYPE)"  /project "pysvn"
+	cd ..\Source & devenv pysvn-for-svn-1-4-msvc71.sln /useenv /build "$(BUILD_TYPE)"  /project "pysvn"
 
 all-1.5:
-	cd ..\Source & devenv pysvn-for-svn-1-5.sln /useenv /build "$(BUILD_TYPE)"  /project "pysvn"
+	cd ..\Source & devenv pysvn-for-svn-1-5-msvc71.sln /useenv /build "$(BUILD_TYPE)"  /project "pysvn"
 
 all-1.6:
-	cd ..\Source & devenv pysvn-for-svn-1-6.sln /useenv /build "$(BUILD_TYPE)"  /project "pysvn"
+	cd ..\Source & devenv pysvn-for-svn-1-6-msvc71.sln /useenv /build "$(BUILD_TYPE)"  /project "pysvn"
 
 clean: clean-$(SVN_VER_MAJ_MIN)
 
 clean-1.4:
-	cd ..\Source & devenv pysvn-for-svn-1-4.sln /useenv /clean "$(BUILD_TYPE)"  /project "pysvn"
+	cd ..\Source & devenv pysvn-for-svn-1-4-msvc71.sln /useenv /clean "$(BUILD_TYPE)"  /project "pysvn"
 	cd ..\Source & del sept
 	cd ..\Tests & $(MAKE) -f win32.mak SVN_VER_MAJ_MIN=1.4 clean
 	cd ..\kit\Win32-1.4 & $(MAKE) clean
 
 clean-1.5:
-	cd ..\Source & devenv pysvn-for-svn-1-5.sln /useenv /clean "$(BUILD_TYPE)"  /project "pysvn"
+	cd ..\Source & devenv pysvn-for-svn-1-5-msvc71.sln /useenv /clean "$(BUILD_TYPE)"  /project "pysvn"
 	cd ..\Source & del sept
 	cd ..\Tests & $(MAKE) -f win32.mak SVN_VER_MAJ_MIN=1.5 clean
 	cd ..\kit\Win32-1.5 & $(MAKE) clean
 
 clean-1.6:
-	cd ..\Source & devenv pysvn-for-svn-1-6.sln /useenv /clean "$(BUILD_TYPE)"  /project "pysvn"
+	cd ..\Source & devenv pysvn-for-svn-1-6-msvc71.sln /useenv /clean "$(BUILD_TYPE)"  /project "pysvn"
 	cd ..\Source & del sept
 	cd ..\Tests & $(MAKE) -f win32.mak SVN_VER_MAJ_MIN=1.6 clean
 	cd ..\kit\Win32-1.6 & $(MAKE) clean
