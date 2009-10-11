@@ -15,7 +15,7 @@ call :cmd_shell cd /d b:\
 call :cmd_shell svnadmin create b:\repos
 
 echo Info: Test - mkdir
-all :cmd_pysvn mkdir file:///b:/repos/trunk -m "test-01 add trunk"
+call :cmd_pysvn mkdir file:///b:/repos/trunk -m "test-01 add trunk"
 call :cmd_pysvn mkdir file:///b:/repos/trunk/test -m "test-01 add test"
 
 echo Info: Test - ls
@@ -33,13 +33,13 @@ call :cmd_createfile file3.txt test add file 3
 call :cmd_createfile file4.txt test add file 4
 call :cmd_createfile file5.txt test add file 5
 call :cmd_shell mkdir folder1
-call :cmd_createfile folder1/file7.txt test add file 7
-call :cmd_shell mkdir folder1/folder2
-call :cmd_createfile folder1/folder2/file8.txt test add file 8
+call :cmd_createfile folder1\file7.txt test add file 7
+call :cmd_shell mkdir folder1\folder2
+call :cmd_createfile folder1\folder2\file8.txt test add file 8
 call :cmd_shell mkdir folder3
-call :cmd_createfile folder3/file9.txt test add file 9
-call :cmd_shell mkdir folder3/folder4
-call :cmd_createfile folder3/folder4/file10.txt test add file 10
+call :cmd_createfile folder3\file9.txt test add file 9
+call :cmd_shell mkdir folder3\folder4
+call :cmd_createfile folder3\folder4\file10.txt test add file 10
 
 call :cmd_pysvn add file1.txt
 call :cmd_pysvn add file2.txt

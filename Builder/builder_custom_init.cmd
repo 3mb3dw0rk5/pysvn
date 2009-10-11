@@ -9,12 +9,17 @@ if not "%2" == "" set PY_MIN=%2
 if not "%3" == "" set BUILD_TYPE=%3
 if not "%4" == "" set SVN_VER_MAJ_MIN=%4
 
-if "%BUILD_TYPE%" == "" set /p BUILD_TYPE="Build type: "
+if "%BUILD_TYPE%" == "" set /p BUILD_TYPE="Build type (Release): "
 if "%BUILD_TYPE%" == "" set BUILD_TYPE=Release
 
 
-if "%SVN_VER_MAJ_MIN%" == "" set /p SVN_VER_MAJ_MIN="Build Version: "
-if "%SVN_VER_MAJ_MIN%" == "" goto :eof
+if "%SVN_VER_MAJ_MIN%" == "" set /p SVN_VER_MAJ_MIN="Build Version (1.6): "
+if "%SVN_VER_MAJ_MIN%" == "" set SVN_VER_MAJ_MIN=1.6
+
+if "%SVN_VER_MAJ_MIN%" == "1.4" set SVN_VER_MAJ_DASH_MIN=1-4
+if "%SVN_VER_MAJ_MIN%" == "1.5" set SVN_VER_MAJ_DASH_MIN=1-5
+if "%SVN_VER_MAJ_MIN%" == "1.6" set SVN_VER_MAJ_DASH_MIN=1-6
+
 
 rem Save CWD
 pushd .
