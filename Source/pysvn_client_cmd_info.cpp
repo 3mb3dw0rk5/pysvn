@@ -43,16 +43,33 @@ public:
         )
     : m_line_no( line_no )
     , m_revision( revision )
-    , m_author( author )
-    , m_date( date )
-    , m_merged_revision( merged_revision )
-    , m_merged_author( merged_author )
-    , m_merged_date( merged_date )
-    , m_merged_path( merged_path )
-    , m_line( line )
+    , m_author()
+    , m_date()
+    , m_merged_revision( merged_revision)
+    , m_merged_author()
+    , m_merged_date()
+    , m_merged_path()
+    , m_line()
     {
+    if( author != NULL )
+        m_author = author;
+
+    if( date != NULL )
+        m_date = date;
+
+    if( merged_author != NULL )
+        m_merged_author = merged_author;
+
+    if( merged_date != NULL )
+        m_merged_date = merged_date;
+
+    if( merged_path != NULL )
+        m_merged_path = merged_path;
+
+    if( line != NULL )
+        m_line = line;
     }
-    
+
     ~AnnotatedLineInfo()
     {
     }
