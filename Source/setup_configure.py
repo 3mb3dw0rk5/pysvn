@@ -23,6 +23,24 @@ import xml.sax
 class SetupError(Exception):
     pass
 
+
+all_options_info = {
+    '--arch':               (2, '<arch>'),
+    '--apr-inc-dir':        (1, '<dir>'),
+    '--apr-lib-dir':        (1, '<dir>'),
+    '--define':             (2, '<define-string>'),
+    '--enable-debug':       (0, None),
+    '--fixed-module-name':  (0, None),
+    '--norpath':            (0, None),
+    '--platform':           (1, '<platform-name>'),
+    '--pycxx-dir':          (1, '<dir>'),
+    '--pycxx-src-dir':      (1, '<dir>'),
+    '--svn-inc-dir':        (1, '<dir>'),
+    '--svn-lib-dir':        (1, '<dir>'),
+    '--svn-root-dir':       (1, '<dir>'),
+    '--verbose':            (0, None),
+    }
+
 def cmd_configure( argv ):
     if sys.platform == 'win32':
         print( 'Error: Works for Unix like systems only' )
@@ -43,21 +61,14 @@ def cmd_help( argv ):
         python %(progname)s configure <options>
 
     where <options> is one or more of:
-        --verbose
-        --platform=<platform-name>
-        --enable-debug
-        --pycxx-dir=<dir>
-        --pycxx-src-dir=<dir>
-        --norpath
-        --fixed-module-name
-        --apr-inc-dir=<dir>
-        --svn-root-dir=<dir>
-        --svn-inc-dir=<dir>
-        --svn-lib-dir=<dir>
-        --define=<define-string>
-        --universal (build Mac OS X universal binary - not working at yet)
-
 ''' % {'progname': progname} )
+    for option, num_value in sorted( all_options_info.items() ):
+        num, value = num_value
+        if num == 0:
+            print '        %s' % (option,)
+        else:
+            print '        %s=%s' % (option,value)
+
     return 1
 
 class MakeFileCreater:
@@ -67,9 +78,12 @@ class MakeFileCreater:
         self.is_mac_os_x_fink = False
         self.is_mac_os_x_darwin_ports = False
         self.mac_os_x_version = None
-        self.mac_os_x_universal = False
+        self.mac_os_x_arch = False
         self.mac_os_x_sdk = None
         self.platform = sys.platform
+
+        self.__all_options = {}
+        self.__used_options = set()
 
     def node_text( self, all_nodes ):
         all_text = []
@@ -99,41 +113,97 @@ class MakeFileCreater:
                     self.is_mac_os_x = True
 
                     # look for the universal SDK
-                    for mac_ver in ['10.4', '%d.%d' % (self.mac_os_x_version[0], self.mac_os_x_version[1])]:
-                        self.mac_os_x_sdk = '/Developer/SDKs/MacOSX%su.sdk' % mac_ver
+                    for mac_ver in ['10.5', '%d.%d' % (self.mac_os_x_version[0], self.mac_os_x_version[1])]:
+                        self.mac_os_x_sdk = '/Developer/SDKs/MacOSX%s.sdk' % mac_ver
                         if os.path.exists( self.mac_os_x_sdk ):
                             print( 'Info: Mac OS X Universal SDKs found (%s)' % self.mac_os_x_sdk )
                             break
 
-    def createMakefile( self, argv ):
-        for arg in argv:
-            if arg.startswith( '--platform=' ):
-                self.platform = arg[len('--platform='):]
-                print( 'Info: Platform overridden as %s' % self.platform )
+    def parseOptions( self, argv ):
+        for option in argv:
+            option_parts = option.split( '=', 1 )
+            option_name = option_parts[0]
+            if option_name not in all_options_info:
+                print( 'Error: Unknown option %s' % option )
+                return False
 
-        self.verbose = '--verbose' in argv
+            repeat_count, value = all_options_info[ option_name ]
+            if repeat_count == 0:
+                if len(option_parts) != 1:
+                    print 'Error: Option %s does not take a value' % (option_name,)
+                    return False
+
+                self.__all_options[ option_name ] = None
+
+            elif repeat_count == 1:
+                if len(option_parts) != 2:
+                    print 'Error: Option %s requires a value' % (option_name,)
+                    return False
+
+                if option_name in self.__all_options:
+                    print 'Error: only one %s is allowed' % (option_name,)
+                    return False
+
+                self.__all_options[ option_name ] = option_parts[1]
+
+            elif repeat_count == 2:
+                if len(option_parts) != 2:
+                    print 'Error: Option %s requires a value' % (option_name,)
+                    return False
+
+                self.__all_options.setdefault( option_name, [] ).append( option_parts[1] )
+
+        return True
+
+    def hasOption( self, option_name ):
+        self.__used_options.add( option_name )
+        return option_name in self.__all_options
+
+    def getOption( self, option_name ):
+        self.__used_options.add( option_name )
+        return self.__all_options[ option_name ]
+
+    def checkAllOptionsUsed( self ):
+        all_options = set( self.__all_options )
+        unused_options = all_options - self.__used_options
+        if len(unused_options) > 0:
+            print( 'Error: Unused options: %s' % (', '.join( unused_options ),) )
+            return False
+
+        return True
+
+    def createMakefile( self, _argv ):
+        if not self.parseOptions( _argv[2:] ):
+            return 1
+
+        if self.hasOption( '--platform' ):
+            self.platform = self.getOption( '--platform' )
+            print( 'Info: Platform overridden as %s' % self.platform )
+
+        self.verbose = self.hasOption( '--verbose' )
         self.detectMacVersion()
-        if '--universal' in argv and self.mac_os_x_sdk is not None:
-            print( 'Info: turning on universal support' )
-            self.mac_os_x_universal = True
+
+        if self.is_mac_os_x and self.hasOption( '--arch' ):
+            print( 'Info: Building for arch %s' % ', '.join( self.getOption( '--arch' ) ) )
+            self.mac_os_x_arch = ', '.join( ['-arch %s' % (arch,) for arch in self.getOption( '--arch' )] )
         else:
-            self.mac_os_x_universal = False
+            self.mac_os_x_arch = ''
 
         if self.verbose:
             print( 'Info: Creating makefile for python %r on %s' % (sys.version_info, self.platform) )
 
         debug_cflags_list = []
-        if '--enable-debug' in argv:
+        if self.hasOption( '--enable-debug' ):
             print( 'Info: Enabling debug' )
             debug_cflags_list.append( '-g' )
 
         include_dir_list = []
 
         # add pycxx include
-        pycxx_dir = self.find_pycxx( argv )
+        pycxx_dir = self.find_pycxx()
         include_dir_list.append( pycxx_dir )
         # add pycxx source
-        pycxx_src_dir = self.find_pycxx_src( argv, pycxx_dir )
+        pycxx_src_dir = self.find_pycxx_src( pycxx_dir )
         include_dir_list.append( pycxx_src_dir )
 
         # must add python after pyxx because some distributions have pycxx inside of the
@@ -146,10 +216,10 @@ class MakeFileCreater:
         print( 'Info: Found Python include in %s' % ' '.join( include_dir_list ) )
 
         # add SVN include
-        svn_include = self.find_svn_inc( argv )
+        svn_include = self.find_svn_inc()
         include_dir_list.append( svn_include )
         # add APR include
-        include_dir_list.append( self.find_apr_inc( argv ) )
+        include_dir_list.append( self.find_apr_inc() )
 
         # add source dir
         include_dir_list.append( '.' )
@@ -170,15 +240,15 @@ class MakeFileCreater:
         py_cflags_list.append( '-DPYCXX_PYTHON_2TO3' )
 
         # get user supplied defines
-        for arg in argv:
-            if arg.startswith( '--define=' ):
-                py_cflags_list.append( '-D%s' % arg[len('--define='):] )
+        if self.hasOption( '--define' ):
+            for define in self.getOption( '--define' ):
+                py_cflags_list.append( '-D%s' % (define,) )
 
         module_type = '.so'
         if self.platform == 'cygwin':
             module_type = '.dll'
 
-        if '--fixed-module-name' in argv:
+        if self.hasOption( '--fixed-module-name' ):
             print( 'Info: Using fixed module name' )
             pysvn_module_name = '_pysvn'+ module_type
 
@@ -211,13 +281,13 @@ class MakeFileCreater:
             'py_cflags':        ' '.join( py_cflags_list ),
 
             # add svn bin dir
-            'svn_bin_dir':      self.find_svn_bin( argv ),
+            'svn_bin_dir':      self.find_svn_bin(),
 
             # add svn lib dir
-            'svn_lib_dir':      self.find_svn_lib( argv ),
+            'svn_lib_dir':      self.find_svn_lib(),
 
             # add apr lib dir
-            'apr_lib_dir':      self.find_apr_lib( argv ),
+            'apr_lib_dir':      self.find_apr_lib(),
 
             'lib_apr':          self.lib_apr,    # set as a side effect of find_apr_lib
 
@@ -226,7 +296,13 @@ class MakeFileCreater:
 
             # pycxx src dir
             'pycxx_src_dir':    pycxx_src_dir,
+
+            # mac arch options
+            'mac_os_x_arch':    self.mac_os_x_arch
             }
+
+        if not self.checkAllOptionsUsed():
+            return 1
 
         print( 'Info: Creating Makefile for Source' )
 
@@ -262,12 +338,6 @@ class MakeFileCreater:
             elif self.is_mac_os_x_darwin_ports:
                 makefile.write( self.makefile_template_macosx_darwin_ports % template_values )
 
-            elif self.mac_os_x_universal:
-                template_values[ 'mac_os_x_sdk' ] = self.mac_os_x_sdk
-                if sys.version_info[0] >= 3:
-                    makefile.write( self.makefile_template_macosx_universal_py3 % template_values )
-                else:
-                    makefile.write( self.makefile_template_macosx_universal_py2 % template_values )
             else:
                 if sys.version_info[0] >= 3:
                     makefile.write( self.makefile_template_macosx_one_arch_py3 % template_values )
@@ -299,7 +369,7 @@ class MakeFileCreater:
         elif self.platform.startswith('linux'):
             if self.verbose:
                 print( 'Info: Using Linux makefile template' )
-            if '--norpath' in argv:
+            if self.hasOption( '--norpath' ):
                 makefile.write( self.makefile_template_linux_norpath % template_values )
             else:
                 makefile.write( self.makefile_template_linux % template_values )
@@ -544,12 +614,12 @@ LDLIBS=-L%(svn_lib_dir)s \
 PYTHON=%(python_exe)s
 SVN_INCLUDE=%(svn_include)s
 CCC=g++
-CCCFLAGS=-Wall -no-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s -arch i386
+CCCFLAGS=-Wall -no-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s %(mac_os_x_arch)s
 CC=gcc
-CCFLAGS=-Wall -no-long-double -fPIC %(includes)s %(debug_cflags)s -arch i386
+CCFLAGS=-Wall -no-long-double -fPIC %(includes)s %(debug_cflags)s %(mac_os_x_arch)s
 PYCXX=%(pycxx_dir)s
 PYCXXSRC=%(pycxx_src_dir)s
-LDSHARED=g++ -bundle %(debug_cflags)s -u _PyMac_Error %(frameworks)s -arch i386
+LDSHARED=g++ -bundle %(debug_cflags)s -u _PyMac_Error %(frameworks)s %(mac_os_x_arch)s
 LDLIBS=-L%(svn_lib_dir)s \
 -L%(apr_lib_dir)s \
 -lsvn_client-1 \
@@ -569,62 +639,12 @@ LDLIBS=-L%(svn_lib_dir)s \
 PYTHON=%(python_exe)s
 SVN_INCLUDE=%(svn_include)s
 CCC=g++
-CCCFLAGS=-Wall -no-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s -arch i386
+CCCFLAGS=-Wall -no-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s %(mac_os_x_arch)s
 CC=gcc
-CCFLAGS=-Wall -no-long-double -fPIC %(includes)s %(debug_cflags)s -arch i386
+CCFLAGS=-Wall -no-long-double -fPIC %(includes)s %(debug_cflags)s %(mac_os_x_arch)s
 PYCXX=%(pycxx_dir)s
 PYCXXSRC=%(pycxx_src_dir)s
-LDSHARED=g++ -bundle %(debug_cflags)s %(frameworks)s -arch i386
-LDLIBS=-L%(svn_lib_dir)s \
--L%(apr_lib_dir)s \
--lsvn_client-1 \
--lsvn_repos-1 \
--lsvn_wc-1 \
--lsvn_fs-1 \
--lsvn_subr-1 \
--lsvn_diff-1 \
--l%(lib_apr)s
-#include pysvn_common.mak
-'''
-
-    makefile_template_macosx_universal_py2 = '''#
-#	Created by pysvn Extension/Source/setup.py
-#       -- makefile_template_macosx_universal --
-#
-PYTHON=%(python_exe)s
-SVN_INCLUDE=%(svn_include)s
-CCC=g++
-CCCFLAGS=-Wall -no-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s -isysroot %(mac_os_x_sdk)s -arch ppc -arch i386 -arch x86_64
-CC=gcc
-CCFLAGS=-Wall -no-long-double -fPIC %(includes)s %(debug_cflags)s -isysroot %(mac_os_x_sdk)s -arch ppc -arch i386 -arch x86_64
-PYCXX=%(pycxx_dir)s
-PYCXXSRC=%(pycxx_src_dir)s
-LDSHARED=g++ -bundle -twolevel_namespace %(debug_cflags)s -u _PyMac_Error %(frameworks)s -Wl,-syslibroot,%(mac_os_x_sdk)s -arch ppc -arch i386 -arch x86_64
-LDLIBS=-L%(svn_lib_dir)s \
--L%(apr_lib_dir)s \
--lsvn_client-1 \
--lsvn_repos-1 \
--lsvn_wc-1 \
--lsvn_fs-1 \
--lsvn_subr-1 \
--lsvn_diff-1 \
--l%(lib_apr)s
-#include pysvn_common.mak
-'''
-
-    makefile_template_macosx_universal_py3 = '''#
-#	Created by pysvn Extension/Source/setup.py
-#       -- makefile_template_macosx_universal --
-#
-PYTHON=%(python_exe)s
-SVN_INCLUDE=%(svn_include)s
-CCC=g++
-CCCFLAGS=-Wall -no-long-double -fPIC -fexceptions -frtti %(includes)s %(py_cflags)s %(debug_cflags)s -isysroot %(mac_os_x_sdk)s -arch ppc -arch i386 -arch x86_64
-CC=gcc
-CCFLAGS=-Wall -no-long-double -fPIC %(includes)s %(debug_cflags)s -isysroot %(mac_os_x_sdk)s -arch ppc -arch i386 -arch x86_64
-PYCXX=%(pycxx_dir)s
-PYCXXSRC=%(pycxx_src_dir)s
-LDSHARED=g++ -bundle -twolevel_namespace %(debug_cflags)s %(frameworks)s -Wl,-syslibroot,%(mac_os_x_sdk)s -arch ppc -arch i386 -arch x86_64
+LDSHARED=g++ -bundle %(debug_cflags)s %(frameworks)s %(mac_os_x_arch)s
 LDLIBS=-L%(svn_lib_dir)s \
 -L%(apr_lib_dir)s \
 -lsvn_client-1 \
@@ -719,12 +739,12 @@ LDLIBS= \
 #include pysvn_common.mak
 '''
 
-    def find_pycxx( self, argv ):
+    def find_pycxx( self ):
         pycxx_version = (6, 1, 1)
 
-        pycxx_dir = self.find_dir( argv,
+        pycxx_dir = self.find_dir(
                     'PyCXX include',
-                    '--pycxx-dir=',
+                    '--pycxx-dir',
                     None,
                     [
                         '../Import/pycxx-%d.%d.%d' % pycxx_version,
@@ -748,10 +768,10 @@ LDLIBS= \
         return pycxx_dir
 
 
-    def find_pycxx_src( self, argv, pycxx_dir ):
-        return self.find_dir( argv,
+    def find_pycxx_src( self, pycxx_dir ):
+        return self.find_dir(
                     'PyCXX Source',
-                    '--pycxx-src-dir=',
+                    '--pycxx-src-dir',
                     None,
                     [
                         '%s/Src' % pycxx_dir,
@@ -759,10 +779,10 @@ LDLIBS= \
                     ],
                     'cxxsupport.cxx' )
 
-    def find_svn_inc( self, argv ):
-        return self.find_dir( argv,
+    def find_svn_inc( self ):
+        return self.find_dir(
                     'SVN include',
-                    '--svn-inc-dir=',
+                    '--svn-inc-dir',
                     'include/subversion-1',
                     [
                         '/opt/local/include/subversion-1',      # Darwin - darwin ports
@@ -773,10 +793,10 @@ LDLIBS= \
                     ],
                     'svn_client.h' )
 
-    def find_svn_bin( self, argv ):
-        return self.find_dir( argv,
+    def find_svn_bin( self ):
+        return self.find_dir(
                     'SVN bin',
-                    '--svn-bin-dir=',
+                    '--svn-bin-dir',
                     'bin',
                     [
                         '/opt/local/bin',      # Darwin - darwin ports
@@ -787,10 +807,10 @@ LDLIBS= \
                     ],
                     'svnadmin' )
 
-    def find_svn_lib( self, argv ):
-        dir = self.find_dir( argv,
+    def find_svn_lib( self ):
+        dir = self.find_dir(
                     'SVN library',
-                    '--svn-lib-dir=',
+                    '--svn-lib-dir',
                     'lib',
                     [
                         '/opt/local/lib',                       # Darwin - darwin ports
@@ -807,13 +827,13 @@ LDLIBS= \
         self.is_mac_os_x_darwin_ports = dir.startswith( '/opt/local/' )
         return dir
 
-    def find_apr_inc( self, argv ):
+    def find_apr_inc( self ):
         last_exception = None
         for apr_ver in ['apr-1', 'apr-0']:
             try:
-                return self.find_dir( argv,
+                return self.find_dir(
                     'APR include',
-                    '--apr-inc-dir=',
+                    '--apr-inc-dir',
                     'include/%s' % apr_ver,
                     [
                     ],
@@ -823,9 +843,9 @@ LDLIBS= \
 
         for apr_ver in ['apr-1.0', 'apr-1', 'apr-0']:
             try:
-                return self.find_dir( argv,
+                return self.find_dir(
                     'APR include',
-                    '--apr-inc-dir=',
+                    '--apr-inc-dir',
                     None,
                     [
                         '/opt/local/include/%s' % apr_ver,      # Darwin - darwin ports
@@ -843,16 +863,16 @@ LDLIBS= \
                 last_exception = e
         raise last_exception
 
-    def find_apr_lib( self, argv ):
+    def find_apr_lib( self ):
         last_exception = None
         lib_list = [(self.get_lib_name_for_platform( 'libapr-1' ), 'apr-1'),
                     (self.get_lib_name_for_platform( 'libapr-0' ), 'apr-0')]
 
         for apr_libname, self.lib_apr in lib_list:
             try:
-                return self.find_dir( argv,
+                return self.find_dir(
                     'APR library',
-                    '--apr-lib-dir=',
+                    '--apr-lib-dir',
                     'lib',
                     [],
                     apr_libname )
@@ -861,9 +881,9 @@ LDLIBS= \
 
         for apr_libname, self.lib_apr in lib_list:
             try:
-                return self.find_dir( argv,
+                return self.find_dir(
                     'APR library',
-                    '--apr-lib-dir=',
+                    '--apr-lib-dir',
                     None,
                     [
                         '/opt/local/lib',                       # Darwin - darwin ports
@@ -889,28 +909,29 @@ LDLIBS= \
         else:
             return '%s.so' % libname
 
-    def find_dir( self, argv, name, kw, svn_root_suffix, base_dir_list, check_file ):
-        dirname = self.__find_dir( argv, name, kw, svn_root_suffix, base_dir_list, check_file )
+    def find_dir( self, name, kw, svn_root_suffix, base_dir_list, check_file ):
+        dirname = self.__find_dir( name, kw, svn_root_suffix, base_dir_list, check_file )
         print( 'Info: Found %14.14s in %s' % (name, dirname) )
         return dirname
 
-    def __find_dir( self, argv, name, kw, svn_root_suffix, base_dir_list, check_file ):
+    def __find_dir( self, name, kw, svn_root_suffix, base_dir_list, check_file ):
         # override the base_dir_list from the command line kw
         svn_root_dir = None
-        for arg in argv[2:]:
-            if arg[0:len(kw)] == kw:
-                base_dir_list = [arg[len(kw):]]
-            elif( arg[0:len('--svn-root-dir=')] == '--svn-root-dir='
-            and svn_root_suffix is not None ):
-                base_dir_list = ['%s/%s' % (arg[len('--svn-root-dir='):], svn_root_suffix)]
+
+        if self.hasOption( kw ):
+            base_dir_list = [self.getOption( kw )]
+
+        elif( self.hasOption( '--svn-root-dir' )
+        and svn_root_suffix is not None ):
+            base_dir_list = ['%s/%s' % (self.getOption( '--svn-root-dir' ), svn_root_suffix)]
 
         # expect to find check_file in one of the dir
-        for dir in base_dir_list:
-            full_check_file = os.path.join( dir, check_file )
+        for dirname in base_dir_list:
+            full_check_file = os.path.join( dirname, check_file )
             if self.verbose:
                 print( 'Info: Checking for %s in %s' % (name, full_check_file) )
             if os.path.exists( full_check_file ):
-                return os.path.abspath( dir )
+                return os.path.abspath( dirname )
 
         raise SetupError( 'cannot find %s %s - use %s' % (name, check_file, kw) )
 
@@ -931,7 +952,3 @@ LDLIBS= \
  
         print( 'Info: Building against SVN %d.%d.%d' % (major, minor, patch) )
         return (major, minor, patch)
-
-
-if __name__ == '__main__':
-    sys.exit( main( sys.argv ) )
