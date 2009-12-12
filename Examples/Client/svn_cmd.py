@@ -628,6 +628,27 @@ class SvnCommand:
                 for file in all_files:
                     print( '%(name)s' % file )
 
+    def cmd_list( self, args ):
+        recurse = args.getBooleanOption( '--recursive', True )
+        revision = args.getOptionalRevision( '--revision', 'head' )
+        verbose = args.getBooleanOption( '--verbose', True )
+        positional_args = args.getPositionalArgs( 0 )
+        if len(positional_args) == 0:
+            positional_args.append( '.' )
+
+        for arg in positional_args:
+            all_files = self.client.list( arg, revision=revision, recurse=recurse )
+            if verbose:
+                for file, Q in all_files:
+                    args = {}
+                    args.update( file )
+                    args['time_str'] = fmtDateTime( file.time )
+                    args['created_rev_num'] = file.created_rev.number
+                    print( '%(created_rev_num)7d %(last_author)-10s %(size)6d %(time_str)s %(path)s' % args )
+            else:
+                for file, Q in all_files:
+                    print( '%(path)s' % file )
+
     def cmd_merge( self, args ):
         recurse = args.getBooleanOption( '--recursive', True )
         dry_run = args.getBooleanOption( '--dry-run', False )
