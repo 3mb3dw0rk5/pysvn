@@ -65,9 +65,9 @@ def cmd_help( argv ):
     for option, num_value in sorted( all_options_info.items() ):
         num, value = num_value
         if num == 0:
-            print '        %s' % (option,)
+            print( '        %s' % (option,) )
         else:
-            print '        %s=%s' % (option,value)
+            print( '        %s=%s' % (option,value) )
 
     return 1
 
@@ -130,25 +130,25 @@ class MakeFileCreater:
             repeat_count, value = all_options_info[ option_name ]
             if repeat_count == 0:
                 if len(option_parts) != 1:
-                    print 'Error: Option %s does not take a value' % (option_name,)
+                    print( 'Error: Option %s does not take a value' % (option_name,) )
                     return False
 
                 self.__all_options[ option_name ] = None
 
             elif repeat_count == 1:
                 if len(option_parts) != 2:
-                    print 'Error: Option %s requires a value' % (option_name,)
+                    print( 'Error: Option %s requires a value' % (option_name,) )
                     return False
 
                 if option_name in self.__all_options:
-                    print 'Error: only one %s is allowed' % (option_name,)
+                    print( 'Error: only one %s is allowed' % (option_name,) )
                     return False
 
                 self.__all_options[ option_name ] = option_parts[1]
 
             elif repeat_count == 2:
                 if len(option_parts) != 2:
-                    print 'Error: Option %s requires a value' % (option_name,)
+                    print( 'Error: Option %s requires a value' % (option_name,) )
                     return False
 
                 self.__all_options.setdefault( option_name, [] ).append( option_parts[1] )
