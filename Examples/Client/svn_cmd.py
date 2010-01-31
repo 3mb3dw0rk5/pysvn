@@ -513,7 +513,7 @@ class SvnCommand:
             if info.rev:
                 print( 'Revision: %s' % info.rev.number )
             if info.repos_root_URL and self.pysvn_testing >= '01.03.00':
-                print( 'Repository rootURL: %s' % info.repos_root_URL )
+                print( 'Repository root_URL: %s' % info.repos_root_URL )
             if info.repos_UUID:
                 print( 'Repository UUID: %s' % info.repos_UUID )
             if info.last_changed_author:
