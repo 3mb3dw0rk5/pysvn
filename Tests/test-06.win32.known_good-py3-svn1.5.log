@@ -60,7 +60,7 @@ Info: PYSVN CMD info2 file1.txt
 Path: file1.txt
 Url: file:///b:/repos/trunk/test/file1.txt
 Revision: 3
-Repository root URL: file:///b:/repos
+Repository root_URL: file:///b:/repos
 Repository UUID: b08a34a7-24ac-2447-890d-38d2104d314d
 Last changed author: barry
 Last Changed Date: 30-Dec-2005 20:31:09
@@ -80,7 +80,7 @@ Info: PYSVN CMD info2 --revision HEAD file:///b:/repos/trunk/test/file1.txt
 Path: file1.txt
 Url: file:///b:/repos/trunk/test/file1.txt
 Revision: 3
-Repository root URL: file:///b:/repos
+Repository root_URL: file:///b:/repos
 Repository UUID: b08a34a7-24ac-2447-890d-38d2104d314d
 Last changed author: barry
 Last Changed Date: 30-Dec-2005 20:31:09

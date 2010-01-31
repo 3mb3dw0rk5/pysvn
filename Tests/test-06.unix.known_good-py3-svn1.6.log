@@ -78,7 +78,7 @@ Info: pysvn command: info2 --revision HEAD file:///Users/barry/wc/svn/pysvn/Exte
 Path: file1.txt
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-06/repos/trunk/test/file1.txt
 Revision: 3
-Repository root URL: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-06/repos
+Repository root_URL: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-06/repos
 Repository UUID: 8c776b55-675e-4f63-91a1-353407e7f4a1
 Last changed author: barry
 Last Changed Date: 01-Mar-2009 14:58:54

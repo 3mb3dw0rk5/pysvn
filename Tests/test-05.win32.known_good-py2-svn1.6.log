@@ -59,7 +59,7 @@ Info: PYSVN CMD info2 b:\wc1\test\file1.txt
 Path: b:/wc1/test/file1.txt
 Url: file:///B:/repos/trunk/test/file1.txt
 Revision: 3
-Repository root URL: file:///B:/repos
+Repository root_URL: file:///B:/repos
 Repository UUID: 10d6108c-ddd6-2142-a5a0-48c29f581f6f
 Last changed author: barry
 Last Changed Date: 05-Apr-2009 15:44:51
@@ -86,7 +86,7 @@ Info: PYSVN CMD info2 b:\wc1\test\file1.txt
 Path: b:/wc1/test/file1.txt
 Url: file:///B:/repos/trunk/test/file1.txt
 Revision: 3
-Repository root URL: file:///B:/repos
+Repository root_URL: file:///B:/repos
 Repository UUID: 10d6108c-ddd6-2142-a5a0-48c29f581f6f
 Last changed author: barry
 Last Changed Date: 05-Apr-2009 15:44:51
@@ -125,7 +125,7 @@ Info: PYSVN CMD info2 b:\wc2\test\file1.txt
 Path: b:/wc2/test/file1.txt
 Url: file:///B:/repos/trunk/test/file1.txt
 Revision: 3
-Repository root URL: file:///B:/repos
+Repository root_URL: file:///B:/repos
 Repository UUID: 10d6108c-ddd6-2142-a5a0-48c29f581f6f
 Last changed author: barry
 Last Changed Date: 05-Apr-2009 15:44:51
@@ -199,7 +199,7 @@ Info: PYSVN CMD info2 --revision HEAD file:///b:/repos/trunk/test/file1.txt
 Path: file1.txt
 Url: file:///B:/repos/trunk/test/file1.txt
 Revision: 4
-Repository root URL: file:///B:/repos
+Repository root_URL: file:///B:/repos
 Repository UUID: 10d6108c-ddd6-2142-a5a0-48c29f581f6f
 Last changed author: barry
 Last Changed Date: 05-Apr-2009 15:44:58
