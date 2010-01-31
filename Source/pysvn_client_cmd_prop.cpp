@@ -53,7 +53,11 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a
     SvnPool pool( m_context );
 
 #if defined( PYSVN_HAS_CLIENT_PROPSET3 )
-    svn_revnum_t base_revision_for_url = args.getInteger( name_base_revision_for_url, 0 );
+    svn_revnum_t base_revision_for_url;
+    if( is_svn_url( path ) )
+        base_revision_for_url = args.getInteger( name_base_revision_for_url, 0 );
+    else
+        base_revision_for_url = args.getInteger( name_base_revision_for_url, SVN_INVALID_REVNUM );
 
     apr_array_header_t *changelists = NULL;
 
@@ -517,7 +521,11 @@ Py::Object pysvn_client::cmd_propset( const Py::Tuple &a_args, const Py::Dict &a
         changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
     }
 
-    svn_revnum_t base_revision_for_url = args.getInteger( name_base_revision_for_url, 0 );
+    svn_revnum_t base_revision_for_url;
+    if( is_svn_url( path ) )
+        base_revision_for_url = args.getInteger( name_base_revision_for_url, 0 );
+    else
+        base_revision_for_url = args.getInteger( name_base_revision_for_url, SVN_INVALID_REVNUM );
     svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_empty, svn_depth_infinity, svn_depth_empty );
 
     apr_hash_t *revprops = NULL;

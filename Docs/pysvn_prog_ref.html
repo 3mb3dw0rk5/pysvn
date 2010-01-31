@@ -1604,6 +1604,7 @@ propdel( prop_name,
          recurse=False<span class="svn_1002000">,
          skip_checks=False</span><span class="svn_1005000">,
          depth=depth,
+         base_revision_for_url=[0 for URL, -1 for path],
          revprops</span> )
 </pre>
 <p>Delete the property prop_name from url_or_path.
@@ -1615,6 +1616,12 @@ property is not appropriate for  target), or
 SVN_ERR_BAD_MIME_TYPE (if  propname is "svn:mime-type", but 
 propval is not a valid mime-type).</span>
 </p>
+<p>
+The url_or_path may only be an URL if base_revision_for_url is not
+-1; in this case, the property will only be set
+if it has not changed since revision base_revision_for_url.
+base_revision_for_url must be -1 if url_or_path
+is not an URL.</p>
 <p>The src_revision defaults to
 pysvn.Revision( opt_revision_kind.head ) if the src_path is a
 URL otherwise to pysvn.Revision( opt_revision_kind.working ).
@@ -1690,7 +1697,7 @@ WC targets.
          recurse=False<span class="svn_1002000">,
          skip_checks=False</span><span class="svn_1005000">,
          depth=depth,
-         base_revision_for_url=0,
+         base_revision_for_url=[0 for URL, -1 for path],
          allow_unver_obstructions=False,
          revprops</span> )
 </pre>
@@ -1707,6 +1714,13 @@ propval is not a valid mime-type).</span>
 if the url_or_path is a URL otherwise to
 pysvn.Revision( opt_revision_kind.working ).
 </p>
+<p>
+The url_or_path may only be an URL if base_revision_for_url is not
+-1; in this case, the property will only be set
+if it has not changed since revision base_revision_for_url.
+base_revision_for_url must be -1 if url_or_path
+is not an URL.</p>
+
 <div class="svn_1005000">
 <p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
