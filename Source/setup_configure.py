@@ -37,6 +37,7 @@ all_options_info = {
     '--pycxx-src-dir':      (1, '<dir>'),
     '--svn-inc-dir':        (1, '<dir>'),
     '--svn-lib-dir':        (1, '<dir>'),
+    '--svn-bin-dir':        (1, '<dir>'),
     '--svn-root-dir':       (1, '<dir>'),
     '--verbose':            (0, None),
     }
