@@ -657,6 +657,38 @@ static svn_error_t *log4Receiver
     entry_dict[ name_revision ] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, log_entry->revision ) );
 
     Py::List changed_paths_list;
+#if defined( PYSVN_HAS_CLIENT_LOG5 )
+    if( log_entry->changed_paths2 != NULL )
+    {
+        for( apr_hash_index_t *hi = apr_hash_first( pool, log_entry->changed_paths2 );
+                hi != NULL;
+                    hi = apr_hash_next( hi ) )
+        {
+            Py::Dict changed_entry_dict;
+
+            char *path = NULL;
+            void *val = NULL;
+            apr_hash_this( hi, (const void **) &path, NULL, &val );
+
+            svn_log_changed_path_t *log_item = reinterpret_cast<svn_log_changed_path_t *> (val);
+
+            changed_entry_dict[ name_path ] = Py::String( path );
+
+            char action[2]; action[0] = log_item->action; action[1] = 0;
+            changed_entry_dict[ name_action ] = Py::String( action );
+
+            changed_entry_dict[ name_copyfrom_path ] = utf8_string_or_none( log_item->copyfrom_path );
+
+            if( SVN_IS_VALID_REVNUM( log_item->copyfrom_rev ) )
+                changed_entry_dict[ name_copyfrom_revision ] =
+                    Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, log_item->copyfrom_rev ) );
+            else
+                changed_entry_dict[ name_copyfrom_revision ] = Py::None();
+
+            changed_paths_list.append( baton->m_wrapper_log_changed_path->wrapDict( changed_entry_dict ) );
+        }
+    }
+#else
     if( log_entry->changed_paths != NULL )
     {
         for( apr_hash_index_t *hi = apr_hash_first( pool, log_entry->changed_paths );
@@ -687,6 +719,7 @@ static svn_error_t *log4Receiver
             changed_paths_list.append( baton->m_wrapper_log_changed_path->wrapDict( changed_entry_dict ) );
         }
     }
+#endif
 
     entry_dict[ name_changed_paths ] = changed_paths_list;
     entry_dict[ "has_children" ] = Py::Int( log_entry->has_children != 0 ? 1 : 0 );
