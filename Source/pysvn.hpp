@@ -623,7 +623,7 @@ public:
             case Py_GE:
                 return Py::Boolean( m_value >= other_value->m_value );
             default:
-            throw Py::RuntimeError( "rich_compare bad op" );
+                throw Py::RuntimeError( "rich_compare bad op" );
             }
         }
         else
@@ -631,7 +631,7 @@ public:
             std::string msg( "expecting " );
             msg += toTypeName( m_value );
             msg += " object for rich compare ";
-            throw Py::AttributeError( msg );
+            throw Py::NotImplementedError( msg );
         }
     }
 
