@@ -523,8 +523,12 @@ LDSHARED=g++ -shared %(debug_cflags)s
 LDLIBS=-L%(svn_lib_dir)s -Wl,--rpath -Wl,/usr/lib:/usr/local/lib:%(svn_lib_dir)s \
 -lsvn_client-1 \
 -lsvn_diff-1 \
--lsvn_repos-1 \
- -lkrb5 -lcom_err -lexpat -lneon
+-lsvn_repos-1
+
+.if exists(/usr/lib/libkrb5.so)
+LDLIBS+=-lkrb5
+.endif
+LDLIBS+=-lcom_err -lexpat -lneon
 
 #include pysvn_common.mak
 '''
