@@ -16,6 +16,7 @@ import sys
 import os
 import distutils
 import distutils.sysconfig
+import distutils.util
 
 import xml.dom.minidom
 import xml.sax
@@ -265,6 +266,13 @@ class MakeFileCreater:
                 py_cflags_list.append( '-Dinit_pysvn=init_pysvn_%d_%d' % sys.version_info[:2] )
                 py_cflags_list.append( '-Dinit_pysvn_d=init_pysvn_%d_%d_d' % sys.version_info[:2] )
 
+
+        pysvn_version_info = {}
+        f = open( 'Builder/version.info', 'r' )
+        for line in f:
+            key, value = line.strip().split('=')
+            pysvn_version_info[ key ] = value
+
         template_values = {
             'pysvn_module_name': pysvn_module_name,
 
@@ -297,6 +305,15 @@ class MakeFileCreater:
 
             # pycxx src dir
             'pycxx_src_dir':    pycxx_src_dir,
+
+            # python version:
+            'python_version':   '%d.%d' % (sys.version_info[0], sys.version_info[1]),
+
+            # python platform:
+            'python_platform':  distutils.util.get_platform(),
+
+            # pysvn version:
+            'pysvn_version':    '%(MAJOR)s.%(MINOR)s.%(PATCH)s' % pysvn_version_info,
 
             # mac arch options
             'mac_os_x_arch':    self.mac_os_x_arch
