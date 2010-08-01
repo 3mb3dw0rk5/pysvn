@@ -64,7 +64,10 @@ elif pymaj == 2 and pymin == 5:
     install_dir = '/Library/Frameworks/Python.framework/Versions/2.5/lib/python2.5/site-packages'
 
 elif pymaj == 2 and pymin == 6:
-    install_dir = '/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages'
+    if vendor == 'apple_com':
+        install_dir = '/Library/Python/2.6/site-packages'
+    else:
+        install_dir = '/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages'
 
 elif pymaj == 2 and pymin == 7:
     install_dir = '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages'
