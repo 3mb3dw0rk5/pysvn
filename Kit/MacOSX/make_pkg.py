@@ -13,12 +13,14 @@ os.system( 'uname -p >./uname-p.tmp' )
 processor = open( 'uname-p.tmp' ).read().strip()
 os.remove( 'uname-p.tmp' )
 
+vendor = os.environ.get( 'BUILDER_VENDOR', 'unknown' )
+
 if processor == 'i386':
     if hasattr( sys, 'maxsize' ):
         maxsize = sys.maxsize
     else:
         maxsize = sys.maxint
-
+    
     if maxsize == (2**31-1):
         processor = 'i386'
     else:
@@ -32,7 +34,7 @@ pysvn_short_version_string = '%d.%d.%d' % (pysvn.version[0], pysvn.version[1], p
 svn_version_package_string = '%d%d%d' % (pysvn.svn_version[0], pysvn.svn_version[1], pysvn.svn_version[2])
 svn_version_string = '%d.%d.%d' % (pysvn.svn_version[0], pysvn.svn_version[1], pysvn.svn_version[2])
 pysvn_so_string = '_pysvn_%d_%d.so' % (pymaj, pymin)
-pkg_filename = 'py%s%s_pysvn_svn%s-%s-%s' % (pymaj, pymin, svn_version_package_string, pysvn_version_string, processor)
+pkg_filename = 'py%s%s_%s_pysvn_svn%s-%s-%s' % (pymaj, pymin, vendor, svn_version_package_string, pysvn_version_string, processor)
 
 print( 'Info: Packageing %s' % pkg_filename )
 build_time  = time.time()
@@ -48,6 +50,9 @@ elif pymaj == 2 and pymin == 5:
 
 elif pymaj == 2 and pymin == 6:
     install_dir = '/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages'
+
+elif pymaj == 2 and pymin == 7:
+    install_dir = '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages'
 
 elif pymaj == 3 and pymin == 1:
     install_dir = '/Library/Frameworks/Python.framework/Versions/3.1/lib/python3.1/site-packages'
