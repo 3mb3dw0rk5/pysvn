@@ -9,9 +9,24 @@ sys.path.insert( 0, '../../Source')
 import pysvn
 import time
 
-os.system( 'uname -p >./uname-p.tmp' )
-processor = open( 'uname-p.tmp' ).read().strip()
-os.remove( 'uname-p.tmp' )
+os.system( 'lipo -info %s >lipo-info.tmp' % (sys.argv[0],) )
+lipo_info = open( 'lipo-info.tmp' ).read()
+os.remove( 'lipo-info.tmp' )
+
+is_x86_64 = 'x86_64' in lipo_info
+is_i386 = 'i386' in lipo_info
+
+if is_x86_64 and is_i386:
+    processor = 'intel'
+
+elif is_x86_64:
+    processor = 'x86_64'
+
+elif is_i386:
+    processor = 'i386'
+
+else:
+    assert False, 'Unknown processor type'
 
 vendor = os.environ.get( 'BUILDER_VENDOR', 'unknown' )
 
