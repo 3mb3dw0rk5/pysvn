@@ -9,7 +9,7 @@ sys.path.insert( 0, '../../Source')
 import pysvn
 import time
 
-os.system( 'lipo -info %s >lipo-info.tmp' % (sys.argv[0],) )
+os.system( 'lipo -info %s >lipo-info.tmp' % (sys.executable,) )
 lipo_info = open( 'lipo-info.tmp' ).read()
 os.remove( 'lipo-info.tmp' )
 
