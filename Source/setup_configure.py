@@ -187,7 +187,7 @@ class MakeFileCreater:
 
         if self.is_mac_os_x and self.hasOption( '--arch' ):
             print( 'Info: Building for arch %s' % ', '.join( self.getOption( '--arch' ) ) )
-            self.mac_os_x_arch = ', '.join( ['-arch %s' % (arch,) for arch in self.getOption( '--arch' )] )
+            self.mac_os_x_arch = ' '.join( ['-arch %s' % (arch,) for arch in self.getOption( '--arch' )] )
         else:
             self.mac_os_x_arch = ''
 
@@ -268,7 +268,7 @@ class MakeFileCreater:
 
 
         pysvn_version_info = {}
-        f = open( 'Builder/version.info', 'r' )
+        f = open( '../Builder/version.info', 'r' )
         for line in f:
             key, value = line.strip().split('=')
             pysvn_version_info[ key ] = value
@@ -336,13 +336,21 @@ class MakeFileCreater:
             var_ldlibrary = distutils.sysconfig.get_config_var('LDLIBRARY')
             framework_lib = os.path.join( var_prefix, os.path.basename( var_ldlibrary ) )
 
-            if self.is_atleast_mac_os_x_version( (10,4) ) >= 0:
+            if self.is_atleast_mac_os_x_version( (10,5) ) >= 0:
+                if self.verbose:
+                    print( 'Info: Using Mac OS X 10.5 makefile template' )
+
+                template_values['extra_libs'] = ''
+                template_values['frameworks'] = '-framework System %s -framework CoreFoundation -framework Kerberos -framework Security' % framework_lib
+
+            elif self.is_atleast_mac_os_x_version( (10,4) ) >= 0:
                 if self.verbose:
                     print( 'Info: Using Mac OS X 10.4 makefile template' )
 
                 # 10.4 needs the libintl.a but 10.3 does not
                 template_values['extra_libs'] = '%(svn_lib_dir)s/libintl.a' % template_values
                 template_values['frameworks'] = '-framework System %s -framework CoreFoundation -framework Kerberos -framework Security' % framework_lib
+
             else:
                 if self.verbose:
                     print( 'Info: Using Mac OS X 10.3 makefile template' )
