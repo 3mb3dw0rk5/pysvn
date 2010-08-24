@@ -198,7 +198,7 @@ Py::Object pysvn_client::cmd_cat( const Py::Tuple &a_args, const Py::Dict &a_kws
 
     // return the bytes as is to the application
     // we can assume nothing about them
-    return Py::String( stringbuf->data, (int)stringbuf->len );
+    return Py::Bytes( stringbuf->data, (int)stringbuf->len );
 }
 
 Py::Object pysvn_client::cmd_mkdir( const Py::Tuple &a_args, const Py::Dict &a_kws )
