@@ -49,10 +49,12 @@ pysvn_transaction::pysvn_transaction
 void pysvn_transaction::init
     (
     const std::string &repos_path,
-    const std::string &transaction_name
+    const std::string &transaction_name,
+    bool is_revision
     )
 {
-    svn_error_t *error = m_transaction.init( repos_path, transaction_name );
+    svn_error_t *error = m_transaction.init( repos_path, transaction_name,
+        is_revision );
     if( error != NULL )
     {
         SvnException e( error );
@@ -138,7 +140,7 @@ Py::Object pysvn_transaction::cmd_cat( const Py::Tuple &a_args, const Py::Dict &
         svn_error_t *error;
 
         svn_fs_root_t *txn_root = NULL;
-        error = svn_fs_txn_root( &txn_root, m_transaction, pool );
+        error = m_transaction.root( &txn_root, pool );
         if( error != NULL )
             throw SvnException( error );
 
@@ -188,11 +190,23 @@ Py::Object pysvn_transaction::cmd_changed( const Py::Tuple &a_args, const Py::Di
 
     try
     {
-        svn_revnum_t base_rev = svn_fs_txn_base_revision( m_transaction );
-        if( !SVN_IS_VALID_REVNUM( base_rev ) )
-            throw Py::RuntimeError( "svn_fs_txn_base_revision failed" );
-
         svn_error_t *error;
+        svn_revnum_t base_rev;
+        if( m_transaction.is_revision() )
+        {
+            base_rev = m_transaction.revision() - 1;
+        }
+        else
+        {
+            base_rev = svn_fs_txn_base_revision( m_transaction );
+        }
+        if( !SVN_IS_VALID_REVNUM( base_rev ) )
+        {
+            error = svn_error_create( SVN_ERR_FS_NO_SUCH_REVISION,
+                NULL, "Transaction is not based on a revision" );
+            throw SvnException( error );
+        }
+
         // Get the base root.
         svn_fs_root_t *base_rev_root = NULL;
         error = svn_fs_revision_root( &base_rev_root, m_transaction, base_rev, pool );
@@ -200,7 +214,7 @@ Py::Object pysvn_transaction::cmd_changed( const Py::Tuple &a_args, const Py::Di
             throw SvnException( error );
 
         svn_fs_root_t *txn_root = NULL;
-        error = svn_fs_txn_root( &txn_root, m_transaction, pool );
+        error = m_transaction.root( &txn_root, pool );
         if( error != NULL )
             throw SvnException( error );
 
@@ -266,7 +280,7 @@ Py::Object pysvn_transaction::cmd_propdel( const Py::Tuple &a_args, const Py::Di
         svn_error_t * error;
 
         svn_fs_root_t *txn_root = NULL;
-        error = svn_fs_txn_root( &txn_root, m_transaction, pool );
+        error = m_transaction.root( &txn_root, pool );
         if( error != NULL )
             throw SvnException( error );
 
@@ -322,7 +336,7 @@ Py::Object pysvn_transaction::cmd_propget( const Py::Tuple &a_args, const Py::Di
     {
         svn_error_t * error;
         svn_fs_root_t *txn_root = NULL;
-        error = svn_fs_txn_root( &txn_root, m_transaction, pool );
+        error = m_transaction.root( &txn_root, pool );
         if( error != NULL )
             throw SvnException( error );
 
@@ -376,7 +390,7 @@ Py::Object pysvn_transaction::cmd_proplist( const Py::Tuple &a_args, const Py::D
     {
         svn_error_t * error;
         svn_fs_root_t *txn_root = NULL;
-        error = svn_fs_txn_root( &txn_root, m_transaction, pool );
+        error = m_transaction.root( &txn_root, pool );
         if( error != NULL )
             throw SvnException( error );
 
@@ -426,7 +440,7 @@ Py::Object pysvn_transaction::cmd_propset( const Py::Tuple &a_args, const Py::Di
         svn_error_t * error;
 
         svn_fs_root_t *txn_root = NULL;
-        error = svn_fs_txn_root( &txn_root, m_transaction, pool );
+        error = m_transaction.root( &txn_root, pool );
         if( error != NULL )
             throw SvnException( error );
 
@@ -478,13 +492,28 @@ Py::Object pysvn_transaction::cmd_revpropdel( const Py::Tuple &a_args, const Py:
 
     try
     {
-        svn_error_t *error = svn_fs_change_txn_prop
-            (
-            m_transaction,
-            prop_name.c_str(),
-            NULL,            // value = NULL
-            pool
-            );
+        svn_error_t *error;
+        if( m_transaction.is_revision() )
+        {
+            error = svn_fs_change_rev_prop
+                (
+                m_transaction,
+                m_transaction.revision(),
+                prop_name.c_str(),
+                NULL,            // value = NULL
+                pool
+                );
+        }
+        else
+        {
+            error = svn_fs_change_txn_prop
+                (
+                m_transaction,
+                prop_name.c_str(),
+                NULL,            // value = NULL
+                pool
+                );
+        }
         if( error != NULL )
             throw SvnException( error );
     }
@@ -514,7 +543,28 @@ Py::Object pysvn_transaction::cmd_revpropget( const Py::Tuple &a_args, const Py:
 
     try
     {
-        svn_error_t * error = svn_fs_txn_prop( &prop_val, m_transaction, prop_name.c_str(), pool );
+        svn_error_t *error;
+        if( m_transaction.is_revision() )
+        {
+            error = svn_fs_revision_prop
+                (
+                &prop_val,
+                m_transaction,
+                m_transaction.revision(),
+                prop_name.c_str(),
+                pool
+                );
+        }
+        else
+        {
+            error = svn_fs_txn_prop
+                (
+                &prop_val,
+                m_transaction,
+                prop_name.c_str(),
+                pool
+                );
+        }
         if( error != NULL )
             throw SvnException( error );
     }
@@ -548,12 +598,26 @@ Py::Object pysvn_transaction::cmd_revproplist( const Py::Tuple &a_args, const Py
 
     try
     {
-        svn_error_t *error = svn_fs_txn_proplist
-            (
-            &props,
-            m_transaction,
-            pool
-            );
+        svn_error_t *error;
+        if( m_transaction.is_revision() )
+        {
+            error = svn_fs_revision_proplist
+                (
+                &props,
+                m_transaction,
+                m_transaction.revision(),
+                pool
+                );
+        }
+        else
+        {
+            error = svn_fs_txn_proplist
+                (
+                &props,
+                m_transaction,
+                pool
+                );
+        }
         if( error != NULL )
             throw SvnException( error );
     }
@@ -584,13 +648,28 @@ Py::Object pysvn_transaction::cmd_revpropset( const Py::Tuple &a_args, const Py:
     try
     {
         const svn_string_t *svn_prop_val = svn_string_ncreate( prop_val.c_str(), prop_val.size(), pool );
-        svn_error_t *error = svn_fs_change_txn_prop
-            (
-            m_transaction,
-            prop_name.c_str(),
-            svn_prop_val,
-            pool
-            );
+        svn_error_t *error;
+        if( m_transaction.is_revision() )
+        {
+            error = svn_fs_change_rev_prop
+                (
+                m_transaction,
+                m_transaction.revision(),
+                prop_name.c_str(),
+                svn_prop_val,
+                pool
+                );
+        }
+        else
+        {
+            error = svn_fs_change_txn_prop
+                (
+                m_transaction,
+                prop_name.c_str(),
+                svn_prop_val,
+                pool
+                );
+        }
         if( error != NULL )
             throw SvnException( error );
     }

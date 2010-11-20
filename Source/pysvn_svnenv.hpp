@@ -360,12 +360,16 @@ public:
     SvnTransaction();
     ~SvnTransaction();
 
-    svn_error_t *init( const std::string &repos_path, const std::string &transaction );
+    svn_error_t *init( const std::string &repos_path, const std::string &transaction,
+        bool is_revision );
 
     operator svn_fs_txn_t *();
     svn_fs_txn_t *transaction();
     operator svn_fs_t *();
     operator svn_repos_t *();
+    svn_revnum_t revision();
+    bool is_revision() const { return m_txn == NULL; };
+    svn_error_t *root( svn_fs_root_t **root, apr_pool_t *pool );
 
 private:
     apr_pool_t          *m_pool;
@@ -373,6 +377,7 @@ private:
     svn_fs_t            *m_fs;
     svn_fs_txn_t        *m_txn;
     char                *m_txn_name;
+    svn_revnum_t         m_rev_id;
 };
 
 #endif // __PYSVN_SVNENV__

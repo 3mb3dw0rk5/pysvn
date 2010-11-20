@@ -147,5 +147,5 @@ except ImportError as e:
 def Client( config_dir='' ):
     return _pysvn._Client( config_dir, result_wrappers=globals() )
 
-def Transaction( repos_path, transaction_name ):
-    return _pysvn._Transaction( repos_path, transaction_name, result_wrappers=globals() )
+def Transaction( repos_path, transaction_name, is_revision=False ):
+    return _pysvn._Transaction( repos_path, transaction_name, is_revision, result_wrappers=globals() )

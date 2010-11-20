@@ -349,7 +349,7 @@ public:
     pysvn_transaction( pysvn_module &module, Py::Dict result_wrappers );
     virtual ~pysvn_transaction();
     void init( const std::string &repos_path,
-        const std::string &transaction_name );
+        const std::string &transaction_name, bool is_revision );
 
     // override functions from PythonExtension
     virtual Py::Object getattr( const char *name );

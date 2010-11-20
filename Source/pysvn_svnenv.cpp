@@ -595,11 +595,13 @@ SvnTransaction::SvnTransaction()
 , m_fs( NULL )
 , m_txn( NULL )
 , m_txn_name( NULL )
+, m_rev_id( SVN_INVALID_REVNUM )
 {
     apr_pool_create( &m_pool, NULL );
 }
 
-svn_error_t *SvnTransaction::init( const std::string &repos_path, const std::string &transaction_name )
+svn_error_t *SvnTransaction::init( const std::string &repos_path,
+    const std::string &transaction_name, bool is_revision )
 {
     svn_error_t *error;
     error = svn_repos_open( &m_repos, repos_path.c_str(), m_pool );
@@ -610,14 +612,34 @@ svn_error_t *SvnTransaction::init( const std::string &repos_path, const std::str
     // what is a warning function?
     // svn_fs_set_warning_func (m_fs, warning_func, NULL);
 
-    m_txn_name = apr_pstrdup( m_pool, transaction_name.c_str() );
-    error = svn_fs_open_txn( &m_txn, m_fs, m_txn_name, m_pool );
+    if( is_revision )
+    {
+        Py::String rev_name( transaction_name );
+        Py::Long long_val( rev_name );
+        m_rev_id = (long)long_val;
+        if (! SVN_IS_VALID_REVNUM( m_rev_id ))
+            return svn_error_create( SVN_ERR_CL_ARG_PARSING_ERROR, NULL,
+                "invalid revision number supplied" );
+    }
+    else
+    {
+        m_txn_name = apr_pstrdup( m_pool, transaction_name.c_str() );
+        error = svn_fs_open_txn( &m_txn, m_fs, m_txn_name, m_pool );
+    }
 
     return error;
 }
 
 SvnTransaction::~SvnTransaction()
 {
+}
+
+svn_error_t *SvnTransaction::root( svn_fs_root_t **root, apr_pool_t *pool )
+{
+    if( is_revision() )
+        return svn_fs_revision_root( root, m_fs, m_rev_id, pool );
+    else
+        return svn_fs_txn_root( root, m_txn, pool );
 }
 
 SvnTransaction::operator svn_fs_txn_t *()
@@ -639,6 +661,11 @@ SvnTransaction::operator svn_repos_t *()
 svn_fs_txn_t *SvnTransaction::transaction()
 {
     return m_txn;
+}
+
+svn_revnum_t SvnTransaction::revision()
+{
+    return m_rev_id;
 }
 
 //--------------------------------------------------------------------------------

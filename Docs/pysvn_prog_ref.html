@@ -2058,7 +2058,7 @@ an older revision, use a merge followed by a commit.
 
 <pre>
 transaction = pysvn.Transaction()
-transaction = pysvn.Transaction( repos_path, transaction_name )
+transaction = pysvn.Transaction( repos_path, transaction_name, [is_revision=False] )
 </pre>
 
 <p>The Transaction object allows you to implement hook code for
@@ -2071,6 +2071,15 @@ the SVN documentation for details on hook scripts.
 If two threads attempt to call methods of Transaction at the same
 time one of the threads will get a pysvn.TransactionError exception
 with the value 'transaction in use on another thread'.
+</p>
+
+<p>When the optional parameter is_revision is True, than the
+transaction_name parameter will be interpreted as a revision number
+and all subsequent operation will be performed on this revision.
+Note that the propdel and propset operations will fail than.
+This option lets you use the Transation object to write post-commit
+hooks with the same API than pre-commit hooks, and lets you easily test
+your pre-commit hook on revisions.
 </p>
 
 <h3><a name="pysvn_transaction_methods">Transaction methods</a></h3>
@@ -2115,7 +2124,7 @@ changed( [copy_info=False] )
 </pre>
 <p>
 Return a dict of all changes in the transaction. The keys in
-the dict are the path names and the values are tuples contraining
+the dict are the path names and the values are tuples containing
 action, kind, text_mod, prop_mod.
 </p>
 <p>

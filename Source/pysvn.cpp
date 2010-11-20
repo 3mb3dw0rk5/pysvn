@@ -188,6 +188,7 @@ Py::Object pysvn_module::new_transaction( const Py::Tuple &a_args, const Py::Dic
     {
     { true, name_repos_path },
     { true, name_transaction_name },
+    { false, name_is_revision },
     { false, name_result_wrappers },
     { false, NULL }
     };
@@ -197,6 +198,7 @@ Py::Object pysvn_module::new_transaction( const Py::Tuple &a_args, const Py::Dic
 
     std::string repos_path = args.getUtf8String( name_repos_path );
     std::string transaction_name = args.getUtf8String( name_transaction_name );
+    bool is_revision = args.getBoolean( name_is_revision, false );
 
     Py::Dict result_wrappers_dict;
     if( args.hasArg( name_result_wrappers ) )
@@ -204,7 +206,7 @@ Py::Object pysvn_module::new_transaction( const Py::Tuple &a_args, const Py::Dic
 
     pysvn_transaction *t = new pysvn_transaction( *this, result_wrappers_dict );
     Py::Object result( Py::asObject( t ) );
-    t->init( repos_path, transaction_name );
+    t->init( repos_path, transaction_name, is_revision );
     return result;
 }
 

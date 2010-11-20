@@ -32,15 +32,23 @@ cmd ${PYSVN} mkdir file://${TESTROOT}/repos/trunk/test -m "test-04 add test"
 echo Info: Install hooks
 echo '#!/bin/sh' >${TESTROOT}/repos/hooks/pre-commit
 echo export PYTHONPATH=$PYTHONPATH >>${TESTROOT}/repos/hooks/pre-commit
-echo echo $PYTHON ${WORKDIR}/Tests/test_04_pre_commit_test_1.py '"$@"' ">${TESTROOT}/test_1.output" >>${TESTROOT}/repos/hooks/pre-commit
-echo $PYTHON ${WORKDIR}/Tests/test_04_pre_commit_test_1.py '"$@"' ">>${TESTROOT}/test_1.output" >>${TESTROOT}/repos/hooks/pre-commit
+echo echo $PYTHON ${WORKDIR}/Tests/test_04_commit_hook_test_1.py '"$@"' ">${TESTROOT}/pre_test_1.output" >>${TESTROOT}/repos/hooks/pre-commit
+echo $PYTHON ${WORKDIR}/Tests/test_04_commit_hook_test_1.py '"$@"' ">>${TESTROOT}/pre_test_1.output" >>${TESTROOT}/repos/hooks/pre-commit
 chmod +x ${TESTROOT}/repos/hooks/pre-commit
 
+echo '#!/bin/sh' >${TESTROOT}/repos/hooks/post-commit
+echo export PYTHONPATH=$PYTHONPATH >>${TESTROOT}/repos/hooks/post-commit
+echo echo $PYTHON ${WORKDIR}/Tests/test_04_commit_hook_test_1.py '"$@"' is_revision ">${TESTROOT}/post_test_1.output" >>${TESTROOT}/repos/hooks/post-commit
+echo $PYTHON ${WORKDIR}/Tests/test_04_commit_hook_test_1.py '"$@"' is_revision ">>${TESTROOT}/post_test_1.output" >>${TESTROOT}/repos/hooks/post-commit
+chmod +x ${TESTROOT}/repos/hooks/post-commit
 
 cmd ${PYSVN} mkdir file://${TESTROOT}/repos/trunk/test/a -m "pre-commit test 1"
-echo Info: test_1.output start ----------------------------------------
-cat ${TESTROOT}/test_1.output
-echo Info: test_1.output end ------------------------------------------
+echo Info: pre_test_1.output start ------------------------------------
+cat ${TESTROOT}/pre_test_1.output
+echo Info: pre_test_1.output end --------------------------------------
+echo Info: post_test_1.output start -----------------------------------
+cat ${TESTROOT}/post_test_1.output
+echo Info: post_test_1.output end -------------------------------------
 
 
 echo Info: Add two files
@@ -52,31 +60,43 @@ echo file1 A > ${TESTROOT}/wc/a/file1.txt
 cmd ${PYSVN} add ${TESTROOT}/wc/file1.txt
 cmd ${PYSVN} add ${TESTROOT}/wc/a/file1.txt
 cmd ${PYSVN} checkin -m "Add two files" ${TESTROOT}/wc
-echo Info: test_1.output start ----------------------------------------
-cat ${TESTROOT}/test_1.output
-echo Info: test_1.output end ------------------------------------------
+echo Info: pre_test_1.output start ------------------------------------
+cat ${TESTROOT}/pre_test_1.output
+echo Info: pre_test_1.output end --------------------------------------
+echo Info: post_test_1.output start -----------------------------------
+cat ${TESTROOT}/post_test_1.output
+echo Info: post_test_1.output end -------------------------------------
 
 echo Info: Mod one file Mod one prop
 
 echo file1 ROOT ln 2 > ${TESTROOT}/wc/file1.txt
 cmd ${PYSVN} propset svn:eol-style native ${TESTROOT}/wc/a/file1.txt
 cmd ${PYSVN} checkin -m "Mod one file Mod one prop" ${TESTROOT}/wc
-echo Info: test_1.output start ----------------------------------------
-cat ${TESTROOT}/test_1.output
-echo Info: test_1.output end ------------------------------------------
+echo Info: pre_test_1.output start ------------------------------------
+cat ${TESTROOT}/pre_test_1.output
+echo Info: pre_test_1.output end --------------------------------------
+echo Info: post_test_1.output start -----------------------------------
+cat ${TESTROOT}/post_test_1.output
+echo Info: post_test_1.output end -------------------------------------
 
 echo Info: Delete one file
 
 cmd ${PYSVN} rm ${TESTROOT}/wc/a/file1.txt
 cmd ${PYSVN} checkin -m "Delete one file" ${TESTROOT}/wc
-echo Info: test_1.output start ----------------------------------------
-cat ${TESTROOT}/test_1.output
-echo Info: test_1.output end ------------------------------------------
+echo Info: pre_test_1.output start ------------------------------------
+cat ${TESTROOT}/pre_test_1.output
+echo Info: pre_test_1.output end --------------------------------------
+echo Info: post_test_1.output start -----------------------------------
+cat ${TESTROOT}/post_test_1.output
+echo Info: post_test_1.output end -------------------------------------
 
 echo Info: Copy one file
 
 cmd ${PYSVN} cp ${TESTROOT}/wc/file1.txt ${TESTROOT}/wc/file1copy.txt
 cmd ${PYSVN} checkin -m "Copy one file" ${TESTROOT}/wc
-echo Info: test_1.output start ----------------------------------------
-cat ${TESTROOT}/test_1.output
-echo Info: test_1.output end ------------------------------------------
+echo Info: pre_test_1.output start ------------------------------------
+cat ${TESTROOT}/pre_test_1.output
+echo Info: pre_test_1.output end --------------------------------------
+echo Info: post_test_1.output start -----------------------------------
+cat ${TESTROOT}/post_test_1.output
+echo Info: post_test_1.output end -------------------------------------
