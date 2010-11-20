@@ -41,4 +41,16 @@ for name, (action, kind, text_mod, prop_mod, copyfrom_rev, copyfrom_path) in cha
         if kind == pysvn.node_kind.file:
             print( '     contents: %r' % t.cat( name ) )
 
+print( 'Info: list() ...' )
+def recursive_list( path ):
+    entries = t.list( path )
+    entry_list = list( entries.items() )
+    entry_list.sort()
+    for name, kind in entry_list:
+        full = '%s/%s' % (path, name)
+        print( '%s: kind=%r' % (full, kind) )
+        if kind == pysvn.node_kind.dir:
+            recursive_list( full )
+recursive_list( '' )
+
 sys.exit( 0 )

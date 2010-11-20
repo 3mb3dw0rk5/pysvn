@@ -359,6 +359,7 @@ public:
     // SVN Transaction commands
     Py::Object cmd_cat( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_changed( const Py::Tuple& args, const Py::Dict &kws );
+    Py::Object cmd_list( const Py::Tuple& args, const Py::Dict &kws );
 
     Py::Object cmd_propdel( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_propget( const Py::Tuple& args, const Py::Dict &kws );
@@ -791,6 +792,7 @@ extern apr_array_header_t *targetsFromStringOrList( Py::Object arg, SvnPool &poo
 extern Py::List toListOfStrings( Py::Object obj );
 extern apr_array_header_t *arrayOfStringsFromListOfStrings( Py::Object arg, SvnPool &pool );
 extern apr_hash_t *hashOfStringsFromDistOfStrings( Py::Object arg, SvnPool &pool );
+extern Py::Object direntsToObject( apr_hash_t *props, SvnPool &pool );
 
 Py::Object toObject( apr_time_t t );
 Py::Object toObject( pysvn_commit_info_t *commit_info, int commit_style );

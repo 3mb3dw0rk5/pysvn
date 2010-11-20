@@ -2089,6 +2089,7 @@ your pre-commit hook on revisions.
 
 <td><a href="#pysvn_transaction_cat">cat</a></td>
 <td><a href="#pysvn_transaction_changed">changed</a></td>
+<td><a href="#pysvn_transaction_list">list</a></td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
@@ -2141,6 +2142,18 @@ The optional copy_info parameter when True will return the copy from revision an
 <li>copyfrom_rev - int - when path has been copied this is its copy from revision number</li>
 <li>copyfrom_path - int - when path has been copied this is its copy from path</li>
 </ul>
+
+<h4><a name="pysvn_transaction_list"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.list</a></h4>
+<pre>
+path_content = list( [path] )
+</pre>
+<p>
+Return a dict of all entries in the directory 'path'. The keys in
+the dict are the path names and the value contains the kind (one of
+the pysvn.<a href="#pysvn_node_kind">node_kind</a> values). If 'path'
+is not given the root of the repository will be examined. This is a same
+as '' and '/' as path.
+</p>
 
 <h4><a name="pysvn_transaction_propdel"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.propdel</a></h4>
 <pre>

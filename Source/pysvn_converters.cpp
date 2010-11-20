@@ -643,3 +643,21 @@ apr_hash_t *hashOfStringsFromDistOfStrings( Py::Object arg, SvnPool &pool )
 
     return hash;
 }
+
+Py::Object direntsToObject( apr_hash_t *dirents, SvnPool &pool )
+{
+    Py::Dict py_dirents_dict;
+
+    for( apr_hash_index_t *hi = apr_hash_first( pool, dirents ); hi; hi = apr_hash_next( hi ) )
+    {
+        const void *key = NULL;
+        void *val = NULL;
+
+        apr_hash_this (hi, &key, NULL, &val);
+        const svn_fs_dirent_t *dirent = (const svn_fs_dirent_t *)val;
+
+        py_dirents_dict[ Py::String( (const char *)key ) ] = toEnumValue( dirent->kind );
+    }
+
+    return py_dirents_dict;
+}

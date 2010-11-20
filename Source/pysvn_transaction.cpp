@@ -244,6 +244,61 @@ Py::Object pysvn_transaction::cmd_changed( const Py::Tuple &a_args, const Py::Di
     return dict;
 }
 
+Py::Object pysvn_transaction::cmd_list( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { false,  name_path },
+    { false, NULL }
+    };
+    FunctionArguments args( "list", args_desc, a_args, a_kws );
+    args.check();
+
+    std::string path( args.getUtf8String( name_path, empty_string ) );
+
+    SvnPool pool( m_transaction );
+
+    apr_hash_t *dir_entries = NULL;
+
+    try
+    {
+        svn_error_t *error;
+
+        svn_fs_root_t *txn_root = NULL;
+        error = m_transaction.root( &txn_root, pool );
+        if( error != NULL )
+            throw SvnException( error );
+
+        svn_node_kind_t kind;
+        error = svn_fs_check_path( &kind, txn_root, path.c_str(), pool );
+        if( error != NULL )
+            throw SvnException( error );
+
+        if( kind == svn_node_none )
+        {
+            error = svn_error_createf( SVN_ERR_FS_NOT_FOUND, NULL, "Path '%s' does not exist", path.c_str() );
+            throw SvnException( error );
+        }
+
+        if( kind != svn_node_dir )
+        {
+            error = svn_error_createf( SVN_ERR_FS_NOT_DIRECTORY, NULL, "Path '%s' is not a directory", path.c_str() );
+            throw SvnException( error );
+        }
+
+        error = svn_fs_dir_entries( &dir_entries, txn_root, path.c_str(), pool );
+        if( error != NULL )
+            throw SvnException( error );
+
+    }
+    catch( SvnException &e )
+    {
+        throw_client_error( e );
+    }
+
+    return direntsToObject( dir_entries, pool );
+}
+
 #if 0
 Py::Object pysvn_transaction::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
@@ -691,6 +746,7 @@ void pysvn_transaction::init_type()
 
     add_keyword_method("cat", &pysvn_transaction::cmd_cat, pysvn_transaction_cat_doc );
     add_keyword_method("changed", &pysvn_transaction::cmd_changed, pysvn_transaction_changed_doc );
+    add_keyword_method("list", &pysvn_transaction::cmd_list, pysvn_transaction_list_doc );
 #if 0
     add_keyword_method("diff", &pysvn_transaction::cmd_diff, pysvn_transaction_diff_doc );
 #endif

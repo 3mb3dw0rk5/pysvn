@@ -23,6 +23,10 @@ Info: changed() ...
 trunk/test/a: action='A', kind=<node_kind.dir>, text_mod=0, prop_mod=0
 Info: changed( copy_info=True ) ...
 trunk/test/a: action='A', kind=<node_kind.dir>, text_mod=0, prop_mod=0 copyfrom_rev=0 copyfrom_path=None
+Info: list() ...
+/trunk: kind=<node_kind.dir>
+/trunk/test: kind=<node_kind.dir>
+/trunk/test/a: kind=<node_kind.dir>
 Info: pre_test_1.output end --------------------------------------
 Info: post_test_1.output start -----------------------------------
 /Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 3 is_revision
@@ -36,6 +40,10 @@ Info: changed() ...
 trunk/test/a: action='A', kind=<node_kind.dir>, text_mod=0, prop_mod=0
 Info: changed( copy_info=True ) ...
 trunk/test/a: action='A', kind=<node_kind.dir>, text_mod=0, prop_mod=0 copyfrom_rev=0 copyfrom_path=None
+Info: list() ...
+/trunk: kind=<node_kind.dir>
+/trunk/test: kind=<node_kind.dir>
+/trunk/test/a: kind=<node_kind.dir>
 Info: post_test_1.output end -------------------------------------
 Info: Add two files
 Info: Command: /Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir checkout file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos/trunk/test /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc
@@ -69,6 +77,12 @@ trunk/test/a/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=
      contents: 'file1 A\n'
 trunk/test/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0 copyfrom_rev=0 copyfrom_path=None
      contents: 'file1 ROOT\n'
+Info: list() ...
+/trunk: kind=<node_kind.dir>
+/trunk/test: kind=<node_kind.dir>
+/trunk/test/a: kind=<node_kind.dir>
+/trunk/test/a/file1.txt: kind=<node_kind.file>
+/trunk/test/file1.txt: kind=<node_kind.file>
 Info: pre_test_1.output end --------------------------------------
 Info: post_test_1.output start -----------------------------------
 /Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 4 is_revision
@@ -88,6 +102,12 @@ trunk/test/a/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=
      contents: 'file1 A\n'
 trunk/test/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0 copyfrom_rev=0 copyfrom_path=None
      contents: 'file1 ROOT\n'
+Info: list() ...
+/trunk: kind=<node_kind.dir>
+/trunk/test: kind=<node_kind.dir>
+/trunk/test/a: kind=<node_kind.dir>
+/trunk/test/a/file1.txt: kind=<node_kind.file>
+/trunk/test/file1.txt: kind=<node_kind.file>
 Info: post_test_1.output end -------------------------------------
 Info: Mod one file Mod one prop
 Info: Command: /Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir propset svn:eol-style native /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
@@ -117,6 +137,12 @@ trunk/test/a/file1.txt: action='R', kind=<node_kind.file>, text_mod=0, prop_mod=
      contents: 'file1 A\n'
 trunk/test/file1.txt: action='R', kind=<node_kind.file>, text_mod=1, prop_mod=0 copyfrom_rev=0 copyfrom_path=None
      contents: 'file1 ROOT ln 2\n'
+Info: list() ...
+/trunk: kind=<node_kind.dir>
+/trunk/test: kind=<node_kind.dir>
+/trunk/test/a: kind=<node_kind.dir>
+/trunk/test/a/file1.txt: kind=<node_kind.file>
+/trunk/test/file1.txt: kind=<node_kind.file>
 Info: pre_test_1.output end --------------------------------------
 Info: post_test_1.output start -----------------------------------
 /Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 5 is_revision
@@ -138,6 +164,12 @@ trunk/test/a/file1.txt: action='R', kind=<node_kind.file>, text_mod=0, prop_mod=
      contents: 'file1 A\n'
 trunk/test/file1.txt: action='R', kind=<node_kind.file>, text_mod=1, prop_mod=0 copyfrom_rev=0 copyfrom_path=None
      contents: 'file1 ROOT ln 2\n'
+Info: list() ...
+/trunk: kind=<node_kind.dir>
+/trunk/test: kind=<node_kind.dir>
+/trunk/test/a: kind=<node_kind.dir>
+/trunk/test/a/file1.txt: kind=<node_kind.file>
+/trunk/test/file1.txt: kind=<node_kind.file>
 Info: post_test_1.output end -------------------------------------
 Info: Delete one file
 Info: Command: /Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir rm /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
@@ -158,6 +190,11 @@ Info: changed() ...
 trunk/test/a/file1.txt: action='D', kind=<node_kind.file>, text_mod=0, prop_mod=0
 Info: changed( copy_info=True ) ...
 trunk/test/a/file1.txt: action='D', kind=<node_kind.file>, text_mod=0, prop_mod=0 copyfrom_rev=0 copyfrom_path=None
+Info: list() ...
+/trunk: kind=<node_kind.dir>
+/trunk/test: kind=<node_kind.dir>
+/trunk/test/a: kind=<node_kind.dir>
+/trunk/test/file1.txt: kind=<node_kind.file>
 Info: pre_test_1.output end --------------------------------------
 Info: post_test_1.output start -----------------------------------
 /Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 6 is_revision
@@ -171,6 +208,11 @@ Info: changed() ...
 trunk/test/a/file1.txt: action='D', kind=<node_kind.file>, text_mod=0, prop_mod=0
 Info: changed( copy_info=True ) ...
 trunk/test/a/file1.txt: action='D', kind=<node_kind.file>, text_mod=0, prop_mod=0 copyfrom_rev=0 copyfrom_path=None
+Info: list() ...
+/trunk: kind=<node_kind.dir>
+/trunk/test: kind=<node_kind.dir>
+/trunk/test/a: kind=<node_kind.dir>
+/trunk/test/file1.txt: kind=<node_kind.file>
 Info: post_test_1.output end -------------------------------------
 Info: Copy one file
 Info: Command: /Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir cp /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/file1.txt /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/file1copy.txt
@@ -193,6 +235,12 @@ trunk/test/file1copy.txt: action='A', kind=<node_kind.file>, text_mod=0, prop_mo
 Info: changed( copy_info=True ) ...
 trunk/test/file1copy.txt: action='A', kind=<node_kind.file>, text_mod=0, prop_mod=0 copyfrom_rev=5 copyfrom_path=u'/trunk/test/file1.txt'
      contents: 'file1 ROOT ln 2\n'
+Info: list() ...
+/trunk: kind=<node_kind.dir>
+/trunk/test: kind=<node_kind.dir>
+/trunk/test/a: kind=<node_kind.dir>
+/trunk/test/file1.txt: kind=<node_kind.file>
+/trunk/test/file1copy.txt: kind=<node_kind.file>
 Info: pre_test_1.output end --------------------------------------
 Info: post_test_1.output start -----------------------------------
 /Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 7 is_revision
@@ -208,4 +256,10 @@ trunk/test/file1copy.txt: action='A', kind=<node_kind.file>, text_mod=0, prop_mo
 Info: changed( copy_info=True ) ...
 trunk/test/file1copy.txt: action='A', kind=<node_kind.file>, text_mod=0, prop_mod=0 copyfrom_rev=5 copyfrom_path=u'/trunk/test/file1.txt'
      contents: 'file1 ROOT ln 2\n'
+Info: list() ...
+/trunk: kind=<node_kind.dir>
+/trunk/test: kind=<node_kind.dir>
+/trunk/test/a: kind=<node_kind.dir>
+/trunk/test/file1.txt: kind=<node_kind.file>
+/trunk/test/file1copy.txt: kind=<node_kind.file>
 Info: post_test_1.output end -------------------------------------
