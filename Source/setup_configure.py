@@ -24,6 +24,9 @@ import xml.sax
 class SetupError(Exception):
     pass
 
+# version of PyCXX that we require
+pycxx_version = (6, 2, 2)
+
 
 all_options_info = {
     '--arch':               (2, '<arch>'),
@@ -770,8 +773,6 @@ LDLIBS= \
 '''
 
     def find_pycxx( self ):
-        pycxx_version = (6, 2, 1)
-
         pycxx_dir = self.find_dir(
                     'PyCXX include',
                     '--pycxx-dir',
@@ -790,13 +791,12 @@ LDLIBS= \
             if 'PYCXX_VERSION_MAJOR' in words:
                 major_match = int( words[2] ) == pycxx_version[0]
             if 'PYCXX_VERSION_MINOR' in words:
-                minor_match = int( words[2] ) == pycxx_version[0]
+                minor_match = int( words[2] ) == pycxx_version[1]
 
         if not major_match and not minor_match:
             raise SetupError( 'PyCXX version not as required.' )
 
         return pycxx_dir
-
 
     def find_pycxx_src( self, pycxx_dir ):
         return self.find_dir(
