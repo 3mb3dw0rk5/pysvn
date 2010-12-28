@@ -332,7 +332,7 @@ class SvnCommand:
     def cmd_cat( self, args ):
         revision = args.getOptionalRevision( '--revision', 'head' )
         text = self.client.cat( args.getPositionalArgs( 1, 1 )[0], revision=revision )
-        print( text )
+        print( text.decode( 'utf-8' ) )
 
     def cmd_checkout( self, args ):
         recurse = args.getBooleanOption( '--non-recursive', False )
