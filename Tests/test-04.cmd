@@ -17,20 +17,22 @@ rem mkdir
 %PYSVN% mkdir file:///b:/repos/trunk/test -m "test-01 add test"
 
 rem Install hooks
-rem echo echo svnlook info %%1 -t %%2 ^>b:\test_1.output >b:\repos\hooks\pre-commit.cmd
-rem echo svnlook info %%1 -t %%2 ^>^>b:\test_1.output >>b:\repos\hooks\pre-commit.cmd
-rem echo echo svnlook changed %%1 -t %%2 ^>^>b:\test_1.output >>b:\repos\hooks\pre-commit.cmd
-rem echo svnlook changed %%1 -t %%2 ^>^>b:\test_1.output >>b:\repos\hooks\pre-commit.cmd
-echo echo %PYTHON% %WORKDIR%\Tests\test_04_pre_commit_test_1.py %%* ^>b:\test_1.output >>b:\repos\hooks\pre-commit.cmd
+echo echo %PYTHON% %WORKDIR%\Tests\test_04_commit_hook_test_1.py %%* ^>b:\pre_test_1.output >>b:\repos\hooks\pre-commit.cmd
 echo set PYTHONPATH=%PYTHONPATH% >>b:\repos\hooks\pre-commit.cmd
-echo %PYTHON% %WORKDIR%\Tests\test_04_pre_commit_test_1.py %%* ^>^>b:\test_1.output >>b:\repos\hooks\pre-commit.cmd
+echo %PYTHON% %WORKDIR%\Tests\test_04_commit_hook_test_1.py %%* ^>^>b:\pre_test_1.output >>b:\repos\hooks\pre-commit.cmd
 
+echo echo %PYTHON% %WORKDIR%\Tests\test_04_commit_hook_test_1.py %%* is_revision ^>b:\post_test_1.output >>b:\repos\hooks\post-commit.cmd
+echo set PYTHONPATH=%PYTHONPATH% >>b:\repos\hooks\post-commit.cmd
+echo %PYTHON% %WORKDIR%\Tests\test_04_commit_hook_test_1.py %%* is_revision ^>^>b:\post_test_1.output >>b:\repos\hooks\post-commit.cmd
 
 rem Add one dir
 %PYSVN% mkdir file:///b:/repos/trunk/test/a -m "pre-commit test 1"
-rem test_1.output start ----------------------------------------
-type b:\test_1.output
-rem  test_1.output end ------------------------------------------
+rem pre_test_1.output start ----------------------------------------
+type b:\pre_test_1.output
+rem  pre_test_1.output end ------------------------------------------
+rem post_test_1.output start ----------------------------------------
+type b:\post_test_1.output
+rem  post_test_1.output end ------------------------------------------
 
 rem Add two files
 %PYSVN% co file:///b:/repos/trunk/test b:\wc
@@ -40,25 +42,34 @@ echo file1 A >b:\wc\a\file1.txt
 %PYSVN% add b:\wc\file1.txt
 %PYSVN% add b:\wc\a\file1.txt
 %PYSVN% checkin -m "Add two files" b:\wc
-rem test_1.output start ----------------------------------------
-type b:\test_1.output
-rem  test_1.output end ------------------------------------------
+rem pre_test_1.output start ----------------------------------------
+type b:\pre_test_1.output
+rem  pre_test_1.output end ------------------------------------------
+rem post_test_1.output start ----------------------------------------
+type b:\post_test_1.output
+rem  post_test_1.output end ------------------------------------------
 
 rem Mod one file Mod one prop
 
 echo file1 ROOT ln 2 >b:\wc\file1.txt
 %PYSVN% propset svn:eol-style native b:\wc\a\file1.txt
 %PYSVN% checkin -m "Mod one file Mod one prop" b:\wc
-rem test_1.output start ----------------------------------------
-type b:\test_1.output
-rem  test_1.output end ------------------------------------------
+rem pre_test_1.output start ----------------------------------------
+type b:\pre_test_1.output
+rem  pre_test_1.output end ------------------------------------------
+rem post_test_1.output start ----------------------------------------
+type b:\post_test_1.output
+rem  post_test_1.output end ------------------------------------------
 
 rem Delete one file
 
 %PYSVN% rm b:\wc\a\file1.txt
 %PYSVN% checkin -m "Delete one file" b:\wc
-rem test_1.output start ----------------------------------------
-type b:\test_1.output
-rem test_1.output end ------------------------------------------
+rem pre_test_1.output start ----------------------------------------
+type b:\pre_test_1.output
+rem  pre_test_1.output end ------------------------------------------
+rem post_test_1.output start ----------------------------------------
+type b:\post_test_1.output
+rem  post_test_1.output end ------------------------------------------
 
 endlocal
