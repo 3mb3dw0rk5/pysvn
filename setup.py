@@ -33,7 +33,7 @@ def run(self):
     os.system(sys.executable + ' setup.py configure')
     os.system('make clean')
     os.system('make')
-    os.system('make egg')
+    os.system('make egg DISTDIR="%s"' % os.path.abspath(os.path.join('..', self.dist_dir)))
     os.chdir('..')              # Go back in parent directory
     # Add to 'Distribution.dist_files' so that the "upload" command works
     getattr( self.distribution, 'dist_files', [] ).append(

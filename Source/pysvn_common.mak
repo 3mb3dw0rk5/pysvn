@@ -181,13 +181,13 @@ clean:
 test: pysvn/__init__.py pysvn/%(pysvn_module_name)s
 	PYTHONPATH=. $(PYTHON) -c "import pysvn;print( pysvn );print( pysvn.version );print( pysvn.svn_version );print( pysvn.Client() )"
 
+DISTDIR=$(shell python -c "import os; print os.path.abspath(os.path.join(os.curdir, '..', 'dist'))")
 egg: pysvn/%(pysvn_module_name)s
-	mkdir -p dist
 	mkdir -p dist/EGG-INFO
-	mkdir -p ../dist
+	mkdir -p $(DISTDIR)
 	cp -rvf pysvn dist
 	cp -rvf ../pysvn.egg-info/* dist/EGG-INFO
 	find dist/ | sed 's:dist/::' > dist/EGG-INFO/SOURCES.txt
-	rm -f ../../dist/pysvn-%(pysvn_version)s-py%(python_version)s-%(python_platform)s.egg
-	(cd dist ; zip -r ../../dist/pysvn-%(pysvn_version)s-py%(python_version)s-%(python_platform)s.egg *)
+	rm -f $(DISTDIR)/pysvn-%(pysvn_version)s-py%(python_version)s-%(python_platform)s.egg
+	(cd dist ; zip -r $(DISTDIR)/pysvn-%(pysvn_version)s-py%(python_version)s-%(python_platform)s.egg *)
 	rm -rf dist
