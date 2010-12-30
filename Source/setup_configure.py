@@ -506,7 +506,7 @@ LDLIBS=-L%(svn_lib_dir)s -Wl,--rpath -Wl,%(svn_lib_dir)s \
 -lsvn_client-1 \
 -lsvn_diff-1 \
 -lsvn_repos-1 \
--lcom_err -lresolv -lexpat -lneon -lssl
+-lcom_err -lresolv -lexpat -lssl
 PYSVN_CREATE_INIT_OPTION=%(pysvn_module_name)s
 
 #include pysvn_common.mak
