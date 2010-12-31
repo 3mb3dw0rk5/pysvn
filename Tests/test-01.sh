@@ -43,7 +43,7 @@ cmd_pysvn ls file://${TESTROOT}/repos -v -R
 
 echo Info: Testing - checkout
 cmd_pysvn checkout file://${TESTROOT}/repos/trunk ${TESTROOT}/wc1
-cmd python ${WORKDIR}/Tests/find.py ${TESTROOT}/wc1
+cmd ${PYTHON} ${WORKDIR}/Tests/find.py ${TESTROOT}/wc1
 cmd cd ${TESTROOT}/wc1/test
 
 echo Info: Testing - add
