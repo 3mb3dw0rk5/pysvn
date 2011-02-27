@@ -41,6 +41,8 @@ if processor == 'i386':
     else:
         processor = 'x86_64'
 
+python_vendor = os.environ[ 'BUILDER_VENDOR' ]
+
 pymaj, pymin, pypat, _, _ = sys.version_info
 python_version_string = '%d.%d.%d' % (pymaj, pymin, pypat)
 pysvnmaj, pysvnmin, pysvnpat, _ = pysvn.version
@@ -199,7 +201,7 @@ f.write('''<?xml version="1.0" encoding="UTF-8"?>
     <key>CFBundleGetInfoString</key>
     <string>pysvn Extension %(pysvn_version_string)s for Python %(pymaj)s.%(pymin)s</string>
     <key>CFBundleIdentifier</key>
-    <string>org.tigris.pysvn.extension.py%(pymaj)s.%(pymin)s</string>
+    <string>org.tigris.pysvn.extension.py%(pymaj)s.%(pymin)s.%(python_vendor)s</string>
     <key>CFBundleName</key>
     <string>pysvn Extension</string>
     <key>CFBundleShortVersionString</key>
