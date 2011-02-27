@@ -197,9 +197,9 @@ f.write('''<?xml version="1.0" encoding="UTF-8"?>
 <plist version="1.0">
 <dict>
     <key>CFBundleGetInfoString</key>
-    <string>pysvn Extension %(pysvn_version_string)s</string>
+    <string>pysvn Extension %(pysvn_version_string)s for Python %(pymaj)s.%(pymin)s</string>
     <key>CFBundleIdentifier</key>
-    <string>org.tigris.pysvn.extension</string>
+    <string>org.tigris.pysvn.extension.py%(pymaj)s.%(pymin)s</string>
     <key>CFBundleName</key>
     <string>pysvn Extension</string>
     <key>CFBundleShortVersionString</key>
