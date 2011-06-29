@@ -322,9 +322,6 @@ class MakeFileCreater:
             'mac_os_x_arch':    self.mac_os_x_arch
             }
 
-        if not self.checkAllOptionsUsed():
-            return 1
-
         print( 'Info: Creating Makefile for Source' )
 
         major, minor, patch = self.getSvnVersion( svn_include )
@@ -418,6 +415,9 @@ class MakeFileCreater:
             if self.verbose:
                 print( 'Info: Using unix makefile template' )
             makefile.write( self.makefile_template % template_values )
+
+        if not self.checkAllOptionsUsed():
+            return 1
 
         f = open( 'pysvn_common.mak', 'r' )
         makefile.write( f.read() % template_values )
