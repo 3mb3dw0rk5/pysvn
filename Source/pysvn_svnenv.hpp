@@ -20,12 +20,20 @@
 #error PyCXX version 5.3.5 is required
 #endif
 
-
+#include <svn_version.h>
 #include <svn_client.h>
 #include <svn_fs.h>
 #include <svn_repos.h>
 #include <apr_xlate.h>
 #include <string>
+
+#if !defined( SVN_VER_MAJOR )
+#error "SVN_VER_MAJOR not defined"
+#endif
+
+#if !defined( SVN_VER_MINOR )
+#error "SVN_VER_MINOR not defined"
+#endif
 
 // SVN 1.1 or later
 #if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 1) || SVN_VER_MAJOR > 1
@@ -159,6 +167,13 @@
 #define PYSVN_HAS_SVN_WC_CONFLICT_RESULT_T__SAVE_MERGED
 
 #endif
+
+// SVn 1.7 or later
+#if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 6) || SVN_VER_MAJOR > 1
+#define PYSVN_HAS_SVN_1_7
+
+#endif
+
 
 #if defined( PYSVN_HAS_CLIENT_STATUS3 )
 typedef svn_wc_status2_t pysvn_wc_status_t;

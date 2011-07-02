@@ -145,6 +145,32 @@ if hasattr( pysvn.wc_notify_action, 'property_added' ):
     wc_notify_action_map[ pysvn.wc_notify_action.tree_conflict ] = 'tree_conflict'
     wc_notify_action_map[ pysvn.wc_notify_action.failed_external ] = 'failed_external'
 
+if hasattr( pysvn.wc_notify_action, 'update_started' ):
+    wc_notify_action_map[ pysvn.wc_notify_action.update_started ] = 'update_started'
+    wc_notify_action_map[ pysvn.wc_notify_action.update_skip_obstruction ] = 'update_skip_obstruction'
+    wc_notify_action_map[ pysvn.wc_notify_action.update_skip_working_only ] = 'update_skip_working_only'
+    wc_notify_action_map[ pysvn.wc_notify_action.update_external_removed ] = 'update_external_removed'
+    wc_notify_action_map[ pysvn.wc_notify_action.update_shadowed_add ] = 'update_shadowed_add'
+    wc_notify_action_map[ pysvn.wc_notify_action.update_shadowed_update ] = 'update_shadowed_update'
+    wc_notify_action_map[ pysvn.wc_notify_action.update_shadowed_delete ] = 'update_shadowed_delete'
+    wc_notify_action_map[ pysvn.wc_notify_action.merge_record_info ] = 'merge_record_info'
+    wc_notify_action_map[ pysvn.wc_notify_action.upgraded_path ] = 'upgraded_path'
+    wc_notify_action_map[ pysvn.wc_notify_action.merge_record_info_begin ] = 'merge_record_info_begin'
+    wc_notify_action_map[ pysvn.wc_notify_action.merge_elide_info ] = 'merge_elide_info'
+    wc_notify_action_map[ pysvn.wc_notify_action.patch ] = 'patch'
+    wc_notify_action_map[ pysvn.wc_notify_action.patch_applied_hunk ] = 'patch_applied_hunk'
+    wc_notify_action_map[ pysvn.wc_notify_action.patch_rejected_hunk ] = 'patch_rejected_hunk'
+    wc_notify_action_map[ pysvn.wc_notify_action.patch_hunk_already_applied ] = 'patch_hunk_already_applied'
+    wc_notify_action_map[ pysvn.wc_notify_action.commit_copied ] = 'commit_copied'
+    wc_notify_action_map[ pysvn.wc_notify_action.commit_copied_replaced ] = 'commit_copied_replaced'
+    wc_notify_action_map[ pysvn.wc_notify_action.url_redirect ] = 'url_redirect'
+    wc_notify_action_map[ pysvn.wc_notify_action.path_nonexistent ] = 'path_nonexistent'
+    wc_notify_action_map[ pysvn.wc_notify_action.exclude ] = 'exclude'
+    wc_notify_action_map[ pysvn.wc_notify_action.failed_conflict ] = 'failed_conflict'
+    wc_notify_action_map[ pysvn.wc_notify_action.failed_missing ] = 'failed_missing'
+    wc_notify_action_map[ pysvn.wc_notify_action.failed_out_of_date ] = 'failed_out_of_date'
+    wc_notify_action_map[ pysvn.wc_notify_action.failed_no_parent ] = 'failed_no_parent'
+
 class SvnCommand:
     def __init__( self, progname ):
         self.progname = progname
