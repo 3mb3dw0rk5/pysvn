@@ -169,7 +169,7 @@
 #endif
 
 // SVn 1.7 or later
-#if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 6) || SVN_VER_MAJOR > 1
+#if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 7) || SVN_VER_MAJOR > 1
 #define PYSVN_HAS_SVN_1_7
 
 #endif
