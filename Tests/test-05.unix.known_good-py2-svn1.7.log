@@ -59,13 +59,13 @@ Info: pysvn command: info2 /home/barry/wc/svn/pysvn/Extension/Tests/testroot-05/
 Path: /home/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt
 Url: file:///home/barry/wc/svn/pysvn/Extension/Tests/testroot-05/repos/trunk/test/file1.txt
 Revision: 3
-Repository UUID: dcc396d6-f34b-4ca9-81cf-14a542bc59bb
+Repository UUID: 253c7a72-4057-4a2c-bd81-09e280fdb83c
 Last changed author: barry
-Last Changed Date: 02-Jul-2011 16:45:25
+Last Changed Date: 31-Jul-2011 20:13:59
 Last changed revision: 3
 Node kind: file
 Schedule: normal
-Text Last Updated: 02-Jul-2011 16:45:24
+Text Last Updated: 31-Jul-2011 20:13:59
 Checksum: e99afc2363b20ca1e52cd9ce4e8577eb
 Info: Test - lock unlocked file
 Info: CWD: /home/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test
@@ -85,17 +85,17 @@ Info: pysvn command: info2 /home/barry/wc/svn/pysvn/Extension/Tests/testroot-05/
 Path: /home/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt
 Url: file:///home/barry/wc/svn/pysvn/Extension/Tests/testroot-05/repos/trunk/test/file1.txt
 Revision: 3
-Repository UUID: dcc396d6-f34b-4ca9-81cf-14a542bc59bb
+Repository UUID: 253c7a72-4057-4a2c-bd81-09e280fdb83c
 Last changed author: barry
-Last Changed Date: 02-Jul-2011 16:45:25
+Last Changed Date: 31-Jul-2011 20:13:59
 Last changed revision: 3
 Node kind: file
 Lock Owner: barry
-Lock Creation Date: 02-Jul-2011 16:45:25
-Lock Token: opaquelocktoken:7d309c84-e9bd-4214-a8bf-52609487d5b5
+Lock Creation Date: 31-Jul-2011 20:14:00
+Lock Token: opaquelocktoken:f9b9410e-3ca2-44b1-a71d-349171145d1b
 Lock Comment:
 Schedule: normal
-Text Last Updated: 02-Jul-2011 16:45:24
+Text Last Updated: 31-Jul-2011 20:13:59
 Checksum: e99afc2363b20ca1e52cd9ce4e8577eb
 Info: Test - attempt to checkin over a locked file
 Info: CWD: /home/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test
@@ -104,7 +104,16 @@ Info: CWD: /home/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test
 Info: pysvn command: commit -m change when file locked in other wc .
 M /home/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test/file1.txt
 M /home/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test/file2.txt
+traced call
+traced call
 Commit failed (details follow):
+traced call
+traced call
+traced call
+traced call
+traced call
+traced call
+traced call
 Cannot verify lock on path '/trunk/test/file1.txt'; no matching lock-token available
 Info: Test - lock locked file
 Info: CWD: /home/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test
@@ -121,18 +130,18 @@ Info: pysvn command: info2 /home/barry/wc/svn/pysvn/Extension/Tests/testroot-05/
 Path: /home/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test/file1.txt
 Url: file:///home/barry/wc/svn/pysvn/Extension/Tests/testroot-05/repos/trunk/test/file1.txt
 Revision: 3
-Repository UUID: dcc396d6-f34b-4ca9-81cf-14a542bc59bb
+Repository UUID: 253c7a72-4057-4a2c-bd81-09e280fdb83c
 Last changed author: barry
-Last Changed Date: 02-Jul-2011 16:45:25
+Last Changed Date: 31-Jul-2011 20:13:59
 Last changed revision: 3
 Node kind: file
 Lock Owner: barry
-Lock Creation Date: 02-Jul-2011 16:45:26
-Lock Token: opaquelocktoken:13d67d10-10a7-4dfb-bdc0-34de54eae906
+Lock Creation Date: 31-Jul-2011 20:14:00
+Lock Token: opaquelocktoken:6fa5172e-5fe3-4959-85ef-caa61a29c7b6
 Lock Comment:
 Stealing lock
 Schedule: normal
-Text Last Updated: 02-Jul-2011 16:45:25
+Text Last Updated: 31-Jul-2011 20:14:00
 Checksum: e99afc2363b20ca1e52cd9ce4e8577eb
 Info: Test - status of locked files
 Info: CWD: /home/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test
@@ -195,8 +204,8 @@ Info: pysvn command: info2 --revision HEAD file:///home/barry/wc/svn/pysvn/Exten
 Path: file1.txt
 Url: file:///home/barry/wc/svn/pysvn/Extension/Tests/testroot-05/repos/trunk/test/file1.txt
 Revision: 4
-Repository UUID: dcc396d6-f34b-4ca9-81cf-14a542bc59bb
+Repository UUID: 253c7a72-4057-4a2c-bd81-09e280fdb83c
 Last changed author: barry
-Last Changed Date: 02-Jul-2011 16:45:26
+Last Changed Date: 31-Jul-2011 20:14:01
 Last changed revision: 4
 Node kind: file
