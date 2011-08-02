@@ -217,6 +217,8 @@ and credential handling.
 </p>
 <p><a href="#pysvn_client_callback_ssl_server_trust_prompt">callback_ssl_server_trust_prompt</a> is called when using HTTPS to a server whoes certificate needs is trust verifing.
 </p>
+<p><a href="#pysvn_client_callback_conflict_resolver">callback_conflict_resolver</a> is called to handle conflicts.
+</p>
 <p>It is possible to use the Client object without setting up any
 calls backs. Make sure that all nessesary usernames, passwords and
 SSL certificate information are stored in the subversion
@@ -429,6 +431,50 @@ a tuple of three values (retcode, accepted_failures, save).
 <li>save - boolean, return True if you want subversion to remember
   the certificate in the configuration directory. return False
   to prevent saving the certificate.</li>
+</ul>
+
+
+<h4><a name="pysvn_client_callback_conflict_resolver"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.callback_conflict_resolver</a></h4>
+<pre>
+import pysvn
+
+def conflict_resolver( conflict_description ):
+    return conflict_choice, merge_file, save_merged
+
+client = pysvn.Client()
+client.callback_conflict_resolver = conflict_resolver
+</pre>
+
+<p>The callback_conflict_resolver is called each time a conflict needs resolving.
+It is passed the conflict_description and must return a conflict_choice, merge_file and save_merged.
+</p>
+
+<p>The members of the conflict_description dictionary are:</p>
+<ul>
+<li>path - string - The path that is in conflict (for a tree conflict, it is the victim)</li>
+<li>node_kind - pysvn.node_kind - The node type of the path being operated on</li>
+<li>kind - pysvn.conflict_kind - the sort of conflict being described</li>
+<li>property_name - string or None - The name of the property whose conflict is being described.
+     (Only if kind is 'property'; else undefined.)</li>
+<li>is_binary - boolean - Whether svn thinks ('my' version of) path is a 'binary' file.
+    (Only if kind is 'text', else undefined.)</li>
+<li>mime_type - string or None - The svn:mime-type property of ('my' version of) path</li>
+<li>action - pysvn.wc_conflict_action - the action being attempted on the conflicted node or property</li>
+<li>reason - pysvn.wc_conflict_reason - The state of the target node or property, relative to its merge-left
+   source, that is the reason for the conflict</li>
+<li>base_file - string - common ancestor of the two files being merged</li>
+<li>their_file - string - their version of the file</li>
+<li>my_file - string - my locally-edited version of the file</li>
+<li>merged_file - string - merged version; may contain conflict markers</li>
+<li>operation - pysvn.wc_operation - the operation that exposed the conflict. Used only for tree conflicts</li>
+<li>src_left_version - pysvn.wc_conflict_version - Info on the "merge-left source" or "older" version of incoming change</li>
+<li>src_right_version - pysvn.wc_conflict_version - Info on the "merge-right source" or "their" version of incoming change</li>
+</ul>
+
+<ul>
+<li>conflict_choice is one of the pysvn.wc_conflict_choice values</li>
+<li>merge_file is a file name or None</li>
+<li>save_merged is True or False</li>
 </ul>
 
 <h3><a name="pysvn_client_methods">Client methods</a></h3>
