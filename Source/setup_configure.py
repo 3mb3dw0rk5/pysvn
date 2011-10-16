@@ -25,7 +25,7 @@ class SetupError(Exception):
     pass
 
 # version of PyCXX that we require
-pycxx_version = (6, 2, 3)
+pycxx_version = (6, 2, 4)
 
 
 all_options_info = {
