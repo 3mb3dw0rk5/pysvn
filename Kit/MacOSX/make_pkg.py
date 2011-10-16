@@ -72,10 +72,16 @@ elif pymaj == 2 and pymin == 6:
         install_dir = '/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages'
 
 elif pymaj == 2 and pymin == 7:
-    install_dir = '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages'
+    if vendor == 'apple_com':
+        install_dir = '/Library/Python/2.7/site-packages'
+    else:
+        install_dir = '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages'
 
 elif pymaj == 3 and pymin == 1:
     install_dir = '/Library/Frameworks/Python.framework/Versions/3.1/lib/python3.1/site-packages'
+
+elif pymaj == 3 and pymin == 2:
+    install_dir = '/Library/Frameworks/Python.framework/Versions/3.2/lib/python3.2/site-packages'
 
 else:
     raise RuntimeError( 'Unsupported version of python' )
