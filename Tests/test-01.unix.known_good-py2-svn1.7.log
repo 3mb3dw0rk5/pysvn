@@ -564,15 +564,11 @@ no_such_prop: None
 Info: Testing - revpropset
 Info: CWD: /home/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test
 Info: pysvn command: revpropset svn:log Hello world file:///home/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk
-traced call
-traced call
 Repository has not been enabled to accept revision propchanges;
 ask the administrator to create a pre-revprop-change hook
 Info: Testing - revpropdel
 Info: CWD: /home/barry/wc/svn/pysvn/Extension/Tests/testroot-01/wc2/test
 Info: pysvn command: revpropdel svn:log file:///home/barry/wc/svn/pysvn/Extension/Tests/testroot-01/repos/trunk
-traced call
-traced call
 Repository has not been enabled to accept revision propchanges;
 ask the administrator to create a pre-revprop-change hook
 Info: Testing - status - see above

@@ -104,16 +104,7 @@ Info: CWD: /home/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test
 Info: pysvn command: commit -m change when file locked in other wc .
 M /home/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test/file1.txt
 M /home/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test/file2.txt
-traced call
-traced call
 Commit failed (details follow):
-traced call
-traced call
-traced call
-traced call
-traced call
-traced call
-traced call
 Cannot verify lock on path '/trunk/test/file1.txt'; no matching lock-token available
 Info: Test - lock locked file
 Info: CWD: /home/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test

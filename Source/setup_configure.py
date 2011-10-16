@@ -1,6 +1,6 @@
 #
 # ====================================================================
-# Copyright (c) 2005-2010 Barry A Scott.  All rights reserved.
+# Copyright (c) 2005-2011 Barry A Scott.  All rights reserved.
 #
 # This software is licensed as described in the file LICENSE.txt,
 # which you should have received as part of this distribution.
@@ -118,7 +118,7 @@ class MakeFileCreater:
                     self.is_mac_os_x = True
 
                     # look for the universal SDK
-                    for mac_ver in ['10.5', '%d.%d' % (self.mac_os_x_version[0], self.mac_os_x_version[1])]:
+                    for mac_ver in ['10.7', '%d.%d' % (self.mac_os_x_version[0], self.mac_os_x_version[1])]:
                         self.mac_os_x_sdk = '/Developer/SDKs/MacOSX%s.sdk' % mac_ver
                         if os.path.exists( self.mac_os_x_sdk ):
                             print( 'Info: Mac OS X Universal SDKs found (%s)' % self.mac_os_x_sdk )
