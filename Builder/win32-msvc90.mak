@@ -1,5 +1,5 @@
 BUILD_TYPE=Release
-SVN_VER_MAJ_MIN=1.6
+SVN_VER_MAJ_MIN=1.7
 
 VCBUILD_OPT=/useenv /nologo /nocolor "/info:Info: " "/error:Error: " "/warning:Warn: "
 
