@@ -28,23 +28,6 @@ class SetupError(Exception):
 pycxx_version = (6, 2, 4)
 
 
-all_options_info = {
-    '--arch':               (2, '<arch>'),
-    '--apr-inc-dir':        (1, '<dir>'),
-    '--apr-lib-dir':        (1, '<dir>'),
-    '--define':             (2, '<define-string>'),
-    '--enable-debug':       (0, None),
-    '--fixed-module-name':  (0, None),
-    '--norpath':            (0, None),
-    '--platform':           (1, '<platform-name>'),
-    '--pycxx-dir':          (1, '<dir>'),
-    '--pycxx-src-dir':      (1, '<dir>'),
-    '--svn-inc-dir':        (1, '<dir>'),
-    '--svn-lib-dir':        (1, '<dir>'),
-    '--svn-bin-dir':        (1, '<dir>'),
-    '--svn-root-dir':       (1, '<dir>'),
-    '--verbose':            (0, None),
-    }
 
 def cmd_configure( argv ):
     if sys.platform == 'win32':
@@ -52,87 +35,67 @@ def cmd_configure( argv ):
         return 1
 
     try:
-        creater = MakeFileCreater()
-        return creater.createMakefile( argv )
+        o = Options( argv )
+        creater = MakeFileCreater( o )
+        return creater.createMakefile()
 
     except SetupError as e:
-        print( 'Error:',str(e) )
+        print( 'Error:', str(e) )
         return 1
 
 def cmd_help( argv ):
-    progname = os.path.basename( argv[0] )
-    print( '''    Create a makefile for this python and platform
-
-        python %(progname)s configure <options>
-
-    where <options> is one or more of:
-''' % {'progname': progname} )
-    for option, num_value in sorted( all_options_info.items() ):
-        num, value = num_value
-        if num == 0:
-            print( '        %s' % (option,) )
-        else:
-            print( '        %s=%s' % (option,value) )
-
+    o = Options( argv )
+    o.usage()
     return 1
 
-class MakeFileCreater:
-    def __init__( self ):
-        self.verbose = False
-        self.is_mac_os_x = False
-        self.is_mac_os_x_fink = False
-        self.is_mac_os_x_darwin_ports = False
-        self.mac_os_x_version = None
-        self.mac_os_x_arch = False
-        self.mac_os_x_sdk = None
-        self.platform = sys.platform
+class Options:
+    all_options_info = {
+        '--arch':               (2, '<arch>'),
+        '--apr-inc-dir':        (1, '<dir>'),
+        '--apr-lib-dir':        (1, '<dir>'),
+        '--define':             (2, '<define-string>'),
+        '--enable-debug':       (0, None),
+        '--fixed-module-name':  (0, None),
+        '--norpath':            (0, None),
+        '--platform':           (1, '<platform-name>'),
+        '--pycxx-dir':          (1, '<dir>'),
+        '--pycxx-src-dir':      (1, '<dir>'),
+        '--svn-inc-dir':        (1, '<dir>'),
+        '--svn-lib-dir':        (1, '<dir>'),
+        '--svn-bin-dir':        (1, '<dir>'),
+        '--svn-root-dir':       (1, '<dir>'),
+        '--verbose':            (0, None),
+        }
 
+    def __init__( self, argv ):
+        self.__argv = argv
+        self.__progname = os.path.basename( argv[0] )
         self.__all_options = {}
         self.__used_options = set()
 
-    def node_text( self, all_nodes ):
-        all_text = []
-        for node in all_nodes:
-            if node.nodeType == xml.dom.minidom.Node.TEXT_NODE:
-                all_text.append( node.data )
-        return ''.join( all_text )
+    def usage( self ):
+        print( '''    Create a makefile for this python and platform
 
-    def is_atleast_mac_os_x_version( self, version ):
-        return self.mac_os_x_version[0:len(version)] >= list(version)
+            python %(progname)s configure <options>
 
-    def detectMacVersion( self ):
-        if os.path.exists( '/System/Library/CoreServices/SystemVersion.plist' ):
-            dom = xml.dom.minidom.parse( open( '/System/Library/CoreServices/SystemVersion.plist' ) )
-            plist = dom.getElementsByTagName( 'plist' )[0]
-            plist_dict = plist.getElementsByTagName( 'dict' )[0]
-            for key_or_value in plist_dict.childNodes:
-                if key_or_value.nodeName == 'key' and self.node_text( key_or_value.childNodes ) == 'ProductVersion':
-                    value_node = key_or_value.nextSibling
-                    while value_node.nodeType == xml.dom.minidom.Node.TEXT_NODE:
-                        value_node = value_node.nextSibling
+        where <options> is one or more of:
+''' % {'progname': self.__progname} )
+        for option, num_value in sorted( all_options_info.items() ):
+            num, value = num_value
+            if num == 0:
+                print( '        %s' % (option,) )
+            else:
+                print( '        %s=%s' % (option,value) )
 
-                    self.mac_os_x_version_string = self.node_text( value_node.childNodes )
-                    if self.verbose:
-                        print( 'Info: Mac OS X Version %s' % self.mac_os_x_version_string )
-                    self.mac_os_x_version = [int(s) for s in self.mac_os_x_version_string.split('.')]
-                    self.is_mac_os_x = True
-
-                    # look for the universal SDK
-                    for mac_ver in ['10.7', '%d.%d' % (self.mac_os_x_version[0], self.mac_os_x_version[1])]:
-                        self.mac_os_x_sdk = '/Developer/SDKs/MacOSX%s.sdk' % mac_ver
-                        if os.path.exists( self.mac_os_x_sdk ):
-                            print( 'Info: Mac OS X Universal SDKs found (%s)' % self.mac_os_x_sdk )
-                            break
-
-    def parseOptions( self, argv ):
-        for option in argv:
+    def parseOptions( self ):
+        for option in self.__argv[2:]:
             option_parts = option.split( '=', 1 )
             option_name = option_parts[0]
-            if option_name not in all_options_info:
+            if option_name not in self.all_options_info:
                 print( 'Error: Unknown option %s' % option )
                 return False
 
-            repeat_count, value = all_options_info[ option_name ]
+            repeat_count, value = self.all_options_info[ option_name ]
             if repeat_count == 0:
                 if len(option_parts) != 1:
                     print( 'Error: Option %s does not take a value' % (option_name,) )
@@ -177,20 +140,68 @@ class MakeFileCreater:
 
         return True
 
-    def createMakefile( self, _argv ):
-        if not self.parseOptions( _argv[2:] ):
+
+class MakeFileCreater:
+    def __init__( self, options ):
+        self.options = options
+
+        self.verbose = False
+        self.is_mac_os_x = False
+        self.is_mac_os_x_fink = False
+        self.is_mac_os_x_darwin_ports = False
+        self.mac_os_x_version = None
+        self.mac_os_x_arch = False
+        self.mac_os_x_sdk = None
+        self.platform = sys.platform
+
+    def node_text( self, all_nodes ):
+        all_text = []
+        for node in all_nodes:
+            if node.nodeType == xml.dom.minidom.Node.TEXT_NODE:
+                all_text.append( node.data )
+        return ''.join( all_text )
+
+    def is_atleast_mac_os_x_version( self, version ):
+        return self.mac_os_x_version[0:len(version)] >= list(version)
+
+    def detectMacVersion( self ):
+        if os.path.exists( '/System/Library/CoreServices/SystemVersion.plist' ):
+            dom = xml.dom.minidom.parse( open( '/System/Library/CoreServices/SystemVersion.plist' ) )
+            plist = dom.getElementsByTagName( 'plist' )[0]
+            plist_dict = plist.getElementsByTagName( 'dict' )[0]
+            for key_or_value in plist_dict.childNodes:
+                if key_or_value.nodeName == 'key' and self.node_text( key_or_value.childNodes ) == 'ProductVersion':
+                    value_node = key_or_value.nextSibling
+                    while value_node.nodeType == xml.dom.minidom.Node.TEXT_NODE:
+                        value_node = value_node.nextSibling
+
+                    self.mac_os_x_version_string = self.node_text( value_node.childNodes )
+                    if self.verbose:
+                        print( 'Info: Mac OS X Version %s' % self.mac_os_x_version_string )
+                    self.mac_os_x_version = [int(s) for s in self.mac_os_x_version_string.split('.')]
+                    self.is_mac_os_x = True
+
+                    # look for the universal SDK
+                    for mac_ver in ['10.7', '%d.%d' % (self.mac_os_x_version[0], self.mac_os_x_version[1])]:
+                        self.mac_os_x_sdk = '/Developer/SDKs/MacOSX%s.sdk' % mac_ver
+                        if os.path.exists( self.mac_os_x_sdk ):
+                            print( 'Info: Mac OS X Universal SDKs found (%s)' % self.mac_os_x_sdk )
+                            break
+
+    def createMakefile( self):
+        if not self.options.parseOptions():
             return 1
 
-        if self.hasOption( '--platform' ):
-            self.platform = self.getOption( '--platform' )
+        if self.options.hasOption( '--platform' ):
+            self.platform = self.options.getOption( '--platform' )
             print( 'Info: Platform overridden as %s' % self.platform )
 
-        self.verbose = self.hasOption( '--verbose' )
+        self.verbose = self.options.hasOption( '--verbose' )
         self.detectMacVersion()
 
-        if self.is_mac_os_x and self.hasOption( '--arch' ):
-            print( 'Info: Building for arch %s' % ', '.join( self.getOption( '--arch' ) ) )
-            self.mac_os_x_arch = ' '.join( ['-arch %s' % (arch,) for arch in self.getOption( '--arch' )] )
+        if self.is_mac_os_x and self.options.hasOption( '--arch' ):
+            print( 'Info: Building for arch %s' % ', '.join( self.options.getOption( '--arch' ) ) )
+            self.mac_os_x_arch = ' '.join( ['-arch %s' % (arch,) for arch in self.options.getOption( '--arch' )] )
         else:
             self.mac_os_x_arch = ''
 
@@ -198,7 +209,7 @@ class MakeFileCreater:
             print( 'Info: Creating makefile for python %r on %s' % (sys.version_info, self.platform) )
 
         debug_cflags_list = []
-        if self.hasOption( '--enable-debug' ):
+        if self.options.hasOption( '--enable-debug' ):
             print( 'Info: Enabling debug' )
             debug_cflags_list.append( '-g' )
 
@@ -245,15 +256,15 @@ class MakeFileCreater:
         py_cflags_list.append( '-DPYCXX_PYTHON_2TO3' )
 
         # get user supplied defines
-        if self.hasOption( '--define' ):
-            for define in self.getOption( '--define' ):
+        if self.options.hasOption( '--define' ):
+            for define in self.options.getOption( '--define' ):
                 py_cflags_list.append( '-D%s' % (define,) )
 
         module_type = '.so'
         if self.platform == 'cygwin':
             module_type = '.dll'
 
-        if self.hasOption( '--fixed-module-name' ):
+        if self.options.hasOption( '--fixed-module-name' ):
             print( 'Info: Using fixed module name' )
             pysvn_module_name = '_pysvn'+ module_type
 
@@ -395,7 +406,7 @@ class MakeFileCreater:
         elif self.platform.startswith('linux'):
             if self.verbose:
                 print( 'Info: Using Linux makefile template' )
-            if self.hasOption( '--norpath' ):
+            if self.options.hasOption( '--norpath' ):
                 makefile.write( self.makefile_template_linux_norpath % template_values )
             else:
                 makefile.write( self.makefile_template_linux % template_values )
@@ -416,7 +427,7 @@ class MakeFileCreater:
                 print( 'Info: Using unix makefile template' )
             makefile.write( self.makefile_template % template_values )
 
-        if not self.checkAllOptionsUsed():
+        if not self.options.checkAllOptionsUsed():
             return 1
 
         f = open( 'pysvn_common.mak', 'r' )
@@ -948,12 +959,12 @@ LDLIBS= \
         # override the base_dir_list from the command line kw
         svn_root_dir = None
 
-        if self.hasOption( kw ):
-            base_dir_list = [self.getOption( kw )]
+        if self.options.hasOption( kw ):
+            base_dir_list = [self.options.getOption( kw )]
 
-        elif( self.hasOption( '--svn-root-dir' )
+        elif( self.options.hasOption( '--svn-root-dir' )
         and svn_root_suffix is not None ):
-            base_dir_list = ['%s/%s' % (self.getOption( '--svn-root-dir' ), svn_root_suffix)]
+            base_dir_list = ['%s/%s' % (self.options.getOption( '--svn-root-dir' ), svn_root_suffix)]
 
         # expect to find check_file in one of the dir
         for dirname in base_dir_list:
