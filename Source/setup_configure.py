@@ -1513,7 +1513,7 @@ class LinuxCompilerGCC(CompilerGCC):
         self._completeInit()
 
     def get_lib_name_for_platform( self, libname ):
-        if self.platform == 'cygwin':
+        if self.setup.platform == 'cygwin':
             return '%s.dll.a' % libname
         else:
             return '%s.so' % libname
@@ -1529,15 +1529,51 @@ class LinuxCompilerGCC(CompilerGCC):
     def setupPySvn( self ):
         self._addVar( 'PYTHON_VERSION', '%d.%d' % (sys.version_info[0], sys.version_info[1]) )
         self._addVar( 'PYTHON_INC',     '/usr/include/python%(PYTHON_VERSION)s' )
-        self._addVar( 'CCCFLAGS',
-                                        '-g '
-                                        '-Wall -fPIC -fexceptions -frtti '
-                                        '-I. -I%(APR_INC)s -I%(SVN_INC)s '
-                                        '-DPYCXX_PYTHON_2TO3 -I%(PYCXX)s -I%(PYCXX_SRC)s -I%(PYTHON_INC)s '
-                                        '-D%(DEBUG)s' )
 
-        self._addVar( 'LDSHARED',       '%(CCC)s -shared -g ' )
+        py_cflags_list = [
+                    '-Wall -fPIC -fexceptions -frtti',
+                    '-I. -I%(APR_INC)s -I%(SVN_INC)s',
+                    '-DPYCXX_PYTHON_2TO3 -I%(PYCXX)s -I%(PYCXX_SRC)s -I%(PYTHON_INC)s',
+                    '-D%(DEBUG)s',
+                    ]
 
+        if self.options.hasOption( '--enable-debug' ):
+            print( 'Info: Debug enabled' )
+            py_cflags_list.append( '-g' )
+
+        if self.options.hasOption( '--fixed-module-name' ):
+            print( 'Info: Using fixed module name' )
+            pysvn_module_name = '_pysvn'
+
+        else:
+            # name of the module including the python version to help
+            # ensure that only a matching _pysvn.so for the version of
+            # python is imported
+
+            pysvn_module_name = '_pysvn_%d_%d' % (sys.version_info[0], sys.version_info[1])
+            if sys.version_info[0] >= 3:
+                py_cflags_list.append( '-DPyInit__pysvn=PyInit__pysvn_%d_%d' % sys.version_info[:2] )
+                py_cflags_list.append( '-DPyInit__pysvn_d=PyInit__pysvn_%d_%d_d' % sys.version_info[:2] )
+            else:
+                py_cflags_list.append( '-Dinit_pysvn=init_pysvn_%d_%d' % sys.version_info[:2] )
+                py_cflags_list.append( '-Dinit_pysvn_d=init_pysvn_%d_%d_d' % sys.version_info[:2] )
+
+        self._addVar( 'PYSVN_MODULE_BASENAME', pysvn_module_name )
+        py_ld_libs = [
+                '-L%(SVN_LIB)s',
+                '-L/usr/lib',
+                '-lsvn_client-1',
+                '-lsvn_repos-1',
+                '-lsvn_wc-1',
+                '-lsvn_fs-1',
+                '-lsvn_subr-1',
+                '-lsvn_diff-1',
+                '-lapr-1',
+                ]
+
+        self._addVar( 'CCCFLAGS', ' '.join( py_cflags_list ) )
+        self._addVar( 'LDLIBS', ' '.join( py_ld_libs ) )
+        self._addVar( 'LDSHARED',       '%(CCC)s -shared -g %(LDLIBS)s' )
 
 #--------------------------------------------------------------------------------
 class Target:
