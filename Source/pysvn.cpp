@@ -356,28 +356,35 @@ PythonDisallowThreads::~PythonDisallowThreads()
 }
 
 //--------------------------------------------------------------------------------
+#if defined(WIN32)
+#define EXPORT_SYMBOL __declspec( dllexport )
+#else
+#define EXPORT_SYMBOL
+#endif
+
+
 static pysvn_module* the_pysvn_module = NULL;
 #if PY_MAJOR_VERSION >= 3
-extern "C" PyObject *PyInit__pysvn()
+extern "C" EXPORT_SYMBOL PyObject *PyInit__pysvn()
 {
     the_pysvn_module = new pysvn_module;
     return the_pysvn_module->module().ptr();
 }
 
 // symbol required for the debug version
-extern "C" PyObject *PyInit__pysvn_d()
+extern "C" EXPORT_SYMBOL PyObject *PyInit__pysvn_d()
 { 
     return PyInit__pysvn();
 }
 
 #else
-extern "C" void init_pysvn()
+extern "C" EXPORT_SYMBOL void init_pysvn()
 {
     the_pysvn_module = new pysvn_module;
 }
 
 // symbol required for the debug version
-extern "C" void init_pysvn_d()
+extern "C" EXPORT_SYMBOL void init_pysvn_d()
 {
     init_pysvn();
 }
