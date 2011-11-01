@@ -38,7 +38,9 @@ def cmd_configure( argv ):
         o = Options( argv )
         setup = Setup( o )
 
-        return setup.generateMakefile()
+        setup.generateSourcesMakefile()
+        setup.generateTestMakefile()
+        return 0
 
     except SetupError as e:
         print( 'Error:', str(e) )
@@ -229,7 +231,7 @@ class Setup:
             PythonExtension( self.c_pysvn, self.c_pysvn.expand( 'pysvn/%(PYSVN_MODULE_BASENAME)s' ), self.pysvn_obj_files ),
             ]
 
-    def generateMakefile( self ):
+    def generateSourcesMakefile( self ):
         if not self.options.parseOptions():
             raise SetupError( 'failed to parse options' )
 
@@ -238,10 +240,11 @@ class Setup:
 
         self.platform = self.options.getOption( '--platform' )
 
-        self.__makefile = open( 'pysvn.mak', 'wt' )
+        self.__makefile = open( 'Makefile', 'wt' )
 
         self.setupCompile()
 
+        print( 'Info: Creating Makefile for Sources' )
         self.c_pysvn.generateMakefileHeader()
 
         self.makePrint( 'all: %s' % (' '.join( [exe.getTargetFilename() for exe in self.all_exe] )) )
@@ -253,8 +256,45 @@ class Setup:
         for target in self.all_support_targets:
             target.generateMakefile()
 
+        self.__makefile.close()
+        self.__makefile = None
+
         if not self.options.checkAllOptionsUsed():
             raise SetupError( 'not all options used' )
+
+        return 0
+
+    def generateTestMakefile( self ):
+        print( 'Info: Creating Makefile for Tests' )
+
+        all_normal_test_cases = [
+            TestCase( self.c_pysvn, '01' ),
+            TestCase( self.c_pysvn, '04' ),
+            TestCase( self.c_pysvn, '05' ),
+            TestCase( self.c_pysvn, '06' ),
+            TestCase( self.c_pysvn, '07' ),
+            ]
+
+        all_extra_test_cases = [
+            TestCase( self.c_pysvn, '03' ),
+            ]
+
+        all_test_cases = []
+        all_test_cases.extend( all_normal_test_cases )
+        all_test_cases.extend( all_extra_test_cases )
+
+        self.__makefile = open( '../Tests/Makefile', 'wt' )
+
+        self.c_pysvn.ruleAllTestCase( 'all', all_normal_test_cases )
+        self.c_pysvn.ruleAllTestCase( 'extratests', all_extra_test_cases )
+
+        self.makePrint( 'clean: %s' % (' '.join( ['clean-%s' % (tc.test_name,) for tc in all_test_cases] )) )
+
+        for test_case in all_test_cases:
+            test_case.generateMakefile()
+
+        self.__makefile.close()
+        self.__makefile = None
 
         return 0
 
@@ -305,16 +345,20 @@ class Compiler:
     def _completeInit( self ):
         # must be called  by the leaf derived class to finish initialising the compile
 
+
         self._addVar( 'PYTHON',         sys.executable )
 
         self._addVar( 'PYCXX',          self.find_pycxx() )
         self._addVar( 'PYCXX_SRC',      self.find_pycxx_src() )
-        self._addVar( 'SVN_INC',        self.find_svn_inc() )
+        svn_inc = self.find_svn_inc()
+        self._addVar( 'SVN_INC',        svn_inc )
         self._addVar( 'SVN_LIB',        self.find_svn_lib() )
         self._addVar( 'SVN_BIN',        self.find_svn_bin() )
         self._addVar( 'APR_INC',        self.find_apr_inc() )
         self._addVar( 'APU_INC',        self.find_apu_inc() )
         self._addVar( 'APR_LIB',        self.find_apr_lib() )
+
+        self.__getSvnVersion( svn_inc )
 
     def platformFilename( self, filename ):
         return filename
@@ -340,10 +384,10 @@ class Compiler:
             self.__variables[ name ] = value
 
         except TypeError:
-            raise SetupError( 'Cannot translate name %r value %r' % (name, value) )
+            raise SetupError( 'Cannot addVar name %r value %r' % (name, value) )
 
         except KeyError as e:
-            raise SetupError( 'Cannot translate name %r value %r - %s' % (name, value, e) )
+            raise SetupError( 'Cannot addVar name %r value %r - %s' % (name, value, e) )
 
     def expand( self, s ):
         try:
@@ -353,9 +397,9 @@ class Compiler:
             print( 'Error: %s' % (e,) )
             print( 'String: %s' % (s,) )
             for key, value in sorted( self.__variables.items() ):
-                print( 'Vairable: %s: %r' % (key, value) )
+                print( 'Variable: %s: %r' % (key, value) )
 
-            raise SetupError( 'Cannot translate string (%s)' % (e,) )
+            raise SetupError( 'Cannot expand string %r - %s' % (s,e) )
 
 
     def find_pycxx( self ):
@@ -503,7 +547,7 @@ class Compiler:
 
         raise SetupError( 'cannot find %s %s - use %s' % (name, check_file, kw) )
 
-    def getSvnVersion( self, svn_include ):
+    def __getSvnVersion( self, svn_include ):
         all_svn_version_lines = open( os.path.join( svn_include, 'svn_version.h' ) ).readlines()
         major = None
         minor = None
@@ -519,7 +563,10 @@ class Compiler:
                     patch = int(words[2])
  
         print( 'Info: Building against SVN %d.%d.%d' % (major, minor, patch) )
-        return (major, minor, patch)
+        self.__svn_version_tuple = (major, minor, patch)
+
+    def getSvnVersion( self ):
+        return self.__svn_version_tuple
 
 
 class Win32CompilerMSVC90(Compiler):
@@ -560,6 +607,9 @@ class Win32CompilerMSVC90(Compiler):
 
     def getObjectExt( self ):
         return '.obj'
+
+    def getTouchCommand( self ):
+        return r'c:\UnxUtils\touch'
 
     def generateMakefileHeader( self ):
         self.makePrint( '#' )
@@ -684,6 +734,40 @@ class Win32CompilerMSVC90(Compiler):
 					r'ws2_32.lib',
 					] ) )
 
+    def ruleAllTestCase( self, target_name, all_test_cases ):
+        self.makePrint( '%s: %s' %
+                (target_name
+                , ' '.join( ['test-%s.win32.new.log.clean' % (tc.test_name,) for tc in all_test_cases] )) )
+
+    def ruleTestCase( self, test_case ):
+        v = {'TN': test_case.test_name
+            ,'KGV':  'py%d-svn%d.%d' %
+                        (sys.version_info.major
+                        ,self.getSvnVersion()[0], self.getSvnVersion()[1])}
+
+        rules = []
+        rules.append( '' )
+        rules.append( '' )
+
+        rules.append( 'test-%(TN)s.win32.new.log: test-%(TN)s.cmd test-%(TN)s.win32.known_good-%(KGV)s.log' % v )
+        rules.append( '\t' '-subst b: /d >nul 2>&1' % v )
+        rules.append( '\t' 'if exist testroot-%(TN)s rmdir /s /q testroot-%(TN)s' % v )
+        rules.append( '\t' 'test-%(TN)s.cmd >test-%(TN)s.win32.new.log 2>&1' % v )
+        rules.append( '\t' '%%(PYTHON)s benchmark_diff.py test-%(TN)s.win32.known_good-%(KGV)s.log test-%(TN)s.win32.new.log' % v )
+        rules.append( '' )
+        rules.append( 'clean-%(TN)s:' % v )
+        rules.append( '\t' '-subst b: /d >nul 2>&1' % v )
+        rules.append( '\t' 'if exist test-%(TN)s.win32.new.log del test-%(TN)s.win32.new.log' % v )
+        rules.append( '\t' 'if exist testroot-%(TN)s rmdir /s /q testroot-%(TN)s' % v )
+        rules.append( '' )
+        rules.append( 'diff-%(TN)s: test-%(TN)s.win32.new.log' % v )
+        rules.append( '\t' 'wb-diff.cmd test-%(TN)s.win32.known_good-%(KGV)s.log.clean test-%(TN)s.win32.new.log.clean' % v )
+        rules.append( '' )
+        rules.append( 'new-%(TN)s: test-%(TN)s.win32.new.log' % v )
+        rules.append( '\t' 'copy test-%(TN)s.win32.new.log test-%(TN)s.win32.known_good-%(KGV)s.log' % v )
+
+        self.makePrint( self.expand( '\n'.join( rules ) ) )
+
 
 class CompilerGCC(Compiler):
     def __init__( self, setup ):
@@ -700,6 +784,9 @@ class CompilerGCC(Compiler):
 
     def getObjectExt( self ):
         return '.o'
+
+    def getTouchCommand( self ):
+        return 'touch'
 
     def generateMakefileHeader( self ):
         self.makePrint( '#' )
@@ -759,6 +846,39 @@ class CompilerGCC(Compiler):
         rules = []
         rules.append( 'clean::' )
         rules.append( '\trm -f %s' % (filename,) )
+
+        self.makePrint( self.expand( '\n'.join( rules ) ) )
+
+    def ruleAllTestCase( self, target_name, all_test_cases ):
+        self.makePrint( '%s: %s' %
+                (target_name
+                , ' '.join( ['test-%s.unix.new.log.clean' % (tc.test_name,) for tc in all_test_cases] )) )
+
+    def ruleTestCase( self, test_case ):
+        v = {'TN': test_case.test_name
+            ,'KGV':  'py%d-svn%d.%d' %
+                                        (sys.version_info.major
+                                        ,self.getSvnVersion()[0], self.getSvnVersion()[1])}
+        rules = []
+        rules.append( '' )
+        rules.append( '' )
+        rules.append( 'test-%(TN)s.unix.new.log: test-%(TN)s.sh test-%(TN)s.unix.known_good-%(KGV)s.log' % v )
+        rules.append( '\t' '-rm -rf testroot-%(TN)s' % v )
+        rules.append( '\t' 'PATH=%%(SVN_BIN)s:$(PATH) PYTHON=%%(PYTHON)s ./test-%(TN)s.sh >test-%(TN)s.unix.new.log 2>&1' % v )
+        rules.append( '' )
+        rules.append( 'test-%(TN)s.unix.new.log.clean: test-%(TN)s.unix.new.log' % v )
+        rules.append( '\t' '%%(PYTHON)s benchmark_diff.py test-%(TN)s.unix.known_good-%(KGV)s.log test-%(TN)s.unix.new.log' % v )
+        rules.append( '' )
+        rules.append( 'clean-%(TN)s:' % v )
+        rules.append( '\t' '-rm -f test-%(TN)s.unix.new.log' % v )
+        rules.append( '\t' '-rm -f test-%(TN)s.unix.new.log.clean' % v )
+        rules.append( '\t' '-rm -rf testroot-%(TN)s' % v )
+        rules.append( '' )
+        rules.append( 'diff-%(TN)s: test-%(TN)s.unix.new.log.clean' % v )
+        rules.append( '\t' 'wb-diff test-%(TN)s.unix.known_good-%(KGV)s.log.clean test-%(TN)s.unix.new.log.clean' % v )
+        rules.append( '' )
+        rules.append( 'new-%(TN)s: test-%(TN)s.unix.new.log' % v )
+        rules.append( '\t' 'cp test-%(TN)s.unix.new.log test-%(TN)s.unix.known_good-%(KGV)s.log' % v )
 
         self.makePrint( self.expand( '\n'.join( rules ) ) )
 
@@ -1122,7 +1242,7 @@ class Source(Target):
 
 class PysvnSvnErrorsPy(Source):
     def __init__( self, compiler ):
-        Target.__init__( self, compiler, [] )
+        Source.__init__( self, compiler, [] )
 
         debug( 'PysvnSvnErrorsPy:0x%8.8x.__init__()' % (id(self),) )
 
@@ -1150,7 +1270,7 @@ class PysvnSvnErrorsPy(Source):
 
 class PysvnDocsSource(Source):
     def __init__( self, compiler ):
-        Target.__init__( self, compiler, [] )
+        Source.__init__( self, compiler, 'pysvn_docs.cpp', [] )
 
         debug( 'PysvnDocsSource:0x%8.8x.__init__()' % (id(self),) )
 
@@ -1177,7 +1297,7 @@ class PysvnDocsSource(Source):
 
 class GenerateSvnErrorCodesHeader(Source):
     def __init__( self, compiler ):
-        Target.__init__( self, compiler, [] )
+        Source.__init__( self, compiler, 'generate_svn_error_codes.hpp', [] )
 
         debug( 'GenerateSvnErrorCodesHeader:0x%8.8x.__init__()' % (id(self),) )
 
@@ -1202,7 +1322,7 @@ class GenerateSvnErrorCodesHeader(Source):
 
 class PysvnDocsHeader(Source):
     def __init__( self, compiler, all_dependencies ):
-        Target.__init__( self, compiler, [] )
+        Source.__init__( self, compiler, 'pysvn_docs.hpp', [] )
 
         self.all_dependencies = all_dependencies
 
@@ -1221,15 +1341,16 @@ class PysvnDocsHeader(Source):
                     (self.getTargetFilename()
                     ,' '.join( self.all_dependencies)) )
         rules.append( '\t@ echo Info: Make %s' % self.getTargetFilename() )
-        rules.append( '\tc:\\UnxUtils\\touch %s' %
-                    (self.getTargetFilename(),) )
+        rules.append( '\t%s %s' %
+                    (self.compiler.getTouchCommand()
+                    ,self.getTargetFilename(),) )
 
         self.makePrint( self.compiler.expand( '\n'.join( rules ) ) )
         self.ruleClean()
 
 class PysvnVersionHeader(Source):
     def __init__( self, compiler ):
-        Target.__init__( self, compiler, [] )
+        Source.__init__( self, compiler, 'pysvn_version.hpp', [] )
 
         debug( 'PysvnVersionHeader:0x%8.8x.__init__()' % (id(self),) )
 
@@ -1259,7 +1380,7 @@ class PysvnVersionHeader(Source):
 
 class PysvnModuleInit(Source):
     def __init__( self, compiler ):
-        Target.__init__( self, compiler, [] )
+        Source.__init__( self, compiler, 'pysvn/__init__.py', [] )
 
         debug( 'PysvnModuleInit:0x%8.8x.__init__()' % (id(self),) )
 
@@ -1290,3 +1411,19 @@ class PysvnModuleInit(Source):
 
         self.makePrint( self.compiler.expand( '\n'.join( rules ) ) )
         self.ruleClean()
+
+class TestCase(Target):
+    def __init__( self, compiler, test_name ):
+        self.test_name = test_name
+
+        Target.__init__( self, compiler, [] )
+
+        debug( 'TestCase:0x%8.8x.__init__( %r )' % (id(self), test_name) )
+
+    def __repr__( self ):
+        return '<TestCase:0x%8.8x %s>' % (id(self), self.test_name)
+
+    def _generateMakefile( self ):
+        debug( 'TestCase:0x%8.8x.generateMakefile() for %r' % (id(self), self.test_name) )
+
+        self.compiler.ruleTestCase( self )
