@@ -753,6 +753,8 @@ class Win32CompilerMSVC90(Compiler):
         rules.append( '\t' '-subst b: /d >nul 2>&1' % v )
         rules.append( '\t' 'if exist testroot-%(TN)s rmdir /s /q testroot-%(TN)s' % v )
         rules.append( '\t' 'test-%(TN)s.cmd >test-%(TN)s.win32.new.log 2>&1' % v )
+        rules.append( '' )
+        rules.append( 'test-%(TN)s.win32.new.log.clean: test-%(TN)s.win32.new.log' % v )
         rules.append( '\t' '%%(PYTHON)s benchmark_diff.py test-%(TN)s.win32.known_good-%(KGV)s.log test-%(TN)s.win32.new.log' % v )
         rules.append( '' )
         rules.append( 'clean-%(TN)s:' % v )
