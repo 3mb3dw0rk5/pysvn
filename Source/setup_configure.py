@@ -752,6 +752,8 @@ class Win32CompilerMSVC90(Compiler):
         rules.append( 'test-%(TN)s.win32.new.log: test-%(TN)s.cmd test-%(TN)s.win32.known_good-%(KGV)s.log' % v )
         rules.append( '\t' '-subst b: /d >nul 2>&1' % v )
         rules.append( '\t' 'if exist testroot-%(TN)s rmdir /s /q testroot-%(TN)s' % v )
+        rules.append( '\t' 'set PATH=%%(SVN_BIN)s:$(PATH)' % v )
+        rules.append( '\t' 'set PYTHON=%%(PYTHON)s' % v )
         rules.append( '\t' 'test-%(TN)s.cmd >test-%(TN)s.win32.new.log 2>&1' % v )
         rules.append( '' )
         rules.append( 'test-%(TN)s.win32.new.log.clean: test-%(TN)s.win32.new.log' % v )
