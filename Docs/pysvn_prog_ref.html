@@ -31,11 +31,15 @@ span.svn_example {display: inline; }
 </style>
 
 <style id="show_style" type="text/css">
+span.svn_1007000 {display: inline; }
+span.svn_1006000 {display: inline; }
 span.svn_1005000 {display: inline; }
 span.svn_1004000 {display: inline; }
 span.svn_1003000 {display: inline; }
 span.svn_1002000 {display: inline; }
 span.svn_1001000 {display: inline; }
+div.svn_1007000 {display: block; }
+div.svn_1006000 {display: block; }
 div.svn_1005000 {display: block; }
 div.svn_1004000 {display: block; }
 div.svn_1003000 {display: block; }
@@ -65,6 +69,7 @@ only available with SVN 1.6.0 or later.
 <p>Click one of the buttons below to show the pysvn API as supported
 by a particular version of the SVN.</p>
 <div id="buttons_work" style="display: none">
+<span class="button" onclick='changeDisplay( 1007000 )'>Show SVN 1.7.0 API</span>
 <span class="button" onclick='changeDisplay( 1006000 )'>Show SVN 1.6.0 API</span>
 <span class="button" onclick='changeDisplay( 1005000 )'>Show SVN 1.5.0 API</span>
 <span class="button" onclick='changeDisplay( 1004000 )'>Show SVN 1.4.0 API</span>
@@ -564,7 +569,7 @@ It is passed the conflict_description and must return a conflict_choice, merge_f
 <td><a href="#pysvn_client_switch">switch</a></td>
 <td><span class="svn_1002000"><a href="#pysvn_client_unlock">unlock</a></span></td>
 <td><a href="#pysvn_client_update">update</a></td>
-<td>&nbsp;</td>
+<td><span class="svn_1007000"><a href="#pysvn_client_upgrade">upgrade</a></span></td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
@@ -2096,6 +2101,15 @@ current revision. To make the current version identical to
 an older revision, use a merge followed by a commit.
 </p>
 
+<div class="svn_1007000">
+<h4><a name="pysvn_client_upgrade"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.upgrade</a></h4>
+<pre>
+upgrade( path )
+</pre>
+<p>Recursively upgrade a working copy from any older format to the current
+ WC metadata storage format.  path is the path to the WC root.
+</p>
+</div>
 
 <h2><a name="pysvn_transaction"><a href="#pysvn_module">pysvn</a>.Transaction - Subversion transaction interface</a></h2>
 

@@ -923,5 +923,8 @@ void pysvn_client::init_type()
 #if defined( PYSVN_HAS_CLIENT_LOCK )
     add_keyword_method("unlock", &pysvn_client::cmd_unlock, pysvn_client_unlock_doc );
 #endif
+#if defined( PYSVN_HAS_CLIENT_UPGRADE )
+    add_keyword_method("upgrade", &pysvn_client::cmd_upgrade, pysvn_client_upgrade_doc );
+#endif
     add_keyword_method("update", &pysvn_client::cmd_update, pysvn_client_update_doc );
 }

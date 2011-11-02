@@ -30,6 +30,29 @@ bool is_svn_url( const std::string &path_or_url )
 }
 
 // convert a path or URL to what SVN likes
+#if defined(PYSVN_HAS_SVN_1_7)
+std::string svnNormalisedIfPath( const std::string &unnormalised, SvnPool &pool )
+{
+    if( is_svn_url( unnormalised ) )
+    {
+        const char *normalised_path = svn_uri_canonicalize( unnormalised.c_str(), pool );
+        return std::string( normalised_path );
+    }
+    else
+    {
+        const char *normalised_path = svn_dirent_canonicalize( unnormalised.c_str(), pool );
+        return std::string( normalised_path );
+    }
+}
+
+// convert a path to what the native OS likes
+std::string osNormalisedPath( const std::string &unnormalised, SvnPool &pool )
+{
+    const char *local_path = svn_dirent_local_style( unnormalised.c_str(), pool );
+
+    return std::string( local_path );
+}
+#else
 std::string svnNormalisedIfPath( const std::string &unnormalised, SvnPool &pool )
 {
     if( is_svn_url( unnormalised ) )
@@ -51,3 +74,4 @@ std::string osNormalisedPath( const std::string &unnormalised, SvnPool &pool )
 
     return std::string( local_path );
 }
+#endif
