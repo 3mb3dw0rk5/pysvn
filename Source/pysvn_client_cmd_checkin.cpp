@@ -202,6 +202,7 @@ Py::Object pysvn_client::cmd_checkout( const Py::Tuple &a_args, const Py::Dict &
     svn_revnum_t revnum = 0;
     try
     {
+        std::string norm_url( svnNormalisedIfPath( url, pool ) );
         std::string norm_path( svnNormalisedIfPath( path, pool ) );
 
         checkThreadPermission();
@@ -214,7 +215,7 @@ Py::Object pysvn_client::cmd_checkout( const Py::Tuple &a_args, const Py::Dict &
         svn_error_t *error = svn_client_checkout3
             (
             &revnum,
-            url.c_str(),
+            norm_url.c_str(),
             norm_path.c_str(),
             &peg_revision,
             &revision,
@@ -228,7 +229,7 @@ Py::Object pysvn_client::cmd_checkout( const Py::Tuple &a_args, const Py::Dict &
         svn_error_t *error = svn_client_checkout2
             (
             &revnum,
-            url.c_str(),
+            norm_url.c_str(),
             norm_path.c_str(),
             &peg_revision,
             &revision,
@@ -241,7 +242,7 @@ Py::Object pysvn_client::cmd_checkout( const Py::Tuple &a_args, const Py::Dict &
         svn_error_t *error = svn_client_checkout
             (
             &revnum,
-            url.c_str(),
+            norm_url.c_str(),
             norm_path.c_str(),
             &revision,
             recurse,
