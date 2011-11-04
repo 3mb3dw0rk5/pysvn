@@ -41,7 +41,6 @@ class CommandError( Exception ):
         return self._reason
 
 def main( args ):
-    print( 'main args %r' % (args,) )
     progname = os.path.basename( args[0] )
     pause = False
     if args[1:2] == ['--pause']:
@@ -468,11 +467,6 @@ class SvnCommand:
         self.client.export( positional_args[0], positional_args[1], revision=revision, force=force, native_eol=native_eol )
 
     def cmd_info( self, args ):
-        if not hasattr( self.client, 'info' ):
-            print( 'Info: info is not available using info2' )
-            self.cmd_info2( args )
-            return
-
         positional_args = args.getPositionalArgs( 0, 1 )
         if len(positional_args) == 0:
             positional_args.append( '.' )
@@ -987,7 +981,6 @@ class SvnCommand:
         if len(positional_args) == 0:
             positional_args.append( '.' )
 
-        print( 'cmd_update client.update( %r, recurse=%r )' % (positional_args[0], recurse) )
         rev_list = self.client.update( positional_args[0], recurse=recurse )
         self.printNotifyMessages()
         if type(rev_list) == type([]) and len(rev_list) != 1:
