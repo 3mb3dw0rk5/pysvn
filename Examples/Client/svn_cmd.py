@@ -24,6 +24,11 @@ except NameError:
         list_out.sort()
         return list_out
 
+if hasattr( types, 'StringTypes' ):
+    StringTypes = types.StringTypes
+else:
+    StringTypes = [type( '' )]
+
 class CommandError( Exception ):
     def __init__( self, reason ):
         Exception.__init__( self )
@@ -36,6 +41,7 @@ class CommandError( Exception ):
         return self._reason
 
 def main( args ):
+    print( 'main args %r' % (args,) )
     progname = os.path.basename( args[0] )
     pause = False
     if args[1:2] == ['--pause']:
@@ -241,7 +247,7 @@ class SvnCommand:
         print( 'callback_conflict_resolver' )
         for key in sorted( arg_dict.keys() ):
             value = arg_dict[ key ]
-            if type(value) not in types.StringTypes:
+            if type(value) not in StringTypes:
                 value = repr(value)
             print( '  %s: %r %s' % (key, type(arg_dict[key]), value) )
 
@@ -463,7 +469,7 @@ class SvnCommand:
 
     def cmd_info( self, args ):
         if not hasattr( self.client, 'info' ):
-            print 'Info: info is not available using info2'
+            print( 'Info: info is not available using info2' )
             self.cmd_info2( args )
             return
 
@@ -472,10 +478,7 @@ class SvnCommand:
             positional_args.append( '.' )
 
         path = positional_args[0]
-
-	self.debug( 'cmd_info path=%r' % (path,) )
-
-
+    
         entry = self.client.info( path )
 
         print( 'Path: %s' % path )
@@ -983,6 +986,8 @@ class SvnCommand:
         positional_args = args.getPositionalArgs( 0 )
         if len(positional_args) == 0:
             positional_args.append( '.' )
+
+        print( 'cmd_update client.update( %r, recurse=%r )' % (positional_args[0], recurse) )
         rev_list = self.client.update( positional_args[0], recurse=recurse )
         self.printNotifyMessages()
         if type(rev_list) == type([]) and len(rev_list) != 1:

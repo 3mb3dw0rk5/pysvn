@@ -971,11 +971,11 @@ class MacOsxCompilerGCC(CompilerGCC):
         self._pysvnModuleSetup()
         self._addVar( 'PYSVN_MODULE_BASENAME', self.pysvn_module_name )
 
-        self._addVar( 'PYTHON_VERSION', '%d.%d' % (sys.version_info[0], sys.version_info[1]) )
-        self._addVar( 'PYTHON_DIR',      '/Library/Frameworks/Python.framework/Versions/%(PYTHON_VERSION)s' )
-        self._addVar( 'PYTHON_FRAMEWORK', '/Library/Frameworks/Python.framework/Versions/%(PYTHON_VERSION)s/Python' )
+        self._addVar( 'PYTHON_VERSION',     '%d.%d' % (sys.version_info[0], sys.version_info[1]) )
+        self._addVar( 'PYTHON_DIR',         '/Library/Frameworks/Python.framework/Versions/%(PYTHON_VERSION)s' )
+        self._addVar( 'PYTHON_FRAMEWORK',   '/Library/Frameworks/Python.framework/Versions/%(PYTHON_VERSION)s/Python' )
 
-        self._addVar( 'PYTHON_INC', '%(PYTHON_DIR)s/include/python%(PYTHON_VERSION)s' )
+        self._addVar( 'PYTHON_INC',         distutils.sysconfig.get_python_inc() )
 
         py_cflags_list = [
                     '-g',
@@ -1002,7 +1002,7 @@ class MacOsxCompilerGCC(CompilerGCC):
 
         self._addVar( 'CCCFLAGS', ' '.join( py_cflags_list ) )
         self._addVar( 'LDLIBS', ' '.join( py_ld_libs ) )
-        self._addVar( 'LDSHARED',       '%(CCC)s -bundle -g -u _PyMac_Error '
+        self._addVar( 'LDSHARED',       '%(CCC)s -bundle -g '
                                         '-framework System '
                                         '%(PYTHON_FRAMEWORK)s '
                                         '-framework CoreFoundation '
@@ -1040,9 +1040,9 @@ class LinuxCompilerGCC(CompilerGCC):
                         '/usr/pkg/lib',                         # netbsd
                         ]
         self._find_paths_apr_inc = [
-                        '/usr/include/apr-1',                        # typical Linux
-                        '/usr/local/apr/include/apr-1',                # Mac OS X www.metissian.com
-                        '/usr/pkg/include/apr-1',                # netbsd
+                        '/usr/include/apr-1',                   # typical Linux
+                        '/usr/local/apr/include/apr-1',         # Mac OS X www.metissian.com
+                        '/usr/pkg/include/apr-1',               # netbsd
                         '/usr/include/apache2',                 # alternate Linux
                         '/usr/include/httpd',                   # alternate Linux
                         '/usr/local/include/apr0',              # typical *BSD
