@@ -240,9 +240,7 @@ public:
 #ifdef PYSVN_HAS_CLIENT_GET_CHANGELIST
     Py::Object cmd_get_changelist( const Py::Tuple& args, const Py::Dict &kws );
 #endif
-#if !defined( PYSVN_WC_ADM_PROBE_OPEN3_BROKEN )
     Py::Object cmd_info( const Py::Tuple& args, const Py::Dict &kws );
-#endif
 #if defined( PYSVN_HAS_CLIENT_INFO )
     Py::Object cmd_info2( const Py::Tuple& args, const Py::Dict &kws );
 #endif
@@ -723,6 +721,10 @@ extern bool is_svn_url( const std::string &path_or_url );
 
 // convert a path to what SVN likes only if its not a URL
 extern std::string svnNormalisedIfPath( const std::string &unnormalised, SvnPool &pool );
+// convert a URL to what SVN likes
+extern std::string svnNormalisedUrl( const std::string &unnormalised, SvnPool &pool );
+// convert a path to what SVN likes
+extern std::string svnNormalisedPath( const std::string &unnormalised, SvnPool &pool );
 
 // convert a path to what the native OS likes
 extern std::string osNormalisedPath( const std::string &unnormalised, SvnPool &pool );
