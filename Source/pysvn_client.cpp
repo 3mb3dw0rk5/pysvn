@@ -859,8 +859,9 @@ void pysvn_client::init_type()
     add_keyword_method("get_interactive", &pysvn_client::get_interactive, pysvn_client_get_interactive_doc );
     add_keyword_method("get_store_passwords", &pysvn_client::get_store_passwords, pysvn_client_get_store_passwords_doc );
     add_keyword_method("import_", &pysvn_client::cmd_import, pysvn_client_import__doc );
+#if !defined( PYSVN_WC_ADM_PROBE_OPEN3_BROKEN )
     add_keyword_method("info", &pysvn_client::cmd_info, pysvn_client_info_doc );
-
+#endif
 #if defined( PYSVN_HAS_CLIENT_INFO )
     add_keyword_method("info2", &pysvn_client::cmd_info2, pysvn_client_info2_doc );
 #endif

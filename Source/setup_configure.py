@@ -57,7 +57,7 @@ class Options:
         '--apr-inc-dir':        (1, '<dir>'),
         '--apu-inc-dir':        (1, '<dir>'),
         '--apr-lib-dir':        (1, '<dir>'),
-	'--debug':		(0, None),  # debug this script
+        '--debug':              (0, None),  # debug this script
         '--define':             (2, '<define-string>'),
         '--enable-debug':       (0, None),
         '--fixed-module-name':  (0, None),
@@ -126,9 +126,9 @@ class Options:
 
                 self.__all_options.setdefault( option_name, [] ).append( option_parts[1] )
 
-	global _debug
-	if self.hasOption( '--debug' ):
-	    _debug = True
+        global _debug
+        if self.hasOption( '--debug' ):
+            _debug = True
 
         return True
 
@@ -314,17 +314,17 @@ class Compiler:
 
         self._addVar( 'PYSVN_SRC_DIR', os.path.dirname( os.getcwd() ) )
 
-	self.py_module_defines = []
-	self.py_module_init_function = None
+        self.py_module_defines = []
+        self.py_module_init_function = None
 
     def _pysvnModuleSetup( self ):
         if self.options.hasOption( '--fixed-module-name' ):
             print( 'Info: Using fixed module name' )
             self.pysvn_module_name = '_pysvn'
             if sys.version_info[0] >= 3:
-		self.py_module_init_function = 'PyInit__pysvn'
-	    else:
-		self.py_module_init_function = 'init_pysvn'
+                self.py_module_init_function = 'PyInit__pysvn'
+            else:
+                self.py_module_init_function = 'init_pysvn'
 
         else:
             # name of the module including the python version to help
@@ -333,11 +333,11 @@ class Compiler:
 
             self.pysvn_module_name = '_pysvn_%d_%d' % (sys.version_info[0], sys.version_info[1])
             if sys.version_info[0] >= 3:
-		self.py_module_init_function = 'PyInit__pysvn_%d_%d' % sys.version_info[:2]
+                self.py_module_init_function = 'PyInit__pysvn_%d_%d' % sys.version_info[:2]
                 self.py_module_defines.append( ('PyInit__pysvn', self.py_module_init_function) )
                 self.py_module_defines.append( ('PyInit__pysvn_d', '%s_d' % (self.py_module_init_function,)) )
             else:
-		self.py_module_init_function = 'init_pysvn_%d_%d' % sys.version_info[:2]
+                self.py_module_init_function = 'init_pysvn_%d_%d' % sys.version_info[:2]
                 self.py_module_defines.append( ('init_pysvn', self.py_module_init_function) )
                 self.py_module_defines.append( ('init_pysvn_d', '%s_d' % (self.py_module_init_function,)) )
 
@@ -436,18 +436,18 @@ class Compiler:
                     'cxxsupport.cxx' )
 
     def find_svn_inc( self ):
-	for folder in ['include/subversion-1', 'include']:
-	    try:
-		return self.find_dir(
-			    'SVN include',
-			    '--svn-inc-dir',
-			    folder,
-			    self._find_paths_svn_inc,
-			    'svn_client.h' )
-	    except SetupError as e:
-		last_exception = e
+        for folder in ['include/subversion-1', 'include']:
+            try:
+                return self.find_dir(
+                            'SVN include',
+                            '--svn-inc-dir',
+                            folder,
+                            self._find_paths_svn_inc,
+                            'svn_client.h' )
+            except SetupError as e:
+                last_exception = e
 
-	raise last_exception
+        raise last_exception
 
     def find_svn_bin( self ):
         return self.find_dir(
@@ -470,20 +470,20 @@ class Compiler:
         return folder
 
     def find_apr_inc( self ):
-	return self.find_dir(
-	    'APR include',
-	    '--apr-inc-dir',
-	    None,
-	    self._find_paths_apr_inc,
-	    'apr.h' )
+        return self.find_dir(
+            'APR include',
+            '--apr-inc-dir',
+            None,
+            self._find_paths_apr_inc,
+            'apr.h' )
 
     def find_apu_inc( self ):
-	return self.find_dir(
-	    'APR include',
-	    '--apu-inc-dir',
-	    None,
-	    self._find_paths_apr_util_inc,
-	    'apu.h' )
+        return self.find_dir(
+            'APR include',
+            '--apu-inc-dir',
+            None,
+            self._find_paths_apr_util_inc,
+            'apu.h' )
 
     def find_apr_lib( self ):
         last_exception = None
@@ -522,8 +522,8 @@ class Compiler:
         return dirname
 
     def __find_dir( self, name, kw, svn_root_suffix, base_dir_list, check_file ):
-	debug( '__find_dir( name=%r, kw=%r, svn_root_suffix=%r, base_dir_list=%r, check_file=%r )' %
-		    (name, kw, svn_root_suffix, base_dir_list, check_file) )
+        debug( '__find_dir( name=%r, kw=%r, svn_root_suffix=%r, base_dir_list=%r, check_file=%r )' %
+                    (name, kw, svn_root_suffix, base_dir_list, check_file) )
 
         # override the base_dir_list from the command line kw
         svn_root_dir = None
@@ -535,7 +535,7 @@ class Compiler:
         and svn_root_suffix is not None ):
             base_dir_list = ['%s/%s' % (self.options.getOption( '--svn-root-dir' ), svn_root_suffix)]
 
-	debug( '__find_dir base_dir_list=%r' % (base_dir_list,) )
+        debug( '__find_dir base_dir_list=%r' % (base_dir_list,) )
 
         # expect to find check_file in one of the dir
         for dirname in base_dir_list:
@@ -576,7 +576,7 @@ class Win32CompilerMSVC90(Compiler):
         self._find_paths_pycxx_dir = []
         self._find_paths_pycxx_src = [
                         '%(PYCXX)s/Src',
-			]
+                        ]
         self._find_paths_svn_inc = []
         self._find_paths_svn_bin = []
         self._find_paths_svn_lib = []
@@ -585,10 +585,10 @@ class Win32CompilerMSVC90(Compiler):
         self._find_paths_apr_lib = []
 
         if self.options.hasOption( '--svn-root-dir' ):
-	    svn_root_dir = self.options.getOption( '--svn-root-dir' )
-	    self._find_paths_apr_inc.append( r'%s\include\apr' % (svn_root_dir,) )
-	    self._find_paths_apr_util_inc.append( r'%s\include\apr-util' % (svn_root_dir,) )
-	    self._find_paths_apr_lib.append( r'%s\lib\apr' % (svn_root_dir,) )
+            svn_root_dir = self.options.getOption( '--svn-root-dir' )
+            self._find_paths_apr_inc.append( r'%s\include\apr' % (svn_root_dir,) )
+            self._find_paths_apr_util_inc.append( r'%s\include\apr-util' % (svn_root_dir,) )
+            self._find_paths_apr_lib.append( r'%s\lib\apr' % (svn_root_dir,) )
 
         self._addVar( 'PYTHON_DIR',     sys.exec_prefix )
         self._addVar( 'PYTHON_INC',     r'%(PYTHON_DIR)s\include' )
@@ -613,7 +613,7 @@ class Win32CompilerMSVC90(Compiler):
 
     def generateMakefileHeader( self ):
         self.makePrint( '#' )
-        self.makePrint( '#	Pysvn Makefile generated by setup.py' )
+        self.makePrint( '#        Pysvn Makefile generated by setup.py' )
         self.makePrint( '#' )
         self.makePrint( 'CCC=cl /nologo' )
         self.makePrint( 'CC=cl /nologo' )
@@ -686,53 +686,53 @@ class Win32CompilerMSVC90(Compiler):
                                         r'/I. /I%(APR_INC)s /I%(APU_INC)s /I%(SVN_INC)s '
                                         r'/D_CRT_NONSTDC_NO_DEPRECATE '
                                         r'/U_DEBUG '
-					r'/DWIN32 '
+                                        r'/DWIN32 '
                                         r'/D%(DEBUG)s' )
 
     def setupPySvn( self ):
-	self._pysvnModuleSetup()
+        self._pysvnModuleSetup()
         self._addVar( 'PYSVN_MODULE_BASENAME', self.pysvn_module_name )
 
 
-	py_cflags_list = [
-					r'/Zi /MT /EHsc ',
-					r'/I. /I%(APR_INC)s /I%(APU_INC)s /I%(SVN_INC)s',
-					r'/DPYCXX_PYTHON_2TO3 /I%(PYCXX)s /I%(PYCXX_SRC)s /I%(PYTHON_INC)s',
-					r'/D_CRT_NONSTDC_NO_DEPRECATE',
-					r'/U_DEBUG',
-					r'/DWIN32',
-					r'/D%(DEBUG)s',
-					]
-	for define, value in self.py_module_defines:
-	    py_cflags_list.append( '/D%s=%s' % (define, value) )
+        py_cflags_list = [
+                                        r'/Zi /MT /EHsc ',
+                                        r'/I. /I%(APR_INC)s /I%(APU_INC)s /I%(SVN_INC)s',
+                                        r'/DPYCXX_PYTHON_2TO3 /I%(PYCXX)s /I%(PYCXX_SRC)s /I%(PYTHON_INC)s',
+                                        r'/D_CRT_NONSTDC_NO_DEPRECATE',
+                                        r'/U_DEBUG',
+                                        r'/DWIN32',
+                                        r'/D%(DEBUG)s',
+                                        ]
+        for define, value in self.py_module_defines:
+            py_cflags_list.append( '/D%s=%s' % (define, value) )
 
 
         self._addVar( 'CCCFLAGS', ' '.join( py_cflags_list ) )
 
-	self._addVar( 'LDLIBS', ' '.join( [
-					r'odbc32.lib',
-					r'odbccp32.lib',
-					r'Rpcrt4.lib',
-					r'Mswsock.lib',
-					r'%(SVN_LIB)s\libsvn_client-1.lib',
-					r'%(SVN_LIB)s\libsvn_delta-1.lib',
-					r'%(SVN_LIB)s\libsvn_diff-1.lib',
-					r'%(SVN_LIB)s\libsvn_fs-1.lib',
-					r'%(SVN_LIB)s\libsvn_fs_fs-1.lib',
-					r'%(SVN_LIB)s\libsvn_ra-1.lib',
-					r'%(SVN_LIB)s\libsvn_ra_neon-1.lib',
-					r'%(SVN_LIB)s\libsvn_ra_local-1.lib',
-					r'%(SVN_LIB)s\libsvn_ra_svn-1.lib',
-					r'%(SVN_LIB)s\libsvn_repos-1.lib',
-					r'%(SVN_LIB)s\libsvn_subr-1.lib',
-					r'%(SVN_LIB)s\libsvn_wc-1.lib',
-					r'%(SVN_LIB)s\apr-iconv\libapriconv-1.lib',
-					r'%(SVN_LIB)s\apr-util\libaprutil-1.lib',
-					r'%(SVN_LIB)s\apr-util\xml.lib',
-					r'%(SVN_LIB)s\apr\libapr-1.lib',
-					r'%(SVN_LIB)s\serf\serf-1.lib',
-					r'ws2_32.lib',
-					] ) )
+        self._addVar( 'LDLIBS', ' '.join( [
+                                        r'odbc32.lib',
+                                        r'odbccp32.lib',
+                                        r'Rpcrt4.lib',
+                                        r'Mswsock.lib',
+                                        r'%(SVN_LIB)s\libsvn_client-1.lib',
+                                        r'%(SVN_LIB)s\libsvn_delta-1.lib',
+                                        r'%(SVN_LIB)s\libsvn_diff-1.lib',
+                                        r'%(SVN_LIB)s\libsvn_fs-1.lib',
+                                        r'%(SVN_LIB)s\libsvn_fs_fs-1.lib',
+                                        r'%(SVN_LIB)s\libsvn_ra-1.lib',
+                                        r'%(SVN_LIB)s\libsvn_ra_neon-1.lib',
+                                        r'%(SVN_LIB)s\libsvn_ra_local-1.lib',
+                                        r'%(SVN_LIB)s\libsvn_ra_svn-1.lib',
+                                        r'%(SVN_LIB)s\libsvn_repos-1.lib',
+                                        r'%(SVN_LIB)s\libsvn_subr-1.lib',
+                                        r'%(SVN_LIB)s\libsvn_wc-1.lib',
+                                        r'%(SVN_LIB)s\apr-iconv\libapriconv-1.lib',
+                                        r'%(SVN_LIB)s\apr-util\libaprutil-1.lib',
+                                        r'%(SVN_LIB)s\apr-util\xml.lib',
+                                        r'%(SVN_LIB)s\apr\libapr-1.lib',
+                                        r'%(SVN_LIB)s\serf\serf-1.lib',
+                                        r'ws2_32.lib',
+                                        ] ) )
 
     def ruleAllTestCase( self, target_name, all_test_cases ):
         self.makePrint( '%s: %s' %
@@ -794,7 +794,7 @@ class CompilerGCC(Compiler):
 
     def generateMakefileHeader( self ):
         self.makePrint( '#' )
-        self.makePrint( '#	Pysvn Makefile generated by setup.py' )
+        self.makePrint( '#        Pysvn Makefile generated by setup.py' )
         self.makePrint( '#' )
         self.makePrint( '' )
 
@@ -915,11 +915,11 @@ class MacOsxCompilerGCC(CompilerGCC):
                         '/usr/pkg/include/subversion-1',        # netbsd
                         ]
         self._find_paths_svn_bin = [
-                        '/opt/local/bin',			# Darwin - darwin ports
-                        '/sw/bin',				# Darwin - Fink
-                        '/usr/bin',				# typical Linux
-                        '/usr/local/bin',			# typical *BSD
-                        '/usr/pkg/bin',				# netbsd
+                        '/opt/local/bin',                        # Darwin - darwin ports
+                        '/sw/bin',                                # Darwin - Fink
+                        '/usr/bin',                                # typical Linux
+                        '/usr/local/bin',                        # typical *BSD
+                        '/usr/pkg/bin',                                # netbsd
                         ]
         self._find_paths_svn_lib = [
                         '/opt/local/lib',                       # Darwin - darwin ports
@@ -931,17 +931,17 @@ class MacOsxCompilerGCC(CompilerGCC):
                         '/usr/pkg/lib',                         # netbsd
                         ]
         self._find_paths_apr_inc = [
-                        '/opt/local/include/apr-1',		# Darwin - darwin ports
-                        '/sw/include/apr-1',			# Darwin - fink
-                        '/usr/include/apr-1',			# typical Linux
-                        '/usr/local/apr/include/apr-1',		# Mac OS X www.metissian.com
-                        '/usr/pkg/include/apr-1',		# netbsd
+                        '/opt/local/include/apr-1',                # Darwin - darwin ports
+                        '/sw/include/apr-1',                        # Darwin - fink
+                        '/usr/include/apr-1',                        # typical Linux
+                        '/usr/local/apr/include/apr-1',                # Mac OS X www.metissian.com
+                        '/usr/pkg/include/apr-1',                # netbsd
                         '/usr/include/apache2',                 # alternate Linux
                         '/usr/include/httpd',                   # alternate Linux
                         '/usr/local/include/apr0',              # typical *BSD
                         '/usr/local/include/apache2',           # alternate *BSD
                         ]
-	self._find_paths_apr_util_inc = self._find_paths_apr_inc
+        self._find_paths_apr_util_inc = self._find_paths_apr_inc
         self._find_paths_apr_lib = [
                         '/opt/local/lib',                       # Darwin - darwin ports
                         '/sw/lib',                              # Darwin - fink
@@ -968,7 +968,7 @@ class MacOsxCompilerGCC(CompilerGCC):
         self._addVar( 'LDEXE',          '%(CCC)s -g' )
 
     def setupPySvn( self ):
-	self._pysvnModuleSetup()
+        self._pysvnModuleSetup()
         self._addVar( 'PYSVN_MODULE_BASENAME', self.pysvn_module_name )
 
         self._addVar( 'PYTHON_VERSION', '%d.%d' % (sys.version_info[0], sys.version_info[1]) )
@@ -985,8 +985,8 @@ class MacOsxCompilerGCC(CompilerGCC):
                     '-DPYCXX_PYTHON_2TO3 -I%(PYCXX)s -I%(PYCXX_SRC)s -I%(PYTHON_INC)s',
                     '-D%(DEBUG)s',
                     ]
-	for define, value in self.py_module_defines:
-	    py_cflags_list.append( '-D%s=%s' % (define, value) )
+        for define, value in self.py_module_defines:
+            py_cflags_list.append( '-D%s=%s' % (define, value) )
 
         py_ld_libs = [
                 '-L%(SVN_LIB)s',
@@ -1028,9 +1028,9 @@ class LinuxCompilerGCC(CompilerGCC):
                         '/usr/pkg/include/subversion-1',        # netbsd
                         ]
         self._find_paths_svn_bin = [
-                        '/usr/bin',				# typical Linux
-                        '/usr/local/bin',			# typical *BSD
-                        '/usr/pkg/bin',				# netbsd
+                        '/usr/bin',                                # typical Linux
+                        '/usr/local/bin',                        # typical *BSD
+                        '/usr/pkg/bin',                                # netbsd
                         ]
         self._find_paths_svn_lib = [
                         '/usr/lib64',                           # typical 64bit Linux
@@ -1040,15 +1040,15 @@ class LinuxCompilerGCC(CompilerGCC):
                         '/usr/pkg/lib',                         # netbsd
                         ]
         self._find_paths_apr_inc = [
-                        '/usr/include/apr-1',			# typical Linux
-                        '/usr/local/apr/include/apr-1',		# Mac OS X www.metissian.com
-                        '/usr/pkg/include/apr-1',		# netbsd
+                        '/usr/include/apr-1',                        # typical Linux
+                        '/usr/local/apr/include/apr-1',                # Mac OS X www.metissian.com
+                        '/usr/pkg/include/apr-1',                # netbsd
                         '/usr/include/apache2',                 # alternate Linux
                         '/usr/include/httpd',                   # alternate Linux
                         '/usr/local/include/apr0',              # typical *BSD
                         '/usr/local/include/apache2',           # alternate *BSD
                         ]
-	self._find_paths_apr_util_inc = self._find_paths_apr_inc
+        self._find_paths_apr_util_inc = self._find_paths_apr_inc
         self._find_paths_apr_lib = [
                         '/usr/lib64',                           # typical 64bit Linux
                         '/usr/lib',                             # typical Linux
@@ -1075,7 +1075,7 @@ class LinuxCompilerGCC(CompilerGCC):
         self._addVar( 'LDEXE',          '%(CCC)s -g' )
 
     def setupPySvn( self ):
-	self._pysvnModuleSetup()
+        self._pysvnModuleSetup()
         self._addVar( 'PYSVN_MODULE_BASENAME', self.pysvn_module_name )
 
         self._addVar( 'PYTHON_VERSION', '%d.%d' % (sys.version_info[0], sys.version_info[1]) )
@@ -1087,8 +1087,8 @@ class LinuxCompilerGCC(CompilerGCC):
                     '-DPYCXX_PYTHON_2TO3 -I%(PYCXX)s -I%(PYCXX_SRC)s -I%(PYTHON_INC)s',
                     '-D%(DEBUG)s',
                     ]
-	for define, value in self.py_module_defines:
-	    py_cflags_list.append( '-D%s=%s' % (define, value) )
+        for define, value in self.py_module_defines:
+            py_cflags_list.append( '-D%s=%s' % (define, value) )
 
         if self.options.hasOption( '--enable-debug' ):
             print( 'Info: Debug enabled' )
@@ -1107,7 +1107,7 @@ class LinuxCompilerGCC(CompilerGCC):
                 ]
 
         self._addVar( 'CCCFLAGS',   ' '.join( py_cflags_list ) )
-        self._addVar( 'LDLIBS',	    ' '.join( py_ld_libs ) )
+        self._addVar( 'LDLIBS',            ' '.join( py_ld_libs ) )
         self._addVar( 'LDSHARED',   '%(CCC)s -shared -g %(LDLIBS)s' )
 
 #--------------------------------------------------------------------------------
@@ -1402,7 +1402,7 @@ class PysvnModuleInit(Source):
                     ,self.compiler.platformFilename( 'pysvn/__init__.py.template' )
                     ,self.compiler.platformFilename( 'create__init__.py' )
                     ,self.compiler.platformFilename( 'generate_svn_error_codes/generate_svn_error_codes%s' % 
-							(self.compiler.getProgramExt(),) )) )
+                                                        (self.compiler.getProgramExt(),) )) )
         rules.append( '\t@ echo Info: Make %s' % self.getTargetFilename() )
 
         rules.append( '\t%%(PYTHON)s -u %s %s %s %s %%(PYSVN_MODULE_BASENAME)s%s' % 
@@ -1410,7 +1410,7 @@ class PysvnModuleInit(Source):
                     ,self.compiler.platformFilename( 'pysvn/__init__.py.template' )
                     ,self.getTargetFilename()
                     ,self.compiler.platformFilename( 'generate_svn_error_codes/generate_svn_error_codes%s' % 
-							(self.compiler.getProgramExt(),) )
+                                                        (self.compiler.getProgramExt(),) )
                     ,self.compiler.getPythonExtensionFileExt()) )
 
         self.makePrint( self.compiler.expand( '\n'.join( rules ) ) )

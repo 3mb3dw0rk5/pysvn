@@ -360,6 +360,7 @@ Py::Object pysvn_client::cmd_annotate( const Py::Tuple &a_args, const Py::Dict &
     return entries_list;
 }
 
+#if !defined( PYSVN_WC_ADM_PROBE_OPEN3_BROKEN )
 Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
     static argument_description args_desc[] =
@@ -379,6 +380,8 @@ Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kw
     try
     {
         std::string norm_path( svnNormalisedIfPath( path, pool ) );
+        std::cout << "cmd_info: norm_path " << norm_path << std::endl;
+
 
         checkThreadPermission();
 
@@ -417,6 +420,7 @@ Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kw
 
     return toObject( *entry, pool, m_wrapper_entry );
 }
+#endif
 
 #if defined( PYSVN_HAS_CLIENT_INFO )
 class InfoReceiveBaton

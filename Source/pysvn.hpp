@@ -240,7 +240,9 @@ public:
 #ifdef PYSVN_HAS_CLIENT_GET_CHANGELIST
     Py::Object cmd_get_changelist( const Py::Tuple& args, const Py::Dict &kws );
 #endif
+#if !defined( PYSVN_WC_ADM_PROBE_OPEN3_BROKEN )
     Py::Object cmd_info( const Py::Tuple& args, const Py::Dict &kws );
+#endif
 #if defined( PYSVN_HAS_CLIENT_INFO )
     Py::Object cmd_info2( const Py::Tuple& args, const Py::Dict &kws );
 #endif

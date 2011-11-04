@@ -14,6 +14,7 @@ import os
 import parse_datetime
 import glob
 import locale
+import types
 
 try:
     sorted( [] )
@@ -239,7 +240,10 @@ class SvnCommand:
     def callback_conflict_resolver( self, arg_dict ):
         print( 'callback_conflict_resolver' )
         for key in sorted( arg_dict.keys() ):
-            print( '  %s: %r' % (key, arg_dict[ key ]) )
+            value = arg_dict[ key ]
+            if type(value) not in types.StringTypes:
+                value = repr(value)
+            print( '  %s: %r %s' % (key, type(arg_dict[key]), value) )
 
         return pysvn.wc_conflict_choice.postpone, None, False
 
@@ -458,11 +462,19 @@ class SvnCommand:
         self.client.export( positional_args[0], positional_args[1], revision=revision, force=force, native_eol=native_eol )
 
     def cmd_info( self, args ):
+        if not hasattr( self.client, 'info' ):
+            print 'Info: info is not available using info2'
+            self.cmd_info2( args )
+            return
+
         positional_args = args.getPositionalArgs( 0, 1 )
         if len(positional_args) == 0:
             positional_args.append( '.' )
 
         path = positional_args[0]
+
+	self.debug( 'cmd_info path=%r' % (path,) )
+
 
         entry = self.client.info( path )
 
