@@ -85,7 +85,7 @@ class Options:
 
         where <options> is one or more of:
 ''' % {'progname': self.__progname} )
-        for option, num_value in sorted( all_options_info.items() ):
+        for option, num_value in sorted( self.all_options_info.items() ):
             num, value = num_value
             if num == 0:
                 print( '        %s' % (option,) )
