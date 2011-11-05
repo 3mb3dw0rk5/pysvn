@@ -1079,7 +1079,7 @@ class LinuxCompilerGCC(CompilerGCC):
         self._addVar( 'PYSVN_MODULE_BASENAME', self.pysvn_module_name )
 
         self._addVar( 'PYTHON_VERSION', '%d.%d' % (sys.version_info[0], sys.version_info[1]) )
-        self._addVar( 'PYTHON_INC',     '/usr/include/python%(PYTHON_VERSION)s' )
+        self._addVar( 'PYTHON_INC',     distutils.sysconfig.get_python_inc() )
 
         py_cflags_list = [
                     '-Wall -fPIC -fexceptions -frtti',
