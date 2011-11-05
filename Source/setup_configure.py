@@ -868,7 +868,7 @@ class CompilerGCC(Compiler):
         rules.append( '' )
         rules.append( 'test-%(TN)s.unix.new.log: test-%(TN)s.sh test-%(TN)s.unix.known_good-%(KGV)s.log' % v )
         rules.append( '\t' '-rm -rf testroot-%(TN)s' % v )
-        rules.append( '\t' 'PATH=%%(SVN_BIN)s:$(PATH) PYTHON=%%(PYTHON)s ./test-%(TN)s.sh >test-%(TN)s.unix.new.log 2>&1' % v )
+        rules.append( '\t' 'LD_LIBRARY_PATH=%%(SVN_LIB)s:%%(APR_LIB)s PATH=%%(SVN_BIN)s:$(PATH) PYTHON=%%(PYTHON)s ./test-%(TN)s.sh >test-%(TN)s.unix.new.log 2>&1' % v )
         rules.append( '' )
         rules.append( 'test-%(TN)s.unix.new.log.clean: test-%(TN)s.unix.new.log' % v )
         rules.append( '\t' '%%(PYTHON)s benchmark_diff.py test-%(TN)s.unix.known_good-%(KGV)s.log test-%(TN)s.unix.new.log' % v )
