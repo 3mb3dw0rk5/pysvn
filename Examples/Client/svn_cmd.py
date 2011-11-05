@@ -248,7 +248,7 @@ class SvnCommand:
             value = arg_dict[ key ]
             if type(value) not in StringTypes:
                 value = repr(value)
-            print( '  %s: %r %s' % (key, type(arg_dict[key]), value) )
+            print( '  %s: %s' % (key, value) )
 
         return pysvn.wc_conflict_choice.postpone, None, False
 
