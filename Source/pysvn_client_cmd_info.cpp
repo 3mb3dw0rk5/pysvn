@@ -385,7 +385,7 @@ Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kw
         svn_wc_adm_access_t *adm_access = NULL;
 
 #if defined( PYSVN_HAS_WC_ADM_PROBE_OPEN3 )
-        char *c_norm_path = svn_dirent_internal_style( path.c_str(), pool );
+        const char *c_norm_path = svn_dirent_internal_style( path.c_str(), pool );
         std::string norm_path( c_norm_path );
         svn_error_t *error = svn_wc_adm_probe_open3( &adm_access, NULL, norm_path.c_str(), false, 0, NULL, NULL, pool );
 #else
