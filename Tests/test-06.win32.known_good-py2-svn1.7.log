@@ -41,19 +41,18 @@ Revision 3
 Info: Test - info of path
 
 Info: PYSVN CMD info file1.txt
-Info: info is not available using info2
-
 Path: file1.txt
+Name: file1.txt
 Url: file:///B:/repos/trunk/test/file1.txt
+Repository: file:///B:/repos
+Repository UUID: 20cb2cd1-2efd-3947-aaaa-689d4cbe5749
 Revision: 3
-Repository root_URL: file:///B:/repos
-Repository UUID: c168b21e-6b9b-304f-94c1-fc36679929b6
-Last changed author: barry
-Last Changed Date: 04-Nov-2011 12:24:25
-Last changed revision: 3
 Node kind: file
 Schedule: normal
-Text Last Updated: 04-Nov-2011 12:24:25
+Last Changed Author: barry
+Last Changed Rev: 3
+Last Changed Date: 06-Nov-2011 13:02:31
+Text Last Updated: 06-Nov-2011 13:02:31
 Checksum: 1e41522fd7b6b6325667c8554893a6db
 Info: Test - info2 of path
 
@@ -63,28 +62,14 @@ Path: file1.txt
 Url: file:///B:/repos/trunk/test/file1.txt
 Revision: 3
 Repository root_URL: file:///B:/repos
-Repository UUID: c168b21e-6b9b-304f-94c1-fc36679929b6
+Repository UUID: 20cb2cd1-2efd-3947-aaaa-689d4cbe5749
 Last changed author: barry
-Last Changed Date: 04-Nov-2011 12:24:25
+Last Changed Date: 06-Nov-2011 13:02:31
 Last changed revision: 3
 Node kind: file
 Schedule: normal
-Text Last Updated: 04-Nov-2011 12:24:25
+Text Last Updated: 06-Nov-2011 13:02:31
 Checksum: 1e41522fd7b6b6325667c8554893a6db
-Info: Test - info of URL
-
-Info: PYSVN CMD info --revision HEAD file:///b:/repos/trunk/test/file1.txt
-Info: info is not available using info2
-
-Path: file1.txt
-Url: file:///B:/repos/trunk/test/file1.txt
-Revision: 3
-Repository root_URL: file:///B:/repos
-Repository UUID: c168b21e-6b9b-304f-94c1-fc36679929b6
-Last changed author: barry
-Last Changed Date: 04-Nov-2011 12:24:25
-Last changed revision: 3
-Node kind: file
 Info: Test - info2 of URL
 
 Info: PYSVN CMD info2 --revision HEAD file:///b:/repos/trunk/test/file1.txt
@@ -93,8 +78,8 @@ Path: file1.txt
 Url: file:///B:/repos/trunk/test/file1.txt
 Revision: 3
 Repository root_URL: file:///B:/repos
-Repository UUID: c168b21e-6b9b-304f-94c1-fc36679929b6
+Repository UUID: 20cb2cd1-2efd-3947-aaaa-689d4cbe5749
 Last changed author: barry
-Last Changed Date: 04-Nov-2011 12:24:25
+Last Changed Date: 06-Nov-2011 13:02:31
 Last changed revision: 3
 Node kind: file
