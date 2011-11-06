@@ -159,6 +159,31 @@ class Setup:
         self.__makefile.write( '\n' )
 
     def setupCompile( self ):
+        if self.options.hasOption( '--platform' ):
+            self.platform = self.options.getOption( '--platform' )
+
+        else:
+            if sys.platform == 'darwin' and os.path.exists( '/System/Library/CoreServices/SystemVersion.plist' ):
+                self.platform = 'macosx'
+
+            elif sys.platform.startswith('aix'):
+                self.platform = 'aix'
+
+            elif sys.platform.startswith('sunos5'):
+                self.platform = 'sunos5'
+
+            elif sys.platform.startswith('linux'):
+                self.platform = 'linux'
+
+            elif sys.platform.startswith('freebsd'):
+                self.platform = 'freebsd'
+
+            elif sys.platform == 'cygwin':
+                self.platform = 'cygwin'
+
+            else:
+                raise SetupError( 'Cannot automatically detect your platform use --platform option' )
+
         if self.platform == 'win32':
             self.c_utils = Win32CompilerMSVC90( self )
             self.c_pysvn = Win32CompilerMSVC90( self )
@@ -170,6 +195,22 @@ class Setup:
         elif self.platform == 'linux':
             self.c_utils = LinuxCompilerGCC( self )
             self.c_pysvn = LinuxCompilerGCC( self )
+
+        elif self.platform == 'freebsd':
+            self.c_utils = FreeBsdCompilerGCC( self )
+            self.c_pysvn = FreeBsdCompilerGCC( self )
+
+        elif self.platform == 'cygwin':
+            self.c_utils = CygwinCompilerGCC( self )
+            self.c_pysvn = CygwinCompilerGCC( self )
+
+        elif self.platform == 'aix':
+            self.c_utils = AixCompilerGCC( self )
+            self.c_pysvn = AixCompilerGCC( self )
+
+        elif self.platform == 'sunos5':
+            self.c_utils = SunOsCompilerGCC( self )
+            self.c_pysvn = SunOsCompilerGCC( self )
 
         else:
             raise SetupError( 'Unknown platform %r' % (self.platform,) )
@@ -234,11 +275,6 @@ class Setup:
     def generateSourcesMakefile( self ):
         if not self.options.parseOptions():
             raise SetupError( 'failed to parse options' )
-
-        if not self.options.hasOption( '--platform' ):
-            raise SetupError( 'missing required  --platform option' )
-
-        self.platform = self.options.getOption( '--platform' )
 
         self.__makefile = open( 'Makefile', 'wt' )
 
@@ -317,6 +353,14 @@ class Compiler:
         self.py_module_defines = []
         self.py_module_init_function = None
 
+    def _getDefines( self, arg_fmt ):
+        all_defines = []
+        if self.setup.options.hasOption( '--define' ):
+            for define in self.setup.options.getOption( '--define' ):
+                all_defines.append( arg_fmt % (define,) )
+
+        return all_defines
+
     def _pysvnModuleSetup( self ):
         if self.options.hasOption( '--fixed-module-name' ):
             print( 'Info: Using fixed module name' )
@@ -344,7 +388,6 @@ class Compiler:
 
     def _completeInit( self ):
         # must be called  by the leaf derived class to finish initialising the compile
-
 
         self._addVar( 'PYTHON',         sys.executable )
 
@@ -706,6 +749,7 @@ class Win32CompilerMSVC90(Compiler):
         for define, value in self.py_module_defines:
             py_cflags_list.append( '/D%s=%s' % (define, value) )
 
+        py_cflags_list.extend( self._getDefines( '/D%s' ) )
 
         self._addVar( 'CCCFLAGS', ' '.join( py_cflags_list ) )
 
@@ -988,6 +1032,8 @@ class MacOsxCompilerGCC(CompilerGCC):
         for define, value in self.py_module_defines:
             py_cflags_list.append( '-D%s=%s' % (define, value) )
 
+        py_cflags_list.extend( self._getDefines( '-D%s' ) )
+
         py_ld_libs = [
                 '-L%(SVN_LIB)s',
                 '-L/usr/lib',
@@ -1010,7 +1056,7 @@ class MacOsxCompilerGCC(CompilerGCC):
                                         '-framework Security '
                                         '%(LDLIBS)s' )
 
-class LinuxCompilerGCC(CompilerGCC):
+class UnixCompilerGCC(CompilerGCC):
     def __init__( self, setup ):
         CompilerGCC.__init__( self, setup )
 
@@ -1090,13 +1136,31 @@ class LinuxCompilerGCC(CompilerGCC):
         for define, value in self.py_module_defines:
             py_cflags_list.append( '-D%s=%s' % (define, value) )
 
+        py_cflags_list.extend( self._getDefines( '-D%s' ) )
+
         if self.options.hasOption( '--enable-debug' ):
             print( 'Info: Debug enabled' )
             py_cflags_list.append( '-g' )
 
+        self._addVar( 'CCCFLAGS',   ' '.join( py_cflags_list ) )
+        self._addVar( 'LDLIBS',     ' '.join( self._getLdLibs() ) )
+        self._addVar( 'LDSHARED',   '%(CCC)s -shared -g %(LDLIBS)s' )
+
+#--------------------------------------------------------------------------------
+class LinuxCompilerGCC(UnixCompilerGCC):
+    def __init__( self, setup ):
+        UnixCompilerGCC.__init__( self, setup )
+
+    def _getLdLibs( self ):
         py_ld_libs = [
                 '-L%(SVN_LIB)s',
-                '-L/usr/lib',
+                ]
+        if not self.setup.options.hasOption( '--norpath' ):
+            py_ld_libs.extend( [
+                    '-Wl,--rpath',
+                    '-Wl,%(SVN_LIB)s'
+                    ] )
+        py_ld_libs.extend( [
                 '-lsvn_client-1',
                 '-lsvn_repos-1',
                 '-lsvn_wc-1',
@@ -1104,11 +1168,122 @@ class LinuxCompilerGCC(CompilerGCC):
                 '-lsvn_subr-1',
                 '-lsvn_diff-1',
                 '-lapr-1',
+                ] )
+        return py_ld_libs
+
+class FreeBsdCompilerGCC(UnixCompilerGCC):
+    def __init__( self, setup ):
+        UnixCompilerGCC.__init__( self, setup )
+
+    def _getLdLibs( self ):
+        py_ld_libs = [
+                '-L%(SVN_LIB)s',
+                '-Wl,--rpath',
+                '-Wl,/usr/lib:/usr/local/lib:%(svn_lib_dir)s',
+                '-lsvn_client-1',
+                '-lsvn_diff-1',
+                '-lsvn_repos-1',
                 ]
 
-        self._addVar( 'CCCFLAGS',   ' '.join( py_cflags_list ) )
-        self._addVar( 'LDLIBS',            ' '.join( py_ld_libs ) )
-        self._addVar( 'LDSHARED',   '%(CCC)s -shared -g %(LDLIBS)s' )
+        if os.path.exists( '/usr/lib/libkrb5.so' ):
+            py_ld_libs.append( '-lkrb5' )
+
+        py_ld_libs.extend( [
+                '-lcom_err',
+                '-lexpat',
+                '-lneon',
+                ] )
+        return py_ld_libs
+
+class CygwinCompilerGCC(UnixCompilerGCC):
+    def __init__( self, setup ):
+        UnixCompilerGCC.__init__( self, setup )
+
+    def _getLdLibs( self ):
+        py_ld_libs = [
+                '-L%(svn_lib_dir)s',
+                '-L/usr/lib/python%d.%d/config -lpython%d.%d.dll' %
+                    (sys.version_info[0], sys.version_info[1], sys.version_info[0], sys.version_info[1]),
+                '-lsvn_client-1',
+                '-lsvn_repos-1',
+                '-lsvn_subr-1',
+                '-lsvn_delta-1',
+                '-lsvn_fs_fs-1',
+                '-lsvn_fs-1',
+                '-lsvn_ra_svn-1',
+                '-lsvn_repos-1',
+                '-lsvn_ra_local-1',
+                '-lsvn_diff-1',
+                '-lsvn_ra-1',
+                '-lsvn_wc-1',
+                '-lapr-1',
+                '-laprutil-1',
+                '-liconv',
+                '-lexpat',
+                '-lpthread',
+                '-lz',
+                ]
+        return py_ld_libs
+
+class AixCompilerGCC(UnixCompilerGCC):
+    def __init__( self, setup ):
+        UnixCompilerGCC.__init__( self, setup )
+
+    def _getLdLibs( self ):
+        for path in sys.path:
+            python_exp = os.path.join( path, 'config', 'python.exp' )
+            if os.path.exists( python_exp ):
+                break
+        else:
+            python_exp = os.path.abspath( os.path.join( sys.executable, os.path.pardir, os.path.pardir, 
+                                              'lib', 'python%d.%d' % (sys.version_info[0], sys.version_info[1]), 'config', 'python.exp'))
+            if not os.path.exists(python_exp):
+                python_exp = 'python.exp'
+
+        py_ld_libs = [
+                '-L%(svn_lib_dir)s',
+                '-lsvn_client-1',
+                '-lsvn_repos-1',
+                '-lsvn_subr-1',
+                '-lsvn_delta-1',
+                '-lsvn_fs_fs-1',
+                '-lsvn_fs-1',
+                '-lsvn_ra_svn-1',
+                '-lsvn_repos-1',
+                '-lsvn_ra_local-1',
+                '-lsvn_diff-1',
+                '-lsvn_ra-1',
+                '-lsvn_wc-1',
+                '-lsvn_fs_util-1',
+                '-lsvn_ra_neon-1',
+                '-lapr-1',
+                '-lneon',
+                '-laprutil-1',
+                '-liconv',
+                '-lexpat',
+                '-lintl',
+                '-lpthread',
+                '-lz',
+                '-Wl,-bI:%s' % (python_exp,),
+                ]
+        return py_ld_libs
+
+class SunOsCompilerGCC(UnixCompilerGCC):
+    def __init__( self, setup ):
+        UnixCompilerGCC.__init__( self, setup )
+
+    def _getLdLibs( self ):
+        py_ld_libs = [
+                '-L%(svn_lib_dir)s',
+                '-Wl,--rpath -Wl,%(svn_lib_dir)s',
+                '-lsvn_client-1',
+                '-lsvn_diff-1',
+                '-lsvn_repos-1',
+                '-lresolv',
+                '-lexpat',
+                '-lneon',
+                ]
+        return py_ld_libs
 
 #--------------------------------------------------------------------------------
 class Target:
