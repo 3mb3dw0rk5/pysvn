@@ -22,6 +22,7 @@
 
 #include <svn_version.h>
 #include <svn_client.h>
+#include <svn_dirent_uri.h>
 #include <svn_fs.h>
 #include <svn_repos.h>
 #include <apr_xlate.h>
