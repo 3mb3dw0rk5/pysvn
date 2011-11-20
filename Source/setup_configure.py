@@ -694,7 +694,7 @@ class Win32CompilerMSVC90(Compiler):
         rules.append( '%s : %s' % (pyd_filename, ' '.join( all_objects )) )
         rules.append( '\t@echo Link %s' % (pyd_filename,) )
         rules.append( '\t@$(LDSHARED)  %%(CCCFLAGS)s /Fe%s /Fd%s %s %%(PYTHON_LIB)s\python%d%d.lib $(LDLIBS)' %
-                            (pyd_filename, pdf_filename, ' '.join( all_objects ), sys.version_info.major, sys.version_info.minor) )
+                            (pyd_filename, pdf_filename, ' '.join( all_objects ), sys.version_info[0], sys.version_info[1]) )
 
         self.makePrint( self.expand( '\n'.join( rules ) ) )
 
@@ -786,7 +786,7 @@ class Win32CompilerMSVC90(Compiler):
     def ruleTestCase( self, test_case ):
         v = {'TN': test_case.test_name
             ,'KGV':  'py%d-svn%d.%d' %
-                        (sys.version_info.major
+                        (sys.version_info[0]
                         ,self.getSvnVersion()[0], self.getSvnVersion()[1])}
 
         rules = []
@@ -905,7 +905,7 @@ class CompilerGCC(Compiler):
     def ruleTestCase( self, test_case ):
         v = {'TN': test_case.test_name
             ,'KGV':  'py%d-svn%d.%d' %
-                                        (sys.version_info.major
+                                        (sys.version_info[0]
                                         ,self.getSvnVersion()[0], self.getSvnVersion()[1])}
         rules = []
         rules.append( '' )
