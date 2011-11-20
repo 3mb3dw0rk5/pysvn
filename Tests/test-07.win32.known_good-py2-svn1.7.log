@@ -76,15 +76,15 @@ Info: Error: 'Operation does not support multiple sources'
 Info: Code: 195014, Message: 'Operation does not support multiple sources'
 Info: running test_07_changelist
 After add_to_changelist show all
-   changelist-two B:/wc1/test/file_a2.txt
    changelist-one B:/wc1/test/file_b1.txt
+   changelist-two B:/wc1/test/file_a2.txt
    changelist-two B:/wc1/test/file_b2.txt
    changelist-one B:/wc1/test/file_a1.txt
 After add_to_changelist show changelist-two
    changelist-two B:/wc1/test/file_a2.txt
    changelist-two B:/wc1/test/file_b2.txt
 After remove_from_changelists all changelist-two show all
-   changelist-one B:/wc1/test/file_b1.txt
    changelist-one B:/wc1/test/file_a1.txt
+   changelist-one B:/wc1/test/file_b1.txt
 After remove_from_changelists all show all
    changelist-one B:/wc1/test/file_b1.txt
