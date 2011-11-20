@@ -219,17 +219,17 @@ Py::Object pysvn_module::new_revision( const Py::Tuple &a_args, const Py::Dict &
     // revision( kind, number )
     // revision( kind, date )
     //
-    static argument_description args_desc[] =
+    static argument_description args_desc_generic[] =
     {
     { true, name_kind },
     { false, name_date },
     { false, name_number },
     { false, NULL }
     };
-    FunctionArguments args( "Revision", args_desc, a_args, a_kws );
-    args.check();
+    FunctionArguments args_generic( "Revision", args_desc_generic, a_args, a_kws );
+    args_generic.check();
 
-    Py::ExtensionObject< pysvn_enum_value<svn_opt_revision_kind> > py_kind( args.getArg( name_kind ) );
+    Py::ExtensionObject< pysvn_enum_value<svn_opt_revision_kind> > py_kind( args_generic.getArg( name_kind ) );
 
     svn_opt_revision_kind kind = svn_opt_revision_kind( py_kind.extensionObject()->m_value );
 
@@ -238,15 +238,15 @@ Py::Object pysvn_module::new_revision( const Py::Tuple &a_args, const Py::Dict &
     {
         case svn_opt_revision_date:
         {
-            static argument_description args_desc[] =
+            static argument_description args_desc_date[] =
             {
             { true, name_kind },
             { true, name_date },
             { false, NULL }
             };
-            FunctionArguments args( "Revision", args_desc, a_args, a_kws );
-            args.check();
-            Py::Float date( args.getArg( name_date ) );
+            FunctionArguments args_date( "Revision", args_desc_date, a_args, a_kws );
+            args_date.check();
+            Py::Float date( args_date.getArg( name_date ) );
 
             rev = new pysvn_revision( kind, double(date) );
             break;
@@ -254,15 +254,15 @@ Py::Object pysvn_module::new_revision( const Py::Tuple &a_args, const Py::Dict &
 
         case svn_opt_revision_number:
         {
-            static argument_description args_desc[] =
+            static argument_description args_desc_number[] =
             {
             { true, name_kind },
             { true, name_number },
             { false, NULL }
             };
-            FunctionArguments args( "Revision", args_desc, a_args, a_kws );
-            args.check();
-            Py::Int revnum( args.getArg( name_number ) );
+            FunctionArguments args_number( "Revision", args_desc_number, a_args, a_kws );
+            args_number.check();
+            Py::Int revnum( args_number.getArg( name_number ) );
 
             rev = new pysvn_revision( kind, 0, long( revnum ) );
             break;
@@ -270,13 +270,13 @@ Py::Object pysvn_module::new_revision( const Py::Tuple &a_args, const Py::Dict &
 
         default:
         {
-            static argument_description args_desc[] =
+            static argument_description args_desc_other[] =
             {
             { true, name_kind },
             { false, NULL }
             };
-            FunctionArguments args( "Revision", args_desc, a_args, a_kws );
-            args.check();
+            FunctionArguments args_default( "Revision", args_desc_other, a_args, a_kws );
+            args_desc_other.check();
 
             rev = new pysvn_revision( kind );
         }
