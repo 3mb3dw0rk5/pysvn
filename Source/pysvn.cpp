@@ -275,8 +275,8 @@ Py::Object pysvn_module::new_revision( const Py::Tuple &a_args, const Py::Dict &
             { true, name_kind },
             { false, NULL }
             };
-            FunctionArguments args_default( "Revision", args_desc_other, a_args, a_kws );
-            args_desc_other.check();
+            FunctionArguments args_other( "Revision", args_desc_other, a_args, a_kws );
+            args_other.check();
 
             rev = new pysvn_revision( kind );
         }
