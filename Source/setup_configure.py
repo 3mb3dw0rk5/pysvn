@@ -1044,6 +1044,7 @@ class MacOsxCompilerGCC(CompilerGCC):
                 '-lsvn_subr-1',
                 '-lsvn_diff-1',
                 '-lapr-1',
+                '-lssl',
                 ]
 
         self._addVar( 'CCCFLAGS', ' '.join( py_cflags_list ) )
