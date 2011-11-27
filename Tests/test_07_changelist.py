@@ -9,7 +9,7 @@ c.add_to_changelist( 'file_a2.txt', 'changelist-two' )
 c.add_to_changelist( 'file_b1.txt', 'changelist-one' )
 c.add_to_changelist( 'file_b2.txt', 'changelist-two' )
 print( 'After add_to_changelist show all' )
-for path, changelist in c.get_changelist( '.' ):
+for path, changelist in sorted( c.get_changelist( '.' ) ):
     print( '   %s %s' % (changelist, path) )
 
 print( 'After add_to_changelist show changelist-two' )
