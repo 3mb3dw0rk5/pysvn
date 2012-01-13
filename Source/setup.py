@@ -18,7 +18,12 @@ import setup_backport
 
 def main( argv ):
     if argv[1:2] == ['backport']:
-        return setup_backport.cmd_backport( argv )
+        if setup_backport.backportRequired():
+            return setup_backport.cmd_backport( argv )
+        else:
+            print( 'Info: These sources are compatible with python %d.%d - no need to run the backport command' %
+                (sys.version_info[0], sys.version_info[1]) )
+            return 0
 
     elif argv[1:2] == ['configure']:
         if setup_backport.backportRequired():
