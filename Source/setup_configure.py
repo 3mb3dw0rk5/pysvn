@@ -975,13 +975,14 @@ class MacOsxCompilerGCC(CompilerGCC):
                         '/usr/pkg/lib',                         # netbsd
                         ]
         self._find_paths_apr_inc = [
-                        '/opt/local/include/apr-1',                # Darwin - darwin ports
-                        '/sw/include/apr-1',                        # Darwin - fink
-                        '/usr/include/apr-1',                        # typical Linux
-                        '/usr/local/apr/include/apr-1',                # Mac OS X www.metissian.com
-                        '/usr/pkg/include/apr-1',                # netbsd
+                        '/opt/local/include/apr-1',             # Darwin - darwin ports
+                        '/sw/include/apr-1',                    # Darwin - fink
+                        '/usr/include/apr-1',                   # typical Linux
+                        '/usr/local/apr/include/apr-1',         # Mac OS X www.metissian.com
+                        '/usr/pkg/include/apr-1',               # netbsd
                         '/usr/include/apache2',                 # alternate Linux
                         '/usr/include/httpd',                   # alternate Linux
+                        '/usr/local/include/apr-1',             # typical FreeBSD
                         '/usr/local/include/apr0',              # typical *BSD
                         '/usr/local/include/apache2',           # alternate *BSD
                         ]
@@ -1180,7 +1181,7 @@ class FreeBsdCompilerGCC(UnixCompilerGCC):
         py_ld_libs = [
                 '-L%(SVN_LIB)s',
                 '-Wl,--rpath',
-                '-Wl,/usr/lib:/usr/local/lib:%(svn_lib_dir)s',
+                '-Wl,/usr/lib:/usr/local/lib',
                 '-lsvn_client-1',
                 '-lsvn_diff-1',
                 '-lsvn_repos-1',
