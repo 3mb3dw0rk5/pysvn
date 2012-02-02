@@ -1093,7 +1093,7 @@ class UnixCompilerGCC(CompilerGCC):
                         '/usr/pkg/include/apr-1',               # netbsd
                         '/usr/include/apache2',                 # alternate Linux
                         '/usr/include/httpd',                   # alternate Linux
-                        '/usr/local/include/apr0',              # typical *BSD
+                        '/usr/local/include/apr-1',             # typical *BSD
                         '/usr/local/include/apache2',           # alternate *BSD
                         ]
         self._find_paths_apr_util_inc = self._find_paths_apr_inc
