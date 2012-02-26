@@ -159,6 +159,10 @@ class Setup:
         self.__makefile.write( '\n' )
 
     def setupCompile( self ):
+        print( 'Info: Configure for python %d.%d.%d in exec_prefix %s' %
+                (sys.version_info[0], sys.version_info[1], sys.version_info[2]
+                ,sys.exec_prefix) )
+
         if self.options.hasOption( '--platform' ):
             self.platform = self.options.getOption( '--platform' )
 
@@ -214,6 +218,8 @@ class Setup:
 
         else:
             raise SetupError( 'Unknown platform %r' % (self.platform,) )
+
+        print( 'Info: Using tool chain %s' % (self.c_utils.__class__.__name__,) )
 
         self.c_utils.setupUtilities()
         self.c_pysvn.setupPySvn()
@@ -1017,9 +1023,8 @@ class MacOsxCompilerGCC(CompilerGCC):
         self._addVar( 'PYSVN_MODULE_BASENAME', self.pysvn_module_name )
 
         self._addVar( 'PYTHON_VERSION',     '%d.%d' % (sys.version_info[0], sys.version_info[1]) )
-        self._addVar( 'PYTHON_DIR',         '/Library/Frameworks/Python.framework/Versions/%(PYTHON_VERSION)s' )
-        self._addVar( 'PYTHON_FRAMEWORK',   '/Library/Frameworks/Python.framework/Versions/%(PYTHON_VERSION)s/Python' )
-
+        self._addVar( 'PYTHON_DIR',         sys.exec_prefix )
+        self._addVar( 'PYTHON_FRAMEWORK',   os.path.join( sys.exec_prefix, 'Python' ) )
         self._addVar( 'PYTHON_INC',         distutils.sysconfig.get_python_inc() )
 
         py_cflags_list = [
