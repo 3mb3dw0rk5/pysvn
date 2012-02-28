@@ -7,7 +7,7 @@ kit_msvc: pysvn.iss setup_version_handling.py
 	if not exist tmp mkdir tmp
 	copy ..\..\LICENSE.txt tmp\LICENSE.txt
 	copy $(SVN_BIN)\*.dll tmp
-	python setup_version_handling.py
+	$(PYTHON) setup_version_handling.py
 	"C:\Program Files (x86)\Inno Setup 5\ISCC.exe" tmp\pysvn-branded.iss
 	tmp\setup_copy.cmd
 
