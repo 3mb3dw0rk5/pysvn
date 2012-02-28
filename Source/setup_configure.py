@@ -759,30 +759,33 @@ class Win32CompilerMSVC90(Compiler):
 
         self._addVar( 'CCCFLAGS', ' '.join( py_cflags_list ) )
 
-        self._addVar( 'LDLIBS', ' '.join( [
-                                        r'odbc32.lib',
-                                        r'odbccp32.lib',
-                                        r'Rpcrt4.lib',
-                                        r'Mswsock.lib',
-                                        r'%(SVN_LIB)s\libsvn_client-1.lib',
-                                        r'%(SVN_LIB)s\libsvn_delta-1.lib',
-                                        r'%(SVN_LIB)s\libsvn_diff-1.lib',
-                                        r'%(SVN_LIB)s\libsvn_fs-1.lib',
-                                        r'%(SVN_LIB)s\libsvn_fs_fs-1.lib',
-                                        r'%(SVN_LIB)s\libsvn_ra-1.lib',
-                                        r'%(SVN_LIB)s\libsvn_ra_neon-1.lib',
-                                        r'%(SVN_LIB)s\libsvn_ra_local-1.lib',
-                                        r'%(SVN_LIB)s\libsvn_ra_svn-1.lib',
-                                        r'%(SVN_LIB)s\libsvn_repos-1.lib',
-                                        r'%(SVN_LIB)s\libsvn_subr-1.lib',
-                                        r'%(SVN_LIB)s\libsvn_wc-1.lib',
-                                        r'%(SVN_LIB)s\apr-iconv\libapriconv-1.lib',
-                                        r'%(SVN_LIB)s\apr-util\libaprutil-1.lib',
-                                        r'%(SVN_LIB)s\apr-util\xml.lib',
-                                        r'%(SVN_LIB)s\apr\libapr-1.lib',
-                                        r'%(SVN_LIB)s\serf\serf-1.lib',
-                                        r'ws2_32.lib',
-                                        ] ) )
+        ldlibs = [
+                    r'odbc32.lib',
+                    r'odbccp32.lib',
+                    r'Rpcrt4.lib',
+                    r'Mswsock.lib',
+                    r'%(SVN_LIB)s\libsvn_client-1.lib',
+                    r'%(SVN_LIB)s\libsvn_delta-1.lib',
+                    r'%(SVN_LIB)s\libsvn_diff-1.lib',
+                    r'%(SVN_LIB)s\libsvn_fs-1.lib',
+                    r'%(SVN_LIB)s\libsvn_fs_fs-1.lib',
+                    r'%(SVN_LIB)s\libsvn_ra-1.lib',
+                    r'%(SVN_LIB)s\libsvn_ra_neon-1.lib',
+                    r'%(SVN_LIB)s\libsvn_ra_local-1.lib',
+                    r'%(SVN_LIB)s\libsvn_ra_svn-1.lib',
+                    r'%(SVN_LIB)s\libsvn_repos-1.lib',
+                    r'%(SVN_LIB)s\libsvn_subr-1.lib',
+                    r'%(SVN_LIB)s\libsvn_wc-1.lib',
+                    r'%(SVN_LIB)s\apr-iconv\libapriconv-1.lib',
+                    r'%(SVN_LIB)s\apr-util\libaprutil-1.lib',
+                    r'%(SVN_LIB)s\apr-util\xml.lib',
+                    r'%(SVN_LIB)s\apr\libapr-1.lib',
+                    ]
+        if os.path.exists( self.expand( r'%(SVN_LIB)s\serf\serf-1.lib' ) ):
+            ldlibs.append( r'%(SVN_LIB)s\serf\serf-1.lib' )
+        ldlibs.append( r'ws2_32.lib' )
+
+        self._addVar( 'LDLIBS', ' '.join( ldlibs ) )
 
     def ruleAllTestCase( self, target_name, all_test_cases ):
         self.makePrint( '%s: %s' %
