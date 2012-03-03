@@ -67,7 +67,7 @@ else:
 print( 'Info: Creating system_files.iss' )
 f = open( 'tmp\\system_files.iss', 'w' )
 for dll in all_dlls:
-    f.write( 'Source: "%s"; DestDir: "{app}"\n' % (dll,) )
+    f.write( 'Source: "%s"; DestDir: "{app}"; Flags: ignoreversion\n' % (dll,) )
 f.close()
 
 print( 'Info: Create setup_copy.cmd' )
