@@ -795,6 +795,7 @@ static void convertReposTree
         is_changed = false;
 
     if( is_changed )
+    {
         if( copy_info )
         {
             Py::Tuple value( 6 );
@@ -822,7 +823,8 @@ static void convertReposTree
 
             dict[ Py::String( path, name_utf8 ) ] = value;
         }
-    
+    }
+
     /* Return here if the node has no children. */
     node = node->child;
     if( node == NULL )
