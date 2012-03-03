@@ -184,7 +184,7 @@ if vendor == 'apple_com':
     readme_vendor_name = "Apple's"
 elif vendor == 'python_org':
     readme_vendor_name = "Python.org's"
-else
+else:
     readme_vendor_name = vendor
 
 print( 'Info: Create tmp/Resources/ReadMe.txt' )
