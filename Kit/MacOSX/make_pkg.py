@@ -180,11 +180,18 @@ for fixup_path in fixup_path_list:
             #print( 'Debug: cmd %r' % cmd )
             os.system( cmd )
 
+if vendor == 'apple_com':
+    readme_vendor_name = "Apple's"
+elif vendor == 'python_org':
+    readme_vendor_name = "Python.org's"
+else
+    readme_vendor_name = vendor
+
 print( 'Info: Create tmp/Resources/ReadMe.txt' )
 f = open('tmp/Resources/ReadMe.txt','w')
 f.write('''<html>
 <body>
-<h1>PySVN %(pysvn_version_string)s for Apple Mac OS X Python %(pymaj)s.%(pymin)s and Subversion %(svn_version_string)s</h1>
+<h1>PySVN %(pysvn_version_string)s for Mac OS X, %(readme_vendor_name)s Python %(pymaj)s.%(pymin)s and Subversion %(svn_version_string)s</h1>
 
 <h2>Copyright Barry A. Scott (c) 2003-%(year)s</h2>
 
