@@ -59,7 +59,7 @@ Py::Object pysvn_client::cmd_merge( const Py::Tuple &a_args, const Py::Dict &a_k
     bool force = args.getBoolean( name_force, false );
 #if defined( PYSVN_HAS_CLIENT_MERGE3 )
     svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity, svn_depth_infinity, svn_depth_files );
-    bool record_only = args.getBoolean( name_recurse, false );
+    bool record_only = args.getBoolean( name_record_only, false );
 #else
     bool recurse = args.getBoolean( name_recurse, true );
 #endif
