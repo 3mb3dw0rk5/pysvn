@@ -375,6 +375,7 @@ template <> EnumString< svn_depth_t >::EnumString()
 
 #if defined( PYSVN_HAS_SVN_WC_CONFLICT_CHOICE_T )
 template <> EnumString< svn_wc_conflict_choice_t >::EnumString()
+: m_type_name( "wc_conflict_choice" )
 {
     // Don't resolve the conflict now.  Let libsvn_wc mark the path
     // 'conflicted', so user can run 'svn resolved' later.
@@ -394,6 +395,7 @@ template <> EnumString< svn_wc_conflict_choice_t >::EnumString()
 
 #if defined( PYSVN_HAS_SVN_WC_OPERATION_T )
 template <> EnumString< svn_wc_operation_t >::EnumString()
+: m_type_name( "wc_operation" )
 {
     add( svn_wc_operation_none, "none" );
     add( svn_wc_operation_update, "update" );
@@ -666,6 +668,13 @@ template <> void pysvn_enum_value< svn_wc_conflict_reason_t >::init_type(void)
 #endif
 
 #if defined( PYSVN_HAS_SVN_WC_OPERATION_T )
+template <> void pysvn_enum< svn_wc_operation_t >::init_type(void)
+{
+    behaviors().name("wc_operation");
+    behaviors().doc("wc_operation enumeration");
+    behaviors().supportGetattr();
+}
+
 template <> void pysvn_enum_value< svn_wc_operation_t >::init_type(void)
 {
     behaviors().name("wc_operation");

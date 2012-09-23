@@ -91,6 +91,11 @@ pysvn_module::pysvn_module()
     pysvn_enum_value< svn_wc_conflict_reason_t >::init_type();
 #endif
 
+#if defined( PYSVN_HAS_SVN_WC_OPERATION_T )
+    pysvn_enum< svn_wc_operation_t >::init_type();
+    pysvn_enum_value< svn_wc_operation_t >::init_type();
+#endif
+
     add_keyword_method( "_Client", &pysvn_module::new_client, pysvn_client_doc );
     add_keyword_method( "Revision", &pysvn_module::new_revision, pysvn_revision_doc );
     add_keyword_method( "_Transaction", &pysvn_module::new_transaction, pysvn_transaction_doc );
