@@ -201,8 +201,10 @@ void pysvn_context::contextProgress
 #if defined( PYSVN_HAS_SVN_CLIENT_CTX_T__CONFLICT_FUNC_1_6 )
 Py::Object toConflictVersion( const svn_wc_conflict_version_t *version )
 {
-    Py::Dict ver;
+    if( version == NULL )
+        return Py::None();
 
+    Py::Dict ver;
     ver["repos_url"] = utf8_string_or_none( version->repos_url );
     ver["peg_rev"] = asObject( new pysvn_revision( svn_opt_revision_number, 0, version->peg_rev ) );
     ver["path_in_repos"] = utf8_string_or_none( version->path_in_repos );
