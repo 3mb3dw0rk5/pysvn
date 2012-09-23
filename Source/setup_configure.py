@@ -873,7 +873,7 @@ class CompilerGCC(Compiler):
 
         rules.append( '%s : %s' % (target_filename, ' '.join( all_objects )) )
         rules.append( '\t@echo Link %s' % (target_filename,) )
-        rules.append( '\t@%%(LDSHARED)s -o %s %%(CCCFLAGS)s %s' % (target_filename, ' '.join( all_objects )) )
+        rules.append( '\t@%%(LDSHARED)s -o %s %%(CCCFLAGS)s %s %%(LDLIBS)s' % (target_filename, ' '.join( all_objects )) )
 
         self.makePrint( self.expand( '\n'.join( rules ) ) )
 
@@ -1154,7 +1154,7 @@ class UnixCompilerGCC(CompilerGCC):
 
         self._addVar( 'CCCFLAGS',   ' '.join( py_cflags_list ) )
         self._addVar( 'LDLIBS',     ' '.join( self._getLdLibs() ) )
-        self._addVar( 'LDSHARED',   '%(CCC)s -shared -g %(LDLIBS)s' )
+        self._addVar( 'LDSHARED',   '%(CCC)s -shared -g' )
 
 #--------------------------------------------------------------------------------
 class LinuxCompilerGCC(UnixCompilerGCC):
