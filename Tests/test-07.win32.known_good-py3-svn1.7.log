@@ -20,7 +20,6 @@ Info: Setup - checkout wc1
 Info: PYSVN CMD checkout file:///b:/repos/trunk b:/wc1
 A B:/wc1/test
 U B:/wc1
-update_started B:/wc1
 Checked out revision 2
 
 Info: CMD cd b:/wc1/test

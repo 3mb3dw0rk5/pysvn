@@ -47,10 +47,10 @@ c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook
 Info: pre commit test 1
 Info: Transaction( B:\repos, 2-2) ...
 Info: revproplist() ...
-svn:log: pre-commit test 1
-svn:check-locks: true
 svn:author: barry
-svn:date: 2012-02-28T13:11:52.623722Z
+svn:check-locks: true
+svn:date: 2012-11-19T19:32:43.053487Z
+svn:log: pre-commit test 1
 Info: changed() ...
 trunk/test/a: action='A', kind=<node_kind.dir>, text_mod=0, prop_mod=0
 Info: changed( copy_info=True ) ...
@@ -69,9 +69,9 @@ c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook
 Info: pre commit test 1
 Info: Transaction( B:\repos, 3, is_revision=True) ...
 Info: revproplist() ...
-svn:log: pre-commit test 1
 svn:author: barry
-svn:date: 2012-02-28T13:11:53.154105Z
+svn:date: 2012-11-19T19:32:43.162677Z
+svn:log: pre-commit test 1
 Info: changed() ...
 trunk/test/a: action='A', kind=<node_kind.dir>, text_mod=0, prop_mod=0
 Info: changed( copy_info=True ) ...
@@ -88,7 +88,6 @@ B:\ > rem Add two files
 B:\ > c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing 01.02.01 --config-dir b:\configdir co file:///b:/repos/trunk/test b:\wc 
 A B:/wc/a
 U B:/wc
-update_started B:/wc
 Checked out revision 3
 
 B:\ > echo file1 ROOT  1>b:\wc\file1.txt 
@@ -113,10 +112,10 @@ c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook
 Info: pre commit test 1
 Info: Transaction( B:\repos, 3-3) ...
 Info: revproplist() ...
-svn:log: Add two files
-svn:check-locks: true
 svn:author: barry
-svn:date: 2012-02-28T13:11:56.913585Z
+svn:check-locks: true
+svn:date: 2012-11-19T19:32:43.755424Z
+svn:log: Add two files
 Info: changed() ...
 trunk/test/a/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0
      contents: 'file1 A \r\n'
@@ -143,9 +142,9 @@ c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook
 Info: pre commit test 1
 Info: Transaction( B:\repos, 4, is_revision=True) ...
 Info: revproplist() ...
-svn:log: Add two files
 svn:author: barry
-svn:date: 2012-02-28T13:11:57.615562Z
+svn:date: 2012-11-19T19:32:43.880213Z
+svn:log: Add two files
 Info: changed() ...
 trunk/test/a/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0
      contents: 'file1 A \r\n'
@@ -184,10 +183,10 @@ c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook
 Info: pre commit test 1
 Info: Transaction( B:\repos, 4-4) ...
 Info: revproplist() ...
-svn:log: Mod one file Mod one prop
-svn:check-locks: true
 svn:author: barry
-svn:date: 2012-02-28T13:11:59.378306Z
+svn:check-locks: true
+svn:date: 2012-11-19T19:32:44.223382Z
+svn:log: Mod one file Mod one prop
 Info: changed() ...
 trunk/test/a/file1.txt: action='R', kind=<node_kind.file>, text_mod=1, prop_mod=1
      svn:eol-style: native
@@ -216,9 +215,9 @@ c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook
 Info: pre commit test 1
 Info: Transaction( B:\repos, 5, is_revision=True) ...
 Info: revproplist() ...
-svn:log: Mod one file Mod one prop
 svn:author: barry
-svn:date: 2012-02-28T13:11:59.955487Z
+svn:date: 2012-11-19T19:32:44.394966Z
+svn:log: Mod one file Mod one prop
 Info: changed() ...
 trunk/test/a/file1.txt: action='R', kind=<node_kind.file>, text_mod=1, prop_mod=1
      svn:eol-style: native
@@ -256,10 +255,10 @@ c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook
 Info: pre commit test 1
 Info: Transaction( B:\repos, 5-5) ...
 Info: revproplist() ...
-svn:log: Delete one file
-svn:check-locks: true
 svn:author: barry
-svn:date: 2012-02-28T13:12:00.860258Z
+svn:check-locks: true
+svn:date: 2012-11-19T19:32:44.722537Z
+svn:log: Delete one file
 Info: changed() ...
 trunk/test/a/file1.txt: action='D', kind=<node_kind.file>, text_mod=0, prop_mod=0
 Info: changed( copy_info=True ) ...
@@ -279,9 +278,9 @@ c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook
 Info: pre commit test 1
 Info: Transaction( B:\repos, 6, is_revision=True) ...
 Info: revproplist() ...
-svn:log: Delete one file
 svn:author: barry
-svn:date: 2012-02-28T13:12:01.187848Z
+svn:date: 2012-11-19T19:32:44.831727Z
+svn:log: Delete one file
 Info: changed() ...
 trunk/test/a/file1.txt: action='D', kind=<node_kind.file>, text_mod=0, prop_mod=0
 Info: changed( copy_info=True ) ...
