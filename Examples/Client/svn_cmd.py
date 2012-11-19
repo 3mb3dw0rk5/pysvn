@@ -367,7 +367,7 @@ class SvnCommand:
     def cmd_cat( self, args ):
         revision = args.getOptionalRevision( '--revision', 'head' )
         text = self.client.cat( args.getPositionalArgs( 1, 1 )[0], revision=revision )
-        print( text.decode( 'utf-8' ) )
+        print( text.decode( 'utf-8' ).replace( '\r\n', '\n' ) )
 
     def cmd_checkout( self, args ):
         recurse = args.getBooleanOption( '--non-recursive', False )
@@ -451,7 +451,7 @@ class SvnCommand:
         diff_text = self.client.diff( tmpdir, positional_args[0], recurse=recurse,
                                             revision1=revision1, revision2=revision2,
                                             diff_options=['-u'] )
-        print( diff_text )
+        print( diff_text.replace( '\r\n', '\n' ) )
 
     def cmd_export( self, args ):
         force = args.getBooleanOption( '--force', False )
