@@ -206,7 +206,7 @@ Py::Object toConflictVersion( const svn_wc_conflict_version_t *version )
 
     Py::Dict ver;
     ver["repos_url"] = utf8_string_or_none( version->repos_url );
-    ver["peg_rev"] = asObject( new pysvn_revision( svn_opt_revision_number, 0, version->peg_rev ) );
+    ver["peg_rev"] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, version->peg_rev ) );
     ver["path_in_repos"] = utf8_string_or_none( version->path_in_repos );
     ver["node_kind"] = toEnumValue( version->node_kind );
 
