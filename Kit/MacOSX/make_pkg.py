@@ -9,6 +9,9 @@ sys.path.insert( 0, '../../Source')
 import pysvn
 import time
 
+package_maker = '/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker'
+package_maker_kit = os.path.exists( package_maker )
+
 os.system( 'lipo -info %s >lipo-info.tmp' % (sys.executable,) )
 lipo_info = open( 'lipo-info.tmp' ).read()
 os.remove( 'lipo-info.tmp' )
@@ -28,7 +31,7 @@ elif is_i386:
 else:
     assert False, 'Unknown processor type'
 
-vendor = os.environ.get( 'BUILDER_VENDOR', 'unknown' )
+python_vendor = os.environ.get( 'BUILDER_VENDOR', 'unknown' )
 
 if processor == 'i386':
     if hasattr( sys, 'maxsize' ):
@@ -41,8 +44,6 @@ if processor == 'i386':
     else:
         processor = 'x86_64'
 
-python_vendor = os.environ[ 'BUILDER_VENDOR' ]
-
 pymaj, pymin, pypat, _, _ = sys.version_info
 python_version_string = '%d.%d.%d' % (pymaj, pymin, pypat)
 pysvnmaj, pysvnmin, pysvnpat, _ = pysvn.version
@@ -51,7 +52,7 @@ pysvn_short_version_string = '%d.%d.%d' % (pysvn.version[0], pysvn.version[1], p
 svn_version_package_string = '%d%d%d' % (pysvn.svn_version[0], pysvn.svn_version[1], pysvn.svn_version[2])
 svn_version_string = '%d.%d.%d' % (pysvn.svn_version[0], pysvn.svn_version[1], pysvn.svn_version[2])
 pysvn_so_string = '_pysvn_%d_%d.so' % (pymaj, pymin)
-pkg_filename = 'py%s%s_%s_pysvn_svn%s-%s-%s' % (pymaj, pymin, vendor, svn_version_package_string, pysvn_version_string, processor)
+pkg_filename = 'py%s%s_%s_pysvn_svn%s-%s-%s' % (pymaj, pymin, python_vendor, svn_version_package_string, pysvn_version_string, processor)
 
 print( 'Info: Packageing %s' % pkg_filename )
 build_time  = time.time()
@@ -66,13 +67,13 @@ elif pymaj == 2 and pymin == 5:
     install_dir = '/Library/Frameworks/Python.framework/Versions/2.5/lib/python2.5/site-packages'
 
 elif pymaj == 2 and pymin == 6:
-    if vendor == 'apple_com':
+    if python_vendor == 'apple_com':
         install_dir = '/Library/Python/2.6/site-packages'
     else:
         install_dir = '/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages'
 
 elif pymaj == 2 and pymin == 7:
-    if vendor == 'apple_com':
+    if python_vendor == 'apple_com':
         install_dir = '/Library/Python/2.7/site-packages'
     else:
         install_dir = '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages'
@@ -82,6 +83,9 @@ elif pymaj == 3 and pymin == 1:
 
 elif pymaj == 3 and pymin == 2:
     install_dir = '/Library/Frameworks/Python.framework/Versions/3.2/lib/python3.2/site-packages'
+
+elif pymaj == 3 and pymin == 3:
+    install_dir = '/Library/Frameworks/Python.framework/Versions/3.3/lib/python3.3/site-packages'
 
 else:
     raise RuntimeError( 'Unsupported version of python' )
@@ -97,7 +101,7 @@ for kit_dir in [
     os.path.join( tmpdir, 'Resources' ),
     os.path.join( tmpdir, 'Contents' ),
     os.path.join( tmpdir, 'Contents/pysvn' ),
-    os.path.join( tmpdir, '%s' % pkg_filename),
+    os.path.join( tmpdir, pkg_filename),
     os.path.join( tmpdir, '%s/Examples' % pkg_filename ),
     os.path.join( tmpdir, '%s/Examples/Client' % pkg_filename ),
     os.path.join( tmpdir, '%s/Documentation' % pkg_filename),
@@ -180,15 +184,22 @@ for fixup_path in fixup_path_list:
             #print( 'Debug: cmd %r' % cmd )
             os.system( cmd )
 
-if vendor == 'apple_com':
+if python_vendor == 'apple_com':
     readme_vendor_name = "Apple's"
-elif vendor == 'python_org':
+
+elif python_vendor == 'python_org':
     readme_vendor_name = "Python.org's"
+
 else:
-    readme_vendor_name = vendor
+    readme_vendor_name = python_vendor
 
 print( 'Info: Create tmp/Resources/ReadMe.txt' )
-f = open('tmp/Resources/ReadMe.txt','w')
+if package_maker_kit:
+    f = open( 'tmp/Resources/ReadMe.txt', 'w' )
+
+else:
+    f = open( 'tmp/%s/ReadMe.txt' % (pkg_filename,), 'w' )
+
 f.write('''<html>
 <body>
 <h1>PySVN %(pysvn_version_string)s for Mac OS X, %(readme_vendor_name)s Python %(pymaj)s.%(pymin)s and Subversion %(svn_version_string)s</h1>
@@ -205,9 +216,10 @@ f.write('''<html>
 ''' % locals() )
 f.close()
 
-print( 'Info: Create tmp/Info.plist' )
-f = open('tmp/Info.plist','w')
-f.write('''<?xml version="1.0" encoding="UTF-8"?>
+if package_maker_kit:
+    print( 'Info: Create tmp/Info.plist' )
+    f = open( 'tmp/Info.plist', 'w' )
+    f.write('''<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
@@ -246,11 +258,11 @@ f.write('''<?xml version="1.0" encoding="UTF-8"?>
 </dict>
 </plist>
 ''' % locals() )
-f.close()
+    f.close()
 
-print( 'Info: Create tmp/Description.plist' )
-f = open('tmp/Description.plist','w')
-f.write('''<?xml version="1.0" encoding="UTF-8"?>
+    print( 'Info: Create tmp/Description.plist' )
+    f = open( 'tmp/Description.plist', 'w' )
+    f.write('''<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
@@ -262,20 +274,58 @@ f.write('''<?xml version="1.0" encoding="UTF-8"?>
 </dict>
 </plist>
 ''' )
-f.close()
+    f.close()
 
-print( 'Info: PackageMaker' )
-cmd = [    '/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker',
-    '-build',
-    '-p %s' % os.path.abspath( 'tmp/%s/%s.pkg' % (pkg_filename, pkg_filename) ),
-    '-f %s' % os.path.abspath( 'tmp/Contents' ),
-    '-r %s' % os.path.abspath( 'tmp/Resources' ),
-    '-i %s' % os.path.abspath( 'tmp/Info.plist' ),
-    '-d %s' % os.path.abspath( 'tmp/Description.plist' ),
-    ]
-os.system( ' '.join( cmd ) )
+    print( 'Info: PackageMaker' )
+    cmd = [ package_maker,
+            '-build',
+            '-p %s' % os.path.abspath( 'tmp/%s/%s.pkg' % (pkg_filename, pkg_filename) ),
+            '-f %s' % os.path.abspath( 'tmp/Contents' ),
+            '-r %s' % os.path.abspath( 'tmp/Resources' ),
+            '-i %s' % os.path.abspath( 'tmp/Info.plist' ),
+            '-d %s' % os.path.abspath( 'tmp/Description.plist' ),
+            ]
+    os.system( ' '.join( cmd ) )
 
-print( 'Info: Make Disk Image' )
-os.system( 'hdiutil create -srcfolder tmp/%s tmp/tmp.dmg' % pkg_filename )
-os.system( 'hdiutil convert tmp/tmp.dmg -format UDZO -imagekey zlib-level=9 ' 
-        '-o tmp/%s.dmg' % pkg_filename )
+    print( 'Info: Make Disk Image' )
+    os.system( 'hdiutil create -srcfolder tmp/%s tmp/tmp.dmg' % pkg_filename )
+    os.system( 'hdiutil convert tmp/tmp.dmg -format UDZO -imagekey zlib-level=9 ' 
+            '-o tmp/%s.dmg' % pkg_filename )
+
+else:
+    print 'Info: Create installation script'
+    f = open( 'tmp/%s/Install PySVN' % (pkg_filename,), 'w' )
+    f.write( '''#!/bin/bash
+    if [ "$( id -u )" != "0" ]
+    then
+        clear
+        echo "To install PYSVN required root (administrator) privileges."
+        echo "Enter your password to proceed."
+        exec sudo "$0"
+    fi
+
+    kit_dir=$( dirname "$0" )
+
+    echo "Installing pysvn Extension %(pysvn_version_string)s for Python %(pymaj)s.%(pymin)s"
+
+    tar xzf "${kit_dir}/%(pkg_filename)s.tar.gz" -C "%(install_dir)s"
+
+    echo "Installation complete. Press RETURN to exit."
+    read A
+
+''' % locals() )
+    f.close()
+    os.system( 'chmod +x "tmp/%s/Install PYSVN"' % (pkg_filename,) )
+
+    cmd = [ 'tar',
+            'czf',
+            'tmp/%s/%s.tar.gz' % (pkg_filename, pkg_filename),
+            '-C' 'tmp/Contents',
+            'pysvn']
+
+    os.system( ' '.join( cmd ) )
+
+    print( 'Info: Make Disk Image' )
+    os.system( 'hdiutil create -srcfolder tmp/%s tmp/tmp.dmg' % pkg_filename )
+    os.system( 'hdiutil convert tmp/tmp.dmg -format UDZO -imagekey zlib-level=9 ' 
+            '-o tmp/%s.dmg' % pkg_filename )
