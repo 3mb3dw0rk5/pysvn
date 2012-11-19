@@ -293,7 +293,7 @@ if package_maker_kit:
             '-o tmp/%s.dmg' % pkg_filename )
 
 else:
-    print 'Info: Create installation script'
+    print( 'Info: Create installation script' )
     f = open( 'tmp/%s/Install PySVN' % (pkg_filename,), 'w' )
     f.write( '''#!/bin/bash
     if [ "$( id -u )" != "0" ]
