@@ -18,8 +18,8 @@ Info: PYSVN CMD mkdir file:///b:/repos/trunk/test -m "test-01 add test"
 Info: Test - ls
 
 Info: PYSVN CMD ls file:///b:/repos -v -R
-      2 barry           0 28-Feb-2012 12:53:00 file:///B:/repos/trunk
-      2 barry           0 28-Feb-2012 12:53:00 file:///B:/repos/trunk/test
+      2 barry           0 19-Nov-2012 19:40:28 file:///B:/repos/trunk
+      2 barry           0 19-Nov-2012 19:40:28 file:///B:/repos/trunk/test
 Info: Test - checkout
 
 Info: PYSVN CMD checkout file:///b:/repos/trunk b:\wc1
@@ -140,8 +140,8 @@ Info: Test - annotate
 Info: PYSVN CMD annotate b:\wc2\test\file1.txt
 A /trunk/test/file1.txt
 A /trunk/test/file1.txt
-0| r3 | barry | 2012-02-28T12:53:02.969153Z | test add file 1
-1| r4 | barry | 2012-02-28T12:53:04.029899Z | line 2
+0| r3 | barry | 2012-11-19T19:40:29.036834Z | test add file 1
+1| r4 | barry | 2012-11-19T19:40:29.395599Z | line 2
 Info: Test - cat
 
 Info: PYSVN CMD cat -r head file:///b:/repos/trunk/test/file1.txt
@@ -159,7 +159,7 @@ Log message
 --- -------
 
 Info: PYSVN CMD ls -v file:///b:/repos/tags
-      6 barry           0 28-Feb-2012 12:53:05 file:///B:/repos/tags/version1
+      6 barry           0 19-Nov-2012 19:40:29 file:///B:/repos/tags/version1
 
 Info: PYSVN CMD copy b:\wc2\test\file1.txt b:\wc2\test\file1b.txt
 A b:/wc2/test/file1b.txt
@@ -299,44 +299,44 @@ Info: PYSVN CMD info b:\wc2\test
 Path: b:\wc2\test
 Name: .
 Url: file:///B:/repos/trunk/test
-Repository UUID: 0e75fc0f-3b1d-fd45-b215-5ceaa252adb9
+Repository UUID: 9eb97a17-a9fb-4948-9ff9-1a389399bc26
 Revision: 4
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 28-Feb-2012 12:53:04
+Last Changed Date: 19-Nov-2012 19:40:29
 
 Info: PYSVN CMD info b:\wc2\test\file1.txt
 Path: b:\wc2\test\file1.txt
 Name: file1.txt
 Url: file:///B:/repos/trunk/test/file1.txt
-Repository UUID: 0e75fc0f-3b1d-fd45-b215-5ceaa252adb9
+Repository UUID: 9eb97a17-a9fb-4948-9ff9-1a389399bc26
 Revision: 4
 Node kind: file
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 28-Feb-2012 12:53:04
-Text Last Updated: 28-Feb-2012 12:53:04
+Last Changed Date: 19-Nov-2012 19:40:29
+Text Last Updated: 19-Nov-2012 19:40:29
 Checksum: cb0b37e264ebcc467e9f37a069e034d7
 Info: Test - log
 
 Info: PYSVN CMD log b:\wc2
 ------------------------------------------------------------
-rev 7: barry | 28-Feb-2012 12:53:06 | 1 lines
+rev 7: barry | 19-Nov-2012 19:40:30 | 1 lines
 copy test
 ------------------------------------------------------------
-rev 4: barry | 28-Feb-2012 12:53:04 | 1 lines
+rev 4: barry | 19-Nov-2012 19:40:29 | 1 lines
 commit modified file
 ------------------------------------------------------------
-rev 3: barry | 28-Feb-2012 12:53:02 | 1 lines
+rev 3: barry | 19-Nov-2012 19:40:29 | 1 lines
 commit added files
 ------------------------------------------------------------
-rev 2: barry | 28-Feb-2012 12:53:00 | 1 lines
+rev 2: barry | 19-Nov-2012 19:40:28 | 1 lines
 test-01 add test
 ------------------------------------------------------------
-rev 1: barry | 28-Feb-2012 12:52:59 | 1 lines
+rev 1: barry | 19-Nov-2012 19:40:28 | 1 lines
 test-01 add trunk
 ------------------------------------------------------------
 Info: Test - ls
@@ -352,14 +352,14 @@ file:///B:/repos/trunk/test/folder1
 file:///B:/repos/trunk/test/folder3
 
 Info: PYSVN CMD ls -v file:///b:/repos/trunk/test
-      4 barry          25 28-Feb-2012 12:53:04 file:///B:/repos/trunk/test/file1.txt
-      7 barry          23 28-Feb-2012 12:53:06 file:///B:/repos/trunk/test/file1b.txt
-      3 barry          17 28-Feb-2012 12:53:02 file:///B:/repos/trunk/test/file2.txt
-      3 barry          17 28-Feb-2012 12:53:02 file:///B:/repos/trunk/test/file3.txt
-      3 barry          17 28-Feb-2012 12:53:02 file:///B:/repos/trunk/test/file4.txt
-      3 barry          17 28-Feb-2012 12:53:02 file:///B:/repos/trunk/test/file5.txt
-      3 barry           0 28-Feb-2012 12:53:02 file:///B:/repos/trunk/test/folder1
-      3 barry           0 28-Feb-2012 12:53:02 file:///B:/repos/trunk/test/folder3
+      4 barry          25 19-Nov-2012 19:40:29 file:///B:/repos/trunk/test/file1.txt
+      7 barry          23 19-Nov-2012 19:40:30 file:///B:/repos/trunk/test/file1b.txt
+      3 barry          17 19-Nov-2012 19:40:29 file:///B:/repos/trunk/test/file2.txt
+      3 barry          17 19-Nov-2012 19:40:29 file:///B:/repos/trunk/test/file3.txt
+      3 barry          17 19-Nov-2012 19:40:29 file:///B:/repos/trunk/test/file4.txt
+      3 barry          17 19-Nov-2012 19:40:29 file:///B:/repos/trunk/test/file5.txt
+      3 barry           0 19-Nov-2012 19:40:29 file:///B:/repos/trunk/test/folder1
+      3 barry           0 19-Nov-2012 19:40:29 file:///B:/repos/trunk/test/folder3
 
 Info: PYSVN CMD ls b:\wc2\test
 b:/wc2/test/file1.txt
@@ -372,14 +372,14 @@ b:/wc2/test/folder1
 b:/wc2/test/folder3
 
 Info: PYSVN CMD ls -v b:\wc2\test
-      4 barry          25 28-Feb-2012 12:53:04 b:/wc2/test/file1.txt
-      7 barry          23 28-Feb-2012 12:53:06 b:/wc2/test/file1b.txt
-      3 barry          17 28-Feb-2012 12:53:02 b:/wc2/test/file2.txt
-      3 barry          17 28-Feb-2012 12:53:02 b:/wc2/test/file3.txt
-      3 barry          17 28-Feb-2012 12:53:02 b:/wc2/test/file4.txt
-      3 barry          17 28-Feb-2012 12:53:02 b:/wc2/test/file5.txt
-      3 barry           0 28-Feb-2012 12:53:02 b:/wc2/test/folder1
-      3 barry           0 28-Feb-2012 12:53:02 b:/wc2/test/folder3
+      4 barry          25 19-Nov-2012 19:40:29 b:/wc2/test/file1.txt
+      7 barry          23 19-Nov-2012 19:40:30 b:/wc2/test/file1b.txt
+      3 barry          17 19-Nov-2012 19:40:29 b:/wc2/test/file2.txt
+      3 barry          17 19-Nov-2012 19:40:29 b:/wc2/test/file3.txt
+      3 barry          17 19-Nov-2012 19:40:29 b:/wc2/test/file4.txt
+      3 barry          17 19-Nov-2012 19:40:29 b:/wc2/test/file5.txt
+      3 barry           0 19-Nov-2012 19:40:29 b:/wc2/test/folder1
+      3 barry           0 19-Nov-2012 19:40:29 b:/wc2/test/folder3
 Info: Test - merge - see below
 Info: Test - mkdir - done above
 Info: Test - move
@@ -533,11 +533,14 @@ callback_conflict_resolver
   kind: <conflict_kind.text>
   merged_file: b:\wc2\test\.svn\tmp\file4.txt.tmp
   mime_type: None
-  my_file: b:\wc2\test\.svn\tmp\svn-5D91FE5D
+  my_file: b:\wc2\test\.svn\tmp\svn-D6E25BC5
   node_kind: <node_kind.file>
+  operation: <wc_operation.none>
   path: b:/wc2/test/file4.txt
   property_name: None
   reason: <conflict_reason.edited>
+  src_left_version: None
+  src_right_version: None
   their_file: b:\wc2\test\.svn\tmp\text-base\file4.txt.svn-base
 A b:/wc2/test/file2b.txt
 D b:/wc2/test/file2.txt
@@ -573,7 +576,7 @@ Info: Test - revproplist
 Info: PYSVN CMD revproplist file:///b:/repos/trunk
 Revision: 12
 svn:author: barry
-svn:date: 2012-02-28T12:53:16.150477Z
+svn:date: 2012-11-19T19:40:33.529202Z
 svn:log: resolve a confict part 2
 Info: Test - revpropget
 
@@ -606,13 +609,13 @@ Info: PYSVN CMD info b:\wc1
 Path: b:\wc1
 Name: .
 Url: file:///B:/repos/trunk
-Repository UUID: 0e75fc0f-3b1d-fd45-b215-5ceaa252adb9
+Repository UUID: 9eb97a17-a9fb-4948-9ff9-1a389399bc26
 Revision: 2
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 2
-Last Changed Date: 28-Feb-2012 12:53:00
+Last Changed Date: 19-Nov-2012 19:40:28
 
 Info: PYSVN CMD relocate file:///b:/repos/trunk file:///b:/root/repos/trunk b:\wc1
 
@@ -620,25 +623,25 @@ Info: PYSVN CMD info b:\wc1
 Path: b:\wc1
 Name: .
 Url: file:///B:/root/repos/trunk
-Repository UUID: 0e75fc0f-3b1d-fd45-b215-5ceaa252adb9
+Repository UUID: 9eb97a17-a9fb-4948-9ff9-1a389399bc26
 Revision: 2
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 2
-Last Changed Date: 28-Feb-2012 12:53:00
+Last Changed Date: 19-Nov-2012 19:40:28
 
 Info: PYSVN CMD info b:\wc2
 Path: b:\wc2
 Name: .
 Url: file:///B:/repos/trunk
-Repository UUID: 0e75fc0f-3b1d-fd45-b215-5ceaa252adb9
+Repository UUID: 9eb97a17-a9fb-4948-9ff9-1a389399bc26
 Revision: 4
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 28-Feb-2012 12:53:04
+Last Changed Date: 19-Nov-2012 19:40:29
 
 Info: PYSVN CMD relocate file:///b:/repos/trunk file:///b:/root/repos/trunk b:\wc2
 
@@ -646,26 +649,26 @@ Info: PYSVN CMD info b:\wc2
 Path: b:\wc2
 Name: .
 Url: file:///B:/root/repos/trunk
-Repository UUID: 0e75fc0f-3b1d-fd45-b215-5ceaa252adb9
+Repository UUID: 9eb97a17-a9fb-4948-9ff9-1a389399bc26
 Revision: 4
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 28-Feb-2012 12:53:04
+Last Changed Date: 19-Nov-2012 19:40:29
 Info: Test - switch
 
 Info: PYSVN CMD info b:\wc2
 Path: b:\wc2
 Name: .
 Url: file:///B:/root/repos/trunk
-Repository UUID: 0e75fc0f-3b1d-fd45-b215-5ceaa252adb9
+Repository UUID: 9eb97a17-a9fb-4948-9ff9-1a389399bc26
 Revision: 4
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 28-Feb-2012 12:53:04
+Last Changed Date: 19-Nov-2012 19:40:29
 
 Info: PYSVN CMD switch b:\wc2 file:///b:/root/repos/tags/version1
 A b:/wc2/test/file2.txt
@@ -681,13 +684,13 @@ Info: PYSVN CMD info b:\wc2
 Path: b:\wc2
 Name: .
 Url: file:///B:/root/repos/tags/version1
-Repository UUID: 0e75fc0f-3b1d-fd45-b215-5ceaa252adb9
+Repository UUID: 9eb97a17-a9fb-4948-9ff9-1a389399bc26
 Revision: 12
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 6
-Last Changed Date: 28-Feb-2012 12:53:05
+Last Changed Date: 19-Nov-2012 19:40:29
 Info: Test - update - see above
 Info: Test - Info: Testing - merge
 
