@@ -11,7 +11,7 @@ else:
 
 print( 'Info: revproplist() ...' )
 all_props = t.revproplist()
-for name, value in all_props.items():
+for name, value in sorted( list( all_props.items() ) ):
     print( '%s: %s' % (name, value) )
 
 print(  'Info: changed() ...' )
@@ -22,7 +22,7 @@ for name, (action, kind, text_mod, prop_mod) in change_list:
     print( '%s: action=%r, kind=%r, text_mod=%r, prop_mod=%r' % (name, action, kind, text_mod, prop_mod) )
     if action != 'D':
         all_props = t.proplist( name )
-        for prop_name, prop_value in all_props.items():
+        for prop_name, prop_value in sorted( list( all_props.items() ) ):
             print( '     %s: %s' % (prop_name, prop_value) )
         if kind == pysvn.node_kind.file:
             print( '     contents: %r' % t.cat( name ) )
@@ -36,7 +36,7 @@ for name, (action, kind, text_mod, prop_mod, copyfrom_rev, copyfrom_path) in cha
             (name, action, kind, text_mod, prop_mod, copyfrom_rev, copyfrom_path) )
     if action != 'D':
         all_props = t.proplist( name )
-        for prop_name, prop_value in all_props.items():
+        for prop_name, prop_value in sorted( list( all_props.items() ) ):
             print( '     %s: %s' % (prop_name, prop_value) )
         if kind == pysvn.node_kind.file:
             print( '     contents: %r' % t.cat( name ) )
