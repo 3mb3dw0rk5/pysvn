@@ -1,24 +1,24 @@
 WorkDir: /Users/barry/wc/svn/pysvn/Extension
-PYTHON: /Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python
+PYTHON: /Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python
 Username: barry
 Info: Command: mkdir testroot-04
 Info: Command: cd testroot-04
 Info: Command: mkdir tmp
 Info: Command: svnadmin create /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos
 Info: Testing - mkdir
-Info: Command: /Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir mkdir file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos/trunk -m test-04 add trunk
-Info: Command: /Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir mkdir file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos/trunk/test -m test-04 add test
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir mkdir file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos/trunk -m test-04 add trunk
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir mkdir file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos/trunk/test -m test-04 add test
 Info: Install hooks
-Info: Command: /Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir mkdir file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos/trunk/test/a -m pre-commit test 1
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir mkdir file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos/trunk/test/a -m pre-commit test 1
 Info: pre_test_1.output start ------------------------------------
-/Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 2-2
+/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 2-2
 Info: pre commit test 1
 Info: Transaction( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos, 2-2) ...
 Info: revproplist() ...
-svn:log: pre-commit test 1
-svn:check-locks: true
 svn:author: barry
-svn:date: 2009-03-01T14:57:49.936907Z
+svn:check-locks: true
+svn:date: 2012-12-30T22:25:13.555328Z
+svn:log: pre-commit test 1
 Info: changed() ...
 trunk/test/a: action='A', kind=<node_kind.dir>, text_mod=0, prop_mod=0
 Info: changed( copy_info=True ) ...
@@ -29,13 +29,13 @@ Info: list() ...
 /trunk/test/a: kind=<node_kind.dir>
 Info: pre_test_1.output end --------------------------------------
 Info: post_test_1.output start -----------------------------------
-/Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 3 is_revision
+/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 3 is_revision
 Info: pre commit test 1
 Info: Transaction( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos, 3, is_revision=True) ...
 Info: revproplist() ...
-svn:log: pre-commit test 1
 svn:author: barry
-svn:date: 2009-03-01T14:57:49.936907Z
+svn:date: 2012-12-30T22:25:13.611447Z
+svn:log: pre-commit test 1
 Info: changed() ...
 trunk/test/a: action='A', kind=<node_kind.dir>, text_mod=0, prop_mod=0
 Info: changed( copy_info=True ) ...
@@ -46,27 +46,27 @@ Info: list() ...
 /trunk/test/a: kind=<node_kind.dir>
 Info: post_test_1.output end -------------------------------------
 Info: Add two files
-Info: Command: /Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir checkout file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos/trunk/test /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir checkout file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos/trunk/test /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc
 A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/a
 U /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc
 Checked out revision 3
-Info: Command: /Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir add /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/file1.txt
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir add /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/file1.txt
 A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/file1.txt
-Info: Command: /Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir add /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir add /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
 A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
-Info: Command: /Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir checkin -m Add two files /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir checkin -m Add two files /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc
 A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
 A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/file1.txt
 Revision 4
 Info: pre_test_1.output start ------------------------------------
-/Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 3-3
+/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 3-3
 Info: pre commit test 1
 Info: Transaction( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos, 3-3) ...
 Info: revproplist() ...
-svn:log: Add two files
-svn:check-locks: true
 svn:author: barry
-svn:date: 2009-03-01T14:57:51.291290Z
+svn:check-locks: true
+svn:date: 2012-12-30T22:25:14.166083Z
+svn:log: Add two files
 Info: changed() ...
 trunk/test/a/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0
      contents: 'file1 A\n'
@@ -85,13 +85,13 @@ Info: list() ...
 /trunk/test/file1.txt: kind=<node_kind.file>
 Info: pre_test_1.output end --------------------------------------
 Info: post_test_1.output start -----------------------------------
-/Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 4 is_revision
+/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 4 is_revision
 Info: pre commit test 1
 Info: Transaction( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos, 4, is_revision=True) ...
 Info: revproplist() ...
-svn:log: Add two files
 svn:author: barry
-svn:date: 2009-03-01T14:57:51.291290Z
+svn:date: 2012-12-30T22:25:14.222916Z
+svn:log: Add two files
 Info: changed() ...
 trunk/test/a/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0
      contents: 'file1 A\n'
@@ -110,21 +110,21 @@ Info: list() ...
 /trunk/test/file1.txt: kind=<node_kind.file>
 Info: post_test_1.output end -------------------------------------
 Info: Mod one file Mod one prop
-Info: Command: /Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir propset svn:eol-style native /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir propset svn:eol-style native /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
 property_added /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
-Info: Command: /Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir checkin -m Mod one file Mod one prop /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir checkin -m Mod one file Mod one prop /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc
 M /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
 M /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/file1.txt
 Revision 5
 Info: pre_test_1.output start ------------------------------------
-/Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 4-4
+/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 4-4
 Info: pre commit test 1
 Info: Transaction( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos, 4-4) ...
 Info: revproplist() ...
-svn:log: Mod one file Mod one prop
-svn:check-locks: true
 svn:author: barry
-svn:date: 2009-03-01T14:57:52.207943Z
+svn:check-locks: true
+svn:date: 2012-12-30T22:25:15.133707Z
+svn:log: Mod one file Mod one prop
 Info: changed() ...
 trunk/test/a/file1.txt: action='R', kind=<node_kind.file>, text_mod=0, prop_mod=1
      svn:eol-style: native
@@ -145,13 +145,13 @@ Info: list() ...
 /trunk/test/file1.txt: kind=<node_kind.file>
 Info: pre_test_1.output end --------------------------------------
 Info: post_test_1.output start -----------------------------------
-/Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 5 is_revision
+/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 5 is_revision
 Info: pre commit test 1
 Info: Transaction( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos, 5, is_revision=True) ...
 Info: revproplist() ...
-svn:log: Mod one file Mod one prop
 svn:author: barry
-svn:date: 2009-03-01T14:57:52.207943Z
+svn:date: 2012-12-30T22:25:15.189141Z
+svn:log: Mod one file Mod one prop
 Info: changed() ...
 trunk/test/a/file1.txt: action='R', kind=<node_kind.file>, text_mod=0, prop_mod=1
      svn:eol-style: native
@@ -172,20 +172,20 @@ Info: list() ...
 /trunk/test/file1.txt: kind=<node_kind.file>
 Info: post_test_1.output end -------------------------------------
 Info: Delete one file
-Info: Command: /Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir rm /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir rm /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
 D /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
-Info: Command: /Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir checkin -m Delete one file /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir checkin -m Delete one file /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc
 D /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/a/file1.txt
 Revision 6
 Info: pre_test_1.output start ------------------------------------
-/Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 5-5
+/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 5-5
 Info: pre commit test 1
 Info: Transaction( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos, 5-5) ...
 Info: revproplist() ...
-svn:log: Delete one file
-svn:check-locks: true
 svn:author: barry
-svn:date: 2009-03-01T14:57:53.209181Z
+svn:check-locks: true
+svn:date: 2012-12-30T22:25:16.140028Z
+svn:log: Delete one file
 Info: changed() ...
 trunk/test/a/file1.txt: action='D', kind=<node_kind.file>, text_mod=0, prop_mod=0
 Info: changed( copy_info=True ) ...
@@ -197,13 +197,13 @@ Info: list() ...
 /trunk/test/file1.txt: kind=<node_kind.file>
 Info: pre_test_1.output end --------------------------------------
 Info: post_test_1.output start -----------------------------------
-/Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 6 is_revision
+/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 6 is_revision
 Info: pre commit test 1
 Info: Transaction( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos, 6, is_revision=True) ...
 Info: revproplist() ...
-svn:log: Delete one file
 svn:author: barry
-svn:date: 2009-03-01T14:57:53.209181Z
+svn:date: 2012-12-30T22:25:16.198329Z
+svn:log: Delete one file
 Info: changed() ...
 trunk/test/a/file1.txt: action='D', kind=<node_kind.file>, text_mod=0, prop_mod=0
 Info: changed( copy_info=True ) ...
@@ -215,20 +215,20 @@ Info: list() ...
 /trunk/test/file1.txt: kind=<node_kind.file>
 Info: post_test_1.output end -------------------------------------
 Info: Copy one file
-Info: Command: /Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir cp /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/file1.txt /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/file1copy.txt
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir cp /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/file1.txt /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/file1copy.txt
 A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/file1copy.txt
-Info: Command: /Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir checkin -m Copy one file /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc
+Info: Command: /Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir checkin -m Copy one file /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc
 A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/file1copy.txt
 Revision 7
 Info: pre_test_1.output start ------------------------------------
-/Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 6-6
+/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 6-6
 Info: pre commit test 1
 Info: Transaction( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos, 6-6) ...
 Info: revproplist() ...
-svn:log: Copy one file
-svn:check-locks: true
 svn:author: barry
-svn:date: 2009-03-01T14:57:55.113268Z
+svn:check-locks: true
+svn:date: 2012-12-30T22:25:18.087823Z
+svn:log: Copy one file
 Info: changed() ...
 trunk/test/file1copy.txt: action='A', kind=<node_kind.file>, text_mod=0, prop_mod=0
      contents: 'file1 ROOT ln 2\n'
@@ -243,13 +243,13 @@ Info: list() ...
 /trunk/test/file1copy.txt: kind=<node_kind.file>
 Info: pre_test_1.output end --------------------------------------
 Info: post_test_1.output start -----------------------------------
-/Library/Frameworks/Python.framework/Versions/2.6/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 7 is_revision
+/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 7 is_revision
 Info: pre commit test 1
 Info: Transaction( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos, 7, is_revision=True) ...
 Info: revproplist() ...
-svn:log: Copy one file
 svn:author: barry
-svn:date: 2009-03-01T14:57:55.113268Z
+svn:date: 2012-12-30T22:25:18.371407Z
+svn:log: Copy one file
 Info: changed() ...
 trunk/test/file1copy.txt: action='A', kind=<node_kind.file>, text_mod=0, prop_mod=0
      contents: 'file1 ROOT ln 2\n'
