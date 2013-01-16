@@ -40,6 +40,9 @@ Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_
 #if defined( PYSVN_HAS_CLIENT_EXPORT4 )
     { false, name_depth },
 #endif
+#if defined( PYSVN_HAS_CLIENT_EXPORT5 )
+    { false, name_ignore_keywords },
+#endif
     { false, NULL }
     };
     FunctionArguments args( "export", args_desc, a_args, a_kws );
@@ -88,6 +91,10 @@ Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_
     revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
 #endif
 
+#if defined( PYSVN_HAS_CLIENT_EXPORT5 )
+    bool ignore_keywords = args.getBoolean( name_ignore_keywords, false );
+#endif
+
     revisionKindCompatibleCheck( is_url, revision, name_revision, name_url_or_path );
 
     svn_revnum_t revnum = 0;
@@ -102,7 +109,23 @@ Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_
 
         PythonAllowThreads permission( m_context );
 
-#if defined( PYSVN_HAS_CLIENT_EXPORT4 )
+#if defined( PYSVN_HAS_CLIENT_EXPORT5 )
+        svn_error_t * error = svn_client_export5
+            (
+            &revnum,
+            norm_src_path.c_str(),
+            dest_path.c_str(),
+            &peg_revision,
+            &revision,
+            force,
+            ignore_externals,
+            ignore_keywords,
+            depth,
+            native_eol,
+            m_context,
+            pool
+            );
+#elif defined( PYSVN_HAS_CLIENT_EXPORT4 )
         svn_error_t * error = svn_client_export4
             (
             &revnum,

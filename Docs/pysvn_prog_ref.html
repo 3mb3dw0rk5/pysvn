@@ -996,11 +996,15 @@ export( src_url_or_path,
         ignore_externals=False,
         recurse=True,
         peg_revision=pysvn.Revision( opt_revision_kind.unspecified )</span><span class="svn_1005000">,
-        depth=depth</span> )
+        depth=depth</span><span class="svn_1007000">,
+        ignore_keywords=False</span> )
 </pre>
 <p>Create an unversioned copy of the src_path at revision in dest_path.
 <span class="svn_1003000">Set recurse to False to export a single file. Set ignore_externals to
 True to ignore externals definitions.</span>
+<span class="svn_1007000">
+Set ignore_keywords to True to prevnet keyword replacement.
+</span>
 </p>
 <p><span class="svn_1002000">peg_revision indicates in
 which revision src_url_or_path is valid.  If peg_revision.kind
