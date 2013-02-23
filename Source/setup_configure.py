@@ -1135,12 +1135,14 @@ class UnixCompilerGCC(CompilerGCC):
         self._addVar( 'PYSVN_MODULE_BASENAME', self.pysvn_module_name )
 
         self._addVar( 'PYTHON_VERSION', '%d.%d' % (sys.version_info[0], sys.version_info[1]) )
-        self._addVar( 'PYTHON_INC',     distutils.sysconfig.get_python_inc() )
+        self._addVar( 'PYTHON_INC',     distutils.sysconfig.get_python_inc( False ) )
+        self._addVar( 'PYTHON_ARCH_SPECIFIC_INC',     distutils.sysconfig.get_python_inc( True ) )
 
         py_cflags_list = [
                     '-Wall -fPIC -fexceptions -frtti',
                     '-I. -I%(APR_INC)s -I%(SVN_INC)s',
                     '-DPYCXX_PYTHON_2TO3 -I%(PYCXX)s -I%(PYCXX_SRC)s -I%(PYTHON_INC)s',
+                    '-I%(PYTHON_ARCH_SPECIFIC_INC)s',
                     '-D%(DEBUG)s',
                     ]
         for define, value in self.py_module_defines:
