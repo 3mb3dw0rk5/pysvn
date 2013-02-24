@@ -170,6 +170,9 @@ template <> EnumString< svn_wc_notify_action_t >::EnumString()
     add( svn_wc_notify_failed_missing, "failed_missing" );
     add( svn_wc_notify_failed_out_of_date, "failed_out_of_date" );
     add( svn_wc_notify_failed_no_parent, "failed_no_parent" );
+    add( svn_wc_notify_failed_locked, "failed_locked" );
+    add( svn_wc_notify_failed_forbidden_by_server, "failed_forbidden_by_server" );
+    add( svn_wc_notify_skip_conflicted, "skip_conflicted" );
 #endif
 
 }
