@@ -268,7 +268,45 @@ Py::Object toObject
     }
 #endif
 
-    long is_versioned = (long)(svn_status.text_status > svn_wc_status_unversioned);
+    long is_versioned;
+    switch( svn_status.text_status )
+    {
+    // exists, but uninteresting
+    case svn_wc_status_normal:
+    // is scheduled for addition
+    case svn_wc_status_added:
+    // under v.c., but is missing
+    case svn_wc_status_missing:
+    // scheduled for deletion
+    case svn_wc_status_deleted:
+    // was deleted and then re-added
+    case svn_wc_status_replaced:
+    // text or props have been modified
+    case svn_wc_status_modified:
+    // local mods received repos mods (### unused)
+    case svn_wc_status_merged:
+    // local mods received conflicting repos mods
+    case svn_wc_status_conflicted:
+        is_versioned = 1;
+
+    // an unversioned resource is in the way of the versioned resource
+    case svn_wc_status_obstructed:
+    // does not exist
+    case svn_wc_status_none:
+    // is not a versioned thing in this wc
+    case svn_wc_status_unversioned:
+    // is unversioned but configured to be ignored
+    case svn_wc_status_ignored:
+    // an unversioned directory path populated by an svn:externals
+    // property; this status is not used for file externals
+    case svn_wc_status_external:
+    // a directory doesn't contain a complete entries list
+    case svn_wc_status_incomplete:
+    // assume any new status not versioned
+    default:
+        is_versioned = 0;
+    }
+
     status[ str_is_versioned ] = Py::Int( is_versioned );
     status[ str_is_locked ] = Py::Int( svn_status.locked );
     status[ str_is_copied ] = Py::Int( svn_status.copied );
