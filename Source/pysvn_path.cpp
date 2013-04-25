@@ -52,7 +52,7 @@ std::string svnNormalisedUrl( const std::string &unnormalised, SvnPool &pool )
 
 std::string svnNormalisedPath( const std::string &unnormalised, SvnPool &pool )
 {
-    const char *normalised_path = svn_dirent_canonicalize( unnormalised.c_str(), pool );
+    const char *normalised_path = svn_dirent_internal_style( unnormalised.c_str(), pool );
     return std::string( normalised_path );
 }
 
