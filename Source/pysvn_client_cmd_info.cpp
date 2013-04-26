@@ -8,7 +8,7 @@
 // ====================================================================
 //
 //
-//  pysvn_client_cmd_prop.cpp
+//  pysvn_client_cmd_info.cpp
 //
 #if defined( _MSC_VER )
 // disable warning C4786: symbol greater than 255 character,
