@@ -18,8 +18,8 @@ Info: PYSVN CMD mkdir file:///b:/repos/trunk/test -m "test-01 add test"
 Info: Test - ls
 
 Info: PYSVN CMD ls file:///b:/repos -v -R
-      2 barry           0 22-Dec-2012 13:46:06 file:///B:/repos/trunk
-      2 barry           0 22-Dec-2012 13:46:06 file:///B:/repos/trunk/test
+      2 barry           0 01-Jul-2013 20:42:16 file:///B:/repos/trunk
+      2 barry           0 01-Jul-2013 20:42:16 file:///B:/repos/trunk/test
 Info: Test - checkout
 
 Info: PYSVN CMD checkout file:///b:/repos/trunk b:\wc1
@@ -132,8 +132,8 @@ Info: Test - annotate
 Info: PYSVN CMD annotate b:\wc2\test\file1.txt
 A /trunk/test/file1.txt
 A /trunk/test/file1.txt
-0| r3 | barry | 2012-12-22T13:46:07.408219Z | test add file 1
-1| r4 | barry | 2012-12-22T13:46:07.844979Z | line 2
+0| r3 | barry | 2013-07-01T19:42:17.538382Z | test add file 1
+1| r4 | barry | 2013-07-01T19:42:17.990544Z | line 2
 Info: Test - cat
 
 Info: PYSVN CMD cat -r head file:///b:/repos/trunk/test/file1.txt
@@ -151,7 +151,7 @@ Log message
 --- -------
 
 Info: PYSVN CMD ls -v file:///b:/repos/tags
-      6 barry           0 22-Dec-2012 13:46:08 file:///B:/repos/tags/version1
+      6 barry           0 01-Jul-2013 20:42:18 file:///B:/repos/tags/version1
 
 Info: PYSVN CMD copy b:\wc2\test\file1.txt b:\wc2\test\file1b.txt
 A B:/wc2/test/file1b.txt
@@ -166,10 +166,10 @@ Info: Test - diff
 Info: Append File b:\wc2\test\file1b.txt - new line       
 
 Info: PYSVN CMD diff b:\wc2
-Index: B:\wc2/test/file1b.txt
+Index: B:/wc2/test/file1b.txt
 ===================================================================
---- B:\wc2/test/file1b.txt	(revision 7)
-+++ B:\wc2/test/file1b.txt	(working copy)
+--- B:/wc2/test/file1b.txt	(revision 7)
++++ B:/wc2/test/file1b.txt	(working copy)
 @@ -1,2 +1,3 @@
  test add file 1
  line 2
@@ -291,44 +291,44 @@ Info: PYSVN CMD info b:\wc2\test
 Path: b:\wc2\test
 Name: .
 Url: file:///B:/repos/trunk/test
-Repository UUID: 27b9317c-2cec-3d4b-a680-5f902a2f5020
+Repository UUID: 875316d8-f5b2-3e4b-a71b-9ac7f05a849a
 Revision: 4
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 22-Dec-2012 13:46:07
+Last Changed Date: 01-Jul-2013 20:42:17
 
 Info: PYSVN CMD info b:\wc2\test\file1.txt
 Path: b:\wc2\test\file1.txt
 Name: file1.txt
 Url: file:///B:/repos/trunk/test/file1.txt
-Repository UUID: 27b9317c-2cec-3d4b-a680-5f902a2f5020
+Repository UUID: 875316d8-f5b2-3e4b-a71b-9ac7f05a849a
 Revision: 4
 Node kind: file
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 22-Dec-2012 13:46:07
-Text Last Updated: 22-Dec-2012 13:46:08
+Last Changed Date: 01-Jul-2013 20:42:17
+Text Last Updated: 01-Jul-2013 20:42:18
 Checksum: cb0b37e264ebcc467e9f37a069e034d7
 Info: Test - log
 
 Info: PYSVN CMD log b:\wc2
 ------------------------------------------------------------
-rev 7: barry | 22-Dec-2012 13:46:08 | 1 lines
+rev 7: barry | 01-Jul-2013 20:42:18 | 1 lines
 copy test
 ------------------------------------------------------------
-rev 4: barry | 22-Dec-2012 13:46:07 | 1 lines
+rev 4: barry | 01-Jul-2013 20:42:17 | 1 lines
 commit modified file
 ------------------------------------------------------------
-rev 3: barry | 22-Dec-2012 13:46:07 | 1 lines
+rev 3: barry | 01-Jul-2013 20:42:17 | 1 lines
 commit added files
 ------------------------------------------------------------
-rev 2: barry | 22-Dec-2012 13:46:06 | 1 lines
+rev 2: barry | 01-Jul-2013 20:42:16 | 1 lines
 test-01 add test
 ------------------------------------------------------------
-rev 1: barry | 22-Dec-2012 13:46:06 | 1 lines
+rev 1: barry | 01-Jul-2013 20:42:16 | 1 lines
 test-01 add trunk
 ------------------------------------------------------------
 Info: Test - ls
@@ -344,34 +344,34 @@ file:///B:/repos/trunk/test/folder1
 file:///B:/repos/trunk/test/folder3
 
 Info: PYSVN CMD ls -v file:///b:/repos/trunk/test
-      4 barry          25 22-Dec-2012 13:46:07 file:///B:/repos/trunk/test/file1.txt
-      7 barry          23 22-Dec-2012 13:46:08 file:///B:/repos/trunk/test/file1b.txt
-      3 barry          17 22-Dec-2012 13:46:07 file:///B:/repos/trunk/test/file2.txt
-      3 barry          17 22-Dec-2012 13:46:07 file:///B:/repos/trunk/test/file3.txt
-      3 barry          17 22-Dec-2012 13:46:07 file:///B:/repos/trunk/test/file4.txt
-      3 barry          17 22-Dec-2012 13:46:07 file:///B:/repos/trunk/test/file5.txt
-      3 barry           0 22-Dec-2012 13:46:07 file:///B:/repos/trunk/test/folder1
-      3 barry           0 22-Dec-2012 13:46:07 file:///B:/repos/trunk/test/folder3
+      4 barry          25 01-Jul-2013 20:42:17 file:///B:/repos/trunk/test/file1.txt
+      7 barry          23 01-Jul-2013 20:42:18 file:///B:/repos/trunk/test/file1b.txt
+      3 barry          17 01-Jul-2013 20:42:17 file:///B:/repos/trunk/test/file2.txt
+      3 barry          17 01-Jul-2013 20:42:17 file:///B:/repos/trunk/test/file3.txt
+      3 barry          17 01-Jul-2013 20:42:17 file:///B:/repos/trunk/test/file4.txt
+      3 barry          17 01-Jul-2013 20:42:17 file:///B:/repos/trunk/test/file5.txt
+      3 barry           0 01-Jul-2013 20:42:17 file:///B:/repos/trunk/test/folder1
+      3 barry           0 01-Jul-2013 20:42:17 file:///B:/repos/trunk/test/folder3
 
 Info: PYSVN CMD ls b:\wc2\test
-B:\wc2\test/file1.txt
-B:\wc2\test/file1b.txt
-B:\wc2\test/file2.txt
-B:\wc2\test/file3.txt
-B:\wc2\test/file4.txt
-B:\wc2\test/file5.txt
-B:\wc2\test/folder1
-B:\wc2\test/folder3
+B:/wc2/test/file1.txt
+B:/wc2/test/file1b.txt
+B:/wc2/test/file2.txt
+B:/wc2/test/file3.txt
+B:/wc2/test/file4.txt
+B:/wc2/test/file5.txt
+B:/wc2/test/folder1
+B:/wc2/test/folder3
 
 Info: PYSVN CMD ls -v b:\wc2\test
-      4 barry          25 22-Dec-2012 13:46:07 B:\wc2\test/file1.txt
-      7 barry          23 22-Dec-2012 13:46:08 B:\wc2\test/file1b.txt
-      3 barry          17 22-Dec-2012 13:46:07 B:\wc2\test/file2.txt
-      3 barry          17 22-Dec-2012 13:46:07 B:\wc2\test/file3.txt
-      3 barry          17 22-Dec-2012 13:46:07 B:\wc2\test/file4.txt
-      3 barry          17 22-Dec-2012 13:46:07 B:\wc2\test/file5.txt
-      3 barry           0 22-Dec-2012 13:46:07 B:\wc2\test/folder1
-      3 barry           0 22-Dec-2012 13:46:07 B:\wc2\test/folder3
+      4 barry          25 01-Jul-2013 20:42:17 B:/wc2/test/file1.txt
+      7 barry          23 01-Jul-2013 20:42:18 B:/wc2/test/file1b.txt
+      3 barry          17 01-Jul-2013 20:42:17 B:/wc2/test/file2.txt
+      3 barry          17 01-Jul-2013 20:42:17 B:/wc2/test/file3.txt
+      3 barry          17 01-Jul-2013 20:42:17 B:/wc2/test/file4.txt
+      3 barry          17 01-Jul-2013 20:42:17 B:/wc2/test/file5.txt
+      3 barry           0 01-Jul-2013 20:42:17 B:/wc2/test/folder1
+      3 barry           0 01-Jul-2013 20:42:17 B:/wc2/test/folder3
 Info: Test - merge - see below
 Info: Test - mkdir - done above
 Info: Test - move
@@ -528,7 +528,7 @@ callback_conflict_resolver
   kind: <conflict_kind.text>
   merged_file: B:\wc2\.svn\tmp\file4.txt.tmp
   mime_type: None
-  my_file: B:\wc2\.svn\tmp\svn-FEEA2CE1
+  my_file: B:\wc2\.svn\tmp\svn-BDA3CF31
   node_kind: <node_kind.file>
   operation: <wc_operation.none>
   path: B:/wc2/test/file4.txt
@@ -572,7 +572,7 @@ Info: Test - revproplist
 Info: PYSVN CMD revproplist file:///b:/repos/trunk
 Revision: 12
 svn:author: barry
-svn:date: 2012-12-22T13:46:12.072200Z
+svn:date: 2013-07-01T19:42:22.247106Z
 svn:log: resolve a confict part 2
 Info: Test - revpropget
 
@@ -605,13 +605,13 @@ Info: PYSVN CMD info b:\wc1
 Path: b:\wc1
 Name: .
 Url: file:///B:/repos/trunk
-Repository UUID: 27b9317c-2cec-3d4b-a680-5f902a2f5020
+Repository UUID: 875316d8-f5b2-3e4b-a71b-9ac7f05a849a
 Revision: 2
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 2
-Last Changed Date: 22-Dec-2012 13:46:06
+Last Changed Date: 01-Jul-2013 20:42:16
 
 Info: PYSVN CMD relocate file:///b:/repos/trunk file:///b:/root/repos/trunk b:\wc1
 
@@ -619,25 +619,25 @@ Info: PYSVN CMD info b:\wc1
 Path: b:\wc1
 Name: .
 Url: file:///B:/root/repos/trunk
-Repository UUID: 27b9317c-2cec-3d4b-a680-5f902a2f5020
+Repository UUID: 875316d8-f5b2-3e4b-a71b-9ac7f05a849a
 Revision: 2
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 2
-Last Changed Date: 22-Dec-2012 13:46:06
+Last Changed Date: 01-Jul-2013 20:42:16
 
 Info: PYSVN CMD info b:\wc2
 Path: b:\wc2
 Name: .
 Url: file:///B:/repos/trunk
-Repository UUID: 27b9317c-2cec-3d4b-a680-5f902a2f5020
+Repository UUID: 875316d8-f5b2-3e4b-a71b-9ac7f05a849a
 Revision: 4
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 22-Dec-2012 13:46:07
+Last Changed Date: 01-Jul-2013 20:42:17
 
 Info: PYSVN CMD relocate file:///b:/repos/trunk file:///b:/root/repos/trunk b:\wc2
 
@@ -645,26 +645,26 @@ Info: PYSVN CMD info b:\wc2
 Path: b:\wc2
 Name: .
 Url: file:///B:/root/repos/trunk
-Repository UUID: 27b9317c-2cec-3d4b-a680-5f902a2f5020
+Repository UUID: 875316d8-f5b2-3e4b-a71b-9ac7f05a849a
 Revision: 4
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 22-Dec-2012 13:46:07
+Last Changed Date: 01-Jul-2013 20:42:17
 Info: Test - switch
 
 Info: PYSVN CMD info b:\wc2
 Path: b:\wc2
 Name: .
 Url: file:///B:/root/repos/trunk
-Repository UUID: 27b9317c-2cec-3d4b-a680-5f902a2f5020
+Repository UUID: 875316d8-f5b2-3e4b-a71b-9ac7f05a849a
 Revision: 4
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 22-Dec-2012 13:46:07
+Last Changed Date: 01-Jul-2013 20:42:17
 
 Info: PYSVN CMD switch b:\wc2 file:///b:/root/repos/tags/version1
 A B:/wc2/test/file2.txt
@@ -680,13 +680,13 @@ Info: PYSVN CMD info b:\wc2
 Path: b:\wc2
 Name: .
 Url: file:///B:/root/repos/tags/version1
-Repository UUID: 27b9317c-2cec-3d4b-a680-5f902a2f5020
+Repository UUID: 875316d8-f5b2-3e4b-a71b-9ac7f05a849a
 Revision: 12
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 6
-Last Changed Date: 22-Dec-2012 13:46:08
+Last Changed Date: 01-Jul-2013 20:42:18
 Info: Test - update - see above
 Info: Test - Info: Testing - merge
 
@@ -785,39 +785,39 @@ MM     B:\wc3\test-branch\file-merge-2.txt
 A  +   B:\wc3\test-branch\file-merge-3.txt
 
 Info: PYSVN CMD diff b:\wc3\test-branch
-Index: B:\wc3\test-branch
+Index: B:/wc3/test-branch
 ===================================================================
---- B:\wc3\test-branch	(revision 14)
-+++ B:\wc3\test-branch	(working copy)
+--- B:/wc3/test-branch	(revision 14)
++++ B:/wc3/test-branch	(working copy)
 
-Property changes on: B:\wc3\test-branch
+Property changes on: B:/wc3/test-branch
 ___________________________________________________________________
 Added: svn:mergeinfo
    Merged /trunk/test:r15*
-Index: B:\wc3\test-branch/file-merge-1.txt
+Index: B:/wc3/test-branch/file-merge-1.txt
 ===================================================================
---- B:\wc3\test-branch/file-merge-1.txt	(revision 14)
-+++ B:\wc3\test-branch/file-merge-1.txt	(working copy)
+--- B:/wc3/test-branch/file-merge-1.txt	(revision 14)
++++ B:/wc3/test-branch/file-merge-1.txt	(working copy)
 @@ -1 +0,0 @@
 -test add file merge 1
-Index: B:\wc3\test-branch/file-merge-2.txt
+Index: B:/wc3/test-branch/file-merge-2.txt
 ===================================================================
---- B:\wc3\test-branch/file-merge-2.txt	(revision 14)
-+++ B:\wc3\test-branch/file-merge-2.txt	(working copy)
+--- B:/wc3/test-branch/file-merge-2.txt	(revision 14)
++++ B:/wc3/test-branch/file-merge-2.txt	(working copy)
 @@ -1 +1,2 @@
  test add file merge 2
 +modify merge 2
 
-Property changes on: B:\wc3\test-branch/file-merge-2.txt
+Property changes on: B:/wc3/test-branch/file-merge-2.txt
 ___________________________________________________________________
 Added: svn:mergeinfo
    Merged /trunk/test/file-merge-2.txt:r15
-Index: B:\wc3\test-branch/file-merge-3.txt
+Index: B:/wc3/test-branch/file-merge-3.txt
 ===================================================================
---- B:\wc3\test-branch/file-merge-3.txt	(revision 14)
-+++ B:\wc3\test-branch/file-merge-3.txt	(working copy)
+--- B:/wc3/test-branch/file-merge-3.txt	(revision 14)
++++ B:/wc3/test-branch/file-merge-3.txt	(working copy)
 
-Property changes on: B:\wc3\test-branch/file-merge-3.txt
+Property changes on: B:/wc3/test-branch/file-merge-3.txt
 ___________________________________________________________________
 Added: svn:mergeinfo
    Merged /trunk/test/file-merge-3.txt:r15
