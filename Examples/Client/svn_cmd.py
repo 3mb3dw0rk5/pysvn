@@ -139,7 +139,7 @@ if hasattr( pysvn.wc_notify_action, 'exists' ):
     wc_notify_action_map[ pysvn.wc_notify_action.merge_begin ] = 'merge_begin'
     wc_notify_action_map[ pysvn.wc_notify_action.update_replace ] = 'update_replace'
 
-
+# new in svn 1.6
 if hasattr( pysvn.wc_notify_action, 'property_added' ):
     wc_notify_action_map[ pysvn.wc_notify_action.property_added ] = 'property_added'
     wc_notify_action_map[ pysvn.wc_notify_action.property_modified ] = 'property_modified'
@@ -151,6 +151,7 @@ if hasattr( pysvn.wc_notify_action, 'property_added' ):
     wc_notify_action_map[ pysvn.wc_notify_action.tree_conflict ] = 'tree_conflict'
     wc_notify_action_map[ pysvn.wc_notify_action.failed_external ] = 'failed_external'
 
+# new in svn 1.7
 if hasattr( pysvn.wc_notify_action, 'update_started' ):
     wc_notify_action_map[ pysvn.wc_notify_action.update_started ] = 'update_started'
     wc_notify_action_map[ pysvn.wc_notify_action.update_skip_obstruction ] = 'update_skip_obstruction'
@@ -176,6 +177,22 @@ if hasattr( pysvn.wc_notify_action, 'update_started' ):
     wc_notify_action_map[ pysvn.wc_notify_action.failed_missing ] = 'failed_missing'
     wc_notify_action_map[ pysvn.wc_notify_action.failed_out_of_date ] = 'failed_out_of_date'
     wc_notify_action_map[ pysvn.wc_notify_action.failed_no_parent ] = 'failed_no_parent'
+
+# new in svn 1.7.1+?
+if hasattr( pysvn.wc_notify_action, 'failed_locked' ):
+    wc_notify_action_map[ pysvn.wc_notify_action.failed_locked ] = 'failed_locked'
+    wc_notify_action_map[ pysvn.wc_notify_action.failed_forbidden_by_server ] = 'failed_forbidden_by_server'
+    wc_notify_action_map[ pysvn.wc_notify_action.skip_conflicted ] = 'skip_conflicted'
+
+# new in svn 1.8
+if hasattr( pysvn.wc_notify_action, 'update_broken_lock' ):
+    wc_notify_action_map[ pysvn.wc_notify_action.update_broken_lock ] = 'update_broken_lock'
+    wc_notify_action_map[ pysvn.wc_notify_action.failed_obstruction ] = 'failed_obstruction'
+    wc_notify_action_map[ pysvn.wc_notify_action.conflict_resolver_starting ] = 'conflict_resolver_starting'
+    wc_notify_action_map[ pysvn.wc_notify_action.conflict_resolver_done ] = 'conflict_resolver_done'
+    wc_notify_action_map[ pysvn.wc_notify_action.left_local_modifications ] = 'left_local_modifications'
+    wc_notify_action_map[ pysvn.wc_notify_action.foreign_copy_begin ] = 'foreign_copy_begin'
+    wc_notify_action_map[ pysvn.wc_notify_action.move_broken ] = 'move_broken'
 
 class SvnCommand:
     def __init__( self, progname ):

@@ -174,7 +174,15 @@ template <> EnumString< svn_wc_notify_action_t >::EnumString()
     add( svn_wc_notify_failed_forbidden_by_server, "failed_forbidden_by_server" );
     add( svn_wc_notify_skip_conflicted, "skip_conflicted" );
 #endif
-
+#if defined( PYSVN_HAS_SVN_1_8 )
+    add( svn_wc_notify_update_broken_lock, "update_broken_lock" );
+    add( svn_wc_notify_failed_obstruction, "failed_obstruction" );
+    add( svn_wc_notify_conflict_resolver_starting, "conflict_resolver_starting" );
+    add( svn_wc_notify_conflict_resolver_done, "conflict_resolver_done" );
+    add( svn_wc_notify_left_local_modifications, "left_local_modifications" );
+    add( svn_wc_notify_foreign_copy_begin, "foreign_copy_begin" );
+    add( svn_wc_notify_move_broken, "move_broken" );
+#endif
 }
 
 template <> EnumString< svn_wc_status_kind >::EnumString()
@@ -358,6 +366,10 @@ template <> EnumString< svn_wc_conflict_reason_t >::EnumString()
     add( svn_wc_conflict_reason_missing, "missing" );
     // object is unversioned
     add( svn_wc_conflict_reason_unversioned, "unversioned" );
+#if defined( PYSVN_HAS_SVN_1_8 )
+    add( svn_wc_conflict_reason_moved_away, "moved_away" );
+    add( svn_wc_conflict_reason_moved_here, "moved_here" );
+#endif
 }
 
 #endif

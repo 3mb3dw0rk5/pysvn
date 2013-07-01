@@ -16,8 +16,8 @@
 #error PyCXX version 5.3.5 is required
 #endif
 
-#if PYCXX_VERSION < PYCXX_MAKEVERSION( 5, 3, 5 )
-#error PyCXX version 5.3.5 is required
+#if PYCXX_VERSION < PYCXX_MAKEVERSION( 6, 2, 4 )
+#error PyCXX version 6.2.4 is required
 #endif
 
 #include <svn_version.h>
@@ -172,6 +172,8 @@
 // SVN 1.7 or later
 #if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 7) || SVN_VER_MAJOR > 1
 #define PYSVN_HAS_SVN_1_7
+#define PYSNV_HAS_REPOS_OPEN2 1
+#define PYSNV_HAS_IO_REMOVE_FILE2 1
 #define PYSVN_HAS_CLIENT_BLAME5 QQQ
 #define PYSVN_HAS_CLIENT_COMMIT5 QQQ
 #define PYSVN_HAS_CLIENT_COPY6 QQQ
@@ -197,6 +199,7 @@
 #define PYSVN_HAS_CLIENT_PROPSET_REMOTE QQQ
 #define PYSVN_HAS_CLIENT_RELOCATE2 QQQ
 #define PYSVN_HAS_CLIENT_STATUS5 QQQ
+#define PYSVN_HAS_CLIENT_STATUS_T QQQ
 #define PYSVN_HAS_CLIENT_SWITCH3 QQQ
 #define PYSVN_HAS_CLIENT_UPDATE4 QQQ
 #define PYSVN_HAS_CLIENT_UPGRADE QQQ
@@ -204,11 +207,19 @@
 #define PYSVN_HAS_CLIENT_UUID_FROM_PATH2 QQQ
 #endif
 
+#if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 8) || SVN_VER_MAJOR > 1
+#define PYSVN_HAS_SVN_1_8
+#define PYSVN_HAS_CLIENT_GET_REPOS_ROOT 1
+#define PYSVN_HAS_CLIENT_ADD5 1
+#define PYSVN_HAS_CLIENT_CREATE_CONTEXT2 1
+#endif
 
 #if defined( PYSVN_HAS_CLIENT_STATUS3 )
 typedef svn_wc_status2_t pysvn_wc_status_t;
+
 #elif defined( PYSVN_HAS_CLIENT_STATUS2 )
 typedef svn_wc_status2_t pysvn_wc_status_t;
+
 #else
 typedef svn_wc_status_t pysvn_wc_status_t;
 #endif
