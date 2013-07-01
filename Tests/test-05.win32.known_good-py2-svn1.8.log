@@ -58,17 +58,17 @@ Info: Test - info2 of unlocked files
 
 Info: PYSVN CMD info2 b:\wc1\test\file1.txt
 
-Path: B:\wc1\test\file1.txt
+Path: B:/wc1/test/file1.txt
 Url: file:///B:/repos/trunk/test/file1.txt
 Revision: 3
 Repository root_URL: file:///B:/repos
-Repository UUID: 6a29ce65-26b4-7443-aaa9-da0d19bfadb9
+Repository UUID: 6a2a1220-720b-2043-8ffe-bfd78d666d1a
 Last changed author: barry
-Last Changed Date: 04-Nov-2011 12:21:25
+Last Changed Date: 01-Jul-2013 12:14:55
 Last changed revision: 3
 Node kind: file
 Schedule: normal
-Text Last Updated: 04-Nov-2011 12:21:24
+Text Last Updated: 01-Jul-2013 12:14:55
 Checksum: 1e41522fd7b6b6325667c8554893a6db
 Info: Test - lock unlocked file
 
@@ -85,21 +85,21 @@ Info: Test - info2 of locked files
 
 Info: PYSVN CMD info2 b:\wc1\test\file1.txt
 
-Path: B:\wc1\test\file1.txt
+Path: B:/wc1/test/file1.txt
 Url: file:///B:/repos/trunk/test/file1.txt
 Revision: 3
 Repository root_URL: file:///B:/repos
-Repository UUID: 6a29ce65-26b4-7443-aaa9-da0d19bfadb9
+Repository UUID: 6a2a1220-720b-2043-8ffe-bfd78d666d1a
 Last changed author: barry
-Last Changed Date: 04-Nov-2011 12:21:25
+Last Changed Date: 01-Jul-2013 12:14:55
 Last changed revision: 3
 Node kind: file
 Lock Owner: barry
-Lock Creation Date: 04-Nov-2011 12:21:26
-Lock Token: opaquelocktoken:0e46caa9-a710-7645-a1be-008bc1d1ed17
+Lock Creation Date: 01-Jul-2013 12:14:56
+Lock Token: opaquelocktoken:d119b7dd-8ec3-4647-9214-89aed90d91d9
 Lock Comment:
 Schedule: normal
-Text Last Updated: 04-Nov-2011 12:21:24
+Text Last Updated: 01-Jul-2013 12:14:55
 Checksum: 1e41522fd7b6b6325667c8554893a6db
 Info: Test - attempt to checkin over a locked file
 
@@ -124,22 +124,22 @@ Info: Test - info2 of locked files
 
 Info: PYSVN CMD info2 b:\wc2\test\file1.txt
 
-Path: B:\wc2\test\file1.txt
+Path: B:/wc2/test/file1.txt
 Url: file:///B:/repos/trunk/test/file1.txt
 Revision: 3
 Repository root_URL: file:///B:/repos
-Repository UUID: 6a29ce65-26b4-7443-aaa9-da0d19bfadb9
+Repository UUID: 6a2a1220-720b-2043-8ffe-bfd78d666d1a
 Last changed author: barry
-Last Changed Date: 04-Nov-2011 12:21:25
+Last Changed Date: 01-Jul-2013 12:14:55
 Last changed revision: 3
 Node kind: file
 Lock Owner: barry
-Lock Creation Date: 04-Nov-2011 12:21:27
-Lock Token: opaquelocktoken:5ca644cf-649a-c741-8a7b-6c3a9ded6390
+Lock Creation Date: 01-Jul-2013 12:14:56
+Lock Token: opaquelocktoken:0cd76b2e-3093-384a-afdb-27055836211f
 Lock Comment:
 Stealing lock
 Schedule: normal
-Text Last Updated: 04-Nov-2011 12:21:25
+Text Last Updated: 01-Jul-2013 12:14:56
 Checksum: 1e41522fd7b6b6325667c8554893a6db
 Info: Test - status of locked files
 
@@ -203,8 +203,8 @@ Path: file1.txt
 Url: file:///B:/repos/trunk/test/file1.txt
 Revision: 4
 Repository root_URL: file:///B:/repos
-Repository UUID: 6a29ce65-26b4-7443-aaa9-da0d19bfadb9
+Repository UUID: 6a2a1220-720b-2043-8ffe-bfd78d666d1a
 Last changed author: barry
-Last Changed Date: 04-Nov-2011 12:21:27
+Last Changed Date: 01-Jul-2013 12:14:56
 Last changed revision: 4
 Node kind: file

@@ -17,13 +17,13 @@ rem mkdir
 %PYSVN% mkdir file:///b:/repos/trunk/test -m "test-01 add test"
 
 rem Install hooks
-echo echo %PYTHON% %WORKDIR%\Tests\test_04_commit_hook_test_1.py %%* ^>b:\pre_test_1.output >>b:\repos\hooks\pre-commit.cmd
+echo echo %PYTHON% %WORKDIR%\Tests\test_04_commit_hook_test_1.py pre-commit %%* ^>b:\pre_test_1.output >>b:\repos\hooks\pre-commit.cmd
 echo set PYTHONPATH=%PYTHONPATH% >>b:\repos\hooks\pre-commit.cmd
-echo %PYTHON% %WORKDIR%\Tests\test_04_commit_hook_test_1.py %%* ^>^>b:\pre_test_1.output >>b:\repos\hooks\pre-commit.cmd
+echo %PYTHON% %WORKDIR%\Tests\test_04_commit_hook_test_1.py pre-commit %%* ^>^>b:\pre_test_1.output >>b:\repos\hooks\pre-commit.cmd
 
-echo echo %PYTHON% %WORKDIR%\Tests\test_04_commit_hook_test_1.py %%* is_revision ^>b:\post_test_1.output >>b:\repos\hooks\post-commit.cmd
+echo echo %PYTHON% %WORKDIR%\Tests\test_04_commit_hook_test_1.py post-commit %%* is_revision ^>b:\post_test_1.output >>b:\repos\hooks\post-commit.cmd
 echo set PYTHONPATH=%PYTHONPATH% >>b:\repos\hooks\post-commit.cmd
-echo %PYTHON% %WORKDIR%\Tests\test_04_commit_hook_test_1.py %%* is_revision ^>^>b:\post_test_1.output >>b:\repos\hooks\post-commit.cmd
+echo %PYTHON% %WORKDIR%\Tests\test_04_commit_hook_test_1.py post-commit %%* is_revision ^>^>b:\post_test_1.output >>b:\repos\hooks\post-commit.cmd
 
 rem Add one dir
 %PYSVN% mkdir file:///b:/repos/trunk/test/a -m "pre-commit test 1"
