@@ -770,7 +770,6 @@ class Win32CompilerMSVC90(Compiler):
                     r'%(SVN_LIB)s\libsvn_fs-1.lib',
                     r'%(SVN_LIB)s\libsvn_fs_fs-1.lib',
                     r'%(SVN_LIB)s\libsvn_ra-1.lib',
-                    r'%(SVN_LIB)s\libsvn_ra_neon-1.lib',
                     r'%(SVN_LIB)s\libsvn_ra_local-1.lib',
                     r'%(SVN_LIB)s\libsvn_ra_svn-1.lib',
                     r'%(SVN_LIB)s\libsvn_repos-1.lib',
@@ -783,6 +782,11 @@ class Win32CompilerMSVC90(Compiler):
                     ]
         if os.path.exists( self.expand( r'%(SVN_LIB)s\serf\serf-1.lib' ) ):
             ldlibs.append( r'%(SVN_LIB)s\serf\serf-1.lib' )
+        elif os.path.exists( self.expand( r'%(SVN_LIB)s\libsvn_ra_neon-1.lib' ) ):
+            ldlibs.append( r'%(SVN_LIB)s\libsvn_ra_neon-1.lib' )
+        else:
+            raise SetupError( 'Cannot find serf or neon' )
+
         ldlibs.append( r'ws2_32.lib' )
 
         self._addVar( 'LDLIBS', ' '.join( ldlibs ) )
