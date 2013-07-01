@@ -1,13 +1,24 @@
 import sys
 import pysvn
-print( 'Info: pre commit test 1' )
 
-if len(sys.argv) == 4 and sys.argv[3] == 'is_revision':
-    print( 'Info: Transaction( %s, %s, is_revision=True) ...' % (sys.argv[1], sys.argv[2]) )
-    t = pysvn.Transaction( sys.argv[1], sys.argv[2], is_revision=True )
+cmd = sys.argv[1]
+
+print( 'Info: %s test 1' % (cmd,) )
+
+if len(sys.argv) == 6 and sys.argv[5] == 'is_revision':
+    # starting with svn 1.8 the transaction is in argv[4] but does not seem usable
+    # continue to use the revision
+    print( 'Info: Transaction( %s, %s, is_revision=True) ...' % (sys.argv[2], sys.argv[3]) )
+    t = pysvn.Transaction( sys.argv[2], sys.argv[3], is_revision=True )
+
+elif len(sys.argv) == 5 and sys.argv[4] == 'is_revision':
+    # pre svn 1.8 interface
+    print( 'Info: Transaction( %s, %s, is_revision=True) ...' % (sys.argv[2], sys.argv[3]) )
+    t = pysvn.Transaction( sys.argv[2], sys.argv[3], is_revision=True )
+
 else:
-    print( 'Info: Transaction( %s, %s) ...' % (sys.argv[1], sys.argv[2]) )
-    t = pysvn.Transaction( sys.argv[1], sys.argv[2] )
+    print( 'Info: Transaction( %s, %s) ...' % (sys.argv[2], sys.argv[3]) )
+    t = pysvn.Transaction( sys.argv[2], sys.argv[3] )
 
 print( 'Info: revproplist() ...' )
 all_props = t.revproplist()
