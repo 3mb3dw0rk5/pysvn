@@ -29,6 +29,11 @@ if hasattr( types, 'StringTypes' ):
 else:
     StringTypes = [type( '' )]
 
+if hasattr( types, 'DictType' ):
+    DictType = types.DictType
+else:
+    DictType = type( {} )
+
 class CommandError( Exception ):
     def __init__( self, reason ):
         Exception.__init__( self )
@@ -263,8 +268,13 @@ class SvnCommand:
         print( 'callback_conflict_resolver' )
         for key in sorted( arg_dict.keys() ):
             value = arg_dict[ key ]
-            if type(value) not in StringTypes:
+
+            if type(value) == DictType:
+                value = '{%s}' % (', '.join( ['%r: %r' % (key, value) for key, value in sorted( value.items() )] ),)
+
+            elif type(value) not in StringTypes:
                 value = repr(value)
+
             print( '  %s: %s' % (key, value) )
 
         return pysvn.wc_conflict_choice.postpone, None, False
