@@ -800,7 +800,9 @@ class Win32CompilerMSVC90(Compiler):
         v = {'TN': test_case.test_name
             ,'KGV':  'py%d-svn%d.%d' %
                         (sys.version_info[0]
-                        ,self.getSvnVersion()[0], self.getSvnVersion()[1])}
+                        ,self.getSvnVersion()[0], self.getSvnVersion()[1])
+            ,'SVN_VERSION': '%d.%d.%d' % self.getSvnVersion()
+            }
 
         rules = []
         rules.append( '' )
@@ -814,7 +816,7 @@ class Win32CompilerMSVC90(Compiler):
         rules.append( '\t' 'test-%(TN)s.cmd >test-%(TN)s.win32.new.log 2>&1' % v )
         rules.append( '' )
         rules.append( 'test-%(TN)s.win32.new.log.clean: test-%(TN)s.win32.new.log' % v )
-        rules.append( '\t' '%%(PYTHON)s benchmark_diff.py test-%(TN)s.win32.known_good-%(KGV)s.log test-%(TN)s.win32.new.log' % v )
+        rules.append( '\t' '%%(PYTHON)s benchmark_diff.py %(SVN_VERSION)s test-%(TN)s.win32.known_good-%(KGV)s.log test-%(TN)s.win32.new.log' % v )
         rules.append( '' )
         rules.append( 'clean-%(TN)s:' % v )
         rules.append( '\t' '-subst b: /d >nul 2>&1' % v )
@@ -919,7 +921,10 @@ class CompilerGCC(Compiler):
         v = {'TN': test_case.test_name
             ,'KGV':  'py%d-svn%d.%d' %
                                         (sys.version_info[0]
-                                        ,self.getSvnVersion()[0], self.getSvnVersion()[1])}
+                                        ,self.getSvnVersion()[0], self.getSvnVersion()[1])
+            ,'SVN_VERSION': '%d.%d.%d' % self.getSvnVersion()
+            }
+
         rules = []
         rules.append( '' )
         rules.append( '' )
@@ -928,7 +933,7 @@ class CompilerGCC(Compiler):
         rules.append( '\t' 'LD_LIBRARY_PATH=%%(SVN_LIB)s:%%(APR_LIB)s PATH=%%(SVN_BIN)s:$(PATH) PYTHON=%%(PYTHON)s ./test-%(TN)s.sh >test-%(TN)s.unix.new.log 2>&1' % v )
         rules.append( '' )
         rules.append( 'test-%(TN)s.unix.new.log.clean: test-%(TN)s.unix.new.log' % v )
-        rules.append( '\t' '%%(PYTHON)s benchmark_diff.py test-%(TN)s.unix.known_good-%(KGV)s.log test-%(TN)s.unix.new.log' % v )
+        rules.append( '\t' '%%(PYTHON)s benchmark_diff.py %(SVN_VERSION)s test-%(TN)s.unix.known_good-%(KGV)s.log test-%(TN)s.unix.new.log' % v )
         rules.append( '' )
         rules.append( 'clean-%(TN)s:' % v )
         rules.append( '\t' '-rm -f test-%(TN)s.unix.new.log' % v )

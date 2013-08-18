@@ -51,7 +51,7 @@ class LiteralCaseBlindSearch:
             return None
 
 class ReplaceDirtInString:
-    def __init__( self, lines_list ):
+    def __init__( self, lines_list, svn_version ):
         self.lines_list = lines_list
         self.workdir = self.find( 'WorkDir' )
         self.python = self.find( 'PYTHON' )
@@ -93,18 +93,24 @@ class ReplaceDirtInString:
                         (tmpSvnFile_re,                '/.svn/tmp/<svn-tempfile>'),
                         ]
 
+
+        if( svn_version is not None
+        and (svn_version[0] > 1 or (svn_version[0] == 1 and svn_version[1] >= 8)) ):
+            txn_re = re.compile( r'svn:txn-client-compat-version: \d+.\d+.\d+' )
+            self.replacement_list.append( (txn_re, 'svn:txn-client-compat-version: %d.%d.%d' % svn_version) )
+
         if self.workdir:
             workdir_re1 = LiteralCaseBlindSearch( self.workdir )
             workdir_re2 = LiteralCaseBlindSearch( os.path.realpath( self.workdir ) )
             self.replacement_list.append(
-                 (workdir_re1,        '<workdir>') )
+                 (workdir_re1,          '<workdir>') )
             self.replacement_list.append(
-                 (workdir_re2,        '<workdir>') )
+                 (workdir_re2,          '<workdir>') )
 
         if self.python:
             python_re = LiteralCaseBlindSearch( self.python )
             self.replacement_list.append(
-                 (python_re,        '<PYTHON>') )
+                 (python_re,            '<PYTHON>') )
 
         if True:
             # must replace username after workdir
@@ -143,13 +149,13 @@ class ReplaceDirtInString:
         return line
 
 
-def stripDirty( filename ):
+def stripDirty( filename, svn_version=None ):
     f = open(filename, 'r')
     contents = f.read()
     f.close()
 
     lines = contents.replace( '\r\n', '\n' ).replace( '\r', '\n' ).split( '\n' )
-    replace = ReplaceDirtInString( lines )
+    replace = ReplaceDirtInString( lines, svn_version=None )
     stripped_lines = replace.execute()
 
     return stripped_lines
@@ -160,17 +166,18 @@ def stripDirty( filename ):
  
 def main( argv ):
     try:
-        benchmark_file = argv[1]
-        results_file = argv[2]
+        svn_version = [int(x) for x in argv[1].split('.')]
+        benchmark_file = argv[2]
+        results_file = argv[3]
 
         print( 'Info: Comparing %s' % benchmark_file )
-        benchmark = stripDirty( benchmark_file )
+        benchmark = stripDirty( benchmark_file, svn_version )
         if _debug:
             print( 'Debug: benchmark after we called stripDirty' )
             pprint.pprint( benchmark )
 
         print( 'Info: Against   %s' % results_file )
-        results = stripDirty( results_file )
+        results = stripDirty( results_file, None )
         if _debug:
             print( 'Debug: results after we called stripDirty' )
             pprint.pprint( results )
