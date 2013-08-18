@@ -179,7 +179,7 @@ def main( argv ):
         benchmark_file = argv[2]
         results_file = argv[3]
 
-        print 'Info: SVN Version %d.%d.%d' % svn_version
+        print( 'Info: SVN Version %d.%d.%d' % svn_version )
 
         print( 'Info: Comparing %s' % benchmark_file )
         benchmark = stripDirty( benchmark_file, svn_version )
