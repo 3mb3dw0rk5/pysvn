@@ -56,6 +56,11 @@ class ReplaceDirtInString:
         self.workdir = self.find( 'WorkDir' )
         self.python = self.find( 'PYTHON' )
         self.username = self.find( 'Username' )
+        self.svn_version = svn_version
+        self.txn_replacement = None
+        if self.svn_version is not None:
+            if self.svn_version[0] > 1 or (self.svn_version[0] == 1 and self.svn_version[1] >= 8):
+                self.txn_replacement = 'svn:txn-client-compat-version: %d.%d.%d' % self.svn_version
 
         # ------------------------------------------------------------------------
         # Version strings:
@@ -92,12 +97,6 @@ class ReplaceDirtInString:
                         (dateUnixLs2_re,               '<ls-date-and-time>'),
                         (tmpSvnFile_re,                '/.svn/tmp/<svn-tempfile>'),
                         ]
-
-
-        if( svn_version is not None
-        and (svn_version[0] > 1 or (svn_version[0] == 1 and svn_version[1] >= 8)) ):
-            txn_re = re.compile( r'svn:txn-client-compat-version: \d+.\d+.\d+' )
-            self.replacement_list.append( (txn_re, 'svn:txn-client-compat-version: %d.%d.%d' % svn_version) )
 
         if self.workdir:
             workdir_re1 = LiteralCaseBlindSearch( self.workdir )
@@ -138,6 +137,7 @@ class ReplaceDirtInString:
 
     def replace( self, line ):
         if _debug: print( 'Processing: %r' % (line,) )
+
         for re_expr, replacement_text in self.replacement_list:
             while 1:
                 if _debug: print( '...trying: %r' % (replacement_text,) )
@@ -145,17 +145,26 @@ class ReplaceDirtInString:
                 if match == None:
                     break
                 line = line[0:match.start()] + replacement_text + line[match.end():]
+
+
                 if _debug: print( '...update line: %r' % (line,) )
+
+        x = line.startswith( 'svn:txn-client-compat-version: ' )
+        if( self.txn_replacement is not None
+        and line.startswith( 'svn:txn-client-compat-version: ' ) ):
+            line = self.txn_replacement
+            if _debug: print( '...update line: %r' % (line,) )
+
         return line
 
 
-def stripDirty( filename, svn_version=None ):
+def stripDirty( filename, svn_version ):
     f = open(filename, 'r')
     contents = f.read()
     f.close()
 
     lines = contents.replace( '\r\n', '\n' ).replace( '\r', '\n' ).split( '\n' )
-    replace = ReplaceDirtInString( lines, svn_version=None )
+    replace = ReplaceDirtInString( lines, svn_version )
     stripped_lines = replace.execute()
 
     return stripped_lines
@@ -166,9 +175,11 @@ def stripDirty( filename, svn_version=None ):
  
 def main( argv ):
     try:
-        svn_version = [int(x) for x in argv[1].split('.')]
+        svn_version = tuple( [int(x) for x in argv[1].split('.')] )
         benchmark_file = argv[2]
         results_file = argv[3]
+
+        print 'Info: SVN Version %d.%d.%d' % svn_version
 
         print( 'Info: Comparing %s' % benchmark_file )
         benchmark = stripDirty( benchmark_file, svn_version )
