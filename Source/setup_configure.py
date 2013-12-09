@@ -952,6 +952,12 @@ class MacOsxCompilerGCC(CompilerGCC):
     def __init__( self, setup ):
         CompilerGCC.__init__( self, setup )
 
+        self.macosx_deployment_target = os.environ.get( 'MACOSX_DEPLOYMENT_TARGET', None )
+        if self.macosx_deployment_target is None:
+            raise SetupError( 'Set environment variable MACOSX_DEPLOYMENT_TARGET to desired target' )
+
+        print( 'Info: MACOSX_DEPLOYMENT_TARGET is %s' % (self.macosx_deployment_target,) )
+
         if self.options.hasOption( '--arch' ):
             arch_options = ' '.join( ['-arch %s' % (arch,) for arch in self.options.getOption( '--arch' )] )
         else:
@@ -974,35 +980,25 @@ class MacOsxCompilerGCC(CompilerGCC):
                         '/sw/include/subversion-1',             # Darwin - Fink
                         '/usr/include/subversion-1',            # typical Linux
                         '/usr/local/include/subversion-1',      # typical *BSD
-                        '/usr/pkg/include/subversion-1',        # netbsd
                         ]
         self._find_paths_svn_bin = [
                         '/opt/local/bin',                        # Darwin - darwin ports
-                        '/sw/bin',                                # Darwin - Fink
-                        '/usr/bin',                                # typical Linux
+                        '/sw/bin',                               # Darwin - Fink
+                        '/usr/bin',                              # typical Linux
                         '/usr/local/bin',                        # typical *BSD
-                        '/usr/pkg/bin',                                # netbsd
                         ]
         self._find_paths_svn_lib = [
                         '/opt/local/lib',                       # Darwin - darwin ports
                         '/sw/lib',                              # Darwin - Fink
-                        '/usr/lib64',                           # typical 64bit Linux
                         '/usr/lib',                             # typical Linux
-                        '/usr/local/lib64',                     # typical 64bit Linux
                         '/usr/local/lib',                       # typical *BSD
-                        '/usr/pkg/lib',                         # netbsd
                         ]
         self._find_paths_apr_inc = [
                         '/opt/local/include/apr-1',             # Darwin - darwin ports
                         '/sw/include/apr-1',                    # Darwin - fink
                         '/usr/include/apr-1',                   # typical Linux
                         '/usr/local/apr/include/apr-1',         # Mac OS X www.metissian.com
-                        '/usr/pkg/include/apr-1',               # netbsd
-                        '/usr/include/apache2',                 # alternate Linux
-                        '/usr/include/httpd',                   # alternate Linux
-                        '/usr/local/include/apr-1',             # typical FreeBSD
-                        '/usr/local/include/apr0',              # typical *BSD
-                        '/usr/local/include/apache2',           # alternate *BSD
+                        '/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX%s.sdk/usr/include/apr-1' % (self.macosx_deployment_target,),
                         ]
         self._find_paths_apr_util_inc = self._find_paths_apr_inc
         self._find_paths_apr_lib = [
@@ -1026,7 +1022,7 @@ class MacOsxCompilerGCC(CompilerGCC):
                                         '-g  '
                                         '-no-long-double '
                                         '-Wall -fPIC -fexceptions -frtti '
-                                        '-I. -I%(APR_INC)s -I%(SVN_INC)s '
+                                        '-I. -I%(APR_INC)s -I%(APU_INC)s -I%(SVN_INC)s '
                                         '-D%(DEBUG)s' )
         self._addVar( 'LDEXE',          '%(CCC)s -g' )
 
@@ -1043,7 +1039,7 @@ class MacOsxCompilerGCC(CompilerGCC):
                     '-g',
                     '-no-long-double',
                     '-Wall -fPIC -fexceptions -frtti',
-                    '-I. -I%(APR_INC)s -I%(SVN_INC)s',
+                    '-I. -I%(APR_INC)s -I%(APU_INC)s -I%(SVN_INC)s',
                     '-DPYCXX_PYTHON_2TO3 -I%(PYCXX)s -I%(PYCXX_SRC)s -I%(PYTHON_INC)s',
                     '-D%(DEBUG)s',
                     ]
@@ -1135,7 +1131,7 @@ class UnixCompilerGCC(CompilerGCC):
         self._addVar( 'CCCFLAGS',
                                         '-g  '
                                         '-Wall -fPIC -fexceptions -frtti '
-                                        '-I. -I%(APR_INC)s -I%(SVN_INC)s '
+                                        '-I. -I%(APR_INC)s -I%(APU_INC)s -I%(SVN_INC)s '
                                         '-D%(DEBUG)s' )
         self._addVar( 'LDEXE',          '%(CCC)s -g' )
 
@@ -1149,7 +1145,7 @@ class UnixCompilerGCC(CompilerGCC):
 
         py_cflags_list = [
                     '-Wall -fPIC -fexceptions -frtti',
-                    '-I. -I%(APR_INC)s -I%(SVN_INC)s',
+                    '-I. -I%(APR_INC)s -I%(APU_INC)s -I%(SVN_INC)s',
                     '-DPYCXX_PYTHON_2TO3 -I%(PYCXX)s -I%(PYCXX_SRC)s -I%(PYTHON_INC)s',
                     '-I%(PYTHON_ARCH_SPECIFIC_INC)s',
                     '-D%(DEBUG)s',
