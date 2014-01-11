@@ -145,7 +145,7 @@ Py::Object pysvn_client::cmd_copy2( const Py::Tuple &a_args, const Py::Dict &a_k
             Py::Object py_revprop = args.getArg( name_revprops );
             if( !py_revprop.isNone() )
             {
-                revprops = hashOfStringsFromDistOfStrings( py_revprop, pool );
+                revprops = hashOfStringsFromDictOfStrings( py_revprop, pool );
             }
         }
 
@@ -361,7 +361,7 @@ Py::Object pysvn_client::cmd_move2( const Py::Tuple &a_args, const Py::Dict &a_k
             Py::Object py_revprop = args.getArg( name_revprops );
             if( !py_revprop.isNone() )
             {
-                revprops = hashOfStringsFromDistOfStrings( py_revprop, pool );
+                revprops = hashOfStringsFromDictOfStrings( py_revprop, pool );
             }
         }
 

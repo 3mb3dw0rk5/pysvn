@@ -649,7 +649,7 @@ Py::List toListOfStrings( Py::Object obj )
     return list;
 }
 
-apr_hash_t *hashOfStringsFromDistOfStrings( Py::Object arg, SvnPool &pool )
+apr_hash_t *hashOfStringsFromDictOfStrings( Py::Object arg, SvnPool &pool )
 {
     Py::Dict dict( arg );
 

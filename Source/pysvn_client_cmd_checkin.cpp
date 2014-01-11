@@ -80,7 +80,7 @@ Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a
         Py::Object py_revprop = args.getArg( name_revprops );
         if( !py_revprop.isNone() )
         {
-            revprops = hashOfStringsFromDistOfStrings( py_revprop, pool );
+            revprops = hashOfStringsFromDictOfStrings( py_revprop, pool );
         }
     }
 #endif
