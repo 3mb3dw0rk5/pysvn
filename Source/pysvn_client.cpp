@@ -890,6 +890,9 @@ void pysvn_client::init_type()
     add_keyword_method("move2", &pysvn_client::cmd_move2, pysvn_client_move2_doc );
 #endif
     add_keyword_method("move", &pysvn_client::cmd_move, pysvn_client_move_doc );
+#if defined( PYSVN_HAS_CLIENT_PATCH )
+    add_keyword_method("patch", &pysvn_client::cmd_patch, pysvn_client_patch_doc );
+#endif
     add_keyword_method("propdel", &pysvn_client::cmd_propdel, pysvn_client_propdel_doc );
     add_keyword_method("propget", &pysvn_client::cmd_propget, pysvn_client_propget_doc );
     add_keyword_method("proplist", &pysvn_client::cmd_proplist, pysvn_client_proplist_doc );

@@ -1,6 +1,6 @@
 //
 // ====================================================================
-// Copyright (c) 2003-2009 Barry A Scott.  All rights reserved.
+// Copyright (c) 2003-2013 Barry A Scott.  All rights reserved.
 //
 // This software is licensed as described in the file LICENSE.txt,
 // which you should have received as part of this distribution.
@@ -86,9 +86,9 @@ private:    // methods
     //
     bool contextGetLogin 
         (
-        const std::string & realm,
-        std::string & username, 
-        std::string & password,
+        const std::string &realm,
+        std::string &username, 
+        std::string &password,
         bool &may_save
         );
 
@@ -265,6 +265,9 @@ public:
     Py::Object cmd_move( const Py::Tuple& args, const Py::Dict &kws );
 #if defined( PYSVN_HAS_CLIENT_MOVE4 )
     Py::Object cmd_move2( const Py::Tuple& args, const Py::Dict &kws );
+#endif
+#if defined( PYSVN_HAS_CLIENT_PATCH )
+    Py::Object cmd_patch( const Py::Tuple& args, const Py::Dict &kws );
 #endif
     Py::Object cmd_propdel( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_propget( const Py::Tuple& args, const Py::Dict &kws );
@@ -798,7 +801,7 @@ extern Py::Bytes asUtf8Bytes( Py::Object obj );
 extern apr_array_header_t *targetsFromStringOrList( Py::Object arg, SvnPool &pool );
 extern Py::List toListOfStrings( Py::Object obj );
 extern apr_array_header_t *arrayOfStringsFromListOfStrings( Py::Object arg, SvnPool &pool );
-extern apr_hash_t *hashOfStringsFromDistOfStrings( Py::Object arg, SvnPool &pool );
+extern apr_hash_t *hashOfStringsFromDictOfStrings( Py::Object arg, SvnPool &pool );
 extern Py::Object direntsToObject( apr_hash_t *props, SvnPool &pool );
 
 Py::Object toObject( apr_time_t t );

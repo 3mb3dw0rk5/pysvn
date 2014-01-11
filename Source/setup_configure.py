@@ -248,6 +248,7 @@ class Setup:
             Source( self.c_pysvn, 'pysvn_client_cmd_list.cpp', pysvn_headers ),
             Source( self.c_pysvn, 'pysvn_client_cmd_lock.cpp', pysvn_headers ),
             Source( self.c_pysvn, 'pysvn_client_cmd_merge.cpp', pysvn_headers ),
+            Source( self.c_pysvn, 'pysvn_client_cmd_patch.cpp', pysvn_headers ),
             Source( self.c_pysvn, 'pysvn_client_cmd_prop.cpp', pysvn_headers ),
             Source( self.c_pysvn, 'pysvn_client_cmd_revprop.cpp', pysvn_headers ),
             Source( self.c_pysvn, 'pysvn_client_cmd_switch.cpp', pysvn_headers ),
@@ -315,6 +316,7 @@ class Setup:
             TestCase( self.c_pysvn, '05' ),
             TestCase( self.c_pysvn, '06' ),
             TestCase( self.c_pysvn, '07' ),
+            TestCase( self.c_pysvn, '08' ),
             ]
 
         all_extra_test_cases = [

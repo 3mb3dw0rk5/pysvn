@@ -741,9 +741,13 @@ class SvnCommand:
                 recurse=recurse, dry_run=dry_run, notice_ancestry=notice_ancestry )
 
     def cmd_mkdir( self, args ):
-        msg = args.getOptionalValue( '--message', '' )
-        if msg == '':
-            msg = self.getLogMessage()
+        if args.haveOption( '--message' ):
+            msg = args.getOptionalValue( '--message', '' )
+            if msg == '':
+                msg = self.getLogMessage()
+
+        else:
+            msg = ''
 
         self.client.mkdir( args.getPositionalArgs( 1, 1 )[0], msg )
 
@@ -751,6 +755,22 @@ class SvnCommand:
         positional_args = args.getPositionalArgs( 2, 2 )
         self.client.move( positional_args[0], positional_args[1] )
     cmd_mv = cmd_move
+
+    def cmd_patch( self, args ):
+        dry_run = args.getBooleanOption( '--dry-run', True )
+        reverse = args.getBooleanOption( '--reverse', True )
+        ignore_whitespace = args.getBooleanOption( '--ignore-whitespace', True )
+        remove_tempfiles = not args.getBooleanOption( '--no-remove-tempfiles', True )
+
+        patch_path, wc_dir_path = args.getPositionalArgs( 2, 2 )
+        abs_patch_path = os.path.abspath( patch_path )
+        abs_wc_dir_path = os.path.abspath( wc_dir_path )
+
+        self.client.patch( abs_patch_path, abs_wc_dir_path,
+                            dry_run=dry_run,
+                            reverse=reverse,
+                            ignore_whitespace=ignore_whitespace,
+                            remove_tempfiles=remove_tempfiles )
 
     def key_props_by_path( self, a ):
         return a[0]
@@ -1053,6 +1073,7 @@ long_opt_info = {
     '--no-auto-props': 0,       # disable automatic properties
     '--no-diff-deleted': 0,     # do not print differences for deleted files
     '--no-ignore': 0,           # disregard default and svn:ignore property ignores
+    '--no-remove-tempfiles': 0, # do not remove temp files
     '--non-interactive': 0,     # do no interactive prompting
     '--notice-ancestry': 0,     # notice ancestry when calculating differences
     '--old': 1,                 # use ARG as the older target
@@ -1269,7 +1290,7 @@ class SvnArguments:
     def getPositionalArgs( self, min_args, max_args=0 ):
         # check min and max then return the list
         if len(self.positional_args) < min_args:
-            raise CommandError( 'too few arguments - need atlease %d' % min_args )
+            raise CommandError( 'too few arguments - need at least %d' % min_args )
         if max_args != 0 and len(self.positional_args) > max_args:
             raise CommandError( 'too many arguments - need no more then %d' % max_args )
 

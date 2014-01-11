@@ -535,42 +535,42 @@ It is passed the conflict_description and must return a conflict_choice, merge_f
 </tr>
 <tr>
 <td><a href="#pysvn_client_move">move</a></td>
-<td><span class="svn_1005000"><a href="#pysvn_client_copy2">copy2</a></span></td>
+<td><span class="svn_1005000"><a href="#pysvn_client_move2">move2</a></span></td>
+<td><span class="svn_1007000"><a href="#pysvn_client_patch">patch</a></span></td>
 <td><a href="#pysvn_client_propdel">propdel</a></td>
 <td><a href="#pysvn_client_propget">propget</a></td>
 <td><a href="#pysvn_client_proplist">proplist</a></td>
-<td><a href="#pysvn_client_propset">propset</a></td>
 </tr>
 <tr bgcolor="#e0e0e0">
+<td><a href="#pysvn_client_propset">propset</a></td>
 <td><a href="#pysvn_client_relocate">relocate</a></td>
 <td><a href="#pysvn_client_remove">remove</a></td>
 <td><span class="svn_1005000"><a href="#pysvn_client_remove_from_changelists">remove_from_changelists</a></span></td>
 <td><a href="#pysvn_client_resolved">resolved</a></td>
 <td><a href="#pysvn_client_revert">revert</a></td>
-<td><a href="#pysvn_client_revpropdel">revpropdel</a></td>
 </tr>
 <tr>
+<td><a href="#pysvn_client_revpropdel">revpropdel</a></td>
 <td><a href="#pysvn_client_revpropget">revpropget</a></td>
 <td><a href="#pysvn_client_revproplist">revproplist</a></td>
 <td><a href="#pysvn_client_revpropset">revpropset</a></td>
 <td><span class="svn_1005000"><a href="#pysvn_client_root_url_from_path">root_url_from_path</a></span></td>
 <td><span class="svn_1003000"><a href="#pysvn_client_set_adm_dir">set_adm_dir</a></span></td>
-<td><a href="#pysvn_client_set_auth_cache">set_auth_cache</a></td>
 </tr>
 <tr bgcolor="#e0e0e0">
+<td><a href="#pysvn_client_set_auth_cache">set_auth_cache</a></td>
 <td><a href="#pysvn_client_set_auto_props">set_auto_props</a></td>
 <td><a href="#pysvn_client_set_default_password">set_default_password</a></td>
 <td><a href="#pysvn_client_set_default_username">set_default_username</a></td>
 <td><a href="#pysvn_client_set_interactive">set_interactive</a></td>
 <td><a href="#pysvn_client_set_store_passwords">set_store_passwords</a></td>
-<td><a href="#pysvn_client_status">status</a></td>
 </tr>
 <tr>
+<td><a href="#pysvn_client_status">status</a></td>
 <td><a href="#pysvn_client_switch">switch</a></td>
 <td><span class="svn_1002000"><a href="#pysvn_client_unlock">unlock</a></span></td>
 <td><a href="#pysvn_client_update">update</a></td>
 <td><span class="svn_1007000"><a href="#pysvn_client_upgrade">upgrade</a></span></td>
-<td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
 </table>
@@ -1652,6 +1652,61 @@ callback must be implemented to return a log message.
 </p>
 </div>
 
+<div class="svn_1005000">
+<h4><a name="pysvn_client_patch"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.patch</a></h4>
+<pre>
+svn_client_patch(patch_abspath,
+                 wc_dir_abspath,
+                 dry_run=False,
+                 strip_count=0,
+                 reverse=False,
+                 ignore_whitespace=False,
+                 remove_tempfiles=False)
+</pre>
+<p>
+Apply a unidiff patch that's located at absolute path
+patch_abspath to the working copy directory at wc_dir_abspath.
+</p>
+<p>
+This function makes a best-effort attempt at applying the patch.
+It might skip patch targets which cannot be patched (e.g. targets
+that are outside of the working copy). It will also reject hunks
+which cannot be applied to a target in case the hunk's context
+does not match anywhere in the patch target.
+</p>
+<p>
+If dry_run is True, the patching process is carried out, and full
+notification feedback is provided, but the working copy is not modified.
+</p>
+<p>
+strip_count specifies how many leading path components should be
+stripped from paths obtained from the patch. It is an error if a
+negative strip count is passed.
+</p>
+<p>
+If reverse is True, apply patches in reverse, deleting lines
+the patch would add and adding lines the patch would delete.
+</p>
+<p>
+If ignore_whitespace is True, allow patches to be applied if they
+only differ from the target by whitespace.
+</p>
+<p>
+If remove_tempfiles is True, lifetimes of temporary files created
+during patching will be managed internally. Otherwise, the caller should
+take ownership of these files, the names of which can be obtained by
+passing a patch_func callback.
+</p>
+<p>
+If notify_func is not None, invoke notify_func
+ as patching progresses.
+</p>
+<p>
+If cancel_func is not None, invoke it at various places during the operation.
+</p>
+
+</div>
+
 <h4><a name="pysvn_client_propdel"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.propdel</a></h4>
 <pre>
 rev = \
@@ -1666,10 +1721,10 @@ propdel( prop_name,
 </pre>
 <p>Delete the property prop_name from url_or_path.
 </p>
-<p><span class="svn_1002000">If  skip_checks is true, do no validity checking.  But if 
+<p><span class="svn_1002000">If skip_checks is true, do no validity checking. But if 
 skip_checks is false, and  propname is not a valid property for 
-target, return an error, either  SVN_ERR_ILLEGAL_TARGET (if the
-property is not appropriate for  target), or 
+target, return an error, either SVN_ERR_ILLEGAL_TARGET (if the
+property is not appropriate for target), or 
 SVN_ERR_BAD_MIME_TYPE (if  propname is "svn:mime-type", but 
 propval is not a valid mime-type).</span>
 </p>
