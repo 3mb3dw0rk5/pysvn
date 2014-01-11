@@ -221,6 +221,7 @@ Py::Object pysvn_client::cmd_mkdir( const Py::Tuple &a_args, const Py::Dict &a_k
 
     // args to the mkdir call
     std::string message;
+    bool have_message = false;
 
     SvnPool pool( m_context );
 
@@ -235,7 +236,7 @@ Py::Object pysvn_client::cmd_mkdir( const Py::Tuple &a_args, const Py::Dict &a_k
         Py::Object py_revprop = args.getArg( name_revprops );
         if( !py_revprop.isNone() )
         {
-            revprops = hashOfStringsFromDistOfStrings( py_revprop, pool );
+            revprops = hashOfStringsFromDictOfStrings( py_revprop, pool );
         }
     }
 #endif
@@ -243,8 +244,11 @@ Py::Object pysvn_client::cmd_mkdir( const Py::Tuple &a_args, const Py::Dict &a_k
     try
     {
         type_error_message = "expecting string message (arg 2)";
-        message = args.getUtf8String( name_log_message );
-
+        if( args.hasArg( name_log_message ) )
+        {
+            message = args.getUtf8String( name_log_message );
+            have_message = true;
+        }
     }
     catch( Py::TypeError & )
     {
@@ -259,8 +263,10 @@ Py::Object pysvn_client::cmd_mkdir( const Py::Tuple &a_args, const Py::Dict &a_k
 
         PythonAllowThreads permission( m_context );
 
-        m_context.setLogMessage( message.c_str() );
-
+        if( have_message )
+        {
+            m_context.setLogMessage( message.c_str() );
+        }
 
 #if defined( PYSVN_HAS_CLIENT_MKDIR3 )
         svn_error_t *error = svn_client_mkdir3
@@ -332,7 +338,7 @@ Py::Object pysvn_client::cmd_remove( const Py::Tuple &a_args, const Py::Dict &a_
         Py::Object py_revprop = args.getArg( name_revprops );
         if( !py_revprop.isNone() )
         {
-            revprops = hashOfStringsFromDistOfStrings( py_revprop, pool );
+            revprops = hashOfStringsFromDictOfStrings( py_revprop, pool );
         }
     }
 #endif
