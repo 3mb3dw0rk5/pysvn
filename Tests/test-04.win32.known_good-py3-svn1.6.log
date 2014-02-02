@@ -24,17 +24,17 @@ B:\ > c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Examples\Client\svn
 
 B:\ > rem Install hooks 
 
-B:\ > echo echo c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py %* >b:\pre_test_1.output  1>>b:\repos\hooks\pre-commit.cmd 
+B:\ > echo echo c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py pre-commit %* >b:\pre_test_1.output  1>>b:\repos\hooks\pre-commit.cmd 
 
 B:\ > echo set PYTHONPATH=C:\wc\svn\pysvn\Extension\Source;C:\wc\svn\pysvn\Extension\Examples\Client  1>>b:\repos\hooks\pre-commit.cmd 
 
-B:\ > echo c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py %* >>b:\pre_test_1.output  1>>b:\repos\hooks\pre-commit.cmd 
+B:\ > echo c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py pre-commit %* >>b:\pre_test_1.output  1>>b:\repos\hooks\pre-commit.cmd 
 
-B:\ > echo echo c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py %* is_revision >b:\post_test_1.output  1>>b:\repos\hooks\post-commit.cmd 
+B:\ > echo echo c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py post-commit %* is_revision >b:\post_test_1.output  1>>b:\repos\hooks\post-commit.cmd 
 
 B:\ > echo set PYTHONPATH=C:\wc\svn\pysvn\Extension\Source;C:\wc\svn\pysvn\Extension\Examples\Client  1>>b:\repos\hooks\post-commit.cmd 
 
-B:\ > echo c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py %* is_revision >>b:\post_test_1.output  1>>b:\repos\hooks\post-commit.cmd 
+B:\ > echo c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py post-commit %* is_revision >>b:\post_test_1.output  1>>b:\repos\hooks\post-commit.cmd 
 
 B:\ > rem Add one dir 
 
@@ -43,13 +43,13 @@ B:\ > c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Examples\Client\svn
 B:\ > rem pre_test_1.output start ---------------------------------------- 
 
 B:\ > type b:\pre_test_1.output 
-c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py B:\repos 2-2  
-Info: pre commit test 1
+c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py pre-commit B:\repos 2-2  
+Info: pre-commit test 1
 Info: Transaction( B:\repos, 2-2) ...
 Info: revproplist() ...
 svn:author: barry
 svn:check-locks: true
-svn:date: 2012-11-19T19:13:48.732162Z
+svn:date: 2014-02-02T14:38:48.683810Z
 svn:log: pre-commit test 1
 Info: changed() ...
 trunk/test/a: action='A', kind=<node_kind.dir>, text_mod=0, prop_mod=0
@@ -65,12 +65,12 @@ B:\ > rem  pre_test_1.output end ------------------------------------------
 B:\ > rem post_test_1.output start ---------------------------------------- 
 
 B:\ > type b:\post_test_1.output 
-c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py B:\repos 3 is_revision  
-Info: pre commit test 1
+c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py post-commit B:\repos 3 is_revision  
+Info: post-commit test 1
 Info: Transaction( B:\repos, 3, is_revision=True) ...
 Info: revproplist() ...
 svn:author: barry
-svn:date: 2012-11-19T19:13:48.856950Z
+svn:date: 2014-02-02T14:38:48.824206Z
 svn:log: pre-commit test 1
 Info: changed() ...
 trunk/test/a: action='A', kind=<node_kind.dir>, text_mod=0, prop_mod=0
@@ -108,13 +108,13 @@ Revision 4
 B:\ > rem pre_test_1.output start ---------------------------------------- 
 
 B:\ > type b:\pre_test_1.output 
-c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py B:\repos 3-3  
-Info: pre commit test 1
+c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py pre-commit B:\repos 3-3  
+Info: pre-commit test 1
 Info: Transaction( B:\repos, 3-3) ...
 Info: revproplist() ...
 svn:author: barry
 svn:check-locks: true
-svn:date: 2012-11-19T19:13:49.402897Z
+svn:date: 2014-02-02T14:38:49.479390Z
 svn:log: Add two files
 Info: changed() ...
 trunk/test/a/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0
@@ -138,12 +138,12 @@ B:\ > rem  pre_test_1.output end ------------------------------------------
 B:\ > rem post_test_1.output start ---------------------------------------- 
 
 B:\ > type b:\post_test_1.output 
-c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py B:\repos 4 is_revision  
-Info: pre commit test 1
+c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py post-commit B:\repos 4 is_revision  
+Info: post-commit test 1
 Info: Transaction( B:\repos, 4, is_revision=True) ...
 Info: revproplist() ...
 svn:author: barry
-svn:date: 2012-11-19T19:13:49.543284Z
+svn:date: 2014-02-02T14:38:49.666585Z
 svn:log: Add two files
 Info: changed() ...
 trunk/test/a/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0
@@ -179,13 +179,13 @@ Revision 5
 B:\ > rem pre_test_1.output start ---------------------------------------- 
 
 B:\ > type b:\pre_test_1.output 
-c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py B:\repos 4-4  
-Info: pre commit test 1
+c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py pre-commit B:\repos 4-4  
+Info: pre-commit test 1
 Info: Transaction( B:\repos, 4-4) ...
 Info: revproplist() ...
 svn:author: barry
 svn:check-locks: true
-svn:date: 2012-11-19T19:13:49.886451Z
+svn:date: 2014-02-02T14:38:50.118973Z
 svn:log: Mod one file Mod one prop
 Info: changed() ...
 trunk/test/a/file1.txt: action='R', kind=<node_kind.file>, text_mod=1, prop_mod=1
@@ -211,12 +211,12 @@ B:\ > rem  pre_test_1.output end ------------------------------------------
 B:\ > rem post_test_1.output start ---------------------------------------- 
 
 B:\ > type b:\post_test_1.output 
-c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py B:\repos 5 is_revision  
-Info: pre commit test 1
+c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py post-commit B:\repos 5 is_revision  
+Info: post-commit test 1
 Info: Transaction( B:\repos, 5, is_revision=True) ...
 Info: revproplist() ...
 svn:author: barry
-svn:date: 2012-11-19T19:13:50.026837Z
+svn:date: 2014-02-02T14:38:50.290569Z
 svn:log: Mod one file Mod one prop
 Info: changed() ...
 trunk/test/a/file1.txt: action='R', kind=<node_kind.file>, text_mod=1, prop_mod=1
@@ -251,13 +251,13 @@ Revision 6
 B:\ > rem pre_test_1.output start ---------------------------------------- 
 
 B:\ > type b:\pre_test_1.output 
-c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py B:\repos 5-5  
-Info: pre commit test 1
+c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py pre-commit B:\repos 5-5  
+Info: pre-commit test 1
 Info: Transaction( B:\repos, 5-5) ...
 Info: revproplist() ...
 svn:author: barry
 svn:check-locks: true
-svn:date: 2012-11-19T19:13:50.370004Z
+svn:date: 2014-02-02T14:38:50.742957Z
 svn:log: Delete one file
 Info: changed() ...
 trunk/test/a/file1.txt: action='D', kind=<node_kind.file>, text_mod=0, prop_mod=0
@@ -274,12 +274,12 @@ B:\ > rem  pre_test_1.output end ------------------------------------------
 B:\ > rem post_test_1.output start ---------------------------------------- 
 
 B:\ > type b:\post_test_1.output 
-c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py B:\repos 6 is_revision  
-Info: pre commit test 1
+c:\python32.win32\python.exe C:\wc\svn\pysvn\Extension\Tests\test_04_commit_hook_test_1.py post-commit B:\repos 6 is_revision  
+Info: post-commit test 1
 Info: Transaction( B:\repos, 6, is_revision=True) ...
 Info: revproplist() ...
 svn:author: barry
-svn:date: 2012-11-19T19:13:50.479194Z
+svn:date: 2014-02-02T14:38:50.883354Z
 svn:log: Delete one file
 Info: changed() ...
 trunk/test/a/file1.txt: action='D', kind=<node_kind.file>, text_mod=0, prop_mod=0
