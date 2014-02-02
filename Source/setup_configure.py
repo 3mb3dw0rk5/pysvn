@@ -307,28 +307,35 @@ class Setup:
 
         return 0
 
+    def __filterTestCases( self, all_test_case_candidates ):
+        all_test_cases = []
+        for tc in all_test_case_candidates:
+            if tc.isTestSupported():
+                all_test_cases.append( tc )
+            else:
+                print( 'Info: svn testcase %s skipped - svn version too old' % (tc.test_name,) )
+
+        return all_test_cases
+
     def generateTestMakefile( self ):
         print( 'Info: Creating Makefile for Tests' )
 
-        all_normal_test_cases = [
+        all_normal_test_cases = self.__filterTestCases( [
             TestCase( self.c_pysvn, '01' ),
             TestCase( self.c_pysvn, '04' ),
             TestCase( self.c_pysvn, '05' ),
             TestCase( self.c_pysvn, '06' ),
             TestCase( self.c_pysvn, '07' ),
             TestCase( self.c_pysvn, '08', (1,7,0) ),
-            ]
+            ] )
 
-        all_extra_test_cases = [
+        all_extra_test_cases = self.__filterTestCases( [
             TestCase( self.c_pysvn, '03' ),
-            ]
+            ] )
 
         all_test_cases = []
-        for tc in all_normal_test_cases + all_extra_test_cases:
-            if tc.isTestSupported():
-                all_test_cases.append( tc )
-            else:
-                print( 'Info: svn testcase %s skipped - svn version too old' % (tc.test_name,) )
+        all_test_cases.extend( all_normal_test_cases )
+        all_test_cases.extend( all_extra_test_cases )
 
         self.__makefile = open( '../Tests/Makefile', 'wt' )
 
