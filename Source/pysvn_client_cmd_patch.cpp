@@ -91,8 +91,8 @@ Py::Object pysvn_client::cmd_patch( const Py::Tuple &a_args, const Py::Dict &a_k
 
         svn_error_t *error = svn_client_patch
             (
-            patch_abspath.c_str(),
-            wc_dir_abspath.c_str(),
+            norm_patch_abspath.c_str(),
+            norm_wc_dir_abspath.c_str(),
             dry_run,
             strip_count,
             reverse,
