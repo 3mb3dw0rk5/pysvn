@@ -316,7 +316,7 @@ class Setup:
             TestCase( self.c_pysvn, '05' ),
             TestCase( self.c_pysvn, '06' ),
             TestCase( self.c_pysvn, '07' ),
-            TestCase( self.c_pysvn, '08' ),
+            TestCase( self.c_pysvn, '08', (1,7,0) ),
             ]
 
         all_extra_test_cases = [
@@ -324,8 +324,11 @@ class Setup:
             ]
 
         all_test_cases = []
-        all_test_cases.extend( all_normal_test_cases )
-        all_test_cases.extend( all_extra_test_cases )
+        for tc in all_normal_test_cases + all_extra_test_cases:
+            if tc.isTestSupported():
+                all_test_cases.append( tc )
+            else:
+                print( 'Info: svn testcase %s skipped - svn version too old' % (tc.test_name,) )
 
         self.__makefile = open( '../Tests/Makefile', 'wt' )
 
@@ -1611,12 +1614,21 @@ class PysvnModuleInit(Source):
         self.ruleClean()
 
 class TestCase(Target):
-    def __init__( self, compiler, test_name ):
+    def __init__( self, compiler, test_name, required_version=None ):
         self.test_name = test_name
+
+        if required_version is None:
+            self.required_version = (1,0,0)
+
+        else:
+            self.required_version = required_version
 
         Target.__init__( self, compiler, [] )
 
         debug( 'TestCase:0x%8.8x.__init__( %r )' % (id(self), test_name) )
+
+    def isTestSupported( self ):
+        return self.compiler.getSvnVersion() >= self.required_version
 
     def __repr__( self ):
         return '<TestCase:0x%8.8x %s>' % (id(self), self.test_name)
