@@ -1183,6 +1183,7 @@ class LinuxCompilerGCC(UnixCompilerGCC):
     def _getLdLibs( self ):
         py_ld_libs = [
                 '-L%(SVN_LIB)s',
+                '-L%(APR_LIB)s',
                 ]
         if not self.setup.options.hasOption( '--norpath' ):
             py_ld_libs.extend( [
@@ -1207,6 +1208,7 @@ class FreeBsdCompilerGCC(UnixCompilerGCC):
     def _getLdLibs( self ):
         py_ld_libs = [
                 '-L%(SVN_LIB)s',
+                '-L%(APR_LIB)s',
                 '-Wl,--rpath',
                 '-Wl,/usr/lib:/usr/local/lib',
                 '-lsvn_client-1',
@@ -1231,6 +1233,7 @@ class CygwinCompilerGCC(UnixCompilerGCC):
     def _getLdLibs( self ):
         py_ld_libs = [
                 '-L%(svn_lib_dir)s',
+                '-L%(apr_lib_dir)s',
                 '-L/usr/lib/python%d.%d/config -lpython%d.%d.dll' %
                     (sys.version_info[0], sys.version_info[1], sys.version_info[0], sys.version_info[1]),
                 '-lsvn_client-1',
