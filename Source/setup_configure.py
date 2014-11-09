@@ -1032,7 +1032,6 @@ class MacOsxCompilerGCC(CompilerGCC):
     def setupUtilities( self ):
         self._addVar( 'CCCFLAGS',
                                         '-g  '
-                                        '-no-long-double '
                                         '-Wall -fPIC -fexceptions -frtti '
                                         '-I. -I%(APR_INC)s -I%(APU_INC)s -I%(SVN_INC)s '
                                         '-D%(DEBUG)s' )
@@ -1049,7 +1048,6 @@ class MacOsxCompilerGCC(CompilerGCC):
 
         py_cflags_list = [
                     '-g',
-                    '-no-long-double',
                     '-Wall -fPIC -fexceptions -frtti',
                     '-I. -I%(APR_INC)s -I%(APU_INC)s -I%(SVN_INC)s',
                     '-DPYCXX_PYTHON_2TO3 -I%(PYCXX)s -I%(PYCXX_SRC)s -I%(PYTHON_INC)s',
