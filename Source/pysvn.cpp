@@ -24,6 +24,11 @@
 
 #include "pysvn_static_strings.hpp"
 
+extern "C" int pysvn_breakpoint()
+{
+    return 0;
+}
+
 pysvn_module::pysvn_module()
 : Py::ExtensionModule<pysvn_module>( "pysvn" )
 , client_error()

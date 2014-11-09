@@ -18,6 +18,8 @@
 #include <list>
 #include <map>
 
+extern "C" int pysvn_breakpoint();
+
 //--------------------------------------------------------------------------------
 class pysvn_module : public Py::ExtensionModule<pysvn_module>
 {
