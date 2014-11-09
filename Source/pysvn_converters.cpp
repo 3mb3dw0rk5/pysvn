@@ -288,6 +288,7 @@ Py::Object toObject
     // local mods received conflicting repos mods
     case svn_wc_status_conflicted:
         is_versioned = 1;
+        break;
 
     // an unversioned resource is in the way of the versioned resource
     case svn_wc_status_obstructed:
