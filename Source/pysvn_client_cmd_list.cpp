@@ -20,13 +20,7 @@
 #include "pysvn_svnenv.hpp"
 #include "svn_path.h"
 #include "svn_config.h"
-#include "svn_sorts.h"
 #include "pysvn_static_strings.hpp"
-
-static int compare_items_as_paths( const svn_sort__item_t *a, const svn_sort__item_t *b)
-{
-    return svn_path_compare_paths ((const char *)a->key, (const char *)b->key);
-}
 
 Py::Object pysvn_client::cmd_ls( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
@@ -100,9 +94,6 @@ Py::Object pysvn_client::cmd_ls( const Py::Tuple &a_args, const Py::Dict &a_kws 
         throw_client_error( e );
     }
 
-
-    apr_array_header_t *array = svn_sort__hash( hash, compare_items_as_paths, pool );
-
     std::string base_path;
     if( !norm_path.empty() )
     {
@@ -113,12 +104,16 @@ Py::Object pysvn_client::cmd_ls( const Py::Tuple &a_args, const Py::Dict &a_kws 
     // convert the entries into python objects
     Py::List entries_list;
 
-    for( int i = 0; i < array->nelts; ++i )
+    for( apr_hash_index_t *hi = apr_hash_first( pool, hash );
+            hi != NULL;
+                hi = apr_hash_next( hi ) )
     {
-        svn_sort__item_t *item = &APR_ARRAY_IDX( array, i, svn_sort__item_t );
+        const void *key;
+        void *val;
+        apr_hash_this( hi, &key, NULL, &val );
 
-        const char *utf8_entryname = static_cast<const char *>( item->key );
-        svn_dirent_t *dirent = static_cast<svn_dirent_t *>( apr_hash_get( hash, utf8_entryname, item->klen ) );
+        const char *utf8_entryname = static_cast<const char *>( key );
+        svn_dirent_t *dirent = static_cast<svn_dirent_t *>( val );
 
         std::string full_name( base_path );
         full_name += utf8_entryname;

@@ -22,28 +22,28 @@ template <> EnumString< svn_opt_revision_kind >::EnumString()
 : m_type_name( "opt_revision_kind" )
 {
     // No revision information given.
-    add(svn_opt_revision_unspecified, "unspecified");
+    add( svn_opt_revision_unspecified, "unspecified" );
 
     // revision given as number
-    add(svn_opt_revision_number, "number");
+    add( svn_opt_revision_number, "number" );
 
     // revision given as date
-    add(svn_opt_revision_date, "date");
+    add( svn_opt_revision_date, "date" );
 
     // rev of most recent change
-    add(svn_opt_revision_committed, "committed");
+    add( svn_opt_revision_committed, "committed" );
 
     // (rev of most recent change) - 1
-    add(svn_opt_revision_previous, "previous");
+    add( svn_opt_revision_previous, "previous" );
 
     // .svn/entries current revision
-    add(svn_opt_revision_base, "base");
+    add( svn_opt_revision_base, "base" );
 
     // current, plus local mods
-    add(svn_opt_revision_working, "working");
+    add( svn_opt_revision_working, "working" );
 
     // repository youngest
-    add(svn_opt_revision_head, "head");
+    add( svn_opt_revision_head, "head" );
 }
 
 template <> EnumString< svn_wc_notify_action_t >::EnumString()
@@ -54,6 +54,7 @@ template <> EnumString< svn_wc_notify_action_t >::EnumString()
 
     // Copying a versioned path.
     add( svn_wc_notify_copy, "copy" );
+
     // Deleting a versioned path.
     add( svn_wc_notify_delete, "delete" );
 
@@ -183,6 +184,13 @@ template <> EnumString< svn_wc_notify_action_t >::EnumString()
     add( svn_wc_notify_foreign_copy_begin, "foreign_copy_begin" );
     add( svn_wc_notify_move_broken, "move_broken" );
 #endif
+#if defined( PYSVN_HAS_SVN_1_9 )
+    add( svn_wc_notify_cleanup_external, "cleanup_external" );
+    add( svn_wc_notify_failed_requires_target, "failed_requires_target" );
+    add( svn_wc_notify_info_external, "info_external" );
+    add( svn_wc_notify_commit_finalizing, "commit_finalizing" );
+#endif
+
 }
 
 template <> EnumString< svn_wc_status_kind >::EnumString()
@@ -275,6 +283,10 @@ template <> EnumString< svn_wc_notify_state_t >::EnumString()
 
     // Modified state got conflicting mods.
     add( svn_wc_notify_state_conflicted, "conflicted" );
+
+    // QQQ: When was this symbol added?
+    // The source to copy the file from is missing.
+    add( svn_wc_notify_state_source_missing, "source_missing" );
 }
 
 template <> EnumString< svn_wc_schedule_t >::EnumString()
@@ -307,6 +319,14 @@ template <> EnumString< svn_node_kind_t >::EnumString()
 
     // something's here, but we don't know what
     add( svn_node_unknown, "unknown" );
+
+#if defined( PYSVN_HAS_SVN_1_8 )
+   // symbolic link
+   // @note This value is not currently used by the public API.
+  add( svn_node_symlink, "symlink" );
+#endif
+
+
 }
 
 #if defined( PYSVN_HAS_DIFF_FILE_IGNORE_SPACE )
@@ -399,12 +419,22 @@ template <> EnumString< svn_wc_conflict_choice_t >::EnumString()
     // If their were files to choose from, select one as a way of
     // resolving the conflict here and now.  libsvn_wc will then do the
     // work of "installing" the chosen file.
-    add( svn_wc_conflict_choose_base, "base" );   // user chooses the original version
-    add( svn_wc_conflict_choose_theirs_full, "theirs_full" ); // user chooses incoming version
-    add( svn_wc_conflict_choose_mine_full, "mine_full" );   // user chooses own version
-    add( svn_wc_conflict_choose_theirs_conflict, "theirs_conflict" ); // user chooses incoming (for conflicted hunks)
-    add( svn_wc_conflict_choose_mine_conflict, "mine_conflict" );   // user chooses own (for conflicted hunks)
-    add( svn_wc_conflict_choose_merged, "merged" ); // user chooses the merged version
+    // user chooses the original version
+    add( svn_wc_conflict_choose_base, "base" );
+    // user chooses incoming version
+    add( svn_wc_conflict_choose_theirs_full, "theirs_full" );
+    // user chooses own version
+    add( svn_wc_conflict_choose_mine_full, "mine_full" );
+    // user chooses incoming (for conflicted hunks)
+    add( svn_wc_conflict_choose_theirs_conflict, "theirs_conflict" );
+    // user chooses own (for conflicted hunks)
+    add( svn_wc_conflict_choose_mine_conflict, "mine_conflict" );
+    // user chooses the merged version
+    add( svn_wc_conflict_choose_merged, "merged" );
+#if defined( PYSVN_HAS_SVN_1_8 )
+    //undecided
+    add( svn_wc_conflict_choose_unspecified, "unspecified" );
+#endif
 }
 #endif
 
@@ -422,15 +452,15 @@ template <> EnumString< svn_wc_operation_t >::EnumString()
 //--------------------------------------------------------------------------------
 template <> void pysvn_enum< svn_opt_revision_kind >::init_type(void)
 {
-    behaviors().name("opt_revision_kind");
-    behaviors().doc("opt_revision_kind enumeration");
+    behaviors().name( "opt_revision_kind" );
+    behaviors().doc( "opt_revision_kind enumeration" );
     behaviors().supportGetattr();
 }
 
 template <> void pysvn_enum_value< svn_opt_revision_kind >::init_type(void)
 {
-    behaviors().name("opt_revision_kind");
-    behaviors().doc("opt_revision_kind value");
+    behaviors().name( "opt_revision_kind" );
+    behaviors().doc( "opt_revision_kind value" );
     behaviors().supportCompare();
     behaviors().supportRichCompare();
     behaviors().supportRepr();
@@ -440,15 +470,15 @@ template <> void pysvn_enum_value< svn_opt_revision_kind >::init_type(void)
 
 template <> void pysvn_enum< svn_wc_notify_action_t >::init_type(void)
 {
-    behaviors().name("wc_notify_action");
-    behaviors().doc("wc_notify_action enumeration");
+    behaviors().name( "wc_notify_action" );
+    behaviors().doc( "wc_notify_action enumeration" );
     behaviors().supportGetattr();
 }
 
 template <> void pysvn_enum_value< svn_wc_notify_action_t >::init_type(void)
 {
-    behaviors().name("wc_notify_action");
-    behaviors().doc("wc_notify_action value");
+    behaviors().name( "wc_notify_action" );
+    behaviors().doc( "wc_notify_action value" );
     behaviors().supportCompare();
     behaviors().supportRichCompare();
     behaviors().supportRepr();
@@ -458,15 +488,15 @@ template <> void pysvn_enum_value< svn_wc_notify_action_t >::init_type(void)
 
 template <> void pysvn_enum< svn_wc_status_kind >::init_type(void)
 {
-    behaviors().name("wc_status_kind");
-    behaviors().doc("wc_status_kind enumeration");
+    behaviors().name( "wc_status_kind" );
+    behaviors().doc( "wc_status_kind enumeration" );
     behaviors().supportGetattr();
 }
 
 template <> void pysvn_enum_value< svn_wc_status_kind >::init_type(void)
 {
-    behaviors().name("wc_status_kind");
-    behaviors().doc("wc_status_kind value");
+    behaviors().name( "wc_status_kind" );
+    behaviors().doc( "wc_status_kind value" );
     behaviors().supportCompare();
     behaviors().supportRichCompare();
     behaviors().supportRepr();
@@ -476,15 +506,15 @@ template <> void pysvn_enum_value< svn_wc_status_kind >::init_type(void)
 
 template <> void pysvn_enum< svn_wc_schedule_t >::init_type(void)
 {
-    behaviors().name("wc_schedule");
-    behaviors().doc("wc_schedule enumeration");
+    behaviors().name( "wc_schedule" );
+    behaviors().doc( "wc_schedule enumeration" );
     behaviors().supportGetattr();
 }
 
 template <> void pysvn_enum_value< svn_wc_schedule_t >::init_type(void)
 {
-    behaviors().name("wc_schedule");
-    behaviors().doc("wc_schedule value");
+    behaviors().name( "wc_schedule" );
+    behaviors().doc( "wc_schedule value" );
     behaviors().supportCompare();
     behaviors().supportRichCompare();
     behaviors().supportRepr();
@@ -494,15 +524,15 @@ template <> void pysvn_enum_value< svn_wc_schedule_t >::init_type(void)
 
 template <> void pysvn_enum< svn_wc_merge_outcome_t >::init_type(void)
 {
-    behaviors().name("wc_merge_outcome");
-    behaviors().doc("wc_merge_outcome enumeration");
+    behaviors().name( "wc_merge_outcome" );
+    behaviors().doc( "wc_merge_outcome enumeration" );
     behaviors().supportGetattr();
 }
 
 template <> void pysvn_enum_value< svn_wc_merge_outcome_t >::init_type(void)
 {
-    behaviors().name("wc_merge_outcome");
-    behaviors().doc("wc_merge_outcome value");
+    behaviors().name( "wc_merge_outcome" );
+    behaviors().doc( "wc_merge_outcome value" );
     behaviors().supportCompare();
     behaviors().supportRichCompare();
     behaviors().supportRepr();
@@ -512,15 +542,15 @@ template <> void pysvn_enum_value< svn_wc_merge_outcome_t >::init_type(void)
 
 template <> void pysvn_enum< svn_wc_notify_state_t >::init_type(void)
 {
-    behaviors().name("wc_notify_state");
-    behaviors().doc("wc_notify_state enumeration");
+    behaviors().name( "wc_notify_state" );
+    behaviors().doc( "wc_notify_state enumeration" );
     behaviors().supportGetattr();
 }
 
 template <> void pysvn_enum_value< svn_wc_notify_state_t >::init_type(void)
 {
-    behaviors().name("wc_notify_state");
-    behaviors().doc("wc_notify_state value");
+    behaviors().name( "wc_notify_state" );
+    behaviors().doc( "wc_notify_state value" );
     behaviors().supportCompare();
     behaviors().supportRichCompare();
     behaviors().supportRepr();
@@ -530,15 +560,15 @@ template <> void pysvn_enum_value< svn_wc_notify_state_t >::init_type(void)
 
 template <> void pysvn_enum< svn_node_kind_t >::init_type(void)
 {
-    behaviors().name("node_kind");
-    behaviors().doc("node_kind enumeration");
+    behaviors().name( "node_kind" );
+    behaviors().doc( "node_kind enumeration" );
     behaviors().supportGetattr();
 }
 
 template <> void pysvn_enum_value< svn_node_kind_t >::init_type(void)
 {
-    behaviors().name("node_kind");
-    behaviors().doc("node_kind value");
+    behaviors().name( "node_kind" );
+    behaviors().doc( "node_kind value" );
     behaviors().supportCompare();
     behaviors().supportRichCompare();
     behaviors().supportRepr();
@@ -549,15 +579,15 @@ template <> void pysvn_enum_value< svn_node_kind_t >::init_type(void)
 #if defined( PYSVN_HAS_DIFF_FILE_IGNORE_SPACE )
 template <> void pysvn_enum< svn_diff_file_ignore_space_t >::init_type(void)
 {
-    behaviors().name("diff_file_ignore_space");
-    behaviors().doc("diff_file_ignore_space enumeration");
+    behaviors().name( "diff_file_ignore_space" );
+    behaviors().doc( "diff_file_ignore_space enumeration" );
     behaviors().supportGetattr();
 }
 
 template <> void pysvn_enum_value< svn_diff_file_ignore_space_t >::init_type(void)
 {
-    behaviors().name("diff_file_ignore_space");
-    behaviors().doc("diff_file_ignore_space value");
+    behaviors().name( "diff_file_ignore_space" );
+    behaviors().doc( "diff_file_ignore_space value" );
     behaviors().supportCompare();
     behaviors().supportRichCompare();
     behaviors().supportRepr();
@@ -569,15 +599,15 @@ template <> void pysvn_enum_value< svn_diff_file_ignore_space_t >::init_type(voi
 #if defined( PYSVN_HAS_CLIENT_DIFF_SUMMARIZE )
 template <> void pysvn_enum< svn_client_diff_summarize_kind_t >::init_type(void)
 {
-    behaviors().name("client_diff_summarize_kind");
-    behaviors().doc("client_diff_summarize_kind enumeration");
+    behaviors().name( "client_diff_summarize_kind" );
+    behaviors().doc( "client_diff_summarize_kind enumeration" );
     behaviors().supportGetattr();
 }
 
 template <> void pysvn_enum_value< svn_client_diff_summarize_kind_t >::init_type(void)
 {
-    behaviors().name("client_diff_summarize_kind");
-    behaviors().doc("client_diff_summarize_kind value");
+    behaviors().name( "client_diff_summarize_kind" );
+    behaviors().doc( "client_diff_summarize_kind value" );
     behaviors().supportCompare();
     behaviors().supportRichCompare();
     behaviors().supportRepr();
@@ -589,15 +619,15 @@ template <> void pysvn_enum_value< svn_client_diff_summarize_kind_t >::init_type
 #if defined( PYSVN_HAS_SVN__DEPTH_PARAMETER )
 template <> void pysvn_enum< svn_depth_t >::init_type(void)
 {
-    behaviors().name("depth");
-    behaviors().doc("depth enumeration");
+    behaviors().name( "depth" );
+    behaviors().doc( "depth enumeration" );
     behaviors().supportGetattr();
 }
 
 template <> void pysvn_enum_value< svn_depth_t >::init_type(void)
 {
-    behaviors().name("depth");
-    behaviors().doc("depth value");
+    behaviors().name( "depth" );
+    behaviors().doc( "depth value" );
     behaviors().supportCompare();
     behaviors().supportRichCompare();
     behaviors().supportRepr();
@@ -609,15 +639,15 @@ template <> void pysvn_enum_value< svn_depth_t >::init_type(void)
 #if defined( PYSVN_HAS_SVN_WC_CONFLICT_CHOICE_T )
 template <> void pysvn_enum< svn_wc_conflict_choice_t >::init_type(void)
 {
-    behaviors().name("wc_conflict_choice");
-    behaviors().doc("wc_conflict_choice enumeration");
+    behaviors().name( "wc_conflict_choice" );
+    behaviors().doc( "wc_conflict_choice enumeration" );
     behaviors().supportGetattr();
 }
 
 template <> void pysvn_enum_value< svn_wc_conflict_choice_t >::init_type(void)
 {
-    behaviors().name("wc_conflict_choice");
-    behaviors().doc("wc_conflict_choice value");
+    behaviors().name( "wc_conflict_choice" );
+    behaviors().doc( "wc_conflict_choice value" );
     behaviors().supportCompare();
     behaviors().supportRichCompare();
     behaviors().supportRepr();
@@ -628,15 +658,15 @@ template <> void pysvn_enum_value< svn_wc_conflict_choice_t >::init_type(void)
 
 template <> void pysvn_enum< svn_wc_conflict_action_t >::init_type(void)
 {
-    behaviors().name("wc_conflict_action");
-    behaviors().doc("wc_conflict_action enumeration");
+    behaviors().name( "wc_conflict_action" );
+    behaviors().doc( "wc_conflict_action enumeration" );
     behaviors().supportGetattr();
 }
 
 template <> void pysvn_enum_value< svn_wc_conflict_action_t >::init_type(void)
 {
-    behaviors().name("wc_conflict_action");
-    behaviors().doc("wc_conflict_action value");
+    behaviors().name( "wc_conflict_action" );
+    behaviors().doc( "wc_conflict_action value" );
     behaviors().supportCompare();
     behaviors().supportRichCompare();
     behaviors().supportRepr();
@@ -647,15 +677,15 @@ template <> void pysvn_enum_value< svn_wc_conflict_action_t >::init_type(void)
 
 template <> void pysvn_enum< svn_wc_conflict_kind_t >::init_type(void)
 {
-    behaviors().name("wc_conflict_kind");
-    behaviors().doc("wc_conflict_kind enumeration");
+    behaviors().name( "wc_conflict_kind" );
+    behaviors().doc( "wc_conflict_kind enumeration" );
     behaviors().supportGetattr();
 }
 
 template <> void pysvn_enum_value< svn_wc_conflict_kind_t >::init_type(void)
 {
-    behaviors().name("wc_conflict_kind");
-    behaviors().doc("wc_conflict_kind value");
+    behaviors().name( "wc_conflict_kind" );
+    behaviors().doc( "wc_conflict_kind value" );
     behaviors().supportCompare();
     behaviors().supportRichCompare();
     behaviors().supportRepr();
@@ -665,15 +695,15 @@ template <> void pysvn_enum_value< svn_wc_conflict_kind_t >::init_type(void)
 
 template <> void pysvn_enum< svn_wc_conflict_reason_t >::init_type(void)
 {
-    behaviors().name("wc_conflict_reason");
-    behaviors().doc("wc_conflict_reason enumeration");
+    behaviors().name( "wc_conflict_reason" );
+    behaviors().doc( "wc_conflict_reason enumeration" );
     behaviors().supportGetattr();
 }
 
 template <> void pysvn_enum_value< svn_wc_conflict_reason_t >::init_type(void)
 {
-    behaviors().name("wc_conflict_reason");
-    behaviors().doc("wc_conflict_reason value");
+    behaviors().name( "wc_conflict_reason" );
+    behaviors().doc( "wc_conflict_reason value" );
     behaviors().supportCompare();
     behaviors().supportRichCompare();
     behaviors().supportRepr();
@@ -685,15 +715,15 @@ template <> void pysvn_enum_value< svn_wc_conflict_reason_t >::init_type(void)
 #if defined( PYSVN_HAS_SVN_WC_OPERATION_T )
 template <> void pysvn_enum< svn_wc_operation_t >::init_type(void)
 {
-    behaviors().name("wc_operation");
-    behaviors().doc("wc_operation enumeration");
+    behaviors().name( "wc_operation" );
+    behaviors().doc( "wc_operation enumeration" );
     behaviors().supportGetattr();
 }
 
 template <> void pysvn_enum_value< svn_wc_operation_t >::init_type(void)
 {
-    behaviors().name("wc_operation");
-    behaviors().doc("wc_operation value");
+    behaviors().name( "wc_operation" );
+    behaviors().doc( "wc_operation value" );
     behaviors().supportCompare();
     behaviors().supportRichCompare();
     behaviors().supportRepr();

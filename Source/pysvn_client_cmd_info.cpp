@@ -20,7 +20,6 @@
 #include "pysvn_svnenv.hpp"
 #include "svn_path.h"
 #include "svn_config.h"
-#include "svn_sorts.h"
 #include "pysvn_static_strings.hpp"
 
 static const char *g_utf_8 = "utf-8";
@@ -1380,22 +1379,28 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
         throw_client_error( e );
     }
 
-    apr_array_header_t *statusarray = svn_sort__hash( status_hash, svn_sort_compare_items_as_paths, pool );
+    // Loop over array, returning each name/status-structure
 
-    // Loop over array, printing each name/status-structure
-    for (int i = statusarray->nelts-1; i >= 0; i--)
+    for( apr_hash_index_t *hi = apr_hash_first( pool, status_hash );
+            hi != NULL;
+                hi = apr_hash_next( hi ) )
     {
-        const svn_sort__item_t *item = &APR_ARRAY_IDX( statusarray, i, const svn_sort__item_t );
-        pysvn_wc_status_t *status = (pysvn_wc_status_t *)item->value;
+        const void *key;
+        void *val;
+        apr_hash_this( hi, &key, NULL, &val );
+
+        pysvn_wc_status_t *status = (pysvn_wc_status_t *)val;
 
         entries_list.append( toObject(
-                Py::String( osNormalisedPath( (const char *)item->key, pool ), "UTF-8" ),
+                Py::String( osNormalisedPath( (const char *)key, pool ), "UTF-8" ),
                 *status,
                 pool,
                 m_wrapper_status,
                 m_wrapper_entry,
                 m_wrapper_lock ) );
     }
+
+    entries_list.sort();
 
     return entries_list;
 }

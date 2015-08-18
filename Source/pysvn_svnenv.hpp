@@ -214,6 +214,15 @@
 #define PYSVN_HAS_CLIENT_CREATE_CONTEXT2 1
 #endif
 
+#if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 9) || SVN_VER_MAJOR > 1
+#define PYSVN_HAS_SVN_1_9
+#define PYSVN_HAS_CLIENT_VACUUM QQQ
+#define PYSVN_HAS_CLIENT_REVERT3 QQQ
+#define PYSVN_HAS_CLIENT_COPY7 QQQ
+#define PYSVN_HAS_CLIENT_CAT3 QQQ
+#define PYSVN_HAS_CLIENT_INFO4 QQQ
+#endif
+
 #if defined( PYSVN_HAS_CLIENT_STATUS3 )
 typedef svn_wc_status2_t pysvn_wc_status_t;
 
