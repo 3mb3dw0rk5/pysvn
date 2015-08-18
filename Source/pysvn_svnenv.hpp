@@ -17,7 +17,7 @@
 #endif
 
 #if PYCXX_VERSION < PYCXX_MAKEVERSION( 6, 2, 4 )
-#error PyCXX version 6.2.4 is required
+#error PyCXX version 6.2.4 or later required
 #endif
 
 #include <svn_version.h>
@@ -26,6 +26,7 @@
 #include <svn_fs.h>
 #include <svn_repos.h>
 #include <apr_xlate.h>
+
 #include <string>
 
 #if !defined( SVN_VER_MAJOR )
