@@ -70,6 +70,7 @@ class Options:
         '--svn-bin-dir':        (1, '<dir>'),
         '--svn-root-dir':       (1, '<dir>'),
         '--verbose':            (0, None),
+        '--disable-deprecated-functions-warnings': (0, None),
         }
 
     def __init__( self, argv ):
@@ -1099,9 +1100,9 @@ class UnixCompilerGCC(CompilerGCC):
                         '/usr/pkg/include/subversion-1',        # netbsd
                         ]
         self._find_paths_svn_bin = [
-                        '/usr/bin',                                # typical Linux
-                        '/usr/local/bin',                        # typical *BSD
-                        '/usr/pkg/bin',                                # netbsd
+                        '/usr/bin',                             # typical Linux
+                        '/usr/local/bin',                       # typical *BSD
+                        '/usr/pkg/bin',                         # netbsd
                         ]
         self._find_paths_svn_lib = [
                         '/usr/lib64',                           # typical 64bit Linux
@@ -1168,6 +1169,10 @@ class UnixCompilerGCC(CompilerGCC):
         if self.options.hasOption( '--enable-debug' ):
             print( 'Info: Debug enabled' )
             py_cflags_list.append( '-g' )
+
+        if self.options.hasOption( '--disable-deprecated-functions-warnings' ):
+            print( 'Info: Disable deprecated functions warnings' )
+            py_cflags_list.append( '-Wno-deprecated-declarations' )
 
         self._addVar( 'CCCFLAGS',   ' '.join( py_cflags_list ) )
         self._addVar( 'LDLIBS',     ' '.join( self._getLdLibs() ) )
