@@ -199,7 +199,8 @@ if hasattr( pysvn.wc_notify_action, 'update_broken_lock' ):
     wc_notify_action_map[ pysvn.wc_notify_action.foreign_copy_begin ] = 'foreign_copy_begin'
     wc_notify_action_map[ pysvn.wc_notify_action.move_broken ] = 'move_broken'
 
-if hasattr( pysvn.wc_notify_action, 'update_broken_lock' ):
+# new in svn 1.9
+if hasattr( pysvn.wc_notify_action, 'cleanup_external' ):
     wc_notify_action_map[ pysvn.wc_notify_action.cleanup_external ] = 'cleanup_external'
     wc_notify_action_map[ pysvn.wc_notify_action.failed_requires_target ] = 'failed_requires_target'
     wc_notify_action_map[ pysvn.wc_notify_action.info_external ] = 'info_external'
