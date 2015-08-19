@@ -57,10 +57,14 @@ class ReplaceDirtInString:
         self.python = self.find( 'PYTHON' )
         self.username = self.find( 'Username' )
         self.svn_version = svn_version
-        self.txn_replacement = None
-        if self.svn_version is not None:
-            if self.svn_version[0] > 1 or (self.svn_version[0] == 1 and self.svn_version[1] >= 8):
-                self.txn_replacement = 'svn:txn-client-compat-version: %d.%d.%d' % self.svn_version
+
+        self.txn_client_replacement = None
+        if self.svn_version[0] > 1 or (self.svn_version[0] == 1 and self.svn_version[1] >= 8):
+            self.txn_client_replacement = 'svn:txn-client-compat-version: %d.%d.%d' % self.svn_version
+
+        self.txn_agent_replacement = None
+        if self.svn_version[0] > 1 or (self.svn_version[0] == 1 and self.svn_version[1] >= 9):
+            self.txn_agent_replacement = 'svn:txn-user-agent: SVN/%d.%d.%d (arch-os-string) ra_local' % self.svn_version
 
         # ------------------------------------------------------------------------
         # Version strings:
@@ -128,7 +132,7 @@ class ReplaceDirtInString:
             parts = line.split( ':' )
             if parts[0] == keyword:
                 value = (':'.join( parts[1:] ) ).strip()
-                if _debug: print( 'find( %s ) -> %s' % (keyword, value) )
+                if _debug: print( 'Debug: find( %s ) -> %s' % (keyword, value) )
                 return value
         return ''
 
@@ -136,24 +140,28 @@ class ReplaceDirtInString:
         return [self.replace( line ) for line in self.lines_list]
 
     def replace( self, line ):
-        if _debug: print( 'Processing: %r' % (line,) )
+        if _debug: print( 'Debug: Processing: %r' % (line,) )
 
         for re_expr, replacement_text in self.replacement_list:
             while 1:
-                if _debug: print( '...trying: %r' % (replacement_text,) )
+                if _debug: print( 'Debug: ...trying: %r' % (replacement_text,) )
                 match = re_expr.search( line )
                 if match == None:
                     break
                 line = line[0:match.start()] + replacement_text + line[match.end():]
 
 
-                if _debug: print( '...update line: %r' % (line,) )
+                if _debug: print( 'Debug: ...update line: %r' % (line,) )
 
-        x = line.startswith( 'svn:txn-client-compat-version: ' )
-        if( self.txn_replacement is not None
+        if( self.txn_client_replacement is not None
         and line.startswith( 'svn:txn-client-compat-version: ' ) ):
-            line = self.txn_replacement
-            if _debug: print( '...update line: %r' % (line,) )
+            line = self.txn_client_replacement
+            if _debug: print( 'Debug: ...update line: %r' % (line,) )
+
+        if( self.txn_agent_replacement is not None
+        and line.startswith( 'svn:txn-user-agent: ' ) ):
+            line = self.txn_agent_replacement
+            if _debug: print( 'Debug: ...update line: %r' % (line,) )
 
         return line
 
@@ -163,9 +171,12 @@ def stripDirty( filename, svn_version ):
     contents = f.read()
     f.close()
 
+    if _debug: print( 'Debug: Debug: stripDirty( %r, %r )'  % (filename, svn_version) )
     lines = contents.replace( '\r\n', '\n' ).replace( '\r', '\n' ).split( '\n' )
     replace = ReplaceDirtInString( lines, svn_version )
     stripped_lines = replace.execute()
+
+    if _debug: print( 'Debug: Debug: stripDirty Done.' )
 
     return stripped_lines
 
@@ -188,7 +199,7 @@ def main( argv ):
             pprint.pprint( benchmark )
 
         print( 'Info: Against   %s' % results_file )
-        results = stripDirty( results_file, None )
+        results = stripDirty( results_file, svn_version )
         if _debug:
             print( 'Debug: results after we called stripDirty' )
             pprint.pprint( results )
