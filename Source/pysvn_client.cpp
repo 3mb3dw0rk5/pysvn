@@ -721,6 +721,11 @@ Py::Object pysvn_client::cmd_root_url_from_path( const Py::Tuple& a_args, const 
     {
         std::string norm_path( svnNormalisedIfPath( path, pool ) );
 
+        checkThreadPermission();
+
+        PythonAllowThreads permission( m_context );
+
+        // known to call back into pysvn
         svn_error_t *error = svn_client_root_url_from_path
             (
             &root_url,
