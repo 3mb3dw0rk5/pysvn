@@ -1,12 +1,12 @@
 @echo off
 @prompt $P$S$G
-@echo WorkDir: %WORKDIR%
+@echo WorkDir: %BUILDER_TOP_DIR%
 @echo PYTHON: %PYTHON%
 @echo Username: %USERNAME%
 
 setlocal
-set PYTHONPATH=%WORKDIR%\Source;%WORKDIR%\Examples\Client
-set PYSVN=%PYTHON% %WORKDIR%\Examples\Client\svn_cmd.py --pysvn-testing 01.03.00 --config-dir b:\configdir
+set PYTHONPATH=%BUILDER_TOP_DIR%\Source;%BUILDER_TOP_DIR%\Examples\Client
+set PYSVN=%PYTHON% %BUILDER_TOP_DIR%\Examples\Client\svn_cmd.py --pysvn-testing 01.03.00 --config-dir b:\configdir
 echo Info: PYSVN CMD %PYSVN%
 
 call :cmd_shell mkdir testroot-07
@@ -21,7 +21,7 @@ call :cmd_pysvn mkdir file:///b:/repos/trunk/test -m "test-07 add test"
 
 echo Info: Setup - checkout wc1
 call :cmd_pysvn checkout file:///b:/repos/trunk b:/wc1
-call :cmd_shell cd b:/wc1/test
+call :cmd_shell cd /d b:/wc1/test
 
 echo Info: Setup - add files
 
@@ -42,16 +42,16 @@ call :cmd_pysvn checkin -m "commit added files"
 call :cmd_pysvn status --verbose b:/wc1
 
 echo Info: running test_07_copy2
-%PYTHON% %WORKDIR%/Tests/test_07_copy2.py b:/configdir
+%PYTHON% %BUILDER_TOP_DIR%/Tests/test_07_copy2.py b:/configdir
 
 echo Info: running test_07_move2
-%PYTHON% %WORKDIR%/Tests/test_07_move2.py b:/configdir
+%PYTHON% %BUILDER_TOP_DIR%/Tests/test_07_move2.py b:/configdir
 
 echo Info: running test_07_changelist
-%PYTHON% %WORKDIR%/Tests/test_07_changelist.py b:/configdir
+%PYTHON% %BUILDER_TOP_DIR%/Tests/test_07_changelist.py b:/configdir
 
 rem echo Info: running test_07_revprops
-rem %PYTHON% %WORKDIR%/Tests/test_07_revprops.py b:/configdir
+rem %PYTHON% %BUILDER_TOP_DIR%/Tests/test_07_revprops.py b:/configdir
 
 goto :eof
 endlocal

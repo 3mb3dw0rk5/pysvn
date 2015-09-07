@@ -1,5 +1,5 @@
 @prompt $P$S$G
-@echo WorkDir: %WORKDIR%
+@echo WorkDir: %BUILDER_TOP_DIR%
 @echo PYTHON: %PYTHON%
 @echo Username: %USERNAME%
 

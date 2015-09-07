@@ -1,12 +1,12 @@
 @echo off
 @prompt $P$S$G
-@echo WorkDir: %WORKDIR%
+@echo WorkDir: %BUILDER_TOP_DIR%
 @echo PYTHON: %PYTHON%
 @echo Username: %USERNAME%
 
 setlocal
-set PYTHONPATH=%WORKDIR%\Source;%WORKDIR%\Examples\Client
-set PYSVN=%PYTHON% %WORKDIR%\Examples\Client\svn_cmd.py --pysvn-testing 01.03.00 --config-dir b:\configdir
+set PYTHONPATH=%BUILDER_TOP_DIR%\Source;%BUILDER_TOP_DIR%\Examples\Client
+set PYSVN=%PYTHON% %BUILDER_TOP_DIR%\Examples\Client\svn_cmd.py --pysvn-testing 01.03.00 --config-dir b:\configdir
 echo Info: PYSVN CMD %PYSVN%
 call :cmd_shell mkdir testroot-06
 call :cmd_shell subst b: %CD%\testroot-06

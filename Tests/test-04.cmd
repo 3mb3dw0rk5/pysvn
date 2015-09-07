@@ -1,11 +1,11 @@
 @prompt $P$S$G$S
-@echo WorkDir: %WORKDIR%
+@echo WorkDir: %BUILDER_TOP_DIR%
 @echo PYTHON: %PYTHON%
 @echo Username: %USERNAME%
 
 setlocal
-set PYTHONPATH=%WORKDIR%\Source;%WORKDIR%\Examples\Client
-set PYSVN=%PYTHON% %WORKDIR%\Examples\Client\svn_cmd.py --pysvn-testing 01.02.01 --config-dir b:\configdir
+set PYTHONPATH=%BUILDER_TOP_DIR%\Source;%BUILDER_TOP_DIR%\Examples\Client
+set PYSVN=%PYTHON% %BUILDER_TOP_DIR%\Examples\Client\svn_cmd.py --pysvn-testing 01.02.01 --config-dir b:\configdir
 mkdir testroot-04
 subst b: %CD%\testroot-04
 cd /d B:\
@@ -17,13 +17,13 @@ rem mkdir
 %PYSVN% mkdir file:///b:/repos/trunk/test -m "test-01 add test"
 
 rem Install hooks
-echo echo %PYTHON% %WORKDIR%\Tests\test_04_commit_hook_test_1.py pre-commit %%* ^>b:\pre_test_1.output >>b:\repos\hooks\pre-commit.cmd
+echo echo %PYTHON% %BUILDER_TOP_DIR%\Tests\test_04_commit_hook_test_1.py pre-commit %%* ^>b:\pre_test_1.output >>b:\repos\hooks\pre-commit.cmd
 echo set PYTHONPATH=%PYTHONPATH% >>b:\repos\hooks\pre-commit.cmd
-echo %PYTHON% %WORKDIR%\Tests\test_04_commit_hook_test_1.py pre-commit %%* ^>^>b:\pre_test_1.output >>b:\repos\hooks\pre-commit.cmd
+echo %PYTHON% %BUILDER_TOP_DIR%\Tests\test_04_commit_hook_test_1.py pre-commit %%* ^>^>b:\pre_test_1.output >>b:\repos\hooks\pre-commit.cmd
 
-echo echo %PYTHON% %WORKDIR%\Tests\test_04_commit_hook_test_1.py post-commit %%* is_revision ^>b:\post_test_1.output >>b:\repos\hooks\post-commit.cmd
+echo echo %PYTHON% %BUILDER_TOP_DIR%\Tests\test_04_commit_hook_test_1.py post-commit %%* is_revision ^>b:\post_test_1.output >>b:\repos\hooks\post-commit.cmd
 echo set PYTHONPATH=%PYTHONPATH% >>b:\repos\hooks\post-commit.cmd
-echo %PYTHON% %WORKDIR%\Tests\test_04_commit_hook_test_1.py post-commit %%* is_revision ^>^>b:\post_test_1.output >>b:\repos\hooks\post-commit.cmd
+echo %PYTHON% %BUILDER_TOP_DIR%\Tests\test_04_commit_hook_test_1.py post-commit %%* is_revision ^>^>b:\post_test_1.output >>b:\repos\hooks\post-commit.cmd
 
 rem Add one dir
 %PYSVN% mkdir file:///b:/repos/trunk/test/a -m "pre-commit test 1"
