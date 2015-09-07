@@ -55,6 +55,8 @@ msvc90_dlls = [
     R'c:\Program Files (x86)\Microsoft Visual Studio 9.0\vc\redist\x86\Microsoft.VC90.CRT\msvcr90.dll',
     ]
 
+msvc90_dlls = []
+
 if py_maj == 3:
     all_dlls.extend( msvc90_dlls )
 
