@@ -1,11 +1,11 @@
-WorkDir: C:\BuildRoot\Win32-MSVC90-1.7.1\py27_pysvn
-PYTHON: c:\python27.Win32\python.exe
+WorkDir: C:\Users\barry\wc\svn\PySVN\Extension
+PYTHON: c:\python27.win32\python.exe
 Username: barry
-Info: PYSVN CMD c:\python27.Win32\python.exe C:\BuildRoot\Win32-MSVC90-1.7.1\py27_pysvn\Examples\Client\svn_cmd.py --pysvn-testing 01.03.00 --config-dir b:\configdir
+Info: PYSVN CMD c:\python27.win32\python.exe C:\Users\barry\wc\svn\PySVN\Extension\Examples\Client\svn_cmd.py --pysvn-testing 01.03.00 --config-dir b:\configdir
 
 Info: CMD mkdir testroot-07
 
-Info: CMD subst b: C:\BuildRoot\Win32-MSVC90-1.7.1\py27_pysvn\Tests\testroot-07
+Info: CMD subst b: C:\Users\barry\wc\svn\PySVN\Extension\Tests\testroot-07
 
 Info: CMD cd /d b:\
 
@@ -23,7 +23,7 @@ U B:/wc1
 update_started B:/wc1
 Checked out revision 2
 
-Info: CMD cd b:/wc1/test
+Info: CMD cd /d b:/wc1/test
 Info: Setup - add files
 Info: Create File file_a1.txt - test add file 1     
 
@@ -53,7 +53,10 @@ Info: Create File file_b2.txt - test add file 2
 
 Info: PYSVN CMD add file_b2.txt
 A B:/wc1/test/file_b2.txt
-The system cannot find the batch label specified - cmd_pysvn
+
+Info: PYSVN CMD checkin -m "commit added files"
+A B:/wc1/test/file_b2.txt
+Revision 6
 
 Info: PYSVN CMD status --verbose b:/wc1
                2      2 barry          B:\wc1
@@ -61,7 +64,7 @@ Info: PYSVN CMD status --verbose b:/wc1
                3      3 barry          B:\wc1\test\file_a1.txt
                4      4 barry          B:\wc1\test\file_a2.txt
                5      5 barry          B:\wc1\test\file_b1.txt
-A              0     -1 None           B:\wc1\test\file_b2.txt
+               6      6 barry          B:\wc1\test\file_b2.txt
 Info: running test_07_copy2
 Info: Copy2 with no revision and no peg_revision
 Info: Copy2 with no peg_revision
