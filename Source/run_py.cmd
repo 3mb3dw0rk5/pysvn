@@ -1,4 +1,4 @@
 setlocal
-set PYTHONPATH=%WORKDIR%\Source
-c:\python23\python %*
+set PYTHONPATH=%BUILDER_TOP_DIR%\Source
+c:\python27.win32\python %*
 endlocal
