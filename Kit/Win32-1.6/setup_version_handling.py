@@ -47,7 +47,6 @@ f.close()
 
 all_dlls = [dll for dll in os.listdir( 'tmp' ) if dll.lower().endswith( '.dll' )]
 
-
 msvc90_dlls = [
     R'c:\Program Files (x86)\Microsoft Visual Studio 9.0\vc\redist\x86\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest',
     R'c:\Program Files (x86)\Microsoft Visual Studio 9.0\vc\redist\x86\Microsoft.VC90.CRT\msvcm90.dll',

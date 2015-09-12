@@ -11,33 +11,21 @@ if not "%4" == "" set SVN_VER_MAJ_MIN=%4
 if "%SVN_VER_MAJ_MIN%" == "" set /p SVN_VER_MAJ_MIN="Build Version (1.8): "
 if "%SVN_VER_MAJ_MIN%" == "" set SVN_VER_MAJ_MIN=1.8
 
-if "%SVN_VER_MAJ_MIN%" == "1.4" set SVN_VER_MAJ_DASH_MIN=1-4
-if "%SVN_VER_MAJ_MIN%" == "1.5" set SVN_VER_MAJ_DASH_MIN=1-5
-if "%SVN_VER_MAJ_MIN%" == "1.6" set SVN_VER_MAJ_DASH_MIN=1-6
-if "%SVN_VER_MAJ_MIN%" == "1.7" set SVN_VER_MAJ_DASH_MIN=1-7
-if "%SVN_VER_MAJ_MIN%" == "1.8" set SVN_VER_MAJ_DASH_MIN=1-8
-if "%SVN_VER_MAJ_MIN%" == "1.9" set SVN_VER_MAJ_DASH_MIN=1-9
-
-if "%SVN_VER_MAJ_DASH_MIN%" == "" (
-    echo "Error: SVN version %SVN_VER_MAJ_MIN% not supported %SVN_VER_MAJ_DASH_MIN%"
-    pause
-    goto end
-)
-
+set SVN_VER_MAJ_DASH_MIN=%SVN_VER_MAJ_MIN:.=-%
 rem Save CWD
 pushd .
 
-set VC_VER=14.0
+set VC_VER=9.0
 
 if exist ..\..\ReleaseEngineering\win32-vc-%VC_VER%\software-versions-%SVN_VER_MAJ_MIN%.cmd (
     echo Setting up compiler VC %VC_VER%
     pushd ..\..\ReleaseEngineering\win32-vc-%VC_VER%
     call software-versions-%SVN_VER_MAJ_MIN%.cmd off
     popd
-    ) else (
+) else (
     echo No compiler setup found
     pause
-    )
+)
 
 set PYCXX=%BUILDER_TOP_DIR%\Import\pycxx-%PYCXX_VER%
 set PY=c:\python%PY_MAJ%%PY_MIN%.win32
@@ -56,4 +44,3 @@ svn --version --quiet
 
 rem restore original CWD
 popd
-:end
