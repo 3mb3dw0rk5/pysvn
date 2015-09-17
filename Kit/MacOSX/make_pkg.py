@@ -90,6 +90,9 @@ elif pymaj == 3 and pymin == 3:
 elif pymaj == 3 and pymin == 4:
     install_dir = '/Library/Frameworks/Python.framework/Versions/3.4/lib/python3.4/site-packages'
 
+elif pymaj == 3 and pymin == 5:
+    install_dir = '/Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/site-packages'
+
 else:
     raise RuntimeError( 'Unsupported version of python' )
 
