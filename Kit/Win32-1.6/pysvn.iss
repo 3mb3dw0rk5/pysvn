@@ -13,13 +13,23 @@ begin
         '', install_path );
     if not rcb then
     begin
-        rcb := RegQueryStringValue( HKCU,
-            'SOFTWARE\Python\PythonCore\%(py_maj)d.%(py_min)d\InstallPath', '', install_path );
+        rcb := RegQueryStringValue( HKLM,
+            'SOFTWARE\Python\PythonCore\%(py_maj)d.%(py_min)d-32\InstallPath', '', install_path );
         if not rcb then
         begin
-            MsgBox( 'pysvn requires Python %(py_maj)d.%(py_min)d to be installed.' #13 #13
-                    'Quitting installation',
-                 mbError, MB_OK );
+            rcb := RegQueryStringValue( HKCU,
+                'SOFTWARE\Python\PythonCore\%(py_maj)d.%(py_min)d\InstallPath', '', install_path );
+            if not rcb then
+            begin
+                rcb := RegQueryStringValue( HKCU,
+                    'SOFTWARE\Python\PythonCore\%(py_maj)d.%(py_min)d-32\InstallPath', '', install_path );
+                if not rcb then
+                begin
+                    MsgBox( 'pysvn requires Python %(py_maj)d.%(py_min)d to be installed.' #13 #13
+                            'Quitting installation',
+                         mbError, MB_OK );
+                end;
+            end;
         end;
     end;
     Result := rcb;
