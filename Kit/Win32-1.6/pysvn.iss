@@ -76,7 +76,6 @@ begin
                 end
                 else
                 begin
-                    ; should never get here
                     Result := 'c:\python%(py_maj)d.%(py_min)d';
                 end;
             end;
