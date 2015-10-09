@@ -1039,12 +1039,24 @@ class MacOsxCompilerGCC(CompilerGCC):
         self._addVar( 'LDEXE',          '%(CCC)s -g' )
 
     def setupPySvn( self ):
+        # Support building in a virtualenv.
+        #
+        # In a virtualenv on a Mac, sys.exec_prefix will be a relative path
+        # pointing to the root of the virtualenv. That root will *not* contain
+        # a Python directory, as needed by PYTHON_FRAMEWORK below.
+        #
+        # Instead, we use sys.real_prefix, which is added when in a virtualenv.
+        # This will point to the Python framework that the virtualenv is based
+        # upon, which does contain the Python directory. It's equivalent to
+        # sys.exec_prefix outside of a virtualenv.
+        python_prefix = getattr( sys, 'real_prefix', sys.exec_prefix )
+
         self._pysvnModuleSetup()
         self._addVar( 'PYSVN_MODULE_BASENAME', self.pysvn_module_name )
 
         self._addVar( 'PYTHON_VERSION',     '%d.%d' % (sys.version_info[0], sys.version_info[1]) )
         self._addVar( 'PYTHON_DIR',         sys.exec_prefix )
-        self._addVar( 'PYTHON_FRAMEWORK',   os.path.join( sys.exec_prefix, 'Python' ) )
+        self._addVar( 'PYTHON_FRAMEWORK',   os.path.join( python_prefix, 'Python' ) )
         self._addVar( 'PYTHON_INC',         distutils.sysconfig.get_python_inc() )
 
         py_cflags_list = [
