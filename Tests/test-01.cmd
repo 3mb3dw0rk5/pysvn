@@ -95,8 +95,6 @@ call :cmd_shell dir /s /b b:\export1.cr
 call :cmd_shell dir /s /b b:\export1.lf
 call :cmd_shell dir /s /b b:\export1.crlf
 
-echo Info: Test - import
-
 echo Info: Test - info
 call :cmd_pysvn info b:\wc2\test
 call :cmd_pysvn info b:\wc2\test\file1.txt
@@ -228,6 +226,24 @@ call :cmd_pysvn status b:\wc3\test-branch
 call :cmd_pysvn diff b:\wc3\test-branch
 
 call :cmd_shell %PYTHON% %BUILDER_TOP_DIR%\Tests\test_01_set_get_tests.py b:\configdir
+
+echo Info: Test - import
+
+call :cmd_createfile b:\tmp\import1.txt import file 1
+call :cmd_createfile b:\tmp\import1.txt import file 2
+
+call :cmd_pysvn mkdir "file://b:/root/repos/trunk/test/import" -m "test-01 add import"
+
+call :cmd_pysvn import --message "no spaces"    "b:\tmp\import1.txt" "file://b:/root/repos/trunk/test/import/import-file1.txt"
+call :cmd_pysvn import --message "space in url" "b:\tmp\import1.txt" "file://b:/root/repos/trunk/test/import/import file1A.txt"
+call :cmd_pysvn import --message "%20 in url"   "b:\tmp\import1.txt" "file://b:/root/repos/trunk/test/import/import%20file1B.txt"
+
+call :cmd_pysvn import --message "space in file, none in url"  "b:\tmp\import 2.txt" "file://b:/root/repos/trunk/test/import/import-file2.txt"
+call :cmd_pysvn import --message "space in file, space in url" "b:\tmp\import 2.txt" "file://b:/root/repos/trunk/test/import/import file2A.txt"
+call :cmd_pysvn import --message "space in file, %20 in url"   "b:\tmp\import 2.txt" "file://b:/root/repos/trunk/test/import/import%20file2B.txt"
+
+call :cmd_pysvn update b:\wc1
+call :cmd_pysvn log --limit 6 --verbose b:\wc1
 
 echo Info: Test - end
 goto :eof

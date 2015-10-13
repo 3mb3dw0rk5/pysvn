@@ -126,8 +126,6 @@ ${PYTHON} ${WORKDIR}/Tests/find.py ${TESTROOT}/export1.cr
 ${PYTHON} ${WORKDIR}/Tests/find.py ${TESTROOT}/export1.lf
 ${PYTHON} ${WORKDIR}/Tests/find.py ${TESTROOT}/export1.crlf
 
-echo Info: Testing - import
-
 echo Info: Testing - info
 cmd_pysvn info ${TESTROOT}/wc2/test
 cmd_pysvn info ${TESTROOT}/wc2/test/file1.txt
@@ -261,3 +259,20 @@ cmd_pysvn status ${TESTROOT}/wc3/test-branch
 cmd_pysvn diff ${TESTROOT}/wc3/test-branch
 
 cmd ${PYTHON} ${WORKDIR}/Tests/test_01_set_get_tests.py ${TESTROOT}/configdir
+
+echo Info: Testing - import
+echo test import file 1 >"${TMPDIR}/import1.txt"
+echo test import file 2 >"${TMPDIR}/import 2.txt"
+
+cmd_pysvn mkdir "file://${TESTROOT}/root/repos/trunk/test/import" -m "test-01 add import"
+
+cmd_pysvn import --message "no spaces"    "${TMPDIR}/import1.txt" "file://${TESTROOT}/root/repos/trunk/test/import/import-file1.txt"
+cmd_pysvn import --message "space in url" "${TMPDIR}/import1.txt" "file://${TESTROOT}/root/repos/trunk/test/import/import file1A.txt"
+cmd_pysvn import --message "%20 in url"   "${TMPDIR}/import1.txt" "file://${TESTROOT}/root/repos/trunk/test/import/import%20file1B.txt"
+
+cmd_pysvn import --message "space in file, none in url"  "${TMPDIR}/import 2.txt" "file://${TESTROOT}/root/repos/trunk/test/import/import-file2.txt"
+cmd_pysvn import --message "space in file, space in url" "${TMPDIR}/import 2.txt" "file://${TESTROOT}/root/repos/trunk/test/import/import file2A.txt"
+cmd_pysvn import --message "space in file, %20 in url"   "${TMPDIR}/import 2.txt" "file://${TESTROOT}/root/repos/trunk/test/import/import%20file2B.txt"
+
+cmd_pysvn update ${TESTROOT}/wc1
+cmd_pysvn log --limit 6 --verbose ${TESTROOT}/wc1

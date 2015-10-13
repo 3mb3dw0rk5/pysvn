@@ -630,10 +630,10 @@ class SvnCommand:
 
 
     def cmd_import( self, args ):
-        msg = self.getOptionalValue( '--message', '' )
+        msg = args.getOptionalValue( '--message', '' )
         recurse = args.getBooleanOption( '--non-recursive', False )
         positional_args = args.getPositionalArgs( 2, 2 )
-        self.client.import_( positional_args[0], positional_args[1], recurse=recurse )
+        self.client.import_( positional_args[0], positional_args[1], msg, recurse=recurse )
 
     def cmd_lock( self, args ):
         msg = args.getOptionalValue( '--message', '' )
@@ -643,12 +643,14 @@ class SvnCommand:
 
     def cmd_log( self, args ):
         start_revision, end_revision = args.getOptionalRevisionPair( '--revision', 'head', '0' )
+        limit = args.getOptionalValue( '--limit', 0 )
         verbose = args.getBooleanOption( '--verbose', True )
         positional_args = args.getPositionalArgs( 1, 1 )
         all_logs = self.client.log( positional_args[0],
                                     revision_start=start_revision,
                                     revision_end=end_revision,
-                                    discover_changed_paths=verbose )
+                                    discover_changed_paths=verbose,
+                                    limit=limit )
 
         for log in all_logs:
             print( '-'*60 )
@@ -1079,6 +1081,7 @@ long_opt_info = {
     '--force': 0,               # force operation to run
     '--force-log': 0,           # force validity of log message source
     '--incremental': 0,         # give output suitable for concatenation
+    '--limit': 1,               # number of logs to fetch
     '--new': 1,                 # use ARG as the newer target
     '--no-auth-cache': 0,       # do not cache authentication tokens
     '--no-auto-props': 0,       # disable automatic properties

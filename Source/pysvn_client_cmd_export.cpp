@@ -8,7 +8,7 @@
 // ====================================================================
 //
 //
-//  pysvn_client_cmd_diff.cpp
+//  pysvn_client_cmd_export.cpp
 //
 #if defined( _MSC_VER )
 // disable warning C4786: symbol greater than 255 character,
@@ -246,6 +246,7 @@ Py::Object pysvn_client::cmd_import( const Py::Tuple &a_args, const Py::Dict &a_
     try
     {
         std::string norm_path( svnNormalisedIfPath( path, pool ) );
+        std::string norm_url( svnNormalisedUrl( url, pool ) );
 
         checkThreadPermission();
 
@@ -258,7 +259,7 @@ Py::Object pysvn_client::cmd_import( const Py::Tuple &a_args, const Py::Dict &a_
             (
             &commit_info,       // changed type
             norm_path.c_str(),
-            url.c_str(),
+            norm_url.c_str(),
             depth,
             !ignore,
             ignore_unknown_node_types,
