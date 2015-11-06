@@ -292,8 +292,9 @@ extern "C" svn_error_t *handlerSslServerTrustPrompt
     if( accept_permanently )
     {
         new_cred->may_save = 1;
-        new_cred->accepted_failures = accepted_failures;
     }
+
+    new_cred->accepted_failures = accepted_failures;
 
     *cred = new_cred;
 
