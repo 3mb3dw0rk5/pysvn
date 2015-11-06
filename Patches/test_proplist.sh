@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 export SVN_INC=/usr/include/subversion-1
 export SVN_LIB=/usr/lib

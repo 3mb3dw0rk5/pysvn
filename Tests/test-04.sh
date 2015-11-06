@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # need to get rid of any symbolic links in the WORKDIR
 export WORKDIR=$( ${PYTHON} -c 'import os;os.chdir("..");print( os.getcwd() )' )
 
@@ -30,7 +30,7 @@ cmd ${PYSVN} mkdir file://${TESTROOT}/repos/trunk -m "test-04 add trunk"
 cmd ${PYSVN} mkdir file://${TESTROOT}/repos/trunk/test -m "test-04 add test"
 
 echo Info: Install hooks
-echo '#!/bin/sh' >${TESTROOT}/repos/hooks/pre-commit
+echo '#!/bin/bash' >${TESTROOT}/repos/hooks/pre-commit
 echo export PYTHONPATH=$PYTHONPATH >>${TESTROOT}/repos/hooks/pre-commit
 echo export LD_LIBRARY_PATH=$LD_LIBRARY_PATH >>${TESTROOT}/repos/hooks/pre-commit
 echo export PATH=$PATH >>${TESTROOT}/repos/hooks/pre-commit
@@ -38,7 +38,7 @@ echo echo $PYTHON ${WORKDIR}/Tests/test_04_commit_hook_test_1.py pre-commit '"$@
 echo $PYTHON ${WORKDIR}/Tests/test_04_commit_hook_test_1.py pre-commit '"$@"' ">>${TESTROOT}/pre_test_1.output" >>${TESTROOT}/repos/hooks/pre-commit
 chmod +x ${TESTROOT}/repos/hooks/pre-commit
 
-echo '#!/bin/sh' >${TESTROOT}/repos/hooks/post-commit
+echo '#!/bin/bash' >${TESTROOT}/repos/hooks/post-commit
 echo export PYTHONPATH=$PYTHONPATH >>${TESTROOT}/repos/hooks/post-commit
 echo export LD_LIBRARY_PATH=$LD_LIBRARY_PATH >>${TESTROOT}/repos/hooks/post-commit
 echo export PATH=$PATH >>${TESTROOT}/repos/hooks/post-commit

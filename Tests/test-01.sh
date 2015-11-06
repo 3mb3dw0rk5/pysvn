@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # need to get rid of any symbolic links in the WORKDIR
 export WORKDIR=$( ${PYTHON} -c 'import os;os.chdir("..");print( os.getcwd() )' )
 

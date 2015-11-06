@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 export PYTHONPATH=${BUILDER_TOP_DIR}/Source
 export LD_LIBRARY_PATH=${SVNCPP_LIB}
 export DYLD_LIBRARY_PATH=${SVNCPP_LIB}
