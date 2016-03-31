@@ -687,7 +687,7 @@ class Win32CompilerMSVC90(Compiler):
 
     def ruleLinkProgram( self, target ):
         pyd_filename = target.getTargetFilename()
-        pdf_filename = target.getTargetFilename( '.pdf' )
+        pdb_filename = target.getTargetFilename( '.pdb' )
 
         all_objects = [source.getTargetFilename() for source in target.all_sources]
 
@@ -697,13 +697,13 @@ class Win32CompilerMSVC90(Compiler):
         rules.append( '%s : %s' % (pyd_filename, ' '.join( all_objects )) )
         rules.append( '\t@echo Link %s' % (pyd_filename,) )
         rules.append( '\t@$(LDEXE)  %%(CCCFLAGS)s /Fe%s /Fd%s %s $(LDLIBS)' %
-                            (pyd_filename, pdf_filename, ' '.join( all_objects )) )
+                            (pyd_filename, pdb_filename, ' '.join( all_objects )) )
 
         self.makePrint( self.expand( '\n'.join( rules ) ) )
 
     def ruleLinkShared( self, target ):
         pyd_filename = target.getTargetFilename()
-        pdf_filename = target.getTargetFilename( '.pdf' )
+        pdb_filename = target.getTargetFilename( '.pdb' )
 
         all_objects = [source.getTargetFilename() for source in target.all_sources]
 
@@ -713,7 +713,7 @@ class Win32CompilerMSVC90(Compiler):
         rules.append( '%s : %s' % (pyd_filename, ' '.join( all_objects )) )
         rules.append( '\t@echo Link %s' % (pyd_filename,) )
         rules.append( '\t@$(LDSHARED)  %%(CCCFLAGS)s /Fe%s /Fd%s %s %%(PYTHON_LIB)s\python%d%d.lib $(LDLIBS)' %
-                            (pyd_filename, pdf_filename, ' '.join( all_objects ), sys.version_info[0], sys.version_info[1]) )
+                            (pyd_filename, pdb_filename, ' '.join( all_objects ), sys.version_info[0], sys.version_info[1]) )
 
         self.makePrint( self.expand( '\n'.join( rules ) ) )
 
