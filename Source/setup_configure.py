@@ -165,7 +165,7 @@ class Setup:
                 ,sys.exec_prefix) )
 
         if self.options.hasOption( '--platform' ):
-            self.platform = self.options.getOption( '--platform' )
+            self.platform = self.options.getOption( '--platform' ).lower()
 
         else:
             if sys.platform == 'darwin' and os.path.exists( '/System/Library/CoreServices/SystemVersion.plist' ):
@@ -189,7 +189,7 @@ class Setup:
             else:
                 raise SetupError( 'Cannot automatically detect your platform use --platform option' )
 
-        if self.platform == 'win32':
+        if self.platform in ('win32', 'win64'):
             self.c_utils = Win32CompilerMSVC90( self )
             self.c_pysvn = Win32CompilerMSVC90( self )
 
