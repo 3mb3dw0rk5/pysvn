@@ -54,6 +54,7 @@ def cmd_help( argv ):
 class Options:
     all_options_info = {
         '--arch':               (2, '<arch>'),
+        '--distro-dir':         (1, '<dir>'),
         '--apr-inc-dir':        (1, '<dir>'),
         '--apu-inc-dir':        (1, '<dir>'),
         '--apr-lib-dir':        (1, '<dir>'),
@@ -68,7 +69,6 @@ class Options:
         '--svn-inc-dir':        (1, '<dir>'),
         '--svn-lib-dir':        (1, '<dir>'),
         '--svn-bin-dir':        (1, '<dir>'),
-        '--svn-root-dir':       (1, '<dir>'),
         '--verbose':            (0, None),
         '--disable-deprecated-functions-warnings': (0, None),
         }
@@ -535,7 +535,7 @@ class Compiler:
         return self.find_dir(
             'APR include',
             '--apr-inc-dir',
-            None,
+            'include',
             self._find_paths_apr_inc,
             'apr.h' )
 
@@ -543,14 +543,13 @@ class Compiler:
         return self.find_dir(
             'APR include',
             '--apu-inc-dir',
-            None,
+            'include',
             self._find_paths_apr_util_inc,
             'apu.h' )
 
     def find_apr_lib( self ):
         last_exception = None
-        lib_list = [(self.get_lib_name_for_platform( 'libapr-1' ), 'apr-1'),
-                    (self.get_lib_name_for_platform( 'libapr-0' ), 'apr-0')]
+        lib_list = [(self.get_lib_name_for_platform( 'libapr-1' ), 'apr-1')]
 
         for apr_libname, self.lib_apr in lib_list:
             try:
@@ -593,9 +592,9 @@ class Compiler:
         if self.options.hasOption( kw ):
             base_dir_list = [self.options.getOption( kw )]
 
-        elif( self.options.hasOption( '--svn-root-dir' )
+        elif( self.options.hasOption( '--distro-dir' )
         and svn_root_suffix is not None ):
-            base_dir_list = ['%s/%s' % (self.options.getOption( '--svn-root-dir' ), svn_root_suffix)]
+            base_dir_list = ['%s/%s' % (self.options.getOption( '--distro-dir' ), svn_root_suffix)]
 
         debug( '__find_dir base_dir_list=%r' % (base_dir_list,) )
 
@@ -646,11 +645,11 @@ class Win32CompilerMSVC90(Compiler):
         self._find_paths_apr_util_inc = []
         self._find_paths_apr_lib = []
 
-        if self.options.hasOption( '--svn-root-dir' ):
-            svn_root_dir = self.options.getOption( '--svn-root-dir' )
-            self._find_paths_apr_inc.append( r'%s\include\apr' % (svn_root_dir,) )
-            self._find_paths_apr_util_inc.append( r'%s\include\apr-util' % (svn_root_dir,) )
-            self._find_paths_apr_lib.append( r'%s\lib\apr' % (svn_root_dir,) )
+        if self.options.hasOption( '--distro-dir' ):
+            distro_dir = self.options.getOption( '--distro-dir' )
+            self._find_paths_apr_inc.append( r'%s\include\apr' % (distro_dir,) )
+            self._find_paths_apr_util_inc.append( r'%s\include\apr-util' % (distro_dir,) )
+            self._find_paths_apr_lib.append( r'%s\lib\apr' % (distro_dir,) )
 
         self._addVar( 'PYTHON_DIR',     sys.exec_prefix )
         self._addVar( 'PYTHON_INC',     r'%(PYTHON_DIR)s\include' )
@@ -788,17 +787,20 @@ class Win32CompilerMSVC90(Compiler):
                     r'%(SVN_LIB)s\libsvn_repos-1.lib',
                     r'%(SVN_LIB)s\libsvn_subr-1.lib',
                     r'%(SVN_LIB)s\libsvn_wc-1.lib',
-                    r'%(SVN_LIB)s\apr-iconv\libapriconv-1.lib',
-                    r'%(SVN_LIB)s\apr-util\libaprutil-1.lib',
-                    r'%(SVN_LIB)s\apr-util\xml.lib',
-                    r'%(SVN_LIB)s\apr\libapr-1.lib',
+                    r'%(APR_LIB)s\libapriconv-1.lib',
+                    r'%(APR_LIB)s\libaprutil-1.lib',
+                    #r'%(APR_LIB)s\xml.lib',
+                    r'%(APR_LIB)s\libapr-1.lib',
                     ]
-        if os.path.exists( self.expand( r'%(SVN_LIB)s\serf\serf-1.lib' ) ):
-            ldlibs.append( r'%(SVN_LIB)s\serf\serf-1.lib' )
-        elif os.path.exists( self.expand( r'%(SVN_LIB)s\libsvn_ra_neon-1.lib' ) ):
-            ldlibs.append( r'%(SVN_LIB)s\libsvn_ra_neon-1.lib' )
-        else:
-            raise SetupError( 'Cannot find serf or neon' )
+        if False:
+            if os.path.exists( self.expand( r'%(SVN_LIB)s\serf\serf-1.lib' ) ):
+                ldlibs.append( r'%(SVN_LIB)s\serf\serf-1.lib' )
+
+            elif os.path.exists( self.expand( r'%(SVN_LIB)s\libsvn_ra_neon-1.lib' ) ):
+                ldlibs.append( r'%(SVN_LIB)s\libsvn_ra_neon-1.lib' )
+
+            else:
+                raise SetupError( 'Cannot find serf or neon' )
 
         ldlibs.append( r'ws2_32.lib' )
 

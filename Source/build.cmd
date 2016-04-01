@@ -1,20 +1,14 @@
 setlocal
-if not "%1" == "" set PYVER=%1
-if "%PYVER%" == "" set /P PYVER="Python version (Mm): "
-if not EXIST c:\python%PYVER%.win32\python.exe (
-    echo Error: Unknown python version
-    exit /b 2
-    )
+set PY_VER=%1
+set SVN_VER_MAJ_MIN=%2
+set BUILD_ARCH=%3
 
-if not "%2" == "" set SVNVER=%2
-if "%SVNVER%" == "" set /P SVNVER="SVN version (M.m.P): "
+call ..\Builder\builder_custom_init.cmd
 
-if not EXIST c:\BuildRoot\Win32-MSVC90-%SVNVER%\svn-win32-%SVNVER%\bin\svn.exe (
-    echo Error: Unknown SVN version
-    exit /b 2
-    )
+set TARGET=c:\BuildRoot\%BUILD_ARCH%-MSVC%VC_VER%-%SVN_VER%
 
-c:\python%PYVER%.win32\python setup.py configure --verbose --platform=win32 --pycxx-dir=%USERPROFILE%\wc\svn\PyCxx --svn-root-dir=c:\BuildRoot\Win32-MSVC90-%SVNVER%\svn-win32-%SVNVER%
+python setup.py configure --verbose --platform=%BUILD_ARCH% --pycxx-dir=%USERPROFILE%\wc\svn\PyCxx --distro-dir=%TARGET%\dist
+
 if ERRORLEVEL 1 goto :EOF
 nmake clean
 if ERRORLEVEL 1 goto :EOF
