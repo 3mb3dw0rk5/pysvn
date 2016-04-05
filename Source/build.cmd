@@ -5,8 +5,6 @@ set BUILD_ARCH=%3
 
 call ..\Builder\builder_custom_init.cmd
 
-set TARGET=c:\BuildRoot\%BUILD_ARCH%-MSVC%VC_VER%-%SVN_VER%
-
 python setup.py configure --verbose --platform=%BUILD_ARCH% --pycxx-dir=%USERPROFILE%\wc\svn\PyCxx --distro-dir=%TARGET%\dist
 
 if ERRORLEVEL 1 goto :EOF
