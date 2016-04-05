@@ -16,7 +16,7 @@ kit_msvc: setup_kit_files.py
 	if exist tmp rmdir /s /q tmp
 	mkdir tmp
 	copy ..\..\LICENSE.txt tmp\LICENSE.txt
-	copy $(SVN_BIN)\*.dll tmp
+	xcopy /q $(SVN_BIN)\*.dll tmp
 	$(PYTHON) setup_kit_files.py $(ARCH) $(VC_VER)
 	"C:\Program Files (x86)\Inno Setup 5\ISCC.exe" tmp\pysvn.iss
 	tmp\setup_copy.cmd

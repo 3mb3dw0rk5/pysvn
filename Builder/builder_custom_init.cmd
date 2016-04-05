@@ -26,9 +26,9 @@ if "%PY_VER%" == "3.3" set VC_VER=9.0
 if "%PY_VER%" == "3.4" set VC_VER=9.0
 if "%PY_VER%" == "3.5" set VC_VER=14.0
 
-if exist ..\..\ReleaseEngineering\win32-vc-%VC_VER%\software-versions-%SVN_VER_MAJ_MIN%.cmd (
+if exist ..\..\ReleaseEngineering\Windows-VC-%VC_VER%\software-versions-%SVN_VER_MAJ_MIN%.cmd (
     echo Setting up compiler VC %VC_VER%
-    pushd ..\..\ReleaseEngineering\win32-vc-%VC_VER%
+    pushd ..\..\ReleaseEngineering\Windows-VC-%VC_VER%
     call software-versions-%SVN_VER_MAJ_MIN%.cmd %BUILD_ARCH%
     popd
 ) else (
