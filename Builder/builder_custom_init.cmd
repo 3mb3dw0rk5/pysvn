@@ -4,13 +4,8 @@ if not "%1" == "" set PY_VER=%1
 if not "%2" == "" set SVN_VER_MAJ_MIN=%4
 if not "%3" == "" set BUILD_ARCH=%3
 
-if "%PY_VER%" == "" set /p PY_VER="Python (2.7): "
 if "%PY_VER%" == "" set PY_VER=2.7
-
-if "%SVN_VER_MAJ_MIN%" == "" set /p SVN_VER_MAJ_MIN="Build Version (1.9): "
 if "%SVN_VER_MAJ_MIN%" == "" set SVN_VER_MAJ_MIN=1.9
-
-if "%BUILD_ARCH%" == "" set /p BUILD_ARCH="Build ARCH (win32): "
 if "%BUILD_ARCH%" == "" set BUILD_ARCH=Win32
 
 if /i "%BUILD_ARCH%" EQU "win32" set BUILD_ARCH=Win32
