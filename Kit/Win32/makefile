@@ -1,0 +1,29 @@
+#
+#	makefile - make the windows kit
+#
+!ifndef ARCH
+!error "ARCH must be provided"
+!endif
+
+
+!ifndef VC_VER
+!error "VC_VER must be provided"
+!endif
+
+all: kit_msvc
+
+kit_msvc: pysvn.iss setup_version_handling.py
+	if exist tmp rmdir /s /q tmp
+	mkdir tmp
+	copy ..\..\LICENSE.txt tmp\LICENSE.txt
+	copy $(SVN_BIN)\*.dll tmp
+	$(PYTHON) setup_version_handling.py $(ARCH) $(VC_VER)
+	"C:\Program Files (x86)\Inno Setup 5\ISCC.exe" tmp\pysvn-branded.iss
+	tmp\setup_copy.cmd
+
+
+debug:
+	"C:\Program Files (x86)\Inno Setup 5\Compil32.exe" pysvn.iss
+
+clean:
+	if exist tmp rmdir /s /q tmp
