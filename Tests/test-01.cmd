@@ -225,7 +225,8 @@ call :cmd_pysvn merge --revision 14:15 file:///b:/root/repos/trunk/test b:\wc3\t
 call :cmd_pysvn status b:\wc3\test-branch
 call :cmd_pysvn diff b:\wc3\test-branch
 
-call :cmd_shell %PYTHON% %BUILDER_TOP_DIR%\Tests\test_01_set_get_tests.py b:\configdir
+
+call :cmd_shell %PYTHON% -u %BUILDER_TOP_DIR%\Tests\test_01_set_get_tests.py b:\configdir
 
 echo Info: Test - import
 

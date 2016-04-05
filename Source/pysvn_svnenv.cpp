@@ -375,8 +375,7 @@ SvnContext::SvnContext( const std::string &config_dir_str )
 
     if( !config_dir_str.empty() )
     {
-        m_config_dir = new char[config_dir_str.size() + 1];
-        strcpy( m_config_dir, config_dir_str.c_str() );
+        m_config_dir = svn_dirent_canonicalize( config_dir_str.c_str(), m_pool );
     }
 
     svn_config_ensure( m_config_dir, m_pool );
@@ -560,8 +559,6 @@ void SvnContext::installConflictResolver( bool install )
 
 SvnContext::~SvnContext()
 {
-    delete m_config_dir;
-
     if( m_pool )
     {
         apr_pool_destroy( m_pool );

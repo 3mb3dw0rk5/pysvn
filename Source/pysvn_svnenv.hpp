@@ -417,7 +417,7 @@ public:
 private:
     apr_pool_t          *m_pool;
     svn_client_ctx_t    *m_context;
-    char                *m_config_dir;
+    const char          *m_config_dir;
 };
 
 class SvnTransaction

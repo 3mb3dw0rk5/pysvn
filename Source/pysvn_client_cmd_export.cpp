@@ -104,6 +104,7 @@ Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_
     try
     {
         std::string norm_src_path( svnNormalisedIfPath( src_path, pool ) );
+        std::string norm_dest_path( svnNormalisedIfPath( dest_path, pool ) );
 
         checkThreadPermission();
 
@@ -114,7 +115,7 @@ Py::Object pysvn_client::cmd_export( const Py::Tuple &a_args, const Py::Dict &a_
             (
             &revnum,
             norm_src_path.c_str(),
-            dest_path.c_str(),
+            norm_dest_path.c_str(),
             &peg_revision,
             &revision,
             force,
