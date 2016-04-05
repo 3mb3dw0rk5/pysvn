@@ -16,6 +16,11 @@ import glob
 import locale
 import types
 
+if sys.version_info.major == 2:
+    # suport cp65001 aka utf-8
+    import codecs
+    codecs.register(lambda name: codecs.lookup('utf-8') if name == 'cp65001' else None)
+
 try:
     sorted( [] )
 except NameError:
