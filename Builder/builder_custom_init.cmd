@@ -5,7 +5,7 @@ if not "%2" == "" set SVN_VER_MAJ_MIN=%4
 if not "%3" == "" set BUILD_ARCH=%3
 
 if "%PY_VER%" == "" set PY_VER=2.7
-if "%SVN_VER_MAJ_MIN%" == "" set SVN_VER_MAJ_MIN=1.9
+if "%SVN_VER_MAJ_MIN%" == "" set SVN_VER_MAJ_MIN=1.8
 if "%BUILD_ARCH%" == "" set BUILD_ARCH=Win32
 
 if /i "%BUILD_ARCH%" EQU "win32" set BUILD_ARCH=Win32

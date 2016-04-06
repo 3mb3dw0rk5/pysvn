@@ -1,4 +1,3 @@
-setlocal
 set PY_VER=%1
 set SVN_VER_MAJ_MIN=%2
 set BUILD_ARCH=%3
@@ -17,4 +16,3 @@ if ERRORLEVEL 1 goto :EOF
 nmake clean
 if ERRORLEVEL 1 goto :EOF
 nmake
-endlocal
