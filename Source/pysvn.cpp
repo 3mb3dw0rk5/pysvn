@@ -24,6 +24,12 @@
 
 #include "pysvn_static_strings.hpp"
 
+#ifdef _WIN32
+// include to cause the windows manifest file to be created for pysvn.pyd
+// as it contains the pragma with linker instructions for the C runtime libs
+#include <use_ansi.h>
+#endif
+
 extern "C" int pysvn_breakpoint()
 {
     return 0;
