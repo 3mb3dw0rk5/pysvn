@@ -9,6 +9,10 @@ if "%BUILD_ARCH%" == "" goto :eof
 if /i "%BUILD_ARCH%" EQU "win32" set BUILD_ARCH=Win32
 if /i "%BUILD_ARCH%" EQU "win64" set BUILD_ARCH=Win64
 
+rem restore the path on later runs
+if "%BUILD_SAVED_PATH%" NEQ "" PATH %BUILD_SAVED_PATH%
+if "%BUILD_SAVED_PATH%" EQU "" set BUILD_SAVED_PATH=%PATH%
+
 set SVN_VER_MAJ_DASH_MIN=%SVN_VER_MAJ_MIN:.=-%
 set PY_MAJ=%PY_VER:~0,1%
 set PY_MIN=%PY_VER:~2%
