@@ -96,11 +96,14 @@ class InnoSetup:
         if self.vc_ver == '9.0':
             redist_year = '2008'
 
+        elif self.vc_ver == '10.0':
+            redist_year = '2010'
+
         elif self.vc_ver == '14.0':
             redist_year = '2015'
 
         else:
-            print( 'Error: Unsupported VC_VER of %s' % (self.vc_ser,) )
+            print( 'Error: Unsupported VC_VER of %s' % (self.vc_ver,) )
             return 1
 
         if self.arch == 'Win32':
