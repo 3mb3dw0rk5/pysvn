@@ -1,7 +1,7 @@
 WorkDir: C:\Users\barry\wc\svn\PySVN\Extension
-PYTHON: c:\python27.win32\python.exe
+PYTHON: c:\python27.Win32\python.exe
 Username: barry
-Info: PYSVN CMD c:\python27.win32\python.exe C:\Users\barry\wc\svn\PySVN\Extension\Examples\Client\svn_cmd.py --pysvn-testing 01.01.00 --config-dir b:\configdir
+Info: PYSVN CMD c:\python27.Win32\python.exe C:\Users\barry\wc\svn\PySVN\Extension\Examples\Client\svn_cmd.py --pysvn-testing 01.01.00 --config-dir b:\configdir
 
 Info: CMD mkdir testroot-01
 
@@ -13,13 +13,15 @@ Info: CMD svnadmin create b:\repos
 Info: Test - mkdir
 
 Info: PYSVN CMD mkdir file:///b:/repos/trunk -m "test-01 add trunk"
+commit_finalizing .
 
 Info: PYSVN CMD mkdir file:///b:/repos/trunk/test -m "test-01 add test"
+commit_finalizing .
 Info: Test - ls
 
 Info: PYSVN CMD ls file:///b:/repos -v -R
-      2 barry           0 16-Oct-2015 16:31:07 file:///B:/repos/trunk
-      2 barry           0 16-Oct-2015 16:31:07 file:///B:/repos/trunk/test
+      2 barry           0 07-Apr-2016 18:57:57 file:///B:/repos/trunk
+      2 barry           0 07-Apr-2016 18:57:57 file:///B:/repos/trunk/test
 Info: Test - checkout
 
 Info: PYSVN CMD checkout file:///b:/repos/trunk b:\wc1
@@ -35,6 +37,7 @@ b:\wc1\.svn\format
 b:\wc1\.svn\pristine
 b:\wc1\.svn\tmp
 b:\wc1\.svn\wc.db
+b:\wc1\.svn\wc.db-journal
 
 Info: CMD cd /d b:\wc1\test
 Info: Test - add
@@ -91,6 +94,7 @@ A B:/wc1/test/folder1/file7.txt
 A B:/wc1/test/folder1/folder2
 A B:/wc1/test/folder1/folder2/file8.txt
 A B:/wc1/test/folder3
+commit_finalizing .
 Revision 3
 Info: Test - update - get a new wc that will update
 
@@ -114,6 +118,7 @@ Info: Append File b:\wc1\test\file1.txt - line 2
 
 Info: PYSVN CMD checkin -m "commit modified file"
 M B:/wc1/test/file1.txt
+commit_finalizing .
 Revision 4
 
 Info: PYSVN CMD checkin -m "commit modified file"
@@ -132,8 +137,8 @@ Info: Test - annotate
 Info: PYSVN CMD annotate b:\wc2\test\file1.txt
 A /trunk/test/file1.txt
 A /trunk/test/file1.txt
-0| r3 | barry | 2015-10-16T15:31:09.355046Z | test add file 1
-1| r4 | barry | 2015-10-16T15:31:10.042533Z | line 2
+0| r3 | barry | 2016-04-07T17:57:59.006964Z | test add file 1
+1| r4 | barry | 2016-04-07T17:58:00.147687Z | line 2
 Info: Test - cat
 
 Info: PYSVN CMD cat -r head file:///b:/repos/trunk/test/file1.txt
@@ -144,14 +149,16 @@ Info: Test - cleanup
 Info: Test - copy
 
 Info: PYSVN CMD mkdir file:///b:/repos/tags -m "test-01 add tags"
+commit_finalizing .
 Info: Create File msg.tmp - tag the trunk      
 
 Info: PYSVN CMD copy file:///b:/repos/trunk file:///b:/repos/tags/version1
 Log message
 --- -------
+commit_finalizing .
 
 Info: PYSVN CMD ls -v file:///b:/repos/tags
-      6 barry           0 16-Oct-2015 16:31:10 file:///B:/repos/tags/version1
+      6 barry           0 07-Apr-2016 18:58:01 file:///B:/repos/tags/version1
 
 Info: PYSVN CMD copy b:\wc2\test\file1.txt b:\wc2\test\file1b.txt
 A B:/wc2/test/file1b.txt
@@ -161,6 +168,7 @@ property_added B:/wc2/test/file1b.txt
 
 Info: PYSVN CMD checkin b:\wc2 -m "copy test"
 A B:/wc2/test/file1b.txt
+commit_finalizing .
 Revision 7
 Info: Test - diff
 Info: Append File b:\wc2\test\file1b.txt - new line       
@@ -178,60 +186,60 @@ Index: B:/wc2/test/file1b.txt
 Info: Test - export
 
 Info: PYSVN CMD export file:///b:/repos/trunk/test b:\export1.native
-A b:\export1.native
-A b:\export1.native/file1.txt
-A b:\export1.native/file1b.txt
-A b:\export1.native/file2.txt
-A b:\export1.native/file3.txt
-A b:\export1.native/file4.txt
-A b:\export1.native/file5.txt
-A b:\export1.native/folder1
-A b:\export1.native/folder1/file7.txt
-A b:\export1.native/folder1/folder2
-A b:\export1.native/folder1/folder2/file8.txt
-A b:\export1.native/folder3
+A B:/export1.native
+A B:/export1.native/file1.txt
+A B:/export1.native/file1b.txt
+A B:/export1.native/file2.txt
+A B:/export1.native/file3.txt
+A B:/export1.native/file4.txt
+A B:/export1.native/file5.txt
+A B:/export1.native/folder1
+A B:/export1.native/folder1/file7.txt
+A B:/export1.native/folder1/folder2
+A B:/export1.native/folder1/folder2/file8.txt
+A B:/export1.native/folder3
 
 Info: PYSVN CMD export --native-eol CR file:///b:/repos/trunk/test b:\export1.cr
-A b:\export1.cr
-A b:\export1.cr/file1.txt
-A b:\export1.cr/file1b.txt
-A b:\export1.cr/file2.txt
-A b:\export1.cr/file3.txt
-A b:\export1.cr/file4.txt
-A b:\export1.cr/file5.txt
-A b:\export1.cr/folder1
-A b:\export1.cr/folder1/file7.txt
-A b:\export1.cr/folder1/folder2
-A b:\export1.cr/folder1/folder2/file8.txt
-A b:\export1.cr/folder3
+A B:/export1.cr
+A B:/export1.cr/file1.txt
+A B:/export1.cr/file1b.txt
+A B:/export1.cr/file2.txt
+A B:/export1.cr/file3.txt
+A B:/export1.cr/file4.txt
+A B:/export1.cr/file5.txt
+A B:/export1.cr/folder1
+A B:/export1.cr/folder1/file7.txt
+A B:/export1.cr/folder1/folder2
+A B:/export1.cr/folder1/folder2/file8.txt
+A B:/export1.cr/folder3
 
 Info: PYSVN CMD export --native-eol LF file:///b:/repos/trunk/test b:\export1.lf
-A b:\export1.lf
-A b:\export1.lf/file1.txt
-A b:\export1.lf/file1b.txt
-A b:\export1.lf/file2.txt
-A b:\export1.lf/file3.txt
-A b:\export1.lf/file4.txt
-A b:\export1.lf/file5.txt
-A b:\export1.lf/folder1
-A b:\export1.lf/folder1/file7.txt
-A b:\export1.lf/folder1/folder2
-A b:\export1.lf/folder1/folder2/file8.txt
-A b:\export1.lf/folder3
+A B:/export1.lf
+A B:/export1.lf/file1.txt
+A B:/export1.lf/file1b.txt
+A B:/export1.lf/file2.txt
+A B:/export1.lf/file3.txt
+A B:/export1.lf/file4.txt
+A B:/export1.lf/file5.txt
+A B:/export1.lf/folder1
+A B:/export1.lf/folder1/file7.txt
+A B:/export1.lf/folder1/folder2
+A B:/export1.lf/folder1/folder2/file8.txt
+A B:/export1.lf/folder3
 
 Info: PYSVN CMD export --native-eol CRLF file:///b:/repos/trunk/test b:\export1.crlf
-A b:\export1.crlf
-A b:\export1.crlf/file1.txt
-A b:\export1.crlf/file1b.txt
-A b:\export1.crlf/file2.txt
-A b:\export1.crlf/file3.txt
-A b:\export1.crlf/file4.txt
-A b:\export1.crlf/file5.txt
-A b:\export1.crlf/folder1
-A b:\export1.crlf/folder1/file7.txt
-A b:\export1.crlf/folder1/folder2
-A b:\export1.crlf/folder1/folder2/file8.txt
-A b:\export1.crlf/folder3
+A B:/export1.crlf
+A B:/export1.crlf/file1.txt
+A B:/export1.crlf/file1b.txt
+A B:/export1.crlf/file2.txt
+A B:/export1.crlf/file3.txt
+A B:/export1.crlf/file4.txt
+A B:/export1.crlf/file5.txt
+A B:/export1.crlf/folder1
+A B:/export1.crlf/folder1/file7.txt
+A B:/export1.crlf/folder1/folder2
+A B:/export1.crlf/folder1/folder2/file8.txt
+A B:/export1.crlf/folder3
 
 Info: CMD dir /s /b b:\export1.native
 b:\export1.native\file1.txt
@@ -290,44 +298,44 @@ Info: PYSVN CMD info b:\wc2\test
 Path: b:\wc2\test
 Name: .
 Url: file:///B:/repos/trunk/test
-Repository UUID: a375192d-598f-3142-99ff-79ed0ab36fe6
+Repository UUID: bfd39227-6b05-f149-a670-491a4a244242
 Revision: 4
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 16-Oct-2015 16:31:10
+Last Changed Date: 07-Apr-2016 18:58:00
 
 Info: PYSVN CMD info b:\wc2\test\file1.txt
 Path: b:\wc2\test\file1.txt
 Name: file1.txt
 Url: file:///B:/repos/trunk/test/file1.txt
-Repository UUID: a375192d-598f-3142-99ff-79ed0ab36fe6
+Repository UUID: bfd39227-6b05-f149-a670-491a4a244242
 Revision: 4
 Node kind: file
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 16-Oct-2015 16:31:10
-Text Last Updated: 16-Oct-2015 16:31:10
+Last Changed Date: 07-Apr-2016 18:58:00
+Text Last Updated: 07-Apr-2016 18:58:00
 Checksum: cb0b37e264ebcc467e9f37a069e034d7
 Info: Test - log
 
 Info: PYSVN CMD log b:\wc2
 ------------------------------------------------------------
-rev 7: barry | 16-Oct-2015 16:31:11 | 1 lines
+rev 7: barry | 07-Apr-2016 18:58:02 | 1 lines
 copy test
 ------------------------------------------------------------
-rev 4: barry | 16-Oct-2015 16:31:10 | 1 lines
+rev 4: barry | 07-Apr-2016 18:58:00 | 1 lines
 commit modified file
 ------------------------------------------------------------
-rev 3: barry | 16-Oct-2015 16:31:09 | 1 lines
+rev 3: barry | 07-Apr-2016 18:57:59 | 1 lines
 commit added files
 ------------------------------------------------------------
-rev 2: barry | 16-Oct-2015 16:31:07 | 1 lines
+rev 2: barry | 07-Apr-2016 18:57:57 | 1 lines
 test-01 add test
 ------------------------------------------------------------
-rev 1: barry | 16-Oct-2015 16:31:07 | 1 lines
+rev 1: barry | 07-Apr-2016 18:57:56 | 1 lines
 test-01 add trunk
 ------------------------------------------------------------
 Info: Test - ls
@@ -343,14 +351,14 @@ file:///B:/repos/trunk/test/folder1
 file:///B:/repos/trunk/test/folder3
 
 Info: PYSVN CMD ls -v file:///b:/repos/trunk/test
-      4 barry          25 16-Oct-2015 16:31:10 file:///B:/repos/trunk/test/file1.txt
-      7 barry          23 16-Oct-2015 16:31:11 file:///B:/repos/trunk/test/file1b.txt
-      3 barry          17 16-Oct-2015 16:31:09 file:///B:/repos/trunk/test/file2.txt
-      3 barry          17 16-Oct-2015 16:31:09 file:///B:/repos/trunk/test/file3.txt
-      3 barry          17 16-Oct-2015 16:31:09 file:///B:/repos/trunk/test/file4.txt
-      3 barry          17 16-Oct-2015 16:31:09 file:///B:/repos/trunk/test/file5.txt
-      3 barry           0 16-Oct-2015 16:31:09 file:///B:/repos/trunk/test/folder1
-      3 barry           0 16-Oct-2015 16:31:09 file:///B:/repos/trunk/test/folder3
+      4 barry          25 07-Apr-2016 18:58:00 file:///B:/repos/trunk/test/file1.txt
+      7 barry          23 07-Apr-2016 18:58:02 file:///B:/repos/trunk/test/file1b.txt
+      3 barry          17 07-Apr-2016 18:57:59 file:///B:/repos/trunk/test/file2.txt
+      3 barry          17 07-Apr-2016 18:57:59 file:///B:/repos/trunk/test/file3.txt
+      3 barry          17 07-Apr-2016 18:57:59 file:///B:/repos/trunk/test/file4.txt
+      3 barry          17 07-Apr-2016 18:57:59 file:///B:/repos/trunk/test/file5.txt
+      3 barry           0 07-Apr-2016 18:57:59 file:///B:/repos/trunk/test/folder1
+      3 barry           0 07-Apr-2016 18:57:59 file:///B:/repos/trunk/test/folder3
 
 Info: PYSVN CMD ls b:\wc2\test
 B:/wc2/test/file1.txt
@@ -363,14 +371,14 @@ B:/wc2/test/folder1
 B:/wc2/test/folder3
 
 Info: PYSVN CMD ls -v b:\wc2\test
-      4 barry          25 16-Oct-2015 16:31:10 B:/wc2/test/file1.txt
-      7 barry          23 16-Oct-2015 16:31:11 B:/wc2/test/file1b.txt
-      3 barry          17 16-Oct-2015 16:31:09 B:/wc2/test/file2.txt
-      3 barry          17 16-Oct-2015 16:31:09 B:/wc2/test/file3.txt
-      3 barry          17 16-Oct-2015 16:31:09 B:/wc2/test/file4.txt
-      3 barry          17 16-Oct-2015 16:31:09 B:/wc2/test/file5.txt
-      3 barry           0 16-Oct-2015 16:31:09 B:/wc2/test/folder1
-      3 barry           0 16-Oct-2015 16:31:09 B:/wc2/test/folder3
+      4 barry          25 07-Apr-2016 18:58:00 B:/wc2/test/file1.txt
+      7 barry          23 07-Apr-2016 18:58:02 B:/wc2/test/file1b.txt
+      3 barry          17 07-Apr-2016 18:57:59 B:/wc2/test/file2.txt
+      3 barry          17 07-Apr-2016 18:57:59 B:/wc2/test/file3.txt
+      3 barry          17 07-Apr-2016 18:57:59 B:/wc2/test/file4.txt
+      3 barry          17 07-Apr-2016 18:57:59 B:/wc2/test/file5.txt
+      3 barry           0 07-Apr-2016 18:57:59 B:/wc2/test/folder1
+      3 barry           0 07-Apr-2016 18:57:59 B:/wc2/test/folder3
 Info: Test - merge - see below
 Info: Test - mkdir - done above
 Info: Test - move
@@ -379,6 +387,7 @@ Info: Create File msg.tmp - move url test
 Info: PYSVN CMD move file:///b:/repos/trunk/test/file2.txt file:///b:/repos/trunk/test/file2b.txt
 Log message
 --- -------
+commit_finalizing .
 
 Info: PYSVN CMD move b:\wc2\test\file3.txt b:\wc2\test\file3b.txt
 A B:/wc2/test/file3b.txt
@@ -388,12 +397,14 @@ Info: PYSVN CMD checkin b:\wc2 -m "move wc test"
 A B:/wc2/test/file3b.txt
 D B:/wc2/test/file3.txt
 M B:/wc2/test/file1b.txt
+commit_finalizing .
 Revision 9
 Info: Test - status
 Info: Append File b:\wc1\test\file4.txt - file 4 is changing     
 
 Info: PYSVN CMD checkin b:\wc1 -m "change wc1 for status -u to detect"
 M B:/wc1/test/file4.txt
+commit_finalizing .
 Revision 10
 
 Info: PYSVN CMD status b:\wc2
@@ -517,6 +528,7 @@ Info: Append File b:\wc2\test\file4.txt - conflict in file4 no
 
 Info: PYSVN CMD checkin b:\wc1\test -m "make a conflict part 1"
 M B:/wc1/test/file4.txt
+commit_finalizing .
 Revision 11
 
 Info: PYSVN CMD update b:\wc2\test
@@ -563,6 +575,7 @@ conflict_resolver_starting B:/wc2/test/file4.txt
 
 Info: PYSVN CMD checkin b:\wc2\test\file4.txt -m "resolve a confict part 2"
 M B:/wc2/test/file4.txt
+commit_finalizing .
 Revision 12
 Info: Test - revert
 
@@ -575,7 +588,7 @@ Info: Test - revproplist
 Info: PYSVN CMD revproplist file:///b:/repos/trunk
 Revision: 12
 svn:author: barry
-svn:date: 2015-10-16T15:31:15.448818Z
+svn:date: 2016-04-07T17:58:07.132770Z
 svn:log: resolve a confict part 2
 Info: Test - revpropget
 
@@ -608,13 +621,13 @@ Info: PYSVN CMD info b:\wc1
 Path: b:\wc1
 Name: .
 Url: file:///B:/repos/trunk
-Repository UUID: a375192d-598f-3142-99ff-79ed0ab36fe6
+Repository UUID: bfd39227-6b05-f149-a670-491a4a244242
 Revision: 2
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 2
-Last Changed Date: 16-Oct-2015 16:31:07
+Last Changed Date: 07-Apr-2016 18:57:57
 
 Info: PYSVN CMD relocate file:///b:/repos/trunk file:///b:/root/repos/trunk b:\wc1
 
@@ -622,25 +635,25 @@ Info: PYSVN CMD info b:\wc1
 Path: b:\wc1
 Name: .
 Url: file:///B:/root/repos/trunk
-Repository UUID: a375192d-598f-3142-99ff-79ed0ab36fe6
+Repository UUID: bfd39227-6b05-f149-a670-491a4a244242
 Revision: 2
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 2
-Last Changed Date: 16-Oct-2015 16:31:07
+Last Changed Date: 07-Apr-2016 18:57:57
 
 Info: PYSVN CMD info b:\wc2
 Path: b:\wc2
 Name: .
 Url: file:///B:/repos/trunk
-Repository UUID: a375192d-598f-3142-99ff-79ed0ab36fe6
+Repository UUID: bfd39227-6b05-f149-a670-491a4a244242
 Revision: 4
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 16-Oct-2015 16:31:10
+Last Changed Date: 07-Apr-2016 18:58:00
 
 Info: PYSVN CMD relocate file:///b:/repos/trunk file:///b:/root/repos/trunk b:\wc2
 
@@ -648,26 +661,26 @@ Info: PYSVN CMD info b:\wc2
 Path: b:\wc2
 Name: .
 Url: file:///B:/root/repos/trunk
-Repository UUID: a375192d-598f-3142-99ff-79ed0ab36fe6
+Repository UUID: bfd39227-6b05-f149-a670-491a4a244242
 Revision: 4
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 16-Oct-2015 16:31:10
+Last Changed Date: 07-Apr-2016 18:58:00
 Info: Test - switch
 
 Info: PYSVN CMD info b:\wc2
 Path: b:\wc2
 Name: .
 Url: file:///B:/root/repos/trunk
-Repository UUID: a375192d-598f-3142-99ff-79ed0ab36fe6
+Repository UUID: bfd39227-6b05-f149-a670-491a4a244242
 Revision: 4
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 4
-Last Changed Date: 16-Oct-2015 16:31:10
+Last Changed Date: 07-Apr-2016 18:58:00
 
 Info: PYSVN CMD switch b:\wc2 file:///b:/root/repos/tags/version1
 A B:/wc2/test/file2.txt
@@ -683,13 +696,13 @@ Info: PYSVN CMD info b:\wc2
 Path: b:\wc2
 Name: .
 Url: file:///B:/root/repos/tags/version1
-Repository UUID: a375192d-598f-3142-99ff-79ed0ab36fe6
+Repository UUID: bfd39227-6b05-f149-a670-491a4a244242
 Revision: 12
 Node kind: directory
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 6
-Last Changed Date: 16-Oct-2015 16:31:10
+Last Changed Date: 07-Apr-2016 18:58:01
 Info: Test - update - see above
 Info: Test - Info: Testing - merge
 
@@ -723,12 +736,14 @@ A B:/wc3/test/file-merge-2.txt
 Info: PYSVN CMD commit -m "add test merge files" .
 A B:/wc3/test/file-merge-1.txt
 A B:/wc3/test/file-merge-2.txt
+commit_finalizing .
 Revision 13
 Info: Create File msg.tmp - make a branch      
 
 Info: PYSVN CMD copy file:///b:/root/repos/trunk/test file:///b:/root/repos/trunk/test-branch
 Log message
 --- -------
+commit_finalizing .
 
 Info: PYSVN CMD update b:\wc3
 A B:/wc3/test-branch
@@ -761,6 +776,7 @@ Info: PYSVN CMD commit -m "change test merge files" .
 A B:/wc3/test/file-merge-3.txt
 D B:/wc3/test/file-merge-1.txt
 M B:/wc3/test/file-merge-2.txt
+commit_finalizing .
 Revision 15
 
 Info: PYSVN CMD merge --dry-run --revision 14:15 file:///b:/root/repos/trunk/test b:\wc3\test-branch
@@ -789,7 +805,7 @@ Info: PYSVN CMD diff b:\wc3\test-branch
 Index: B:/wc3/test-branch/file-merge-1.txt
 ===================================================================
 --- B:/wc3/test-branch/file-merge-1.txt	(revision 14)
-+++ B:/wc3/test-branch/file-merge-1.txt	(working copy)
++++ B:/wc3/test-branch/file-merge-1.txt	(nonexistent)
 @@ -1 +0,0 @@
 -test add file merge 1
 Index: B:/wc3/test-branch/file-merge-2.txt
@@ -799,6 +815,8 @@ Index: B:/wc3/test-branch/file-merge-2.txt
 @@ -1 +1,2 @@
  test add file merge 2
 +modify merge 2
+Index: B:/wc3/test-branch/file-merge-3.txt
+===================================================================
 Index: B:/wc3/test-branch
 ===================================================================
 --- B:/wc3/test-branch	(revision 14)
@@ -807,10 +825,14 @@ Index: B:/wc3/test-branch
 Property changes on: B:/wc3/test-branch
 ___________________________________________________________________
 Added: svn:mergeinfo
+## -0,0 +0,1 ##
    Merged /trunk/test:r15
 
 
-Info: CMD c:\python27.win32\python.exe C:\Users\barry\wc\svn\PySVN\Extension\Tests\test_01_set_get_tests.py b:\configdir
+Info: CMD c:\python27.Win32\python.exe -u C:\Users\barry\wc\svn\PySVN\Extension\Tests\test_01_set_get_tests.py b:\configdir
+Info: test_01_set_get_tests start
+Info: test_01_set_get_tests import pysvn
+Info: test_01_set_get_tests pysvn.Client( b:\configdir )
 Info: Initial values
 Info: get_auth_cache() => 1
 Info: get_auto_props() => 0
@@ -834,6 +856,8 @@ Info: get_default_password() => None
 Info: get_default_username() => None
 Info: get_interactive() => 1
 Info: get_store_passwords() => 1
+Info: test_01_set_get_tests dealloc Client()
+Info: test_01_set_get_tests done
 Info: Test - import
 
 Info: CMD mkdir b:\tmp
@@ -841,24 +865,31 @@ Info: Create File b:\tmp\import1.txt - import file 1
 Info: Create File "b:\tmp\import 2.txt" - import file 2      
 
 Info: PYSVN CMD mkdir "file:///b:/root/repos/trunk/test/import" -m "test-01 add import"
+commit_finalizing .
 
 Info: PYSVN CMD import --message "no spaces"    "b:\tmp\import1.txt" "file:///b:/root/repos/trunk/test/import/import-file1.txt"
 A B:/tmp/import1.txt
+commit_finalizing .
 
 Info: PYSVN CMD import --message "space in url" "b:\tmp\import1.txt" "file:///b:/root/repos/trunk/test/import/import file1A.txt"
 A B:/tmp/import1.txt
+commit_finalizing .
 
 Info: PYSVN CMD import --message "0 in url"   "b:\tmp\import1.txt" "file:///b:/root/repos/trunk/test/import/import0file1B.txt"
 A B:/tmp/import1.txt
+commit_finalizing .
 
 Info: PYSVN CMD import --message "space in file, none in url"  "b:\tmp\import 2.txt" "file:///b:/root/repos/trunk/test/import/import-file2.txt"
 A B:/tmp/import 2.txt
+commit_finalizing .
 
 Info: PYSVN CMD import --message "space in file, space in url" "b:\tmp\import 2.txt" "file:///b:/root/repos/trunk/test/import/import file2A.txt"
 A B:/tmp/import 2.txt
+commit_finalizing .
 
 Info: PYSVN CMD import --message "space in file, 0 in url"   "b:\tmp\import 2.txt" "file:///b:/root/repos/trunk/test/import/import0file2B.txt"
 A B:/tmp/import 2.txt
+commit_finalizing .
 
 Info: PYSVN CMD update b:\wc1
 A B:/wc1/test-branch
@@ -892,32 +923,32 @@ Updated to revision 22
 
 Info: PYSVN CMD log --limit 6 --verbose b:\wc1
 ------------------------------------------------------------
-rev 22: barry | 16-Oct-2015 16:31:20 | 1 lines
+rev 22: barry | 07-Apr-2016 18:58:14 | 1 lines
 Changed paths:
   A /trunk/test/import/import0file2B.txt
 space in file, 0 in url
 ------------------------------------------------------------
-rev 21: barry | 16-Oct-2015 16:31:20 | 1 lines
+rev 21: barry | 07-Apr-2016 18:58:14 | 1 lines
 Changed paths:
   A /trunk/test/import/import file2A.txt
 space in file, space in url
 ------------------------------------------------------------
-rev 20: barry | 16-Oct-2015 16:31:20 | 1 lines
+rev 20: barry | 07-Apr-2016 18:58:13 | 1 lines
 Changed paths:
   A /trunk/test/import/import-file2.txt
 space in file, none in url
 ------------------------------------------------------------
-rev 19: barry | 16-Oct-2015 16:31:19 | 1 lines
+rev 19: barry | 07-Apr-2016 18:58:12 | 1 lines
 Changed paths:
   A /trunk/test/import/import0file1B.txt
 0 in url
 ------------------------------------------------------------
-rev 18: barry | 16-Oct-2015 16:31:19 | 1 lines
+rev 18: barry | 07-Apr-2016 18:58:12 | 1 lines
 Changed paths:
   A /trunk/test/import/import file1A.txt
 space in url
 ------------------------------------------------------------
-rev 17: barry | 16-Oct-2015 16:31:18 | 1 lines
+rev 17: barry | 07-Apr-2016 18:58:11 | 1 lines
 Changed paths:
   A /trunk/test/import/import-file1.txt
 no spaces

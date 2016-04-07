@@ -1,11 +1,11 @@
-WorkDir: C:\wc\svn\pysvn\Extension
-PYTHON: c:\python27.win32\python.exe
+WorkDir: C:\Users\barry\wc\svn\PySVN\Extension
+PYTHON: c:\python27.Win32\python.exe
 Username: barry
-Info: PYSVN CMD c:\python27.win32\python.exe C:\wc\svn\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing 01.03.00 --config-dir b:\configdir
+Info: PYSVN CMD c:\python27.Win32\python.exe C:\Users\barry\wc\svn\PySVN\Extension\Examples\Client\svn_cmd.py --pysvn-testing 01.03.00 --config-dir b:\configdir
 
 Info: CMD mkdir testroot-06
 
-Info: CMD subst b: C:\wc\svn\pysvn\Extension\Tests\testroot-06
+Info: CMD subst b: C:\Users\barry\wc\svn\PySVN\Extension\Tests\testroot-06
 
 Info: CMD cd /d b:\
 
@@ -13,8 +13,10 @@ Info: CMD svnadmin create b:/repos
 Info: Setup - mkdir
 
 Info: PYSVN CMD mkdir file:///b:/repos/trunk -m "test-06 add trunk"
+commit_finalizing .
 
 Info: PYSVN CMD mkdir file:///b:/repos/trunk/test -m "test-06 add test"
+commit_finalizing .
 Info: Setup - checkout wc1
 
 Info: PYSVN CMD checkout file:///b:/repos/trunk b:\wc1
@@ -37,6 +39,7 @@ A B:/wc1/test/file2.txt
 Info: PYSVN CMD checkin -m "commit added files"
 A B:/wc1/test/file1.txt
 A B:/wc1/test/file2.txt
+commit_finalizing .
 Revision 3
 Info: Test - info of path
 
@@ -45,14 +48,14 @@ Path: file1.txt
 Name: file1.txt
 Url: file:///B:/repos/trunk/test/file1.txt
 Repository: file:///B:/repos
-Repository UUID: 20cb2cd1-2efd-3947-aaaa-689d4cbe5749
+Repository UUID: 5ce902c7-25bb-984a-9b33-56980678bf86
 Revision: 3
 Node kind: file
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 3
-Last Changed Date: 06-Nov-2011 13:02:31
-Text Last Updated: 06-Nov-2011 13:02:31
+Last Changed Date: 07-Apr-2016 19:00:43
+Text Last Updated: 07-Apr-2016 19:00:42
 Checksum: 1e41522fd7b6b6325667c8554893a6db
 Info: Test - info2 of path
 
@@ -62,13 +65,13 @@ Path: file1.txt
 Url: file:///B:/repos/trunk/test/file1.txt
 Revision: 3
 Repository root_URL: file:///B:/repos
-Repository UUID: 20cb2cd1-2efd-3947-aaaa-689d4cbe5749
+Repository UUID: 5ce902c7-25bb-984a-9b33-56980678bf86
 Last changed author: barry
-Last Changed Date: 06-Nov-2011 13:02:31
+Last Changed Date: 07-Apr-2016 19:00:43
 Last changed revision: 3
 Node kind: file
 Schedule: normal
-Text Last Updated: 06-Nov-2011 13:02:31
+Text Last Updated: 07-Apr-2016 19:00:42
 Checksum: 1e41522fd7b6b6325667c8554893a6db
 Info: Test - info2 of URL
 
@@ -78,8 +81,8 @@ Path: file1.txt
 Url: file:///B:/repos/trunk/test/file1.txt
 Revision: 3
 Repository root_URL: file:///B:/repos
-Repository UUID: 20cb2cd1-2efd-3947-aaaa-689d4cbe5749
+Repository UUID: 5ce902c7-25bb-984a-9b33-56980678bf86
 Last changed author: barry
-Last Changed Date: 06-Nov-2011 13:02:31
+Last Changed Date: 07-Apr-2016 19:00:43
 Last changed revision: 3
 Node kind: file

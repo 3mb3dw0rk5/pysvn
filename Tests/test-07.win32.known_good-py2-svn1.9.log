@@ -1,7 +1,7 @@
 WorkDir: C:\Users\barry\wc\svn\PySVN\Extension
-PYTHON: c:\python27.win32\python.exe
+PYTHON: c:\python27.Win32\python.exe
 Username: barry
-Info: PYSVN CMD c:\python27.win32\python.exe C:\Users\barry\wc\svn\PySVN\Extension\Examples\Client\svn_cmd.py --pysvn-testing 01.03.00 --config-dir b:\configdir
+Info: PYSVN CMD c:\python27.Win32\python.exe C:\Users\barry\wc\svn\PySVN\Extension\Examples\Client\svn_cmd.py --pysvn-testing 01.03.00 --config-dir b:\configdir
 
 Info: CMD mkdir testroot-07
 
@@ -13,8 +13,10 @@ Info: CMD svnadmin create b:/repos
 Info: Setup - mkdir
 
 Info: PYSVN CMD mkdir file:///b:/repos/trunk -m "test-07 add trunk"
+commit_finalizing .
 
 Info: PYSVN CMD mkdir file:///b:/repos/trunk/test -m "test-07 add test"
+commit_finalizing .
 Info: Setup - checkout wc1
 
 Info: PYSVN CMD checkout file:///b:/repos/trunk b:/wc1
@@ -32,6 +34,7 @@ A B:/wc1/test/file_a1.txt
 
 Info: PYSVN CMD checkin -m "commit added files"
 A B:/wc1/test/file_a1.txt
+commit_finalizing .
 Revision 3
 Info: Create File file_a2.txt - test add file 2     
 
@@ -40,6 +43,7 @@ A B:/wc1/test/file_a2.txt
 
 Info: PYSVN CMD checkin -m "commit added files"
 A B:/wc1/test/file_a2.txt
+commit_finalizing .
 Revision 4
 Info: Create File file_b1.txt - test add file 1     
 
@@ -48,6 +52,7 @@ A B:/wc1/test/file_b1.txt
 
 Info: PYSVN CMD checkin -m "commit added files"
 A B:/wc1/test/file_b1.txt
+commit_finalizing .
 Revision 5
 Info: Create File file_b2.txt - test add file 2     
 
@@ -56,6 +61,7 @@ A B:/wc1/test/file_b2.txt
 
 Info: PYSVN CMD checkin -m "commit added files"
 A B:/wc1/test/file_b2.txt
+commit_finalizing .
 Revision 6
 
 Info: PYSVN CMD status --verbose b:/wc1
