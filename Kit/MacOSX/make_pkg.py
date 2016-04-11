@@ -8,6 +8,7 @@ import sys
 sys.path.insert( 0, '../../Source')
 import pysvn
 import time
+import glob
 
 package_maker = '/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker'
 package_maker_kit = os.path.exists( package_maker )
@@ -159,7 +160,13 @@ for libpath in dylib_list:
 
 for cp_src, cp_dst_dir_fmt in cp_list:
     cmd = 'cp -f "%s" "tmp/%s"' % (cp_src, cp_dst_dir_fmt % locals())
-    print( 'Info:  %r' % cmd )
+    print( 'Info: CMD %r' % cmd )
+    os.system( cmd )
+
+for dylib in glob.glob( 'tmp/Contents/pysvn/*.dylib' ):
+    # all the dylib need to be writable
+    cmd = 'chmod +w "%s"' % (dylib,)
+    print( 'Info: CMD %r' % cmd )
     os.system( cmd )
 
 print( 'Info: Fix the install paths for the dylib files' )
@@ -171,18 +178,21 @@ for libpath in dylib_list:
 for fixup_path in fixup_path_list:
     for libpath in dylib_list:
         if libpath != fixup_path:
-            # some dylib are perm rx, but need w for install_name_tool to work
-            cmd ='chmod +w %s' % (libpath,)
-            print( 'Info:  CMD %s' % (cmd,) )
             os.system( cmd )
-            cmd = ( 'install_name_tool'
+            cmd = ('install_name_tool'
                 ' -change'
                 ' %s'
                 ' %s/pysvn/%s'
                 ' %s' %
-                    (libpath, install_dir, os.path.basename( libpath ), fixup_path) )
+                    (libpath, install_dir, os.path.basename( libpath ), fixup_path))
             print( 'Info: CMD %s' % (cmd,) )
             os.system( cmd )
+
+for dylib in glob.glob( 'tmp/Contents/pysvn/*.dylib' ):
+    # can now remove the +w
+    cmd = 'chmod -w "%s"' % (dylib,)
+    print( 'Info: CMD %r' % cmd )
+    os.system( cmd )
 
 if python_vendor == 'apple_com':
     readme_vendor_name = "Apple's"
