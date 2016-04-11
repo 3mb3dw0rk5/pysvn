@@ -25,7 +25,7 @@ class SetupError(Exception):
     pass
 
 # version of PyCXX that we require
-pycxx_version = (6, 2, 6)
+pycxx_version = (6, 2, 7)
 
 _debug = False
 
@@ -54,7 +54,7 @@ def cmd_help( argv ):
 class Options:
     all_options_info = {
         '--arch':               (2, '<arch>'),
-        '--distro-dir':         (1, '<dir>'),
+        '--distro-dir':         (2, '<dir>'),
         '--apr-inc-dir':        (1, '<dir>'),
         '--apu-inc-dir':        (1, '<dir>'),
         '--apr-lib-dir':        (1, '<dir>'),
@@ -364,8 +364,8 @@ class Compiler:
 
         self.__variables = {}
 
-        self._addVar( 'PYCXX_VER',       '6.2.4' )
-        self._addVar( 'DEBUG',           'NDEBUG')    
+        self._addVar( 'PYCXX_VER',       '%d.%d.%d' % pycxx_version)
+        self._addVar( 'DEBUG',           'NDEBUG')
 
         self._addVar( 'PYSVN_SRC_DIR', os.path.dirname( os.getcwd() ) )
 
@@ -472,18 +472,24 @@ class Compiler:
                     self._find_paths_pycxx_dir,
                     'CXX/Version.hxx' )
 
-        major_match = False
-        minor_match = False
+        major = None
+        minor = None
+        patch = None
         f = open( os.path.join( pycxx_dir, 'CXX/Version.hxx' ) )
         for line in f:
             words = line.split()
-            if 'PYCXX_VERSION_MAJOR' in words:
-                major_match = int( words[2] ) == pycxx_version[0]
-            if 'PYCXX_VERSION_MINOR' in words:
-                minor_match = int( words[2] ) == pycxx_version[1]
+            if len(words) < 3:
+                continue
 
-        if not major_match and not minor_match:
-            raise SetupError( 'PyCXX version not as required.' )
+            if 'PYCXX_VERSION_MAJOR' == words[1]:
+                major = int( words[2] )
+            if 'PYCXX_VERSION_MINOR' == words[1]:
+                minor = int( words[2] )
+            if 'PYCXX_VERSION_PATCH' == words[1]:
+                patch = int( words[2] )
+
+        if (major, minor, patch) != pycxx_version:
+            raise SetupError( 'PyCXX version %d.%d.%d required, but found %d.%d.%d.' % (pycxx_version[0], pycxx_version[1], pycxx_version[2], major, minor, patch) )
 
         return pycxx_dir
 
@@ -520,12 +526,23 @@ class Compiler:
                     'svnadmin%s' % (self.getProgramExt(),) )
 
     def find_svn_lib( self ):
-        folder = self.find_dir(
-                    'SVN library',
-                    '--svn-lib-dir',
-                    'lib',
-                    self._find_paths_svn_lib,
-                    self.get_lib_name_for_platform( 'libsvn_client-1' ) )
+        last_exception = None
+        for lib_name in self.get_lib_name_for_platform( 'libsvn_client-1' ):
+            try:
+                folder = self.find_dir(
+                        'SVN library',
+                        '--svn-lib-dir',
+                        'lib',
+                        self._find_paths_svn_lib,
+                        lib_name )
+                break
+
+            except SetupError as e:
+                last_exception = e
+
+        if last_exception is not None:
+            raise e
+
         # if we are using the Fink SVN then remember this
         self.is_mac_os_x_fink = folder.startswith( '/sw/' )
         self.is_mac_os_x_darwin_ports = folder.startswith( '/opt/local/' )
@@ -549,29 +566,32 @@ class Compiler:
 
     def find_apr_lib( self ):
         last_exception = None
-        lib_list = [(self.get_lib_name_for_platform( 'libapr-1' ), 'apr-1')]
+        all_lib_names = self.get_lib_name_for_platform( 'libapr-1' )
 
-        for apr_libname, self.lib_apr in lib_list:
+        for lib_name in all_lib_names:
             try:
                 return self.find_dir(
-                    'APR library',
-                    '--apr-lib-dir',
-                    'lib',
-                    [],
-                    apr_libname )
+                        'APR library',
+                        '--apr-lib-dir',
+                        'lib',
+                        [],
+                        lib_name )
+
             except SetupError:
                 pass
 
-        for apr_libname, self.lib_apr in lib_list:
+        for lib_name in all_lib_names:
             try:
                 return self.find_dir(
-                    'APR library',
-                    '--apr-lib-dir',
-                    None,
-                    self._find_paths_apr_lib,
-                    apr_libname )
+                        'APR library',
+                        '--apr-lib-dir',
+                        None,
+                        self._find_paths_apr_lib,
+                        lib_name )
+
             except SetupError as e:
                 last_exception = e
+
         raise last_exception
 
     def get_lib_name_for_platform( self, libname ):
@@ -591,10 +611,6 @@ class Compiler:
 
         if self.options.hasOption( kw ):
             base_dir_list = [self.options.getOption( kw )]
-
-        elif( self.options.hasOption( '--distro-dir' )
-        and svn_root_suffix is not None ):
-            base_dir_list = ['%s/%s' % (self.options.getOption( '--distro-dir' ), svn_root_suffix)]
 
         debug( '__find_dir base_dir_list=%r' % (base_dir_list,) )
 
@@ -739,7 +755,7 @@ class Win32CompilerMSVC90(Compiler):
         self.makePrint( self.expand( '\n'.join( rules ) ) )
 
     def get_lib_name_for_platform( self, libname ):
-        return '%s.lib' % (libname,)
+        return ['%s.lib' % (libname,)]
 
     def setupUtilities( self ):
         self._addVar( 'CCCFLAGS',
@@ -915,8 +931,8 @@ class CompilerGCC(Compiler):
         rules = []
 
         rules.append( '%s: %s %s' % (obj_filename, target.src_filename, ' '.join( target.all_dependencies )) )
-        rules.append( '\t@echo Compile: %s into %s' % (target.src_filename, target) )
-        rules.append( '\t@%%(CC)s -c %%(CCCFLAGS)s -o%s  %s' % (obj_filename, target.src_filename) )
+        rules.append( '\t@echo Compile: %s into %s' % (target.src_filename, obj_filename) )
+        rules.append( '\t@%%(CC)s -c %%(CCFLAGS)s -o%s  %s' % (obj_filename, target.src_filename) )
 
         self.makePrint( self.expand( '\n'.join( rules ) ) )
 
@@ -973,6 +989,16 @@ class MacOsxCompilerGCC(CompilerGCC):
 
         print( 'Info: MACOSX_DEPLOYMENT_TARGET is %s' % (self.macosx_deployment_target,) )
 
+        xcode_path = '/Applications/Xcode.app'
+        xcode_version_path = os.path.join( xcode_path, 'Contents', 'version.plist' )
+        if os.path.exists( xcode_version_path ):
+            import plistlib
+            xcode_version_info = plistlib.readPlist( '/Applications/Xcode.app/Contents/version.plist')
+            self.xcode_version = [int(x) for x in xcode_version_info['CFBundleShortVersionString'].split( '.' )]
+
+        else:
+            self.xcode_version = None
+
         if self.options.hasOption( '--arch' ):
             arch_options = ' '.join( ['-arch %s' % (arch,) for arch in self.options.getOption( '--arch' )] )
         else:
@@ -990,47 +1016,58 @@ class MacOsxCompilerGCC(CompilerGCC):
                         '%(PYCXX)s/Src',
                         '/usr/share/python%s/CXX' % (distutils.sysconfig.get_python_version(),) # typical Linux
                         ]
-        self._find_paths_svn_inc = [
-                        '/opt/local/include/subversion-1',      # Darwin - darwin ports
-                        '/sw/include/subversion-1',             # Darwin - Fink
-                        '/usr/include/subversion-1',            # typical Linux
-                        '/usr/local/include/subversion-1',      # typical *BSD
-                        ]
-        self._find_paths_svn_bin = [
-                        '/opt/local/bin',                        # Darwin - darwin ports
-                        '/sw/bin',                               # Darwin - Fink
-                        '/usr/bin',                              # typical Linux
-                        '/usr/local/bin',                        # typical *BSD
-                        ]
-        self._find_paths_svn_lib = [
-                        '/opt/local/lib',                       # Darwin - darwin ports
-                        '/sw/lib',                              # Darwin - Fink
-                        '/usr/lib',                             # typical Linux
-                        '/usr/local/lib',                       # typical *BSD
-                        ]
-        self._find_paths_apr_inc = [
-                        '/opt/local/include/apr-1',             # Darwin - darwin ports
-                        '/sw/include/apr-1',                    # Darwin - fink
-                        '/usr/include/apr-1',                   # typical Linux
-                        '/usr/local/apr/include/apr-1',         # Mac OS X www.metissian.com
-                        '/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX%s.sdk/usr/include/apr-1' % (self.macosx_deployment_target,),
-                        ]
-        self._find_paths_apr_util_inc = self._find_paths_apr_inc
-        self._find_paths_apr_lib = [
-                        '/opt/local/lib',                       # Darwin - darwin ports
-                        '/sw/lib',                              # Darwin - fink
-                        '/usr/lib64',                           # typical 64bit Linux
-                        '/usr/lib',                             # typical Linux
-                        '/usr/local/lib64',                     # typical 64bit Linux
-                        '/usr/local/lib',                       # typical *BSD
-                        '/usr/local/apr/lib',                   # Mac OS X www.metissian.com
-                        '/usr/pkg/lib',                         # netbsd
-                        ]
+
+        if self.options.hasOption( '--distro-dir' ):
+            all_distro_dirs = self.options.getOption( '--distro-dir' )
+            self._find_paths_svn_inc = ['%s/include/subversion-1' % (distro_dir,) for distro_dir in all_distro_dirs]
+            self._find_paths_svn_bin = ['%s/bin' % (distro_dir,) for distro_dir in all_distro_dirs]
+            self._find_paths_svn_lib = ['%s/lib' % (distro_dir,) for distro_dir in all_distro_dirs]
+            self._find_paths_apr_inc = ['%s/include/apr-1' % (distro_dir,) for distro_dir in all_distro_dirs]
+            self._find_paths_apr_util_inc = self._find_paths_apr_inc
+            self._find_paths_apr_lib = ['%s/lib' % (distro_dir,) for distro_dir in all_distro_dirs]
+
+        else:
+            self._find_paths_svn_inc = [
+                            '/opt/local/include/subversion-1',      # Darwin - darwin ports
+                            '/sw/include/subversion-1',             # Darwin - Fink
+                            '/usr/include/subversion-1',            # typical Linux
+                            '/usr/local/include/subversion-1',      # typical *BSD
+                            ]
+            self._find_paths_svn_bin = [
+                            '/opt/local/bin',                        # Darwin - darwin ports
+                            '/sw/bin',                               # Darwin - Fink
+                            '/usr/bin',                              # typical Linux
+                            '/usr/local/bin',                        # typical *BSD
+                            ]
+            self._find_paths_svn_lib = [
+                            '/opt/local/lib',                       # Darwin - darwin ports
+                            '/sw/lib',                              # Darwin - Fink
+                            '/usr/lib',                             # typical Linux
+                            '/usr/local/lib',                       # typical *BSD
+                            ]
+            self._find_paths_apr_inc = [
+                            '/opt/local/include/apr-1',             # Darwin - darwin ports
+                            '/sw/include/apr-1',                    # Darwin - fink
+                            '/usr/include/apr-1',                   # typical Linux
+                            '/usr/local/apr/include/apr-1',         # Mac OS X www.metissian.com
+                            ]
+            self._find_paths_apr_util_inc = self._find_paths_apr_inc
+            self._find_paths_apr_lib = [
+                            '/opt/local/lib',                       # Darwin - darwin ports
+                            '/sw/lib',                              # Darwin - fink
+                            '/usr/lib64',                           # typical 64bit Linux
+                            '/usr/lib',                             # typical Linux
+                            '/usr/local/lib64',                     # typical 64bit Linux
+                            '/usr/local/lib',                       # typical *BSD
+                            '/usr/local/apr/lib',                   # Mac OS X www.metissian.com
+                            '/usr/pkg/lib',                         # netbsd
+                            ]
 
         self._completeInit()
 
     def get_lib_name_for_platform( self, libname ):
-        return '%s.dylib' % (libname,)
+        # With Xcode 7.x no dylib in the SDK only the tbd files
+        return ['%s.dylib' % (libname,), '%s.tbd' % (libname,)]
 
     def setupUtilities( self ):
         self._addVar( 'CCCFLAGS',
@@ -1063,7 +1100,7 @@ class MacOsxCompilerGCC(CompilerGCC):
 
         py_cflags_list = [
                     '-g',
-                    '-Wall -fPIC -fexceptions -frtti',
+                    '-Wall -fPIC',
                     '-I. -I%(APR_INC)s -I%(APU_INC)s -I%(SVN_INC)s',
                     '-DPYCXX_PYTHON_2TO3 -I%(PYCXX)s -I%(PYCXX_SRC)s -I%(PYTHON_INC)s',
                     '-D%(DEBUG)s',
@@ -1075,7 +1112,7 @@ class MacOsxCompilerGCC(CompilerGCC):
 
         py_ld_libs = [
                 '-L%(SVN_LIB)s',
-                '-L/usr/lib',
+                '-L%(APR_LIB)s',
                 '-lsvn_client-1',
                 '-lsvn_repos-1',
                 '-lsvn_wc-1',
@@ -1086,7 +1123,8 @@ class MacOsxCompilerGCC(CompilerGCC):
                 '-lssl',
                 ]
 
-        self._addVar( 'CCCFLAGS', ' '.join( py_cflags_list ) )
+        self._addVar( 'CCFLAGS', ' '.join( py_cflags_list ) )
+        self._addVar( 'CCCFLAGS', ' '.join( ['-fexceptions -frtti'] + py_cflags_list ) )
         self._addVar( 'LDLIBS', ' '.join( py_ld_libs ) )
         self._addVar( 'LDSHARED',       '%(CCC)s -bundle -g '
                                         '-framework System '
@@ -1148,9 +1186,9 @@ class UnixCompilerGCC(CompilerGCC):
 
     def get_lib_name_for_platform( self, libname ):
         if self.setup.platform == 'cygwin':
-            return '%s.dll.a' % libname
+            return ['%s.dll.a' % libname]
         else:
-            return '%s.so' % libname
+            return ['%s.so' % libname]
 
     def setupUtilities( self ):
         self._addVar( 'CCCFLAGS',
@@ -1465,7 +1503,12 @@ class Source(Target):
     def _generateMakefile( self ):
         debug( 'Source:0x%8.8x.generateMakefile() for %r' % (id(self), self.src_filename,) )
 
-        self.compiler.ruleCxx( self )
+        if self.src_filename.endswith( '.c' ):
+            self.compiler.ruleC( self )
+
+        else:
+            self.compiler.ruleCxx( self )
+
         self.compiler.ruleClean( self.getTargetFilename() )
 
 class PysvnSvnErrorsPy(Source):
