@@ -44,6 +44,8 @@ if processor == 'i386':
     else:
         processor = 'x86_64'
 
+print( 'Info: Process is %s' % (processor,) )
+
 pymaj, pymin, pypat, _, _ = sys.version_info
 python_version_string = '%d.%d.%d' % (pymaj, pymin, pypat)
 pysvnmaj, pysvnmin, pysvnpat, _ = pysvn.version
@@ -54,25 +56,13 @@ svn_version_string = '%d.%d.%d' % (pysvn.svn_version[0], pysvn.svn_version[1], p
 pysvn_so_string = '_pysvn_%d_%d.so' % (pymaj, pymin)
 pkg_filename = 'py%s%s_%s_pysvn_svn%s-%s-%s' % (pymaj, pymin, python_vendor, svn_version_package_string, pysvn_version_string, processor)
 
-print( 'Info: Packageing %s' % pkg_filename )
+print( 'Info: Packageing %s' % (pkg_filename,) )
 build_time  = time.time()
 build_time_str = time.strftime( '%d-%b-%Y %H:%M', time.localtime( build_time ) )
 year = time.strftime( '%Y', time.localtime( build_time ) )
 tmpdir = os.path.join( os.getcwd(), 'tmp' )
 
-if pymaj == 2 and pymin == 4:
-    install_dir = '/Library/Frameworks/Python.framework/Versions/2.4/lib/python2.4/site-packages'
-
-elif pymaj == 2 and pymin == 5:
-    install_dir = '/Library/Frameworks/Python.framework/Versions/2.5/lib/python2.5/site-packages'
-
-elif pymaj == 2 and pymin == 6:
-    if python_vendor == 'apple_com':
-        install_dir = '/Library/Python/2.6/site-packages'
-    else:
-        install_dir = '/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages'
-
-elif pymaj == 2 and pymin == 7:
+if pymaj == 2 and pymin == 7:
     if python_vendor == 'apple_com':
         install_dir = '/Library/Python/2.7/site-packages'
     else:
@@ -181,13 +171,17 @@ for libpath in dylib_list:
 for fixup_path in fixup_path_list:
     for libpath in dylib_list:
         if libpath != fixup_path:
+            # some dylib are perm rx, but need w for install_name_tool to work
+            cmd ='chmod +w %s' % (libpath,)
+            print( 'Info:  CMD %s' % (cmd,) )
+            os.system( cmd )
             cmd = ( 'install_name_tool'
                 ' -change'
                 ' %s'
                 ' %s/pysvn/%s'
                 ' %s' %
                     (libpath, install_dir, os.path.basename( libpath ), fixup_path) )
-            #print( 'Debug: cmd %r' % cmd )
+            print( 'Info: CMD %s' % (cmd,) )
             os.system( cmd )
 
 if python_vendor == 'apple_com':
