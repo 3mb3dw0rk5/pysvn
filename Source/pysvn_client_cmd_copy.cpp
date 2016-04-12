@@ -19,7 +19,7 @@
 #include "pysvn.hpp"
 #include "pysvn_static_strings.hpp"
 
-#if defined( PYSVN_HAS_CLIENT_COPY4 ) || defined( PYSVN_HAS_CLIENT_COPY5 ) 
+#if defined( PYSVN_HAS_CLIENT_COPY4 ) || defined( PYSVN_HAS_CLIENT_COPY5 ) || defined( PYSVN_HAS_CLIENT_COPY6 )
 Py::Object pysvn_client::cmd_copy2( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
     static argument_description args_desc[] =
@@ -38,7 +38,11 @@ Py::Object pysvn_client::cmd_copy2( const Py::Tuple &a_args, const Py::Dict &a_k
     args.check();
 
     SvnPool pool( m_context );
+#if defined( PYSVN_HAS_CLIENT_COPY6 )
+    CommitInfoResult commit_info( pool );
+#else
     pysvn_commit_info_t *commit_info = NULL;
+#endif
 
     std::string type_error_message;
     try
@@ -161,7 +165,21 @@ Py::Object pysvn_client::cmd_copy2( const Py::Tuple &a_args, const Py::Dict &a_k
 
             PythonAllowThreads permission( m_context );
 
-#if defined( PYSVN_HAS_CLIENT_COPY5 )
+#if defined( PYSVN_HAS_CLIENT_COPY6 )
+            svn_error_t *error = svn_client_copy6
+                (
+                all_sources,
+                norm_dest_path.c_str(),
+                copy_as_child,
+                make_parents,
+                ignore_externals,
+                revprops,
+                commit_info.callback(),
+                commit_info.baton(),
+                m_context,
+                pool
+                );
+#elif defined( PYSVN_HAS_CLIENT_COPY5 )
             svn_error_t *error = svn_client_copy5
                 (
                 &commit_info,
@@ -206,7 +224,11 @@ Py::Object pysvn_client::cmd_copy2( const Py::Tuple &a_args, const Py::Dict &a_k
         throw Py::TypeError( type_error_message );
     }
 
+#if defined( PYSVN_HAS_CLIENT_COPY6 )
+    return toObject( commit_info, m_wrapper_commit_info, m_commit_info_style );
+#else
     return toObject( commit_info, m_commit_info_style );
+#endif
 }
 #endif
 
@@ -301,7 +323,7 @@ Py::Object pysvn_client::cmd_copy( const Py::Tuple &a_args, const Py::Dict &a_kw
     return toObject( commit_info, m_commit_info_style );
 }
 
-#if defined( PYSVN_HAS_CLIENT_MOVE5 )
+#if defined( PYSVN_HAS_CLIENT_MOVE5 ) || defined( PYSVN_HAS_CLIENT_MOVE6 )
 Py::Object pysvn_client::cmd_move2( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
     static argument_description args_desc[] =
@@ -318,7 +340,11 @@ Py::Object pysvn_client::cmd_move2( const Py::Tuple &a_args, const Py::Dict &a_k
     args.check();
 
     SvnPool pool( m_context );
+#if defined( PYSVN_HAS_CLIENT_MOVE6 )
+    CommitInfoResult commit_info( pool );
+#else
     pysvn_commit_info_t *commit_info = NULL;
+#endif
 
     std::string type_error_message;
     try
@@ -346,8 +372,10 @@ Py::Object pysvn_client::cmd_move2( const Py::Tuple &a_args, const Py::Dict &a_k
         type_error_message = "expecting string for dest_url_or_path";
         Py::String dest_path( args.getUtf8String( name_dest_url_or_path ) );
 
+#if !defined( PYSVN_HAS_CLIENT_MOVE6 )
         type_error_message = "expecting boolean for keyword force";
         bool force = args.getBoolean( name_force, false );
+#endif
 
         type_error_message = "expecting boolean for keyword move_as_child";
         bool move_as_child = args.getBoolean( name_move_as_child, false );
@@ -373,6 +401,20 @@ Py::Object pysvn_client::cmd_move2( const Py::Tuple &a_args, const Py::Dict &a_k
             PythonAllowThreads permission( m_context );
 
             // behavior changed
+#if defined( PYSVN_HAS_CLIENT_MOVE6 )
+            svn_error_t *error = svn_client_move6
+                (
+                all_sources,
+                norm_dest_path.c_str(),
+                move_as_child,
+                make_parents,
+                revprops,
+                commit_info.callback(),
+                commit_info.baton(),
+                m_context,
+                pool
+                );
+#else
             svn_error_t *error = svn_client_move5
                 (
                 &commit_info,
@@ -385,6 +427,7 @@ Py::Object pysvn_client::cmd_move2( const Py::Tuple &a_args, const Py::Dict &a_k
                 m_context,
                 pool
                 );
+#endif
             permission.allowThisThread();
             if( error != NULL )
             {
@@ -404,7 +447,11 @@ Py::Object pysvn_client::cmd_move2( const Py::Tuple &a_args, const Py::Dict &a_k
         throw Py::TypeError( type_error_message );
     }
 
+#if defined( PYSVN_HAS_CLIENT_MOVE6 )
+    return toObject( commit_info, m_wrapper_commit_info, m_commit_info_style );
+#else
     return toObject( commit_info, m_commit_info_style );
+#endif
 }
 #endif
 
