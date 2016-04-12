@@ -442,6 +442,10 @@ Py::Object pysvn_client::cmd_update( const Py::Tuple &a_args, const Py::Dict &a_
     { false, name_depth_is_sticky },
     { false, name_allow_unver_obstructions },
 #endif
+#if defined( PYSVN_HAS_CLIENT_UPDATE4 )
+    { false, name_adds_as_modification },
+    { false, name_make_parents },
+#endif
     { false, NULL }
     };
     FunctionArguments args( "update", args_desc, a_args, a_kws );
@@ -462,6 +466,11 @@ Py::Object pysvn_client::cmd_update( const Py::Tuple &a_args, const Py::Dict &a_
 #if defined( PYSVN_HAS_CLIENT_UPDATE2 )
     bool ignore_externals = args.getBoolean( name_ignore_externals, false );
 #endif
+#if defined( PYSVN_HAS_CLIENT_UPDATE4 )
+    bool adds_as_modification = args.getBoolean( name_adds_as_modification, false );
+    bool make_parents = args.getBoolean( name_make_parents, false );
+#endif
+
     apr_array_header_t *result_revs = NULL;
 
     try
@@ -470,7 +479,22 @@ Py::Object pysvn_client::cmd_update( const Py::Tuple &a_args, const Py::Dict &a_
 
         PythonAllowThreads permission( m_context );
 
-#if defined( PYSVN_HAS_CLIENT_UPDATE3 )
+#if defined( PYSVN_HAS_CLIENT_UPDATE4 )
+        svn_error_t *error = svn_client_update4
+            (
+            &result_revs,
+            targets,
+            &revision,
+            depth,
+            depth_is_sticky,
+            ignore_externals,
+            allow_unver_obstructions,
+            adds_as_modification,
+            make_parents,
+            m_context,
+            pool
+            );
+#elif defined( PYSVN_HAS_CLIENT_UPDATE3 )
         svn_error_t *error = svn_client_update3
             (
             &result_revs,
