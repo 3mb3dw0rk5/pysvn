@@ -323,7 +323,7 @@ Py::Object pysvn_client::cmd_copy( const Py::Tuple &a_args, const Py::Dict &a_kw
     return toObject( commit_info, m_commit_info_style );
 }
 
-#if defined( PYSVN_HAS_CLIENT_MOVE5 ) || defined( PYSVN_HAS_CLIENT_MOVE6 )
+#if defined( PYSVN_HAS_CLIENT_MOVE5 ) || defined( PYSVN_HAS_CLIENT_MOVE6 ) || defined( PYSVN_HAS_CLIENT_MOVE7 )
 Py::Object pysvn_client::cmd_move2( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
     static argument_description args_desc[] =
@@ -334,13 +334,17 @@ Py::Object pysvn_client::cmd_move2( const Py::Tuple &a_args, const Py::Dict &a_k
     { false, name_move_as_child },
     { false, name_make_parents },
     { false, name_revprops },
+#if defined( PYSVN_HAS_CLIENT_MOVE7 )
+    { false, name_allow_mixed_revisions },
+    { false, name_metadata_only },
+#endif
     { false, NULL }
     };
     FunctionArguments args( "move2", args_desc, a_args, a_kws );
     args.check();
 
     SvnPool pool( m_context );
-#if defined( PYSVN_HAS_CLIENT_MOVE6 )
+#if defined( PYSVN_HAS_CLIENT_MOVE6 ) || defined( PYSVN_HAS_CLIENT_MOVE7 )
     CommitInfoResult commit_info( pool );
 #else
     pysvn_commit_info_t *commit_info = NULL;
@@ -372,7 +376,7 @@ Py::Object pysvn_client::cmd_move2( const Py::Tuple &a_args, const Py::Dict &a_k
         type_error_message = "expecting string for dest_url_or_path";
         Py::String dest_path( args.getUtf8String( name_dest_url_or_path ) );
 
-#if !defined( PYSVN_HAS_CLIENT_MOVE6 )
+#if !defined( PYSVN_HAS_CLIENT_MOVE6 ) && !defined( PYSVN_HAS_CLIENT_MOVE7 )
         type_error_message = "expecting boolean for keyword force";
         bool force = args.getBoolean( name_force, false );
 #endif
@@ -382,6 +386,14 @@ Py::Object pysvn_client::cmd_move2( const Py::Tuple &a_args, const Py::Dict &a_k
 
         type_error_message = "expecting boolean for keyword make_parents";
         bool make_parents = args.getBoolean( name_make_parents, false );
+
+#if defined( PYSVN_HAS_CLIENT_MOVE7 )
+        type_error_message = "expecting boolean for keyword allow_mixed_revisions";
+        bool allow_mixed_revisions = args.getBoolean( name_allow_mixed_revisions, false );
+
+        type_error_message = "expecting boolean for keyword metadata_only";
+        bool metadata_only = args.getBoolean( name_metadata_only, false );
+#endif
 
         apr_hash_t *revprops = NULL;
         if( args.hasArg( name_revprops ) )
@@ -401,7 +413,22 @@ Py::Object pysvn_client::cmd_move2( const Py::Tuple &a_args, const Py::Dict &a_k
             PythonAllowThreads permission( m_context );
 
             // behavior changed
-#if defined( PYSVN_HAS_CLIENT_MOVE6 )
+#if defined( PYSVN_HAS_CLIENT_MOVE7 )
+            svn_error_t *error = svn_client_move7
+                (
+                all_sources,
+                norm_dest_path.c_str(),
+                move_as_child,
+                make_parents,
+                allow_mixed_revisions,
+                metadata_only,
+                revprops,
+                commit_info.callback(),
+                commit_info.baton(),
+                m_context,
+                pool
+                );
+#elif defined( PYSVN_HAS_CLIENT_MOVE6 )
             svn_error_t *error = svn_client_move6
                 (
                 all_sources,
@@ -447,7 +474,7 @@ Py::Object pysvn_client::cmd_move2( const Py::Tuple &a_args, const Py::Dict &a_k
         throw Py::TypeError( type_error_message );
     }
 
-#if defined( PYSVN_HAS_CLIENT_MOVE6 )
+#if defined( PYSVN_HAS_CLIENT_MOVE6 ) || defined( PYSVN_HAS_CLIENT_MOVE7 )
     return toObject( commit_info, m_wrapper_commit_info, m_commit_info_style );
 #else
     return toObject( commit_info, m_commit_info_style );
