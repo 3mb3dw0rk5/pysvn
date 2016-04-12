@@ -147,6 +147,10 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
     { false, name_relative_to_dir },
     { false, name_changelists },
 #endif
+#if defined( PYSVN_HAS_CLIENT_DIFF5 )
+    { false, name_show_copies_as_adds },
+    { false, name_use_git_diff_format },
+#endif
     { false, NULL }
     };
     FunctionArguments args( "diff", args_desc, a_args, a_kws );
@@ -206,6 +210,11 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
     }
 #endif
 
+#if defined( PYSVN_HAS_CLIENT_DIFF5 )
+    bool show_copies_as_adds = args.getBoolean( name_show_copies_as_adds, false );
+    bool use_git_diff_format = args.getBoolean( name_use_git_diff_format, false );
+#endif
+
     svn_stringbuf_t *stringbuf = NULL;
 
     try
@@ -224,7 +233,27 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
 
         PythonAllowThreads permission( m_context );
 
-#if defined( PYSVN_HAS_CLIENT_DIFF4 )
+#if defined( PYSVN_HAS_CLIENT_DIFF5 )
+        svn_error_t *error = svn_client_diff5
+            (
+            options,
+            norm_path1.c_str(), &revision1,
+            norm_path2.c_str(), &revision2,
+            relative_to_dir,
+            depth,
+            ignore_ancestry,
+            !diff_deleted,
+            show_copies_as_adds,
+            ignore_content_type,
+            use_git_diff_format,
+            header_encoding_ptr,
+            output_file.file(),
+            error_file.file(),
+            changelists,
+            m_context,
+            pool
+            );
+#elif defined( PYSVN_HAS_CLIENT_DIFF4 )
         svn_error_t *error = svn_client_diff4
             (
             options,
@@ -336,6 +365,10 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
     { false, name_relative_to_dir },
     { false, name_changelists },
 #endif
+#if defined( PYSVN_HAS_CLIENT_DIFF_PEG5 )
+    { false, name_show_copies_as_adds },
+    { false, name_use_git_diff_format },
+#endif
     { false, NULL }
     };
     FunctionArguments args( "diff_peg", args_desc, a_args, a_kws );
@@ -393,6 +426,11 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
     apr_array_header_t *options = apr_array_make( pool, 0, sizeof( const char * ) );
 #endif
 
+#if defined( PYSVN_HAS_CLIENT_DIFF_PEG5 )
+    bool show_copies_as_adds = args.getBoolean( name_show_copies_as_adds, false );
+    bool use_git_diff_format = args.getBoolean( name_use_git_diff_format, false );
+#endif
+
     bool is_url = is_svn_url( path );
     revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
     revisionKindCompatibleCheck( is_url, revision_start, name_revision_start, name_url_or_path );
@@ -418,7 +456,29 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
         // std::cout << "revision_start "  << revision_start.kind  << " " << revision_start.value.number   << std::endl;
         // std::cout << "revision_end "    << revision_end.kind    << " " << revision_end.value.number     << std::endl;
 
-#if defined( PYSVN_HAS_CLIENT_DIFF_PEG4 )
+#if defined( PYSVN_HAS_CLIENT_DIFF_PEG5 )
+        svn_error_t *error = svn_client_diff_peg5
+            (
+            options,
+            norm_path.c_str(),
+            &peg_revision,
+            &revision_start,
+            &revision_end,
+            relative_to_dir,
+            depth,
+            ignore_ancestry,
+            !diff_deleted,
+            show_copies_as_adds,
+            ignore_content_type,
+            use_git_diff_format,
+            header_encoding_ptr,
+            output_file.file(),
+            error_file.file(),
+            changelists,
+            m_context,
+            pool
+            );
+#elif defined( PYSVN_HAS_CLIENT_DIFF_PEG4 )
         svn_error_t *error = svn_client_diff_peg4
             (
             options,
