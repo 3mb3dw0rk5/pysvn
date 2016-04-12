@@ -33,7 +33,13 @@ public:
     {
         close();
         if( m_filename )
+        {
+#if defined( PYSNV_HAS_IO_REMOVE_FILE2 )
+            svn_error_clear( svn_io_remove_file2( m_filename, TRUE, m_pool ) );
+#else
             svn_error_clear( svn_io_remove_file( m_filename, m_pool ) );
+#endif
+        }
     }
 
     void open_unique_file( const std::string &tmp_dir )

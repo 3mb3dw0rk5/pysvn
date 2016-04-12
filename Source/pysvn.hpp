@@ -349,6 +349,7 @@ private:
     DictWrapper         m_wrapper_dirent;
     DictWrapper         m_wrapper_wc_info;
     DictWrapper         m_wrapper_diff_summary;
+    DictWrapper         m_wrapper_commit_info;
 };
 
 class pysvn_transaction : public Py::PythonExtension<pysvn_transaction>
@@ -468,6 +469,31 @@ private:
     Py::Tuple::size_type        m_min_args;
     Py::Tuple::size_type        m_max_args;
 };
+
+//------------------------------------------------------------
+#if defined( PYSVN_HAS_COMMIT_CALLBACK2_T )
+extern "C" svn_error_t *CommitInfoResult_callback( const svn_commit_info_t *commit_info, void *baton, apr_pool_t *pool );
+
+class CommitInfoResult
+{
+    friend svn_error_t *CommitInfoResult_callback( const svn_commit_info_t *commit_info, void *baton, apr_pool_t *pool );
+
+public:
+    CommitInfoResult( SvnPool &pool );
+    ~CommitInfoResult();
+
+    // needed to call svn API
+    svn_commit_callback2_t callback() { return &CommitInfoResult_callback; }
+    void *baton() { return static_cast< void * >( this ); }
+
+    // convert to python
+    int count();
+    const svn_commit_info_t *result( int index );
+
+private:
+    apr_array_header_t  *m_all_results;
+};
+#endif
 
 //------------------------------------------------------------
 template<TEMPLATE_TYPENAME T>
@@ -742,6 +768,7 @@ typedef signed long long signed_int64;
 #endif
 
 
+
 //--------------------------------------------------------------------------------
 //
 //    PythonAllowThreads provides a exception safe
@@ -809,6 +836,22 @@ extern Py::Object direntsToObject( apr_hash_t *props, SvnPool &pool );
 Py::Object toObject( apr_time_t t );
 Py::Object toObject( pysvn_commit_info_t *commit_info, int commit_style );
 
+#if defined( PYSVN_HAS_SVN_COMMIT_INFO_T )
+Py::Object toObject( CommitInfoResult &commit_info, const DictWrapper &wrapper_commit_info, int commit_style );
+#endif
+
+#if defined( PYSVN_HAS_CLIENT_STATUS_T )
+extern Py::Object toObject
+    (
+    Py::String path,
+    svn_client_status_t &svn_status,
+    SvnPool &pool,
+    const DictWrapper &wrapper_status,
+    const DictWrapper &wrapper_entry,
+    const DictWrapper &wrapper_lock
+    );
+
+#else
 extern Py::Object toObject
     (
     Py::String path,
@@ -818,12 +861,15 @@ extern Py::Object toObject
     const DictWrapper &wrapper_entry,
     const DictWrapper &wrapper_lock
     );
+#endif
+
 extern Py::Object toObject
     (
     const svn_wc_entry_t &svn_entry,
     SvnPool &pool,
     const DictWrapper &wrapper_entry
     );
+
 #if defined( PYSVN_HAS_CLIENT_INFO )
 extern Py::Object toObject
     (

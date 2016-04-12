@@ -5,7 +5,7 @@ if [ ! -z "$1" ]
 then
     PREF_VER=$1.$2
 else
-    PREF_VER=2.7
+    PREF_VER=3.4
 fi
 
 for PY_VER in ${PREF_VER} 2.7 2.6

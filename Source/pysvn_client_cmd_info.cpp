@@ -1188,8 +1188,25 @@ struct StatusEntriesBaton
     apr_hash_t* hash;
 };
 
-#if defined( PYSVN_HAS_CLIENT_STATUS4 )
-static svn_error_t *StatusEntriesFunc
+#if defined( PYSVN_HAS_CLIENT_STATUS5 )
+static svn_error_t *status5EntriesFunc
+    (
+    void *baton,
+    const char *path,
+    const svn_client_status_t *status,
+    apr_pool_t *scratch_pool
+    )
+{
+    StatusEntriesBaton *seb = reinterpret_cast<StatusEntriesBaton *>( baton );
+
+    path = apr_pstrdup( seb->pool, path );
+    svn_client_status_t *stat = svn_client_status_dup( status, seb->pool );
+    apr_hash_set( seb->hash, path, APR_HASH_KEY_STRING, stat );
+    return SVN_NO_ERROR;
+}
+
+#elif defined( PYSVN_HAS_CLIENT_STATUS4 )
+static svn_error_t *status4EntriesFunc
     (
     void *baton,
     const char *path,
@@ -1197,42 +1214,39 @@ static svn_error_t *StatusEntriesFunc
     apr_pool_t *pool
     )
 {
-    svn_wc_status2_t *stat;
     StatusEntriesBaton *seb = reinterpret_cast<StatusEntriesBaton *>( baton );
 
     path = apr_pstrdup( seb->pool, path );
-    stat = svn_wc_dup_status2( status, seb->pool );
+    svn_wc_status2_t *stat = svn_wc_dup_status2( status, seb->pool );
     apr_hash_set( seb->hash, path, APR_HASH_KEY_STRING, stat );
     return SVN_NO_ERROR;
 }
 #elif defined( PYSVN_HAS_CLIENT_STATUS2 )
-static void StatusEntriesFunc
+static void status2EntriesFunc
     (
     void *baton,
     const char *path,
     svn_wc_status2_t *status
     )
 {
-    svn_wc_status2_t *stat;
     StatusEntriesBaton *seb = reinterpret_cast<StatusEntriesBaton *>( baton );
 
     path = apr_pstrdup( seb->pool, path );
-    stat = svn_wc_dup_status2( status, seb->pool );
+    svn_wc_status2_t *stat = svn_wc_dup_status2( status, seb->pool );
     apr_hash_set( seb->hash, path, APR_HASH_KEY_STRING, stat );
 }
 #else
-static void StatusEntriesFunc
+static void status1EntriesFunc
     (
     void *baton,
     const char *path,
     svn_wc_status_t *status
     )
 {
-    svn_wc_status_t *stat;
     StatusEntriesBaton *seb = reinterpret_cast<StatusEntriesBaton *>( baton );
 
     path = apr_pstrdup( seb->pool, path );
-    stat = svn_wc_dup_status( status, seb->pool );
+    svn_wc_status2_t *stat = svn_wc_dup_status( status, seb->pool );
     apr_hash_set( seb->hash, path, APR_HASH_KEY_STRING, stat );
 }
 #endif
@@ -1252,6 +1266,9 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
 #if defined( PYSVN_HAS_CLIENT_STATUS3 )
     { false, name_depth },
     { false, name_changelists },
+#endif
+#if defined( PYSVN_HAS_CLIENT_STATUS5 )
+    { false, name_depth_as_sticky },
 #endif
     { false, NULL }
     };
@@ -1280,6 +1297,9 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
 #if defined( PYSVN_HAS_CLIENT_STATUS2 )
     bool ignore_externals = args.getBoolean( name_ignore_externals, false );
 #endif
+#if defined( PYSVN_HAS_CLIENT_STATUS5 )
+    bool  depth_as_sticky = args.getBoolean( name_depth_as_sticky, true );
+#endif
 
     apr_hash_t *status_hash = NULL;
 
@@ -1301,13 +1321,37 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
         baton.hash = status_hash;
         baton.pool = pool;
 
-#if defined( PYSVN_HAS_CLIENT_STATUS4 )
+#if defined( PYSVN_HAS_CLIENT_STATUS5 )
+        const char *abspath_or_url = NULL;
+        svn_error_t *error = svn_dirent_get_absolute( &abspath_or_url, norm_path.c_str(), pool );
+
+        if( error == NULL )
+        {
+            error = svn_client_status5
+                (
+                &revnum,            // revnum
+                m_context,
+                abspath_or_url,     // path
+                &rev,
+                depth,
+                get_all,
+                update,
+                !ignore,
+                ignore_externals,
+                depth_as_sticky,
+                changelists,
+                status5EntriesFunc, // status func
+                &baton,             // status baton
+                pool
+                );
+        }
+#elif defined( PYSVN_HAS_CLIENT_STATUS4 )
         svn_error_t *error = svn_client_status4
             (
             &revnum,            // revnum
             norm_path.c_str(),  // path
             &rev,
-            StatusEntriesFunc,  // status func
+            status4EntriesFunc, // status func
             &baton,             // status baton
             depth,
             get_all,
@@ -1324,7 +1368,7 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
             &revnum,            // revnum
             norm_path.c_str(),  // path
             &rev,
-            StatusEntriesFunc,  // status func
+            status2EntriesFunc, // status func
             &baton,             // status baton
             depth,
             get_all,
@@ -1341,7 +1385,7 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
             &revnum,            // revnum
             norm_path.c_str(),  // path
             &rev,
-            StatusEntriesFunc,  // status func
+            status2EntriesFunc, // status func
             &baton,             // status baton
             recurse,
             get_all,
@@ -1357,7 +1401,7 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
             &revnum,            // revnum
             norm_path.c_str(),  // path
             &rev,
-            StatusEntriesFunc,  // status func
+            status1EntriesFunc, // status func
             &baton,             // status baton
             recurse,
             get_all,
@@ -1389,7 +1433,11 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
         void *val;
         apr_hash_this( hi, &key, NULL, &val );
 
-        pysvn_wc_status_t *status = (pysvn_wc_status_t *)val;
+#if defined( PYSVN_HAS_CLIENT_STATUS_T )
+        svn_client_status_t *status = static_cast<svn_client_status_t *>( val );
+#else
+        pysvn_wc_status_t *status = static_cast<pysvn_wc_status_t *>( val );
+#endif
 
         entries_list.append( toObject(
                 Py::String( osNormalisedPath( (const char *)key, pool ), "UTF-8" ),

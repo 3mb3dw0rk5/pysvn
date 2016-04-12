@@ -73,6 +73,7 @@ std::string name_wrapper_log_changed_path("PysvnLogChangedPath");
 std::string name_wrapper_dirent("PysvnDirent");
 std::string name_wrapper_wc_info("PysvnWcInfo");
 std::string name_wrapper_diff_summary("PysvnDiffSummary");
+std::string name_wrapper_commit_info("PysvnCommitInfo");
 
 pysvn_client::pysvn_client
     (
@@ -95,6 +96,7 @@ pysvn_client::pysvn_client
 , m_wrapper_dirent( result_wrappers, name_wrapper_dirent )
 , m_wrapper_wc_info( result_wrappers, name_wrapper_wc_info )
 , m_wrapper_diff_summary( result_wrappers, name_wrapper_diff_summary )
+, m_wrapper_commit_info( result_wrappers, name_wrapper_commit_info )
 {
     init_py_names();
 }
@@ -249,13 +251,13 @@ int pysvn_client::setattr( const char *_name, const Py::Object &value )
     else if( name == name_commit_info_style )
     {
         Py::Int style( value );
-        if( style == 0l || style == 1l )
+        if( style == 0l || style == 1l || style == 2l )
         {
             m_commit_info_style = style;
         }
             else
         {
-            throw Py::AttributeError( "commit_info_style value must be 0 or 1" );
+            throw Py::AttributeError( "commit_info_style value must be 0, 1 or 2" );
         }
     }
 
@@ -726,6 +728,18 @@ Py::Object pysvn_client::cmd_root_url_from_path( const Py::Tuple& a_args, const 
         PythonAllowThreads permission( m_context );
 
         // known to call back into pysvn
+#if defined( PYSVN_HAS_CLIENT_GET_REPOS_ROOT )
+        const char *repos_uuid = NULL;
+        svn_error_t *error = svn_client_get_repos_root
+            (
+            &root_url,
+            &repos_uuid,
+            norm_path.c_str(),
+            m_context,
+            pool,
+            pool
+            );
+#else
         svn_error_t *error = svn_client_root_url_from_path
             (
             &root_url,
@@ -733,6 +747,7 @@ Py::Object pysvn_client::cmd_root_url_from_path( const Py::Tuple& a_args, const 
             m_context,
             pool
             );
+#endif
         if( error != NULL )
             throw SvnException( error );
     }

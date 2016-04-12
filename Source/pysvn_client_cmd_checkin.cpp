@@ -36,13 +36,24 @@ Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a
     { false, name_changelists },
     { false, name_revprops },
 #endif
+#if defined( PYSVN_HAS_CLIENT_COMMIT5 )
+    { false, name_commit_as_operations },
+#endif
+#if defined( PYSVN_HAS_CLIENT_COMMIT6 )
+    { false, name_include_file_externals },
+    { false, name_include_dir_externals },
+#endif
     { false, NULL }
     };
     FunctionArguments args( "checkin", args_desc, a_args, a_kws );
     args.check();
 
     SvnPool pool( m_context );
+#if defined( PYSVN_HAS_CLIENT_MKDIR4 )
+    CommitInfoResult commit_info( pool );
+#else
     pysvn_commit_info_t *commit_info = NULL;
+#endif
 
     apr_array_header_t *targets = targetsFromStringOrList( args.getArg( name_path ), pool );
 
@@ -84,6 +95,16 @@ Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a
         }
     }
 #endif
+#if defined( PYSVN_HAS_CLIENT_COMMIT5 )
+        type_error_message = "expecting boolean for commit_as_operations keyword arg";
+        bool commit_as_operations = args.getBoolean( name_commit_as_operations, false );
+#endif
+#if defined( PYSVN_HAS_CLIENT_COMMIT6 )
+        type_error_message = "expecting boolean for include_file_externals keyword arg";
+        bool include_file_externals = args.getBoolean( name_include_file_externals, false );
+        type_error_message = "expecting boolean for include_dir_externals keyword arg";
+        bool include_dir_externals = args.getBoolean( name_include_dir_externals, false );
+#endif
 
         try
         {
@@ -93,7 +114,39 @@ Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a
 
             m_context.setLogMessage( message );
 
-#if defined( PYSVN_HAS_CLIENT_COMMIT4 )
+#if defined( PYSVN_HAS_CLIENT_COMMIT6 )
+            svn_error_t *error = svn_client_commit6
+                (
+                targets,
+                depth,
+                keep_locks,
+                keep_changelist,
+                commit_as_operations,
+                include_file_externals,
+                include_dir_externals,
+                changelists,
+                revprops,
+                commit_info.callback(),
+                commit_info.baton(),
+                m_context,
+                pool
+                );
+#elif defined( PYSVN_HAS_CLIENT_COMMIT5 )
+            svn_error_t *error = svn_client_commit5
+                (
+                targets,
+                depth,
+                keep_locks,
+                keep_changelist,
+                commit_as_operations,
+                changelists,
+                revprops,
+                commit_info.callback(),
+                commit_info.baton(),
+                m_context,
+                pool
+                );
+#elif defined( PYSVN_HAS_CLIENT_COMMIT4 )
             svn_error_t *error = svn_client_commit4
                 (
                 &commit_info,
@@ -153,7 +206,11 @@ Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a
         throw Py::TypeError( type_error_message );
     }
 
+#if defined( PYSVN_HAS_CLIENT_MKDIR4 )
+    return toObject( commit_info, m_wrapper_commit_info, m_commit_info_style );
+#else
     return toObject( commit_info, m_commit_info_style );
+#endif
 }
 
 Py::Object pysvn_client::cmd_checkout( const Py::Tuple &a_args, const Py::Dict &a_kws )

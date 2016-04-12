@@ -371,7 +371,11 @@ SvnContext::SvnContext( const std::string &config_dir_str )
 
     apr_pool_create( &m_pool, NULL );
 
+#if defined( PYSVN_HAS_CLIENT_CREATE_CONTEXT2 )
+    svn_client_create_context2( &m_context, NULL, m_pool );
+#else
     svn_client_create_context( &m_context, m_pool );
+#endif
 
     if( !config_dir_str.empty() )
     {
@@ -602,7 +606,11 @@ svn_error_t *SvnTransaction::init( const std::string &repos_path,
     const std::string &transaction_name, bool is_revision )
 {
     svn_error_t *error;
+#if defined( PYSNV_HAS_REPOS_OPEN2 )
+    error = svn_repos_open2( &m_repos, repos_path.c_str(), NULL, m_pool );
+#else
     error = svn_repos_open( &m_repos, repos_path.c_str(), m_pool );
+#endif
     if( error != NULL )
         return error;
 

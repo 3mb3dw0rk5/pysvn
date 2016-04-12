@@ -36,6 +36,9 @@ Py::Object pysvn_client::cmd_add( const Py::Tuple &a_args, const Py::Dict &a_kws
     { false, name_depth },
     { false, name_add_parents },
 #endif
+#if defined( PYSVN_HAS_CLIENT_ADD5 )
+    { false, name_autoprops },
+#endif
 
     { false, NULL }
     };
@@ -56,6 +59,10 @@ Py::Object pysvn_client::cmd_add( const Py::Tuple &a_args, const Py::Dict &a_kws
 #else
     bool recurse = args.getBoolean( name_recurse, true );
 #endif
+#if defined( PYSVN_HAS_CLIENT_ADD5 )
+    bool autoprops = args.getBoolean( name_autoprops, true );
+#endif
+
     SvnPool pool( m_context );
     try
     {
@@ -70,7 +77,19 @@ Py::Object pysvn_client::cmd_add( const Py::Tuple &a_args, const Py::Dict &a_kws
 
             SvnPool pool( m_context );
 
-#if defined( PYSVN_HAS_CLIENT_ADD4 )
+#if defined( PYSVN_HAS_CLIENT_ADD5 )
+            svn_error_t * error = svn_client_add5
+                (
+                norm_path.c_str(),
+                depth,
+                force,
+                !ignore,
+                !autoprops,
+                add_parents,
+                m_context,
+                pool
+                );
+#elif defined( PYSVN_HAS_CLIENT_ADD4 )
             svn_error_t * error = svn_client_add4
                 (
                 norm_path.c_str(),
@@ -255,7 +274,12 @@ Py::Object pysvn_client::cmd_mkdir( const Py::Tuple &a_args, const Py::Dict &a_k
         throw Py::TypeError( type_error_message );
     }
 
+
+#if defined( PYSVN_HAS_CLIENT_MKDIR4 )
+    CommitInfoResult commit_info( pool );
+#else
     pysvn_commit_info_t *commit_info = NULL;
+#endif
 
     try
     {
@@ -268,7 +292,18 @@ Py::Object pysvn_client::cmd_mkdir( const Py::Tuple &a_args, const Py::Dict &a_k
             m_context.setLogMessage( message.c_str() );
         }
 
-#if defined( PYSVN_HAS_CLIENT_MKDIR3 )
+#if defined( PYSVN_HAS_CLIENT_MKDIR4 )
+        svn_error_t *error = svn_client_mkdir4
+            (
+            targets,
+            make_parents,
+            revprops,
+            commit_info.callback(),
+            commit_info.baton(),
+            m_context,
+            pool
+            );
+#elif defined( PYSVN_HAS_CLIENT_MKDIR3 )
         svn_error_t *error = svn_client_mkdir3
             (
             &commit_info,       // changed type
@@ -307,7 +342,11 @@ Py::Object pysvn_client::cmd_mkdir( const Py::Tuple &a_args, const Py::Dict &a_k
         throw_client_error( e );
     }
 
+#if defined( PYSVN_HAS_CLIENT_MKDIR4 )
+    return toObject( commit_info, m_wrapper_commit_info, m_commit_info_style );
+#else
     return toObject( commit_info, m_commit_info_style );
+#endif
 }
 
 Py::Object pysvn_client::cmd_remove( const Py::Tuple &a_args, const Py::Dict &a_kws )
@@ -345,14 +384,31 @@ Py::Object pysvn_client::cmd_remove( const Py::Tuple &a_args, const Py::Dict &a_
 
     apr_array_header_t *targets = targetsFromStringOrList( args.getArg( name_url_or_path ), pool );
 
+#if defined( PYSVN_HAS_CLIENT_MKDIR4 )
+    CommitInfoResult commit_info( pool );
+#else
     pysvn_commit_info_t *commit_info = NULL;
+#endif
+
     try
     {
         checkThreadPermission();
 
         PythonAllowThreads permission( m_context );
 
-#if defined( PYSVN_HAS_CLIENT_DELETE3 )
+#if defined( PYSVN_HAS_CLIENT_DELETE4 )
+        svn_error_t *error = svn_client_delete4
+            (
+            targets,
+            force,
+            keep_local,
+            revprops,
+            commit_info.callback(),
+            commit_info.baton(),
+            m_context,
+            pool
+            );
+#elif defined( PYSVN_HAS_CLIENT_DELETE3 )
         svn_error_t *error = svn_client_delete3
             (
             &commit_info,
@@ -394,7 +450,11 @@ Py::Object pysvn_client::cmd_remove( const Py::Tuple &a_args, const Py::Dict &a_
         throw_client_error( e );
     }
 
+#if defined( PYSVN_HAS_CLIENT_MKDIR4 )
+    return toObject( commit_info, m_wrapper_commit_info, m_commit_info_style );
+#else
     return toObject( commit_info, m_commit_info_style );
+#endif
 }
 
 Py::Object pysvn_client::cmd_revert( const Py::Tuple &a_args, const Py::Dict &a_kws )

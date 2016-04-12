@@ -173,10 +173,11 @@
 // SVN 1.7 or later
 #if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 7) || SVN_VER_MAJOR > 1
 #define PYSVN_HAS_SVN_1_7
+#define PYSVN_HAS_COMMIT_CALLBACK2_T qqq
 #define PYSNV_HAS_REPOS_OPEN2 1
 #define PYSNV_HAS_IO_REMOVE_FILE2 1
 #define PYSVN_HAS_CLIENT_BLAME5 QQQ
-#define PYSVN_HAS_CLIENT_COMMIT5 QQQ
+#define PYSVN_HAS_CLIENT_COMMIT5 1
 #define PYSVN_HAS_CLIENT_COPY6 QQQ
 #define PYSVN_HAS_CLIENT_DELETE4 QQQ
 #define PYSVN_HAS_CLIENT_DIFF5 QQQ
@@ -199,8 +200,10 @@
 #define PYSVN_HAS_CLIENT_PROPSET_LOCAL QQQ
 #define PYSVN_HAS_CLIENT_PROPSET_REMOTE QQQ
 #define PYSVN_HAS_CLIENT_RELOCATE2 QQQ
-#define PYSVN_HAS_CLIENT_STATUS5 QQQ
-#define PYSVN_HAS_CLIENT_STATUS_T QQQ
+//Turning status5 is not compatible with status4 for the pysvn API
+// Comment out until I understand the replacement
+//#define PYSVN_HAS_CLIENT_STATUS5 QQQ
+//#define PYSVN_HAS_CLIENT_STATUS_T QQQ
 #define PYSVN_HAS_CLIENT_SWITCH3 QQQ
 #define PYSVN_HAS_CLIENT_UPDATE4 QQQ
 #define PYSVN_HAS_CLIENT_UPGRADE QQQ
@@ -208,13 +211,16 @@
 #define PYSVN_HAS_CLIENT_UUID_FROM_PATH2 QQQ
 #endif
 
+// SVN 1.8 or later
 #if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 8) || SVN_VER_MAJOR > 1
 #define PYSVN_HAS_SVN_1_8
 #define PYSVN_HAS_CLIENT_GET_REPOS_ROOT 1
 #define PYSVN_HAS_CLIENT_ADD5 1
 #define PYSVN_HAS_CLIENT_CREATE_CONTEXT2 1
+#define PYSVN_HAS_CLIENT_COMMIT6 1
 #endif
 
+// SVN 1.9 or later
 #if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 9) || SVN_VER_MAJOR > 1
 #define PYSVN_HAS_SVN_1_9
 #define PYSVN_HAS_CLIENT_VACUUM QQQ
@@ -224,7 +230,11 @@
 #define PYSVN_HAS_CLIENT_INFO4 QQQ
 #endif
 
-#if defined( PYSVN_HAS_CLIENT_STATUS3 )
+
+#if defined( PYSVN_HAS_CLIENT_STATUS_T )
+// nothing to defined from here on in
+
+#elif defined( PYSVN_HAS_CLIENT_STATUS3 )
 typedef svn_wc_status2_t pysvn_wc_status_t;
 
 #elif defined( PYSVN_HAS_CLIENT_STATUS2 )
