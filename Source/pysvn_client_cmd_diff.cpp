@@ -19,32 +19,27 @@
 #include "pysvn.hpp"
 #include "pysvn_static_strings.hpp"
 
-class pysvn_apr_file
+class PySvnAprFile
 {
 public:
-    pysvn_apr_file( SvnPool &pool )
+    PySvnAprFile( SvnPool &pool )
     : m_pool( pool )
     , m_apr_file( NULL )
     , m_filename( NULL )
     {
     }
 
-    ~pysvn_apr_file()
+    ~PySvnAprFile()
     {
         close();
         if( m_filename )
         {
-#if defined( PYSNV_HAS_IO_REMOVE_FILE2 )
             svn_error_clear( svn_io_remove_file2( m_filename, TRUE, m_pool ) );
-#else
-            svn_error_clear( svn_io_remove_file( m_filename, m_pool ) );
-#endif
         }
     }
 
     void open_unique_file( const std::string &tmp_dir )
     {
-#if defined( PYSVN_HAS_IO_OPEN_UNIQUE_FILE3 )
         svn_error_t *error = svn_io_open_unique_file3
             (
             &m_apr_file,
@@ -54,41 +49,27 @@ public:
             m_pool,
             m_pool
             );
-#elif defined( PYSVN_HAS_IO_OPEN_UNIQUE_FILE2 )
-        svn_error_t *error = svn_io_open_unique_file2
-            (
-            &m_apr_file,
-            &m_filename,
-            tmp_dir.c_str(),
-            ".tmp",
-            svn_io_file_del_none,
-            m_pool
-            );
-#else
-        svn_error_t *error = svn_io_open_unique_file
-            (
-            &m_apr_file,
-            &m_filename,
-            tmp_dir.c_str(),
-            ".tmp",
-            false,
-            m_pool
-            );
-#endif
         if( error != NULL )
         {
             throw SvnException( error );
         }
     }
 
-    
-    void open_tmp_file()
+    void readIntoStringBuf( svn_stringbuf_t **stringbuf )
     {
+        close();
+
         apr_status_t status = apr_file_open( &m_apr_file, m_filename, APR_READ, APR_OS_DEFAULT, m_pool );
         if( status )
         {
             std::string msg( "opening file " ); msg += m_filename;
             throw SvnException( svn_error_create( status, NULL, msg.c_str() ) );
+        }
+
+        svn_error_t *error = svn_stringbuf_from_aprfile( stringbuf, m_apr_file, m_pool );
+        if( error != NULL )
+        {
+            throw SvnException( error );
         }
     }
 
@@ -123,6 +104,83 @@ private:
     const char *m_filename;
 };
 
+class PySvnSvnStream
+{
+public:
+    PySvnSvnStream( SvnPool &pool )
+    : m_pool( pool )
+    , m_svn_stream( NULL )
+    , m_filename( NULL )
+    {
+    }
+
+    ~PySvnSvnStream()
+    {
+        close();
+        if( m_filename )
+        {
+            svn_error_clear( svn_io_remove_file2( m_filename, TRUE, m_pool ) );
+        }
+    }
+
+    void open_unique_file( const std::string &tmp_dir )
+    {
+        svn_error_t *error = svn_stream_open_unique
+            (
+            &m_svn_stream,
+            &m_filename,
+            tmp_dir.c_str(),
+            svn_io_file_del_none,
+            m_pool,
+            m_pool
+            );
+        if( error != NULL )
+        {
+            throw SvnException( error );
+        }
+    }
+    
+    void readIntoStringBuf( svn_stringbuf_t **stringbuf )
+    {
+        close();
+
+        svn_error_t *error = svn_stringbuf_from_file2( stringbuf, m_filename, m_pool );
+        if( error != NULL )
+        {
+            throw SvnException( error );
+        }
+    }
+
+    void close()
+    {
+        // only close if we have an open file
+        if( m_svn_stream == NULL )
+        {
+            return;
+        }
+        svn_stream_t *svn_stream = m_svn_stream;
+
+        // prevent closing the file twice
+        m_svn_stream = NULL;
+
+        svn_error_t *error = svn_stream_close( svn_stream );
+        if( error )
+        {
+            throw SvnException( error );
+        }
+    }
+
+    svn_stream_t *stream()
+    {
+        return m_svn_stream;
+    }
+
+private:
+    SvnPool         &m_pool;
+    svn_stream_t    *m_svn_stream;
+    const char      *m_filename;
+};
+
 Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
     static argument_description args_desc[] =
@@ -150,6 +208,11 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
 #if defined( PYSVN_HAS_CLIENT_DIFF5 )
     { false, name_show_copies_as_adds },
     { false, name_use_git_diff_format },
+#endif
+#if defined( PYSVN_HAS_CLIENT_DIFF6 )
+    { false, name_diff_added },
+    { false, name_ignore_properties },
+    { false, name_properties_only },
 #endif
     { false, NULL }
     };
@@ -214,6 +277,11 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
     bool show_copies_as_adds = args.getBoolean( name_show_copies_as_adds, false );
     bool use_git_diff_format = args.getBoolean( name_use_git_diff_format, false );
 #endif
+#if defined( PYSVN_HAS_CLIENT_DIFF6 )
+    bool diff_added = args.getBoolean( name_diff_added, true );
+    bool ignore_properties = args.getBoolean( name_ignore_properties, false );
+    bool properties_only = args.getBoolean( name_properties_only, false );
+#endif
 
     svn_stringbuf_t *stringbuf = NULL;
 
@@ -225,15 +293,46 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
 
         checkThreadPermission();
 
-        pysvn_apr_file output_file( pool );
-        pysvn_apr_file error_file( pool );
+#if defined( PYSVN_HAS_CLIENT_DIFF6 )
+        PySvnSvnStream output_stream( pool );
+        PySvnSvnStream error_stream( pool );
+
+        output_stream.open_unique_file( norm_tmp_path );
+        error_stream.open_unique_file( norm_tmp_path );
+#else
+        PySvnAprFile output_file( pool );
+        PySvnAprFile error_file( pool );
 
         output_file.open_unique_file( norm_tmp_path );
         error_file.open_unique_file( norm_tmp_path );
+#endif
 
         PythonAllowThreads permission( m_context );
 
-#if defined( PYSVN_HAS_CLIENT_DIFF5 )
+#if defined( PYSVN_HAS_CLIENT_DIFF6 )
+        svn_error_t *error = svn_client_diff6
+            (
+            options,
+            norm_path1.c_str(), &revision1,
+            norm_path2.c_str(), &revision2,
+            relative_to_dir,
+            depth,
+            ignore_ancestry,
+            !diff_added,
+            !diff_deleted,
+            show_copies_as_adds,
+            ignore_content_type,
+            ignore_properties,
+            properties_only,
+            use_git_diff_format,
+            header_encoding_ptr,
+            output_stream.stream(),
+            error_stream.stream(),
+            changelists,
+            m_context,
+            pool
+            );
+#elif defined( PYSVN_HAS_CLIENT_DIFF5 )
         svn_error_t *error = svn_client_diff5
             (
             options,
@@ -321,12 +420,11 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
         if( error != NULL )
             throw SvnException( error );
 
-        output_file.close();
-
-        output_file.open_tmp_file();
-        error = svn_stringbuf_from_aprfile( &stringbuf, output_file.file(), pool );
-        if( error != NULL )
-            throw SvnException( error );
+#if defined( PYSVN_HAS_CLIENT_DIFF6 )
+        output_stream.readIntoStringBuf( &stringbuf );
+#else
+        output_file.readIntoStringBuf( &stringbuf );
+#endif
     }
     catch( SvnException &e )
     {
@@ -368,6 +466,11 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
 #if defined( PYSVN_HAS_CLIENT_DIFF_PEG5 )
     { false, name_show_copies_as_adds },
     { false, name_use_git_diff_format },
+#endif
+#if defined( PYSVN_HAS_CLIENT_DIFF_PEG6 )
+    { false, name_diff_added },
+    { false, name_ignore_properties },
+    { false, name_properties_only },
 #endif
     { false, NULL }
     };
@@ -430,6 +533,11 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
     bool show_copies_as_adds = args.getBoolean( name_show_copies_as_adds, false );
     bool use_git_diff_format = args.getBoolean( name_use_git_diff_format, false );
 #endif
+#if defined( PYSVN_HAS_CLIENT_DIFF_PEG6 )
+    bool diff_added = args.getBoolean( name_diff_added, true );
+    bool ignore_properties = args.getBoolean( name_ignore_properties, false );
+    bool properties_only = args.getBoolean( name_properties_only, false );
+#endif
 
     bool is_url = is_svn_url( path );
     revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
@@ -446,17 +554,51 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
         checkThreadPermission();
 
         PythonAllowThreads permission( m_context );
-        pysvn_apr_file output_file( pool );
-        pysvn_apr_file error_file( pool );
+
+#if defined( PYSVN_HAS_CLIENT_DIFF6 )
+        PySvnSvnStream output_stream( pool );
+        PySvnSvnStream error_stream( pool );
+
+        output_stream.open_unique_file( norm_tmp_path );
+        error_stream.open_unique_file( norm_tmp_path );
+#else
+        PySvnAprFile output_file( pool );
+        PySvnAprFile error_file( pool );
 
         output_file.open_unique_file( norm_tmp_path );
         error_file.open_unique_file( norm_tmp_path );
+#endif
 
         // std::cout << "peg_revision "    << peg_revision.kind    << " " << peg_revision.value.number     << std::endl;
         // std::cout << "revision_start "  << revision_start.kind  << " " << revision_start.value.number   << std::endl;
         // std::cout << "revision_end "    << revision_end.kind    << " " << revision_end.value.number     << std::endl;
 
-#if defined( PYSVN_HAS_CLIENT_DIFF_PEG5 )
+#if defined( PYSVN_HAS_CLIENT_DIFF_PEG6 )
+        svn_error_t *error = svn_client_diff_peg6
+            (
+            options,
+            norm_path.c_str(),
+            &peg_revision,
+            &revision_start,
+            &revision_end,
+            relative_to_dir,
+            depth,
+            ignore_ancestry,
+            !diff_added,
+            !diff_deleted,
+            show_copies_as_adds,
+            ignore_content_type,
+            ignore_properties,
+            properties_only,
+            use_git_diff_format,
+            header_encoding_ptr,
+            output_stream.stream(),
+            error_stream.stream(),
+            changelists,
+            m_context,
+            pool
+            );
+#elif defined( PYSVN_HAS_CLIENT_DIFF_PEG5 )
         svn_error_t *error = svn_client_diff_peg5
             (
             options,
@@ -554,12 +696,11 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
         if( error != NULL )
             throw SvnException( error );
 
-        output_file.close();
-
-        output_file.open_tmp_file();
-        error = svn_stringbuf_from_aprfile( &stringbuf, output_file.file(), pool );
-        if( error != NULL )
-            throw SvnException( error );
+#if defined( PYSVN_HAS_CLIENT_DIFF6 )
+        output_stream.readIntoStringBuf( &stringbuf );
+#else
+        output_file.readIntoStringBuf( &stringbuf );
+#endif
     }
     catch( SvnException &e )
     {
