@@ -211,6 +211,9 @@ Py::Object pysvn_client::cmd_import( const Py::Tuple &a_args, const Py::Dict &a_
     { false, name_ignore_unknown_node_types },
     { false, name_revprops },
 #endif
+#if defined( PYSVN_HAS_CLIENT_IMPORT5 )
+    { false, name_autoprops },
+#endif
     { false, NULL }
     };
     FunctionArguments args( "import_", args_desc, a_args, a_kws );
@@ -242,6 +245,10 @@ Py::Object pysvn_client::cmd_import( const Py::Tuple &a_args, const Py::Dict &a_
     bool ignore = args.getBoolean( name_ignore, false );
 #endif
 
+#if defined( PYSVN_HAS_CLIENT_IMPORT5 )
+    bool autoprops = args.getBoolean( name_autoprops, true );
+#endif
+
 #if defined( PYSVN_HAS_CLIENT_IMPORT4 )
     CommitInfoResult commit_info( pool );
 #else
@@ -259,7 +266,24 @@ Py::Object pysvn_client::cmd_import( const Py::Tuple &a_args, const Py::Dict &a_
 
         m_context.setLogMessage( message.c_str() );
 
-#if defined( PYSVN_HAS_CLIENT_IMPORT4 )
+#if defined( PYSVN_HAS_CLIENT_IMPORT5 )
+        svn_error_t *error = svn_client_import5
+            (
+            norm_path.c_str(),
+            norm_url.c_str(),
+            depth,
+            !ignore,
+            !autoprops,
+            ignore_unknown_node_types,
+            revprops,
+            NULL,       // filter_callback
+            NULL,       // filter_baton
+            commit_info.callback(),
+            commit_info.baton(),
+            m_context,
+            pool
+            );
+#elif defined( PYSVN_HAS_CLIENT_IMPORT4 )
         svn_error_t *error = svn_client_import4
             (
             norm_path.c_str(),
