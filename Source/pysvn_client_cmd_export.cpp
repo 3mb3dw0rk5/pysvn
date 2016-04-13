@@ -242,7 +242,11 @@ Py::Object pysvn_client::cmd_import( const Py::Tuple &a_args, const Py::Dict &a_
     bool ignore = args.getBoolean( name_ignore, false );
 #endif
 
+#if defined( PYSVN_HAS_CLIENT_IMPORT4 )
+    CommitInfoResult commit_info( pool );
+#else
     pysvn_commit_info_t *commit_info = NULL;
+#endif
 
     try
     {
@@ -255,7 +259,21 @@ Py::Object pysvn_client::cmd_import( const Py::Tuple &a_args, const Py::Dict &a_
 
         m_context.setLogMessage( message.c_str() );
 
-#if defined( PYSVN_HAS_CLIENT_IMPORT3 )
+#if defined( PYSVN_HAS_CLIENT_IMPORT4 )
+        svn_error_t *error = svn_client_import4
+            (
+            norm_path.c_str(),
+            norm_url.c_str(),
+            depth,
+            !ignore,
+            ignore_unknown_node_types,
+            revprops,
+            commit_info.callback(),
+            commit_info.baton(),
+            m_context,
+            pool
+            );
+#elif defined( PYSVN_HAS_CLIENT_IMPORT3 )
         svn_error_t *error = svn_client_import3
             (
             &commit_info,       // changed type
@@ -302,5 +320,9 @@ Py::Object pysvn_client::cmd_import( const Py::Tuple &a_args, const Py::Dict &a_
         throw_client_error( e );
     }
 
+#if defined( PYSVN_HAS_CLIENT_IMPORT4 )
+    return toObject( commit_info, m_wrapper_commit_info, m_commit_info_style );
+#else
     return toObject( commit_info, m_commit_info_style );
+#endif
 }
