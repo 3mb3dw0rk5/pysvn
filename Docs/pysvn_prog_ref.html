@@ -2134,7 +2134,9 @@ contains the revision properies and their values.
 
 <h4><a name="pysvn_client_revpropset"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.revpropset</a></h4>
 <pre>
-rev = \
+<span class="svn_1007000">
+old_prop_value = \
+</span>
 revpropset( prop_name,
             prop_value,
             url,
@@ -2142,7 +2144,7 @@ revpropset( prop_name,
             force=False )
 </pre>
 <p>set the revision property prop_name to prop_value in path.
-The revision updated is returned.
+<span class="svn_1007000">The old prop value is returned.</span>
 </p>
 
 <div class="svn_1003000">
@@ -2444,27 +2446,53 @@ Return the contents of path as a string, file_text.
 <h4><a name="pysvn_transaction_changed"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.changed</a></h4>
 <pre>
 file_text = \
-changed( [copy_info=False] )
+changed( copy_info=False,
+         base_dir="",
+         low_water_mark=-1,
+         send_deltas=False )
 </pre>
 <p>
 Return a dict of all changes in the transaction. The keys in
 the dict are the path names and the values are tuples containing
-action, kind, text_mod, prop_mod.
+the following:
 </p>
-<p>
-The optional copy_info parameter when True will return the copy from revision and copy from path information.
-</p>
+
 <ul>
 <li>action - string - a single letter indicating the action
-  'A' for add, 'R' for modify, 'D' for delete</li>
+    'A' for add, 'R' for modify, 'D' for delete</li>
 <li>kind - node_kind - one of the pysvn.<a href="#pysvn_node_kind">node_kind</a> values</li>
-<li>text_mod - int - is != 0 if the text in this path has been
-  modified</li>
-<li>prop_mod - int - is != 0 if the properties in this path
-  have been modified</li>
+<li>text_mod - int - is != 0 if the text in this path has been modified</li>
+<li>prop_mod - int - is != 0 if the properties in this path have been modified</li>
 <li>copyfrom_rev - int - when path has been copied this is its copy from revision number</li>
 <li>copyfrom_path - int - when path has been copied this is its copy from path</li>
 </ul>
+
+<p>
+Changes will be limited to those within base_dir, and if
+low_water_mark is set to something other than SVN_INVALID_REVNUM (-1)
+it is assumed that the client has no knowledge of revisions prior to
+low_water_mark.  Together, these two arguments define the portion of
+the tree that the client is assumed to have knowledge of, and thus any
+copies of data from outside that part of the tree will be sent in their
+entirety, not as simple copies or deltas against a previous version.
+</p>
+<p>
+The editor passed to this function should be aware of the fact
+that, if send_deltas is False, calls to its change_dir_prop(),
+change_file_prop(), and apply_textdelta() functions will not
+contain meaningful data, and merely serve as indications that
+properties or textual contents were changed.
+</p>
+<p>
+If send_deltas is True, the text and property deltas for changes
+will be sent, otherwise null text deltas and empty prop changes will be
+used.
+</p>
+<p>
+Note: This editor driver passes SVN_INVALID_REVNUM (-1) for all
+revision parameters in the editor interface except the copyfrom
+parameter of the add_file() and add_directory() editor functions.
+</p>
 
 <h4><a name="pysvn_transaction_list"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_transaction">Transaction</a>.list</a></h4>
 <pre>
