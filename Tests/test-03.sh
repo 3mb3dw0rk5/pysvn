@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+#   test-03.sh
+#       test callbacks
+#
+
 # need to get rid of any symbolic links in the WORKDIR
 export WORKDIR=$( ${PYTHON} -c 'import os;os.chdir("..");print( os.getcwd() )' )
 

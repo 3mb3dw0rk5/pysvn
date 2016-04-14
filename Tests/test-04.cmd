@@ -1,4 +1,9 @@
 @prompt $P$S$G$S
+@rem
+@rem   test-04.sh
+@rem       test Tranaction object
+@rem
+
 @echo WorkDir: %BUILDER_TOP_DIR%
 @echo PYTHON: %PYTHON%
 @echo Username: %USERNAME%

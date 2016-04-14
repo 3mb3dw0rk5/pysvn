@@ -1,5 +1,9 @@
 @echo off
 @prompt $P$S$G
+@rem
+@rem   test-05.sh
+@rem       test info2 with locked files
+@rem
 @echo WorkDir: %BUILDER_TOP_DIR%
 @echo PYTHON: %PYTHON%
 @echo Username: %USERNAME%

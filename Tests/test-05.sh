@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+#   test-05.sh
+#       test info2 with locked files
+#
+
 # need to get rid of any symbolic links in the WORKDIR
 export WORKDIR=$( ${PYTHON} -c 'import os;os.chdir("..");print( os.getcwd() )' )
 

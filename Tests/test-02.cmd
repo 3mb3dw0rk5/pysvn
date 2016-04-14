@@ -1,4 +1,8 @@
 setlocal
+@rem
+@rem   test-02.cmd
+@rem       test threading, but needs special svn server
+@rem
 set PYTHONPATH=.
 if exist testroot rmdir /s /q testroot
 mkdir testroot

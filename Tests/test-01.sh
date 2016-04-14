@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+#   test-01.sh
+#       test the main commands that are in all versions
+#
+
 # need to get rid of any symbolic links in the WORKDIR
 export WORKDIR=$( ${PYTHON} -c 'import os;os.chdir("..");print( os.getcwd() )' )
 

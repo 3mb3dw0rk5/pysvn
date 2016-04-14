@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+#   test-06.sh
+#       test info and info2
+#
+
 # need to get rid of any symbolic links in the WORKDIR
 export WORKDIR=$( ${PYTHON} -c 'import os;os.chdir("..");print( os.getcwd() )' )
 
@@ -52,7 +57,7 @@ echo Info: Test - info of path
 cmd_pysvn info file1.txt
 
 echo Info: Test - info2 of path
-cmd_pysvn info file1.txt
+cmd_pysvn info2 file1.txt
 
 echo Info: Test - info2 of URL
 cmd_pysvn info --revision HEAD file://${TESTROOT}/repos/trunk/test/file1.txt

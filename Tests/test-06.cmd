@@ -1,5 +1,9 @@
 @echo off
 @prompt $P$S$G
+@rem
+@rem   test-06.sh
+@rem       test info and info2
+@rem
 @echo WorkDir: %BUILDER_TOP_DIR%
 @echo PYTHON: %PYTHON%
 @echo Username: %USERNAME%

@@ -1,5 +1,10 @@
 @echo off
 @prompt $P$S$G
+@rem
+@rem   test-08.sh
+@rem       test patch
+@rem
+
 @echo WorkDir: %BUILDER_TOP_DIR%
 @echo PYTHON: %PYTHON%
 @echo Username: %USERNAME%
@@ -61,6 +66,7 @@ call :cmd_shell type folder1\file-a.txt
 
 call :cmd_shell fc b:\wc1\folder1\file-a.txt b:\wc2\folder1\file-a.txt
 
+goto :eof
 endlocal
 
 :cmd_shell

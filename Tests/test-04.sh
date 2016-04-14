@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+#   test-04.sh
+#       test Tranaction object
+#
+
 # need to get rid of any symbolic links in the WORKDIR
 export WORKDIR=$( ${PYTHON} -c 'import os;os.chdir("..");print( os.getcwd() )' )
 

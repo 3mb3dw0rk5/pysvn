@@ -1,5 +1,9 @@
 @echo off
 @prompt $P$S$G
+@rem
+@rem   test-01.cmd
+@rem       test the main commands that are in all versions
+@rem
 @echo WorkDir: %BUILDER_TOP_DIR%
 @echo PYTHON: %PYTHON%
 @echo Username: %USERNAME%

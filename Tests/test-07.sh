@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+#   test-07.sh
+#       test copy2, move2 and changelist
+#
+
 # need to get rid of any symbolic links in the WORKDIR
 export WORKDIR=$( ${PYTHON} -c 'import os;os.chdir("..");print( os.getcwd() )' )
 
@@ -67,8 +72,5 @@ ${PYTHON} ${WORKDIR}/Tests/test_07_move2.py ${TESTROOT}/configdir
 
 echo Info: running test_07_changelist
 ${PYTHON} ${WORKDIR}/Tests/test_07_changelist.py ${TESTROOT}/configdir
-
-#echo Info: running test_07_revprops
-#${PYTHON} ${WORKDIR}/Tests/test_07_revprops.py ${TESTROOT}/configdir
 
 true
