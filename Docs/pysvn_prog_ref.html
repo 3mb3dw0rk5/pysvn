@@ -780,7 +780,7 @@ If not None revprop is a list holding additional,
 custom revision properties to be set on the new revision.
 This list cannot contain any standard Subversion properties.
 </p>
-<div>
+</div>
 
 <div class="svn_1007000">
 <p>
@@ -858,13 +858,13 @@ pysvn.Revision( opt_revision_kind.working ).
 </p>
 <p>src_url_or_path and dest_url_or_path can each be either a
 working copy (WC) path or URL:
-<ul>
-<li>WC  -> WC:   copy and schedule for addition (with history)</li>
-<li>WC  -> URL:  immediately commit a copy of WC to URL</li>
-<li>URL -> WC:   check out URL into WC, schedule for addition</li>
-<li>URL -> URL:  complete server-side copy; used to branch and tag</li>
-</ul>
 </p>
+<ul>
+<li>WC  -&rt; WC:   copy and schedule for addition (with history)</li>
+<li>WC  -&rt; URL:  immediately commit a copy of WC to URL</li>
+<li>URL -&rt; WC:   check out URL into WC, schedule for addition</li>
+<li>URL -&rt; URL:  complete server-side copy; used to branch and tag</li>
+</ul>
 <p>If the destination is a URL the <a href="#pysvn_client_callback_get_log_message">client_get_log_message</a>
 callback must be implemented to return a log message.
 </p>
@@ -899,10 +899,10 @@ TBD better docs here.</p>
 <p>src_url_or_path and dest_url_or_path can each be either a
 working copy (WC) path or URL:
 <ul>
-<li>WC  -> WC:   copy and schedule for addition (with history)</li>
-<li>WC  -> URL:  immediately commit a copy of WC to URL</li>
-<li>URL -> WC:   check out URL into WC, schedule for addition</li>
-<li>URL -> URL:  complete server-side copy; used to branch and tag</li>
+<li>WC  -&gt; WC:   copy and schedule for addition (with history)</li>
+<li>WC  -&gt; URL:  immediately commit a copy of WC to URL</li>
+<li>URL -&gt; WC:   check out URL into WC, schedule for addition</li>
+<li>URL -&gt; URL:  complete server-side copy; used to branch and tag</li>
 </ul>
 </p>
 <p>If the destination is a URL the <a href="#pysvn_client_callback_get_log_message">client_get_log_message</a>
@@ -1749,8 +1749,8 @@ move( src_url_or_path,
 <p>src_path and dest_path can both be working copy (WC) paths
 or URLs:
 <ul>
-<li>WC  -> WC:   move and schedule for addition (with history)</li>
-<li>URL -> URL:  complete server-side rename.</li>
+<li>WC  -&gt; WC:   move and schedule for addition (with history)</li>
+<li>URL -&gt; URL:  complete server-side rename.</li>
 </ul>
 </p>
 
@@ -1814,10 +1814,10 @@ copy is updated by some other task.
 <p>src_url_or_path and dest_url_or_path can each be either a
 working copy (WC) path or URL:
 <ul>
-<li>WC  -> WC:   move and schedule for addition (with history)</li>
-<li>WC  -> URL:  immediately commit a move of WC to URL</li>
-<li>URL -> WC:   check out URL into WC, schedule for addition</li>
-<li>URL -> URL:  complete server-side move; used to branch and tag</li>
+<li>WC  -&gt; WC:   move and schedule for addition (with history)</li>
+<li>WC  -&gt; URL:  immediately commit a move of WC to URL</li>
+<li>URL -&gt; WC:   check out URL into WC, schedule for addition</li>
+<li>URL -&gt; URL:  complete server-side move; used to branch and tag</li>
 </ul>
 </p>
 <p>If the destination is a URL the <a href="#pysvn_client_callback_get_log_message">client_get_log_message</a>
@@ -2689,8 +2689,7 @@ except pysvn.ClientError, e:
 <li>uuid - string or None</li>
 </ul>
 
-<h2><a href="#pysvn_module">pysvn</a>.<a
-        name="pysvn_opt_revision_kind">opt_revision_kind - subversion
+<h2><a href="#pysvn_module">pysvn</a>.<a name="pysvn_opt_revision_kind">opt_revision_kind - subversion
         revision number kind enumeration</a></h2>
 <ul>
 <li>unspecified - No revision information given.</li>
@@ -2703,9 +2702,7 @@ except pysvn.ClientError, e:
 <li>head - repository youngest</li>
 </ul>
 
-<h2><a href="#pysvn_module">pysvn</a>.<a
-        name="pysvn_wc_notify_action">wc_notify_action - subversion
-        notification callback action enumeration</a></h2>
+<h2><a href="#pysvn_module">pysvn</a>.<a name="pysvn_wc_notify_action">wc_notify_action - subversion notification callback action enumeration</a></h2>
 <ul>
 <li>add - Adding a path to revision control.</li>
 <li>copy - Copying a versioned path.</li>
@@ -2734,9 +2731,7 @@ except pysvn.ClientError, e:
 <li>failed_unlock - Failed to unlock a path.</li>
 </ul>
 
-<h2><a href="#pysvn_module">pysvn</a>.<a
-        name="pysvn_wc_status_kind">wc_status_kind - subversion
-        status kind enumeration</a></h2>
+<h2><a href="#pysvn_module">pysvn</a>.<a name="pysvn_wc_status_kind">wc_status_kind - subversion status kind enumeration</a></h2>
 <ul>
 <li>none - does not exist</li>
 <li>unversioned - is not a versioned thing in this wc</li>
@@ -2754,9 +2749,7 @@ except pysvn.ClientError, e:
 <li>incomplete - a directory doesn't contain a complete entries list </li>
 </ul>
 
-<h2><a href="#pysvn_module">pysvn</a>.<a
-        name="pysvn_wc_merge_outcome">wc_merge_outcome - subversion
-        merge outcome enumeration</a></h2>
+<h2><a href="#pysvn_module">pysvn</a>.<a name="pysvn_wc_merge_outcome">wc_merge_outcome - subversion merge outcome enumeration</a></h2>
 <ul>
 <li>unchanged - The working copy is (or would be) unchanged.
 The changes to be merged were already present in the working copy</li>
@@ -2767,9 +2760,7 @@ but there was (or would be) a conflict</li>
 file was either absent or not under version control.</li>
 </ul>
 
-<h2><a href="#pysvn_module">pysvn</a>.<a
-        name="pysvn_wc_notify_state">wc_notify_state - subversion
-        notify callback state enumeration</a></h2>
+<h2><a href="#pysvn_module">pysvn</a>.<a name="pysvn_wc_notify_state">wc_notify_state - subversion notify callback state enumeration</a></h2>
 <ul>
 <li>inapplicable - inapplicable</li>
 <li>unknown - Notifier doesn't know or isn't saying.</li>
@@ -2781,8 +2772,7 @@ file was either absent or not under version control.</li>
 <li>conflicted - Modified state got conflicting mods.</li>
 </ul>
 
-<h2><a href="#pysvn_module">pysvn</a>.<a
-        name="pysvn_wc_schedule">wc_schedule - subversion status schedule enumeration</a></h2>
+<h2><a href="#pysvn_module">pysvn</a>.<a name="pysvn_wc_schedule">wc_schedule - subversion status schedule enumeration</a></h2>
 <ul>
 <li>normal - Nothing special here</li>
 <li>add - Slated for addition</li>
@@ -2790,8 +2780,7 @@ file was either absent or not under version control.</li>
 <li>replace - Slated for replacement (delete + add)</li>
 </ul>
 
-<h2><a href="#pysvn_module">pysvn</a>.<a
-        name="pysvn_node_kind">node_kind - subversion node kind enumeration</a></h2>
+<h2><a href="#pysvn_module">pysvn</a>.<a name="pysvn_node_kind">node_kind - subversion node kind enumeration</a></h2>
 <ul>
 <li>none - absent</li>
 <li>file - regular file</li>
@@ -2799,8 +2788,7 @@ file was either absent or not under version control.</li>
 <li>unknown - something's here, but we don't know what</li>
 </ul>
 
-<h2><a href="#pysvn_module">pysvn</a>.<a
-        name="pysvn_depth">depth - subversion depth enumeration</a></h2>
+<h2><a href="#pysvn_module">pysvn</a>.<a name="pysvn_depth">depth - subversion depth enumeration</a></h2>
 <ul>
 <li>empty - Just the named directory D, no entries.  Updates will not pull in
      any files or subdirectories not already present.</li>
