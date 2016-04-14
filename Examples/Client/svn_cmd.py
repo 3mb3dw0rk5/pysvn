@@ -389,19 +389,47 @@ class SvnCommand:
     def cmd_annotate( self, args ):
         start_revision, end_revision = args.getOptionalRevisionPair( '--revision', '0', 'head' )
         positional_args = args.getPositionalArgs( 1, 1 )
-        all_lines = self.client.annotate( positional_args[0],
-                    revision_start=start_revision,
-                    revision_end=end_revision )
+        all_lines = self.client.annotate( 
+                                    positional_args[0],
+                                    revision_start=start_revision,
+                                    revision_end=end_revision )
         self.printNotifyMessages()
 
         for line in all_lines:
             print( '%d| r%d | %s | %s | %s' %
-                (line['number']
+                (line['number']+1
                 ,line['revision'].number
                 ,line['author']
                 ,line['date']
                 ,line['line']) )
     cmd_ann = cmd_annotate
+
+    def cmd_annotate2( self, args ):
+        if not hasattr( self.client, 'annotate2' ):
+            print( 'annotate2 is not available in this version of subversion' )
+            return
+
+        start_revision, end_revision = args.getOptionalRevisionPair( '--revision', '0', 'head' )
+        positional_args = args.getPositionalArgs( 1, 1 )
+
+        all_lines = self.client.annotate2(
+                                positional_args[0],
+                                revision_start=start_revision,
+                                revision_end=end_revision )
+
+        self.printNotifyMessages()
+
+        for line in all_lines:
+            print( '%d| r%d | %s' %
+                (line['number']+1
+                ,line['revision'].number
+                ,line['line']) )
+            if line['merged_revision'] is not None:
+                print( '   Merged from r%d %s' %
+                    (line['merged_revision']
+                    ,line['merged_path']) )
+
+    cmd_ann2 = cmd_annotate2
 
     def cmd_cat( self, args ):
         revision = args.getOptionalRevision( '--revision', 'head' )

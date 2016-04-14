@@ -146,6 +146,14 @@ Py::Object utf8_string_or_none( const char *str )
         return Py::String( str, name_utf8 );
 }
 
+Py::Object utf8_string_or_none( const std::string &str )
+{
+    if( str.empty() )
+        return Py::None();
+    else
+        return Py::String( str, name_utf8 );
+}
+
 Py::Object path_string_or_none( const char *str, SvnPool &pool )
 {
     if( str == NULL )
@@ -154,12 +162,12 @@ Py::Object path_string_or_none( const char *str, SvnPool &pool )
         return Py::String( osNormalisedPath( str, pool ), name_utf8 );
 }
 
-Py::Object utf8_string_or_none( const std::string &str )
+Py::Object path_string_or_none( const std::string &str, SvnPool &pool )
 {
     if( str.empty() )
         return Py::None();
     else
-        return Py::String( str, name_utf8 );
+        return Py::String( osNormalisedPath( str, pool ), name_utf8 );
 }
 
 apr_time_t convertStringToTime( const std::string &text, apr_time_t now, SvnPool &pool )

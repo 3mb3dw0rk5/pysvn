@@ -328,6 +328,7 @@ class Setup:
             TestCase( self.c_pysvn, '06' ),
             TestCase( self.c_pysvn, '07' ),
             TestCase( self.c_pysvn, '08', (1,7,0) ),
+            TestCase( self.c_pysvn, '09', (1,7,0) ),
             ] )
 
         all_extra_test_cases = self.__filterTestCases( [

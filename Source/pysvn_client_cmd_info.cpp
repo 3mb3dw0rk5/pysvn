@@ -22,7 +22,145 @@
 #include "svn_config.h"
 #include "pysvn_static_strings.hpp"
 
-static const char *g_utf_8 = "utf-8";
+#if defined( PYSVN_HAS_CLIENT_ANNOTATE5 )
+class AnnotatedLineInfo2
+{
+public:
+    AnnotatedLineInfo2
+        (
+        apr_int64_t line_no,
+        svn_revnum_t revision,
+        apr_hash_t *rev_props,
+        apr_hash_t *merged_rev_props,
+        svn_revnum_t merged_revision,
+        const char *merged_path,
+        const char *line,
+        svn_boolean_t local_change
+        )
+    : m_line_no( line_no )
+    , m_revision( revision )
+    , m_rev_props( rev_props ) //QQQ: need to copy?
+    , m_merged_revision( merged_revision)
+    , m_merged_rev_props( merged_rev_props ) //QQQ: need to copy?
+    , m_merged_path()
+    , m_line()
+    , m_local_change( local_change )
+    {
+    if( merged_path != NULL )
+        m_merged_path = merged_path;
+
+    if( line != NULL )
+        m_line = line;
+    }
+
+    ~AnnotatedLineInfo2()
+    {
+    }
+
+    AnnotatedLineInfo2( const AnnotatedLineInfo2 &other )
+    : m_line_no( other.m_line_no )
+    , m_revision( other.m_revision )
+    , m_rev_props( other.m_rev_props )
+    , m_merged_revision( other.m_merged_revision )
+    , m_merged_rev_props( other.m_merged_rev_props )
+    , m_merged_path( other.m_merged_path )
+    , m_line( other.m_line )
+    , m_local_change( other.m_local_change )
+    {
+    }
+
+    Py::Dict asDict( SvnPool &pool ) const
+    {
+        Py::Dict dict;
+        dict[name_line] = Py::String( m_line );
+        dict[name_number] = Py::Int( long( m_line_no ) );
+        dict[name_revision] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, m_revision ) );
+        // rev_props
+        dict[name_local_change] = Py::Boolean( m_local_change );
+        if( SVN_IS_VALID_REVNUM( m_merged_revision ) )
+        {
+            dict[name_merged_revision] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, m_merged_revision ) );
+            dict[name_merged_path] = path_string_or_none( m_merged_path, pool );
+            // merged_rev_props
+        }
+        else
+        {
+            dict[name_merged_revision] = Py::None();
+            dict[name_merged_path] = Py::None();
+            // merged_rev_props
+        }
+
+        return dict;
+    }
+
+    apr_int64_t     m_line_no;
+    svn_revnum_t    m_revision;
+    apr_hash_t     *m_rev_props;
+    svn_revnum_t    m_merged_revision;
+    apr_hash_t     *m_merged_rev_props;
+    std::string     m_merged_path;
+    std::string     m_line;
+    bool            m_local_change;
+};
+
+class AnnotateBaton2
+{
+public:
+    AnnotateBaton2()
+    : m_all_entries()
+    {
+    }
+    ~AnnotateBaton2()
+    {
+    }
+
+    void *baton() { return static_cast<void *>( this ); };
+    svn_client_blame_receiver3_t callback();
+
+    std::list<AnnotatedLineInfo2> m_all_entries;
+};
+
+static svn_error_t *annotate3_receiver
+    (
+    void *baton,
+    svn_revnum_t start_revnum,
+    svn_revnum_t end_revnum,
+    apr_int64_t line_no,
+    svn_revnum_t revision,
+    apr_hash_t *rev_props,
+    svn_revnum_t merged_revision,
+    apr_hash_t *merged_rev_props,
+    const char *merged_path,
+    const char *line,
+    svn_boolean_t local_change,
+    apr_pool_t *pool
+    )
+{
+    // There are cases when the author has been passed as NULL
+    // protect against NULL passed for any of the strings
+    if( merged_path == NULL )
+        merged_path = "";
+    if( line == NULL )
+        line = "";
+    
+    AnnotateBaton2 *annotate_baton = static_cast<AnnotateBaton2 *>( baton );
+
+    annotate_baton->m_all_entries.push_back(
+        AnnotatedLineInfo2(
+            line_no,
+            revision,
+            rev_props,
+            merged_rev_props,
+            merged_revision,
+            merged_path,
+            line,
+            local_change ) );
+
+    return NULL;
+}
+
+svn_client_blame_receiver3_t AnnotateBaton2::callback() { return &annotate3_receiver; }
+#endif
 
 #if defined( PYSVN_HAS_CLIENT_ANNOTATE4 )
 class AnnotatedLineInfo
@@ -97,7 +235,24 @@ public:
     std::string m_line;
 };
 
-static svn_error_t *annotate_receiver
+class AnnotateBaton
+{
+public:
+    AnnotateBaton()
+    : m_all_entries()
+    {
+    }
+    ~AnnotateBaton()
+    {
+    }
+
+    void *baton() { return static_cast<void *>( this ); };
+    svn_client_blame_receiver2_t callback();
+
+    std::list<AnnotatedLineInfo> m_all_entries;
+};
+
+static svn_error_t *annotate2_receiver
     (
     void *baton,
     apr_int64_t line_no,
@@ -127,15 +282,19 @@ static svn_error_t *annotate_receiver
     if( line == NULL )
         line = "";
 
-    std::list<AnnotatedLineInfo> *entries = (std::list<AnnotatedLineInfo> *)baton;
-    entries->push_back( AnnotatedLineInfo(
-        line_no,
-        revision, author, date,
-        merged_revision, merged_author, merged_date, merged_path,
-        line ) );
+    AnnotateBaton *annotate_baton = static_cast<AnnotateBaton *>( baton );
+    annotate_baton->m_all_entries.push_back(
+                    AnnotatedLineInfo(
+                        line_no,
+                        revision, author, date,
+                        merged_revision, merged_author, merged_date, merged_path,
+                        line ) );
 
     return NULL;
 }
+
+svn_client_blame_receiver2_t AnnotateBaton::callback() { return &annotate2_receiver; }
+
 #else
 class AnnotatedLineInfo
 {
@@ -176,7 +335,23 @@ public:
     std::string m_line;
 };
 
-static svn_error_t *annotate_receiver
+class AnnotateBaton
+{
+public:
+    AnnotateBaton()
+    : m_all_entries()
+    {
+    }
+    ~AnnotateBaton()
+    {
+    }
+    void *baton() { return static_cast<void *>( this ); };
+    svn_client_blame_receiver_t callback();
+
+    std::list<AnnotatedLineInfo> m_all_entries;
+};
+
+static svn_error_t *annotate1_receiver
     (
     void *baton,
     apr_int64_t line_no,
@@ -196,10 +371,109 @@ static svn_error_t *annotate_receiver
     if( line == NULL )
         line = "";
 
-    std::list<AnnotatedLineInfo> *entries = (std::list<AnnotatedLineInfo> *)baton;
-    entries->push_back( AnnotatedLineInfo( line_no, revision, author, date, line ) );
+    AnnotateBaton *annotate_baton = static_cast<AnnotateBaton *>( baton );
+    annotate_baton->m_all_entries.push_back( AnnotatedLineInfo( line_no, revision, author, date, line ) );
 
     return NULL;
+}
+
+svn_client_blame_receiver_t AnnotateBaton::callback() { return &annotate1_receiver; }
+
+#endif
+
+#if defined( PYSVN_HAS_CLIENT_ANNOTATE5 )
+Py::Object pysvn_client::cmd_annotate2( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_url_or_path },
+    { false, name_revision_start },
+    { false, name_revision_end },
+    { false, name_peg_revision },
+    { false, name_ignore_space },
+    { false, name_ignore_eol_style },
+    { false, name_ignore_mime_type },
+    { false, name_include_merged_revisions },
+    { false, NULL }
+    };
+    FunctionArguments args( "annotate", args_desc, a_args, a_kws );
+    args.check();
+
+    std::string path( args.getUtf8String( name_url_or_path, empty_string ) );
+    svn_opt_revision_t revision_start = args.getRevision( name_revision_start, svn_opt_revision_number );
+    svn_opt_revision_t revision_end = args.getRevision( name_revision_end, svn_opt_revision_head );
+    svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, revision_end );
+
+    svn_diff_file_ignore_space_t ignore_space = svn_diff_file_ignore_space_none;
+    if( args.hasArg( name_ignore_space ) )
+    {
+        Py::ExtensionObject< pysvn_enum_value<svn_diff_file_ignore_space_t> > py_ignore_space( args.getArg( name_ignore_space ) );
+        ignore_space = svn_diff_file_ignore_space_t( py_ignore_space.extensionObject()->m_value );
+    }
+
+    svn_boolean_t ignore_eol_style = args.getBoolean( name_ignore_eol_style, false );
+    svn_boolean_t ignore_mime_type = args.getBoolean( name_ignore_mime_type, false );
+    svn_boolean_t include_merged_revisions = args.getBoolean( name_include_merged_revisions, false );
+    SvnPool pool( m_context );
+
+    svn_diff_file_options_t *diff_options = svn_diff_file_options_create( pool );
+    diff_options->ignore_space = ignore_space;
+    diff_options->ignore_eol_style = ignore_eol_style;
+
+    bool is_url = is_svn_url( path );
+    revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
+    revisionKindCompatibleCheck( is_url, revision_start, name_revision_start, name_url_or_path );
+    revisionKindCompatibleCheck( is_url, revision_end, name_revision_end, name_url_or_path );
+
+    AnnotateBaton2 annotate_baton;
+
+    try
+    {
+        std::string norm_path( svnNormalisedIfPath( path, pool ) );
+
+        checkThreadPermission();
+
+        PythonAllowThreads permission( m_context );
+
+        svn_error_t *error = svn_client_blame5
+            (
+            norm_path.c_str(),
+            &peg_revision,
+            &revision_start,
+            &revision_end,
+            diff_options,
+            ignore_mime_type,
+            include_merged_revisions,
+            annotate_baton.callback(),
+            annotate_baton.baton(),
+            m_context,
+            pool
+            );
+
+        permission.allowThisThread();
+        if( error != NULL )
+        {
+            throw SvnException( error );
+        }
+    }
+    catch( SvnException &e )
+    {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
+        throw_client_error( e );
+    }
+
+    // convert the entries into python objects
+    Py::List all_lines;
+    for( std::list<AnnotatedLineInfo2>::const_iterator entry_it = annotate_baton.m_all_entries.begin();
+        entry_it != annotate_baton.m_all_entries.end();
+        ++entry_it )
+    {
+        all_lines.append( entry_it->asDict( pool ) );
+    }
+
+    return all_lines;
 }
 #endif
 
@@ -261,7 +535,7 @@ Py::Object pysvn_client::cmd_annotate( const Py::Tuple &a_args, const Py::Dict &
     revisionKindCompatibleCheck( is_url, revision_start, name_revision_start, name_url_or_path );
     revisionKindCompatibleCheck( is_url, revision_end, name_revision_end, name_url_or_path );
 
-    std::list<AnnotatedLineInfo> all_entries;
+    AnnotateBaton annotate_baton;
 
     try
     {
@@ -281,8 +555,8 @@ Py::Object pysvn_client::cmd_annotate( const Py::Tuple &a_args, const Py::Dict &
             diff_options,
             ignore_mime_type,
             include_merged_revisions,
-            annotate_receiver,
-            &all_entries,
+            annotate_baton.callback(),
+            annotate_baton.baton(),
             m_context,
             pool
             );
@@ -296,8 +570,8 @@ Py::Object pysvn_client::cmd_annotate( const Py::Tuple &a_args, const Py::Dict &
             diff_options,
             ignore_mime_type,
             annotate_receiver,
-            &all_entries,
-            m_context,
+            annotate_baton.callback(),
+            annotate_baton.baton(),
             pool
             );
 #elif defined( PYSVN_HAS_CLIENT_ANNOTATE2 )
@@ -307,8 +581,8 @@ Py::Object pysvn_client::cmd_annotate( const Py::Tuple &a_args, const Py::Dict &
             &peg_revision,
             &revision_start,
             &revision_end,
-            annotate_receiver,
-            &all_entries,
+            annotate_baton.callback(),
+            annotate_baton.baton(),
             m_context,
             pool
             );
@@ -318,8 +592,8 @@ Py::Object pysvn_client::cmd_annotate( const Py::Tuple &a_args, const Py::Dict &
             norm_path.c_str(),
             &revision_start,
             &revision_end,
-            annotate_receiver,
-            &all_entries,
+            annotate_baton.callback(),
+            annotate_baton.baton(),
             m_context,
             pool
             );
@@ -340,8 +614,8 @@ Py::Object pysvn_client::cmd_annotate( const Py::Tuple &a_args, const Py::Dict &
 
     // convert the entries into python objects
     Py::List entries_list;
-    std::list<AnnotatedLineInfo>::const_iterator entry_it = all_entries.begin();
-    while( entry_it != all_entries.end() )
+    std::list<AnnotatedLineInfo>::const_iterator entry_it = annotate_baton.m_all_entries.begin();
+    while( entry_it != annotate_baton.m_all_entries.end() )
     {
         const AnnotatedLineInfo &entry = *entry_it;
         ++entry_it;
@@ -638,7 +912,7 @@ static svn_error_t *log4Receiver
         if( revprops_dict.hasKey( "svn:date" ) )
         {
             Py::String date( revprops_dict[ "svn:date" ] );
-            Py::Object int_date = toObject( convertStringToTime( date.as_std_string( g_utf_8 ), baton->m_now, baton->m_pool ) );
+            Py::Object int_date = toObject( convertStringToTime( date.as_std_string( name_utf8 ), baton->m_now, baton->m_pool ) );
             revprops_dict[ "svn:date" ] = int_date;
             entry_dict[ name_date ] = int_date;
         }

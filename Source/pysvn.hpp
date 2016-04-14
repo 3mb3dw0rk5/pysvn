@@ -224,6 +224,9 @@ public:
     Py::Object cmd_add_to_changelist( const Py::Tuple& args, const Py::Dict &kws );
 #endif
     Py::Object cmd_annotate( const Py::Tuple& args, const Py::Dict &kws );
+#if defined( PYSVN_HAS_CLIENT_ANNOTATE5 )
+    Py::Object cmd_annotate2( const Py::Tuple& args, const Py::Dict &kws );
+#endif
     Py::Object cmd_cat( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_checkout( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_cleanup( const Py::Tuple& args, const Py::Dict &kws );
@@ -819,8 +822,11 @@ private:
 
 //--------------------------------------------------------------------------------
 extern Py::Object utf8_string_or_none( const char *str );
-extern Py::Object path_string_or_none( const char *str, SvnPool &pool );
 extern Py::Object utf8_string_or_none( const std::string &str );
+
+extern Py::Object path_string_or_none( const char *str, SvnPool &pool );
+extern Py::Object path_string_or_none( const std::string &str, SvnPool &pool );
+
 extern apr_time_t convertStringToTime( const std::string &text, apr_time_t now, SvnPool &pool );
 
 extern Py::Object propsToObject( apr_hash_t *props, SvnPool &pool );

@@ -15,7 +15,7 @@ block_begin_index = pysvn__init__file_contents.index( '### IMPORT BLOCK BEGIN\n'
 block_end_index = pysvn__init__file_contents.index( '### IMPORT BLOCK END\n' ) + 1
 
 if sys.version_info[0] >= 3:
-    module_name = 'pysvn.%s' % module_name
+    module_name = 'pysvn.%s' % (module_name,)
 
 replacement = [ '    import %s\n' % (module_name,) ]
 

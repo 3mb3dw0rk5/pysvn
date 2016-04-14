@@ -845,10 +845,13 @@ void pysvn_client::init_type()
     behaviors().supportSetattr();
 
     add_keyword_method("add", &pysvn_client::cmd_add, pysvn_client_add_doc );
-#ifdef PYSVN_HAS_CLIENT_ADD_TO_CHANGELIST
+#if defined( PYSVN_HAS_CLIENT_ADD_TO_CHANGELIST )
     add_keyword_method("add_to_changelist", &pysvn_client::cmd_add_to_changelist, pysvn_client_add_to_changelist_doc );
 #endif
     add_keyword_method("annotate", &pysvn_client::cmd_annotate, pysvn_client_annotate_doc );
+#if defined( PYSVN_HAS_CLIENT_ANNOTATE5 )
+    add_keyword_method("annotate2", &pysvn_client::cmd_annotate2, pysvn_client_annotate2_doc );
+#endif
     add_keyword_method("cat", &pysvn_client::cmd_cat, pysvn_client_cat_doc );
     add_keyword_method("checkin", &pysvn_client::cmd_checkin, pysvn_client_checkin_doc );
     add_keyword_method("checkout", &pysvn_client::cmd_checkout, pysvn_client_checkout_doc );
