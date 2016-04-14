@@ -31,6 +31,8 @@ span.svn_example {display: inline; }
 </style>
 
 <style id="show_style" type="text/css">
+span.svn_1009000 {display: inline; }
+span.svn_1008000 {display: inline; }
 span.svn_1007000 {display: inline; }
 span.svn_1006000 {display: inline; }
 span.svn_1005000 {display: inline; }
@@ -38,6 +40,8 @@ span.svn_1004000 {display: inline; }
 span.svn_1003000 {display: inline; }
 span.svn_1002000 {display: inline; }
 span.svn_1001000 {display: inline; }
+div.svn_1009000 {display: block; }
+div.svn_1008000 {display: block; }
 div.svn_1007000 {display: block; }
 div.svn_1006000 {display: block; }
 div.svn_1005000 {display: block; }
@@ -62,13 +66,15 @@ gives an tutorial introduction to the pysvn module.
 
 <h2>pysvn features and feature testing</h2>
 
-<p>This document covers pysvn version 1.6. Features offered by pysvn
+<p>This document covers pysvn version 1.7. Features offered by pysvn
 depend on the version of SVN that is being used. Full functionality is
 only available with SVN 1.6.0 or later.
 </p>
 <p>Click one of the buttons below to show the pysvn API as supported
 by a particular version of the SVN.</p>
 <div id="buttons_work" style="display: none">
+<span class="button" onclick='changeDisplay( 1009000 )'>Show SVN 1.9.0 API</span>
+<span class="button" onclick='changeDisplay( 1008000 )'>Show SVN 1.8.0 API</span>
 <span class="button" onclick='changeDisplay( 1007000 )'>Show SVN 1.7.0 API</span>
 <span class="button" onclick='changeDisplay( 1006000 )'>Show SVN 1.6.0 API</span>
 <span class="button" onclick='changeDisplay( 1005000 )'>Show SVN 1.5.0 API</span>
@@ -196,15 +202,17 @@ to pysvn 1.1.2.
 for details of effect of the style on the exception raised.
 </p>
 
-
 <h4><a name="pysvn_client_commit_info_style"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.commit_info_style</a></h4>
 <p>commit_info_style is used to control how pysvn return commit information.
 </p>
-<p>commit_info_style can be set to 0 or 1.
+<p>commit_info_style can be set to 0,  1 or 2.
 The default value, 0, makes pysvn return only the commit revision.
 </p>
 
 <p>When set to 1 pysvn returns a dictionary of commit information including date, author, revision and post_commit_err.
+</p>
+
+<p>When set to 2 pysvn returns a list of dictionaries of commit information including date, author, revision and post_commit_err.
 </p>
 
 <h3><a name="pysvn_client_callbacks">Client callbacks</a></h3>
@@ -600,12 +608,16 @@ add( path,
      recurse=True<span class="svn_1001000">,
      force=False</span><span class="svn_1003000">,
      ignore=False</span><span class="svn_1005000">,
-     depth=None</span> )
+     depth=None,
+     add_parents=False</span><span class="svn_1007000">,
+     autoprops=False</span> )
 add( [path,path],
      recurse=True<span class="svn_1001000">,
      force=False</span><span class="svn_1003000">,
      ignore=True</span><span class="svn_1005000">,
-     depth=None</span> )
+     depth=None,
+     add_parents=False</span><span class="svn_1007000">,
+     autoprops=True</span> )
 </pre>
 <p>
 Schedules all the files or directories specfied in the paths
@@ -618,6 +630,10 @@ Files are added at the next checkin.
 <div class="svn_1005000">
 <p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
+<p>Set add_parents True to have subversion create missing directories.</p>
+</div>
+<div class="svn_1007000">
+<p>Set autoprops to False to prevent subversion from applying properties automatically.</p>
 </div>
 
 <h4><a name="pysvn_client_annotate"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.annotate</a></h4>
@@ -720,7 +736,10 @@ checkin( path,
         depth,
         keep_changelist,
         changelists,
-        revprops</span> )
+        revprops</span><span class="svn_1007000">,
+        commit_as_operations=False</span><span class="svn_1008000">,
+        include_file_externals=False,
+        include_dir_externals=False</span> )
 revision = \
 checkin( [path,path],
         log_message,
@@ -729,7 +748,10 @@ checkin( [path,path],
         depth,
         keep_changelist,
         changelists,
-        revprops</span> )
+        revprops</span><span class="svn_1007000">,
+        commit_as_operations=False</span><span class="svn_1008000">,
+        include_file_externals=False,
+        include_dir_externals=False</span> )
 </pre>
 <p>
 checkin the files in the path_list to the repository with the
@@ -741,11 +763,46 @@ keep_locks to True to prevent locks in the path being unlocked.</span>
 checked in revision.
 </p>
 
-<p>depth,
-        keep_changelist,
-        changelists,
-        revprops TBD</p>
+<div class="svn_1005000">
+<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
+</p>
+<p>
+changelists is an array of string changelist
+names, used as a restrictive filter on items that are committed;
+that is, don't commit anything unless it's a member of one of those
+changelists.  After the commit completes successfully, remove
+changelist associations from the targets, unless
+keep_changelists is set.  If changelists is
+empty or None, no changelist filtering occurs.
+</p>
+<p>
+If not None revprop is a list holding additional,
+custom revision properties to be set on the new revision.
+This list cannot contain any standard Subversion properties.
+</p>
+<div>
 
+<div class="svn_1007000">
+<p>
+If commit_as_operations is set to False, when a copy is committed
+all changes below the copy are always committed at the same time
+(independent of the value of depth). If commit_as_operations is
+True, changes to descendants are only committed if they are itself
+included via depth and targets.
+</p>
+</div>
+<div class="svn_1008000">
+<p>
+If include_file_externals and/or include_dir_externals are True,
+also commit all file and/or dir externals (respectively) that are reached
+by recursion, except for those externals which:</p>
+<ul>
+<li>have a fixed revision, or</li>
+<li>come from a different repository root URL (dir externals).</li>
+</ul>
+<p>These flags affect only recursion; externals that directly appear in
+targets are always included in the commit.</p>
+</div>
 
 <h4><a name="pysvn_client_checkout"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.checkout</a></h4>
 <pre>
@@ -869,7 +926,12 @@ diff( tmp_path,
       diff_options=[]</span><span class="svn_1005000">,
       depth=depth</span>,<span class="svn_1006000">,
       relative_to_dir=None,
-      changelists=None</span> )
+      changelists=None</span><span class="svn_1007000">,
+      show_copies_as_adds=False,
+      use_git_diff_format=False</span><span class="svn_1008000">,
+      diff_added=False,
+      ignore_properties=False,
+      properties_only=False</span> )
 </pre>
 <p>
 Return the differences between revision1 of url_or_path
@@ -910,6 +972,22 @@ and its configuration.</span>
  an error is returned.
 </p>
 </div>
+<div class="svn_1007000">
+<p>
+If show_copies_as_adds is True, then copied files will not be diffed
+against their copyfrom source, and will appear in the diff output
+in their entirety, as if they were newly added.
+</p>
+<p>
+If use_git_diff_format is True, then the git's extended diff format
+will be used.
+</p>
+</div>
+<div class="svn_1008000">
+<p>if diff_added is True show diff of added files.</p>
+<p>if ignore_properties is True then ignore diff of properties.</p>
+<p>if properties_only is True then only diff properties.</p>
+</div>
 
 <div class="svn_1001000">
 <h4><a name="pysvn_client_diff_peg"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.diff_peg</a></h4>
@@ -926,7 +1004,12 @@ diff_peg( tmp_path,
           ignore_content_type=False</span><span class="svn_1003000">,
           header_encoding="",
           diff_options=[]</span><span class="svn_1005000">,
-          depth=depth</span> )
+          depth=depth</span><span class="svn_1007000">,
+          show_copies_as_adds=False,
+          use_git_diff_format=False</span><span class="svn_1008000">,
+          diff_added=False,
+          ignore_properties=False,
+          properties_only=False</span> )
 </pre>
 <p>
 return the differences between two revisions of the url_or_path.
@@ -964,6 +1047,22 @@ diff program that subversion uses. Typical options are
 The exact options that work depend on the version of subversion used
 and its configuration.</span>
 </p>
+</div>
+<div class="svn_1007000">
+<p>
+If show_copies_as_adds is True, then copied files will not be diffed
+against their copyfrom source, and will appear in the diff output
+in their entirety, as if they were newly added.
+</p>
+<p>
+If use_git_diff_format is True, then the git's extended diff format
+will be used.
+</p>
+</div>
+<div class="svn_1008000">
+<p>if diff_added is True show diff of added files.</p>
+<p>if ignore_properties is True then ignore diff of properties.</p>
+<p>if properties_only is True then only diff properties.</p>
 </div>
 
 <div class="svn_1004000">
@@ -1160,7 +1259,8 @@ import_( path,
          log_message,
          recurse=True<span class="svn_1003000">,
          ignore=False</span><span class="svn_1005000">,
-         revprops</span> )
+         revprops</span><span class="svn_1008000">,
+         autoprops=False</span> )
 </pre>
 <p>
 Commit an unversioned file or tree into the repository.
@@ -1183,6 +1283,10 @@ entry = info( path )
 </pre>
 <p>return information on path as a <a href="#entry">Entry</a> object.
 </p>
+
+<div class="svn_1008000">
+<p>Set autoprops to False to prevent subversion from applying properties automatically.</p>
+</div>
 
 <div class="svn_1003000">
 <h4><a name="pysvn_client_info2"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.info2</a></h4>
@@ -1669,7 +1773,9 @@ move2( sources,
        dest_url_or_path,
        move_as_child=False,
        make_parents=False,
-       revprops )
+       revprops<span class="svn_1008000">,
+       allow_mixed_revisions=False,
+       metadata_only=False</span> )
 </pre>
 <p>
 Duplicate something in working copy or repos, remembering history.
@@ -1678,7 +1784,32 @@ if the src_path is a URL otherwise to
 pysvn.Revision( opt_revision_kind.working ).
 </p>
 
-<p>revprops TBD</p>
+<p>
+If not None, revprop is a list of strings holding additional,
+custom revision properties to be set on the new revision in
+the event that this is a committing operation.  This table cannot
+contain any standard Subversion properties.
+</p>
+
+<div class="svn_1008000">
+<p>
+If allow_mixed_revisions is False, SVN_ERR_WC_MIXED_REVISIONS
+will be raised if the move source is a mixed-revision subtree.
+</p>
+<p>
+If allow_mixed_revisions is True, a mixed-revision move source is
+allowed but the move will degrade to a copy and a delete without local
+move tracking. This parameter should be set to False except where backwards
+compatibility to older versions of subversion is required.
+</p>
+<p>
+If metadata_only is TRUE and moving a file in a working copy,
+everything in the metadata is updated as if the node is moved, but the
+actual disk move operation is not performed. This feature is useful for
+clients that want to keep the working copy in sync while the actual working
+copy is updated by some other task.
+</p>
+</div>
 
 <p>src_url_or_path and dest_url_or_path can each be either a
 working copy (WC) path or URL:
@@ -2134,7 +2265,7 @@ switch( path,
 </p>
 <p>If depth_is_sticky is set and depth is not
 svn_depth_unknown, then in addition to switching PATH, also set
-its sticky ambient depth value to @a depth.</p>
+its sticky ambient depth value to depth.</p>
 
 <p>If ignore_externals is set, do not process externals definitions
 as part of this operation.</p>
@@ -2177,7 +2308,11 @@ update( path,
         recurse=True,
         revision=pysvn.Revision( opt_revision_kind.head )<span class="svn_1002000">,
         ignore_externals=False</span><span class="svn_1005000">,
-        depth=depth</span> )
+        depth=depth,
+        depth_is_sticky=False,
+        allow_unver_obstructions</span><span class="svn_1007000">,
+        adds_as_modifications=False,
+        make_parents=False</span> )
 </pre>
 <p>Update the file in the working copy at path to the specified
 revision. Set recurse to True to recursively update a directory's
@@ -2190,7 +2325,34 @@ children. <span class="svn_1002000">Set ignore_externals to True to ignore exter
 Use pysvn.depth.unknown to update all files and folders in the working copy honoring the current depths.
 Use pysvn.depth.infinity to upadate all files and folders adding any that are missing ignoring the current depths.
 </p>
+<p>
+If depth_is_sticky is set and depth is not
+svn_depth_unknown, then in addition to updating PATHS, also set
+their sticky ambient depth value to depth.
+</p>
+<p>
+If allow_unver_obstructions is True then the update tolerates
+existing unversioned items that obstruct added paths.  Only
+obstructions of the same type (file or dir) as the added item are
+tolerated.  The text of obstructing files is left as-is, effectively
+treating it as a user modification after the update.  Working
+properties of obstructing items are set equal to the base properties.
+If allow_unver_obstructions is False then the update will abort
+if there are any unversioned obstructing items.
+</p>
 </div>
+<div class="svn_1007000">
+<p>
+If adds_as_modification is True, a local addition at the same path
+as an incoming addition of the same node kind results in a normal node
+with a possible local modification, instead of a tree conflict.
+</p>
+<p>
+If make_parents is True, create any non-existent parent
+directories also by checking them out at depth=empty.
+</p>
+</div>
+
 <p>update returns a pysvn.Revision containing the number of the
 revision the working copy was updated to.
 </p>
@@ -2658,7 +2820,7 @@ file was either absent or not under version control.</li>
 <p>Copyright &copy; 2004-2009 Barry A. Scott. All rigths reserved.</p>
 <script type="text/javascript">
 // expect this to fail on IE and other browsers that don't support
-changeDisplay( 1005000 );
+changeDisplay( 1009000 );
 changeVisual( "hilite" );
 // good we can toggle the display turn on the buttons
 document.getElementById( "buttons_work" ).style.display = "block";

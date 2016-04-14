@@ -1,15 +1,15 @@
 //
 // ====================================================================
-// Copyright (c) 2006 Barry A Scott.  All rights reserved.
+// Copyright (c) 2006-2016 Barry A Scott.  All rights reserved.
 //
 // This software is licensed as described in the file LICENSE.txt,
 // which you should have received as part of this distribution.
 //
 // ====================================================================
 //
-all_versions = new Array( 1001000, 1002000, 1003000, 1004000, 1005000 )
+all_versions = new Array( 1001000, 1002000, 1003000, 1004000, 1005000, 1006000, 1007000, 1008000, 1009000 )
 
-current_version = 1005000;
+current_version = 1009000;
 change_style = "hilite";
 
 function changeDisplay( version )
