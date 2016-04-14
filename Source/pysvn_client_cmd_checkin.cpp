@@ -49,7 +49,7 @@ Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a
     args.check();
 
     SvnPool pool( m_context );
-#if defined( PYSVN_HAS_CLIENT_MKDIR4 )
+#if defined( PYSVN_HAS_CLIENT_COMMIT5 )
     CommitInfoResult commit_info( pool );
 #else
     pysvn_commit_info_t *commit_info = NULL;
@@ -206,7 +206,7 @@ Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a
         throw Py::TypeError( type_error_message );
     }
 
-#if defined( PYSVN_HAS_CLIENT_MKDIR4 )
+#if defined( PYSVN_HAS_CLIENT_COMMIT5 )
     return toObject( commit_info, m_wrapper_commit_info, m_commit_info_style );
 #else
     return toObject( commit_info, m_commit_info_style );
