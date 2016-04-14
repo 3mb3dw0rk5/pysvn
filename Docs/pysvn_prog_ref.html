@@ -2021,14 +2021,14 @@ if there are any unversioned obstructing items.
 relocate( from_url,
           to_url,
           path,
-          recurse=True<span class="svn_1005000">,
-          depth=depth</span> )
+          recurse=True<span class="svn_1007000">,
+          ignore_externals=True</span> )
 </pre>
 <p>Relocate the working copy from from_url to to_url of path.
 </p>
-<div class="svn_1005000">
-<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
-</p>
+<div class="svn_1007000">
+<p>Set ignore_externals to False to work on the externals.</p>
+<p>Note: recurse is ignored since subversion 1.7</p>
 </div>
 
 <h4><a name="pysvn_client_remove"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.remove</a></h4>
