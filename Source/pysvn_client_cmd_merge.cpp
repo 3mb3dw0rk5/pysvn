@@ -45,6 +45,9 @@ Py::Object pysvn_client::cmd_merge( const Py::Tuple &a_args, const Py::Dict &a_k
     { false, name_depth },
     { false, name_record_only },
 #endif
+#if defined( PYSVN_HAS_CLIENT_MERGE4 )
+    { false, name_allow_mixed_revisions },
+#endif
     { false, NULL }
     };
     FunctionArguments args( "merge", args_desc, a_args, a_kws );
@@ -65,6 +68,10 @@ Py::Object pysvn_client::cmd_merge( const Py::Tuple &a_args, const Py::Dict &a_k
 #endif
     bool notice_ancestry = args.getBoolean( name_notice_ancestry, false );
     bool dry_run = args.getBoolean( name_dry_run, false );
+
+#if defined( PYSVN_HAS_CLIENT_MERGE3 )
+    bool allow_mixed_revisions = args.getBoolean( name_allow_mixed_revisions, false );
+#endif
 
 #if defined( PYSVN_HAS_CLIENT_MERGE2 )
     Py::List merge_options_list;
@@ -105,7 +112,25 @@ Py::Object pysvn_client::cmd_merge( const Py::Tuple &a_args, const Py::Dict &a_k
 
         PythonAllowThreads permission( m_context );
 
-#if defined( PYSVN_HAS_CLIENT_MERGE3 )
+#if defined( PYSVN_HAS_CLIENT_MERGE4 )
+        svn_error_t *error = svn_client_merge4
+            (
+            norm_path1.c_str(),
+            &revision1,
+            norm_path2.c_str(),
+            &revision2,
+            norm_local_path.c_str(),
+            depth,
+            !notice_ancestry,
+            force,
+            record_only,
+            dry_run,
+            allow_mixed_revisions,
+            merge_options,
+            m_context,
+            pool
+            );
+#elif defined( PYSVN_HAS_CLIENT_MERGE3 )
         svn_error_t *error = svn_client_merge3
             (
             norm_path1.c_str(),
