@@ -1618,7 +1618,7 @@ static svn_error_t *status4EntriesFunc
     StatusEntriesBaton *seb = reinterpret_cast<StatusEntriesBaton *>( baton );
 
     path = apr_pstrdup( seb->pool, path );
-    svn_wc_status2_t *stat = svn_wc_dup_status2( status, seb->pool );
+    svn_wc_status2_t *stat = svn_wc_dup_status2( status, seb->pool ); // only a deprecation problem if we cannot use status5
     apr_hash_set( seb->hash, path, APR_HASH_KEY_STRING, stat );
     return SVN_NO_ERROR;
 }
