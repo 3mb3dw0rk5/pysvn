@@ -12,17 +12,14 @@
 
 #include "CXX/Objects.hxx"
 
-#ifndef PYCXX_MAKEVERSION
-#error PyCXX version 5.3.5 is required
-#endif
-
-#if PYCXX_VERSION < PYCXX_MAKEVERSION( 6, 2, 4 )
+#if !defined( PYCXX_MAKEVERSION ) || PYCXX_VERSION < PYCXX_MAKEVERSION( 6, 2, 4 )
 #error PyCXX version 6.2.4 or later required
 #endif
 
 #include <svn_version.h>
 #include <svn_client.h>
 #include <svn_dirent_uri.h>
+#include <svn_path.h>
 #include <svn_fs.h>
 #include <svn_repos.h>
 #include <apr_xlate.h>

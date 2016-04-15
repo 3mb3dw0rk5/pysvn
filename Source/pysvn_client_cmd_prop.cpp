@@ -217,7 +217,37 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
 
         PythonAllowThreads permission( m_context );
 
-#if defined( PYSVN_HAS_CLIENT_PROPGET3 )
+#if defined( PYSVN_HAS_CLIENT_PROPGET4 )
+        svn_error_t *error = SVN_NO_ERROR;
+        const char *abspath_or_url = NULL;
+        if( !svn_path_is_url( norm_path.c_str() )
+        &&  !svn_dirent_is_absolute( norm_path.c_str() ) )
+        {
+            error = svn_dirent_get_absolute( &abspath_or_url, norm_path.c_str(), pool );
+        }
+        else
+        {
+            abspath_or_url = norm_path.c_str();
+        }
+
+        if( error == SVN_NO_ERROR )
+        {
+            error = svn_client_propget4
+                (
+                &props,
+                propname.c_str(),
+                abspath_or_url, // svn asserts if not absolute
+                &peg_revision,
+                &revision,
+                &actual_revnum,
+                depth,
+                changelists,
+                m_context,
+                pool,
+                pool
+                );
+        }
+#elif defined( PYSVN_HAS_CLIENT_PROPGET3 )
         svn_error_t *error = svn_client_propget3
             (
             &props,
