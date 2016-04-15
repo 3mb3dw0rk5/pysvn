@@ -830,6 +830,9 @@ extern Py::Object path_string_or_none( const std::string &str, SvnPool &pool );
 extern apr_time_t convertStringToTime( const std::string &text, apr_time_t now, SvnPool &pool );
 
 extern Py::Object propsToObject( apr_hash_t *props, SvnPool &pool );
+#if defined( PYSVN_HAS_CLIENT_PROPGET5 )
+extern Py::Object inheritedPropsToObject( apr_array_header_t *inherited_props, SvnPool &pool );
+#endif
 extern Py::Object revnumListToObject( apr_array_header_t *revs, SvnPool &pool );
 extern void proplistToObject( Py::List &py_path_propmap_list, apr_array_header_t *props, SvnPool &pool );
 extern Py::Bytes asUtf8Bytes( Py::Object obj );

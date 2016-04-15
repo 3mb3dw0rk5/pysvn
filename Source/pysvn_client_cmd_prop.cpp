@@ -166,6 +166,9 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
     { false, name_depth },
     { false, name_changelists },
 #endif
+#if defined( PYSVN_HAS_CLIENT_PROPGET5 )
+    { false, name_get_inherited_props },
+#endif
     { false, NULL }
     };
     FunctionArguments args( "propget", args_desc, a_args, a_kws );
@@ -209,6 +212,11 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
     svn_revnum_t actual_revnum = 0;
 #endif
 
+#if defined( PYSVN_HAS_CLIENT_PROPGET5 )
+    bool get_inherited_props = args.getBoolean( name_get_inherited_props, false );
+    apr_array_header_t *inherited_props = NULL;
+#endif
+
     try
     {
         std::string norm_path( svnNormalisedIfPath( path, pool ) );
@@ -217,7 +225,38 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
 
         PythonAllowThreads permission( m_context );
 
-#if defined( PYSVN_HAS_CLIENT_PROPGET4 )
+#if defined( PYSVN_HAS_CLIENT_PROPGET5 )
+        svn_error_t *error = SVN_NO_ERROR;
+        const char *abspath_or_url = NULL;
+        if( !svn_path_is_url( norm_path.c_str() )
+        &&  !svn_dirent_is_absolute( norm_path.c_str() ) )
+        {
+            error = svn_dirent_get_absolute( &abspath_or_url, norm_path.c_str(), pool );
+        }
+        else
+        {
+            abspath_or_url = norm_path.c_str();
+        }
+
+        if( error == SVN_NO_ERROR )
+        {
+            error = svn_client_propget5
+                (
+                &props,
+                &inherited_props,
+                propname.c_str(),
+                abspath_or_url, // svn asserts if not absolute
+                &peg_revision,
+                &revision,
+                &actual_revnum,
+                depth,
+                changelists,
+                m_context,
+                pool,
+                pool
+                );
+        }
+#elif defined( PYSVN_HAS_CLIENT_PROPGET4 )
         svn_error_t *error = SVN_NO_ERROR;
         const char *abspath_or_url = NULL;
         if( !svn_path_is_url( norm_path.c_str() )
@@ -297,7 +336,20 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
         throw_client_error( e );
     }
 
-    return propsToObject( props, pool );
+#if defined( PYSVN_HAS_CLIENT_PROPGET5 )
+    if( get_inherited_props )
+    {
+        Py::Tuple result( 2 );
+
+        result[0] = propsToObject( props, pool );
+        result[1] = inheritedPropsToObject( inherited_props, pool );
+        return result;
+    }
+    else
+#endif
+    {
+        return propsToObject( props, pool );
+    }
 }
 
 #if defined( PYSVN_HAS_CLIENT_PROPLIST3 )

@@ -1925,11 +1925,23 @@ propget( prop_name,
          revision=pysvn.Revision(),
          recurse=False<span class="svn_1002000">,
          peg_revision=pysvn.Revision( opt_revision_kind.unspecified )</span><span class="svn_1005000">,
-         depth=depth</span> )
+         depth=depth</span><span class="svn_1008000">,
+         get_inherited_props=False</span> )
 </pre>
 <p>Returns a dictionary with keys of url_or_path and values of
 the prop_name.
 </p>
+<div class="svn_1008000">
+<p>
+If get_inherited_props is True returns a tuple of two items:
+</p>
+<ul>
+<li>0 - dictionary with keys of url_or_path and values of
+the prop_name.</li>
+<li>1 - dictionary with keys of url_or_path and values of
+the prop_name that where inherited.</li>
+</ul>
+</div>
 <p>The src_revision defaults to pysvn.Revision( opt_revision_kind.head )
 if the url_or_path is a URL otherwise to
 pysvn.Revision( opt_revision_kind.working ).

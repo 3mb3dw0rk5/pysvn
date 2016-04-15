@@ -20,6 +20,7 @@
 #include <svn_client.h>
 #include <svn_dirent_uri.h>
 #include <svn_path.h>
+#include <svn_props.h>
 #include <svn_fs.h>
 #include <svn_repos.h>
 #include <apr_xlate.h>
@@ -226,7 +227,7 @@
 #define PYSVN_HAS_CLIENT_MERGEINFO_LOG2 QQQ
 #define PYSVN_HAS_CLIENT_MERGE_PEG5 QQQ
 #define PYSVN_HAS_CLIENT_MOVE7 1
-#define PYSVN_HAS_CLIENT_PROPGET5 QQQ
+#define PYSVN_HAS_CLIENT_PROPGET5 1
 #define PYSVN_HAS_CLIENT_PROPLIST4 QQQ
 #endif
 

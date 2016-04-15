@@ -644,6 +644,25 @@ Py::Object propsToObject( apr_hash_t *props, SvnPool &pool )
     return py_prop_dict;
 }
 
+#if defined( PYSVN_HAS_CLIENT_PROPGET5 )
+Py::Object inheritedPropsToObject( apr_array_header_t *inherited_props, SvnPool &pool )
+{
+    Py::Dict all_inherited_props;
+
+    for (int j = 0; j < inherited_props->nelts; ++j)
+    {
+        svn_prop_inherited_item_t *item = ((svn_prop_inherited_item_t **)inherited_props->elts)[j];
+
+        Py::String path_or_url = utf8_string_or_none( item->path_or_url );
+        Py::Dict py_prop_dict = propsToObject( item->prop_hash, pool );
+
+        all_inherited_props[ path_or_url ] = py_prop_dict;
+    }
+
+    return all_inherited_props;
+}
+#endif
+
 void proplistToObject( Py::List &py_path_propmap_list, apr_array_header_t *props, SvnPool &pool )
 {
     for (int j = 0; j < props->nelts; ++j)

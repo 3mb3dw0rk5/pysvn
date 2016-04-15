@@ -661,7 +661,6 @@ class SvnCommand:
                 if wc_info.checksum:
                     print( 'Checksum: %s' %  wc_info.checksum )
 
-
     def cmd_import( self, args ):
         msg = args.getOptionalValue( '--message', '' )
         recurse = args.getBooleanOption( '--non-recursive', False )
@@ -851,16 +850,38 @@ class SvnCommand:
     def cmd_propget( self, args ):
         recurse = args.getBooleanOption( '--recursive', True )
         revision = args.getOptionalRevision( '--revision', 'working' )
+        if self.pysvn_testing >= '01.08.00' and args.getBooleanOption( '--show-inherited-props' ):
+            get_inherited_props = True
+        else:
+            get_inherited_props = False
         positional_args = args.getPositionalArgs( 1, 2 )
         if len(positional_args) == 1:
             positional_args.append( '.' )
         if self.client.is_url( positional_args[0] ):
             revision = args.getOptionalRevision( '--revision', 'head' )
 
-        props = self.client.propget( positional_args[0], positional_args[1], revision=revision, recurse=recurse )
+        if get_inherited_props:
+            props, inherited_props = self.client.propget(
+                    positional_args[0], positional_args[1],
+                    revision=revision,
+                    recurse=recurse,
+                    get_inherited_props=True )
+        else:
+            props = self.client.propget(
+                    positional_args[0], positional_args[1],
+                    revision=revision,
+                    recurse=recurse )
+            inherited_props = {}
+
         prop_names = sorted( props.keys() )
         for name in prop_names:
             print( '%s: %s' % (name, props[name]) )
+
+        if len(inherited_props) > 0:
+            print( 'Inherited props' )
+            prop_names = sorted( inherited_props.keys() )
+            for name in prop_names:
+                print( '%s: %s' % (name, inherited_props[name]) )
 
     cmd_pg = cmd_propget
 
@@ -1127,6 +1148,7 @@ long_opt_info = {
     '--password': 1,            # specify a password ARG
     '--relocate': 0,            # relocate via URL-rewriting
     '--revprop': 0,             # operate on a revision property (use with -r)
+    '--show-inherited-props': 0, # show inherited props
     '--strict': 0,              # use strict semantics
     '--targets': 1,             # pass contents of file ARG as additional args
     '--username': 1,            # specify a username ARG
