@@ -43,31 +43,31 @@ Path: file1.txt
 Name: file1.txt
 Url: file:///Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-06/repos/trunk/test/file1.txt
 Repository: file:///Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-06/repos
-Repository UUID: 13621341-97b7-4db0-8a85-4f1041809f06
+Repository UUID: 4495bcd3-6fd1-4361-8208-4c791db74d87
 Revision: 3
 Node kind: file
 Schedule: normal
 Last Changed Author: barry
 Last Changed Rev: 3
-Last Changed Date: 14-Apr-2016 13:47:34
-Text Last Updated: 14-Apr-2016 13:47:34
+Last Changed Date: 15-Apr-2016 17:09:37
+Text Last Updated: 15-Apr-2016 17:09:37
 Checksum: e99afc2363b20ca1e52cd9ce4e8577eb
 Info: Test - info2 of path
 Info: CWD: /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-06/wc1/test
 Info: pysvn command: info2 file1.txt
 
-Path: file1.txt
+Path: /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-06/wc1/test/file1.txt
 Url: file:///Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-06/repos/trunk/test/file1.txt
 Revision: 3
 Repository root_URL: file:///Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-06/repos
-Repository UUID: 13621341-97b7-4db0-8a85-4f1041809f06
+Repository UUID: 4495bcd3-6fd1-4361-8208-4c791db74d87
 Last changed author: barry
-Last Changed Date: 14-Apr-2016 13:47:34
+Last Changed Date: 15-Apr-2016 17:09:37
 Last changed revision: 3
 Node kind: file
 Schedule: normal
-Text Last Updated: 14-Apr-2016 13:47:34
-Checksum: e99afc2363b20ca1e52cd9ce4e8577eb
+Text Last Updated: 15-Apr-2016 17:09:37
+Checksum: ae0e5a70bbd1dcadbb4ac8ffe321bdb7b7682b72
 Info: Test - info2 of URL
 Info: CWD: /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-06/wc1/test
 Info: pysvn command: info --revision HEAD file:///Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-06/repos/trunk/test/file1.txt
@@ -80,8 +80,8 @@ Path: file1.txt
 Url: file:///Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-06/repos/trunk/test/file1.txt
 Revision: 3
 Repository root_URL: file:///Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-06/repos
-Repository UUID: 13621341-97b7-4db0-8a85-4f1041809f06
+Repository UUID: 4495bcd3-6fd1-4361-8208-4c791db74d87
 Last changed author: barry
-Last Changed Date: 14-Apr-2016 13:47:34
+Last Changed Date: 15-Apr-2016 17:09:37
 Last changed revision: 3
 Node kind: file

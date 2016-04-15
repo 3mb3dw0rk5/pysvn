@@ -325,8 +325,6 @@ template <> EnumString< svn_node_kind_t >::EnumString()
    // @note This value is not currently used by the public API.
   add( svn_node_symlink, "symlink" );
 #endif
-
-
 }
 
 #if defined( PYSVN_HAS_DIFF_FILE_IGNORE_SPACE )

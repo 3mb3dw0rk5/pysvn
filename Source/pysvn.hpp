@@ -888,6 +888,16 @@ extern Py::Object toObject
     const DictWrapper &wrapper_wc_info
     );
 #endif
+#if defined( PYSVN_HAS_CLIENT_INFO3 )
+extern Py::Object toObject
+    (
+    const svn_client_info2_t &info,
+    SvnPool &pool,
+    const DictWrapper &wrapper_info,
+    const DictWrapper &wrapper_lock,
+    const DictWrapper &wrapper_wc_info
+    );
+#endif
 #if defined( PYSVN_HAS_CLIENT_LOCK )
 extern Py::Object toObject
     (

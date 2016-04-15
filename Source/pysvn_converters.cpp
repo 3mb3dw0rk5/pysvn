@@ -21,13 +21,16 @@
 #include "pysvn_static_strings.hpp"
 
 static const std::string str_URL( "URL" );
+static const std::string str_action( "action" );
 static const std::string str_author( "author" );
+static const std::string str_base_abspath( "base_abspath" );
 static const std::string str_changelist( "changelist" );
 static const std::string str_checksum( "checksum" );
 static const std::string str_comment( "comment" );
 static const std::string str_commit_author( "commit_author" );
 static const std::string str_commit_revision( "commit_revision" );
 static const std::string str_commit_time( "commit_time" );
+static const std::string str_conflicts( "conflicts" );
 static const std::string str_conflict_new( "conflict_new" );
 static const std::string str_conflict_old( "conflict_old" );
 static const std::string str_conflict_work( "conflict_work" );
@@ -41,6 +44,7 @@ static const std::string str_depth( "depth" );
 static const std::string str_entry( "entry" );
 static const std::string str_expiration_date( "expiration_date" );
 static const std::string str_is_absent( "is_absent" );
+static const std::string str_is_binary( "is_binary" );
 static const std::string str_is_copied( "is_copied" );
 static const std::string str_is_dav_comment( "is_dav_comment" );
 static const std::string str_is_deleted( "is_deleted" );
@@ -57,16 +61,30 @@ static const std::string str_lock_comment( "lock_comment" );
 static const std::string str_lock_creation_date( "lock_creation_date" );
 static const std::string str_lock_owner( "lock_owner" );
 static const std::string str_lock_token( "lock_token" );
+static const std::string str_merged_file( "merged_file" );
+static const std::string str_mime_type( "mime_type" );
+static const std::string str_moved_from_abspath( "moved_from_abspath" );
+static const std::string str_moved_to_abspath( "moved_to_abspath" );
+static const std::string str_my_abspath( "my_abspath" );
 static const std::string str_name( "name" );
+static const std::string str_node_kind( "node_kind" );
+static const std::string str_operation( "operation" );
 static const std::string str_owner( "owner" );
 static const std::string str_path( "path" );
+static const std::string str_path_in_repos( "path_in_repos" );
+static const std::string str_peg_rev( "peg_rev" );
 static const std::string str_post_commit_err( "post_commit_err" );
 static const std::string str_prejfile( "prejfile" );
 static const std::string str_prop_status( "prop_status" );
 static const std::string str_prop_time( "prop_time" );
 static const std::string str_properties_time( "properties_time" );
+static const std::string str_property_name( "property_name" );
 static const std::string str_property_reject_file( "property_reject_file" );
+static const std::string str_reason( "reason" );
+static const std::string str_recorded_size( "recorded_size" );
+static const std::string str_recorded_time( "recorded_time" );
 static const std::string str_repos( "repos" );
+static const std::string str_repos_url( "repos_url" );
 static const std::string str_repos_UUID( "repos_UUID" );
 static const std::string str_repos_lock( "repos_lock" );
 static const std::string str_repos_prop_status( "repos_prop_status" );
@@ -76,12 +94,16 @@ static const std::string str_rev( "rev" );
 static const std::string str_revision( "revision" );
 static const std::string str_schedule( "schedule" );
 static const std::string str_size( "size" );
+static const std::string str_src_left_version( "src_left_version" );
+static const std::string str_src_right_version( "src_right_version" );
 static const std::string str_text_status( "text_status" );
 static const std::string str_text_time( "text_time" );
+static const std::string str_their_abspath( "their_abspath" );
 static const std::string str_token( "token" );
 static const std::string str_url( "url" );
 static const std::string str_uuid( "uuid" );
 static const std::string str_wc_info( "wc_info" );
+static const std::string str_wcroot_abspath( "wcroot_abspath" );
 static const std::string str_working_size( "working_size" );
 
 #include <iostream>
@@ -497,7 +519,6 @@ Py::Object toObject
     const DictWrapper &wrapper_wc_info
     )
 {
-
     Py::Dict py_info;
 
     // Where the item lives in the repository.
@@ -590,6 +611,245 @@ Py::Object toObject
     return wrapper_info.wrapDict( py_info );
 }
 #endif
+
+#if defined( PYSVN_HAS_CLIENT_INFO3 )
+Py::Object toObject
+    (
+    const svn_wc_conflict_version_t *info
+    )
+{
+    if( info == NULL )
+    {
+        return Py::None();
+    }
+
+    Py::Dict d;
+
+    d[str_repos_url] = utf8_string_or_none( info->repos_url );
+    d[str_peg_rev] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, info->peg_rev ) );
+    d[str_path_in_repos] = utf8_string_or_none( info->path_in_repos );
+    d[str_node_kind] = toEnumValue( info->node_kind );
+#if defined( PYSVN_HAS_SVN_1_8 )
+    d[str_repos_UUID] = utf8_string_or_none( info->repos_uuid );
+#endif
+
+    return d;
+}
+
+Py::String toHex( const unsigned char *bytes, size_t length )
+{
+    static char hex_digits[] = "0123456789abcdef";
+    std::string human;
+
+
+    for( size_t index=0; index < length; ++index )
+    {
+        human += hex_digits[ bytes[index] >> 4 ];
+        human += hex_digits[ bytes[index] & 0x0f ];
+    }
+
+    return Py::String( human );
+}
+
+Py::Object toObject
+    (
+    const svn_client_info2_t &info,
+    SvnPool &pool,
+    const DictWrapper &wrapper_info,
+    const DictWrapper &wrapper_lock,
+    const DictWrapper &wrapper_wc_info
+    )
+{
+    Py::Dict py_info;
+
+    // Where the item lives in the repository.
+    py_info[str_URL] = utf8_string_or_none( info.URL );
+
+    // The revision of the object.  If path_or_url is a working-copy
+    // path, then this is its current working revnum.  If path_or_url
+    // is a URL, then this is the repos revision that path_or_url lives in.
+    py_info[str_rev] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, info.rev ) );
+
+    // The root URL of the repository.
+    py_info[str_repos_root_URL] = utf8_string_or_none( info.repos_root_URL );
+
+    // The repository's UUID.
+    py_info[str_repos_UUID] = utf8_string_or_none( info.repos_UUID );
+
+    // The node's kind.
+    py_info[str_kind] = toEnumValue( info.kind );
+
+    if( info.size == SVN_INVALID_FILESIZE )
+    {
+        py_info[str_size] = Py::None();
+    }
+    else
+    {
+#ifdef HAVE_LONG_LONG
+        py_info[str_size] = Py::LongLong( static_cast<PY_LONG_LONG>( info.size ) );
+#else
+        py_info[str_size] = Py::Int( static_cast<int>( info.size ) );
+#endif
+    }
+
+    // The last revision in which this object changed.
+    py_info[str_last_changed_rev] = Py::asObject(
+                    new pysvn_revision( svn_opt_revision_number, 0, info.last_changed_rev ) );
+
+    // The date of the last_changed_rev.
+    py_info[str_last_changed_date] = toObject( info.last_changed_date );
+
+    // The author of the last_changed_rev.
+    py_info[str_last_changed_author] = utf8_string_or_none( info.last_changed_author );
+
+    // An exclusive lock, if present.  Could be either local or remote.
+    if( info.lock == NULL )
+    {
+        py_info[str_lock] = Py::None();
+    }
+    else
+    {
+        py_info[str_lock] = toObject( *info.lock, wrapper_lock );
+    }
+
+    // Whether or not to ignore the next 10 wc-specific fields.
+    if( info.wc_info == NULL )
+    {
+        py_info[str_wc_info] = Py::None();
+    }
+    else
+    {
+        Py::Dict py_wc_info;
+
+        py_wc_info[str_schedule] = toEnumValue( info.wc_info->schedule );
+        py_wc_info[str_copyfrom_url] = utf8_string_or_none( info.wc_info->copyfrom_url );
+        py_wc_info[str_copyfrom_rev] = Py::asObject(
+                            new pysvn_revision( svn_opt_revision_number, 0, info.wc_info->copyfrom_rev ) );
+        switch( info.wc_info->checksum->kind )
+        {
+        case svn_checksum_md5:
+            py_wc_info[str_checksum] = toHex( info.wc_info->checksum->digest, 16 );
+            break;
+        case svn_checksum_sha1:
+            py_wc_info[str_checksum] = toHex( info.wc_info->checksum->digest, 20 );
+            break;
+        default:
+            py_wc_info[str_checksum] = Py::None();
+        }
+
+        py_wc_info[str_changelist] = utf8_string_or_none( info.wc_info->changelist );
+        py_wc_info[str_depth] = toEnumValue( info.wc_info->depth );
+#ifdef HAVE_LONG_LONG
+        if( info.wc_info->recorded_size == SVN_INFO_SIZE_UNKNOWN )
+            py_wc_info[str_recorded_size] = Py::None();
+        else
+            py_wc_info[str_recorded_size] = Py::LongLong( static_cast<PY_LONG_LONG>( info.wc_info->recorded_size ) );
+#else
+        if( info.wc_info->recorded_size == SVN_INFO_SIZE_UNKNOWN )
+            py_wc_info[str_recorded_size] = Py::None();
+        else
+            py_wc_info[str_recorded_size] = Py::Int( static_cast<int>( info.wc_info->recorded_size ) );
+#endif
+        py_wc_info[str_recorded_time] = toObject( info.wc_info->recorded_time );
+
+        // I'm guesses that recorded size is what used to be size and working_size
+        py_wc_info[str_size] = py_wc_info[str_recorded_size];
+        py_wc_info[str_working_size] = py_wc_info[str_recorded_size];
+
+        // I'm guesses that recorded date is what used to be text_time and prop_time
+        py_wc_info[str_text_time] = py_wc_info[str_recorded_time];
+        py_wc_info[str_prop_time] = py_wc_info[str_recorded_time];
+
+        // conflicts
+        int count = 0;
+        if( info.wc_info->conflicts != NULL )
+        {
+            count = info.wc_info->conflicts->nelts;
+        }
+
+        switch( count )
+        {
+        case 0:
+            py_wc_info[str_conflict_old] = Py::None();
+            py_wc_info[str_conflict_new] = Py::None();
+            py_wc_info[str_conflict_work] = Py::None();
+            py_wc_info[str_prejfile] = Py::None();
+            break;
+
+        case 1:
+            // map for backwards compatibility
+            {
+            svn_wc_conflict_description2_t *item = ((svn_wc_conflict_description2_t **)info.wc_info->conflicts->elts)[0];
+
+            py_wc_info[str_conflict_old] = utf8_string_or_none( item->my_abspath );
+            py_wc_info[str_conflict_new] = utf8_string_or_none( item->their_abspath );
+            py_wc_info[str_conflict_work] = utf8_string_or_none( item->merged_file );
+            py_wc_info[str_prejfile] = utf8_string_or_none( item->their_abspath );
+            }
+            break;
+
+        default:
+            {
+            Py::List all_conflicts;
+
+            for( int i=0; i<count; ++i )
+            {
+                Py::Dict conflict;
+
+                svn_wc_conflict_description2_t *item = ((svn_wc_conflict_description2_t **)info.wc_info->conflicts->elts)[i];
+
+                conflict[str_local_abspath] = path_string_or_none( item->local_abspath, pool );
+                conflict[str_node_kind] = toEnumValue( item->node_kind );
+                conflict[str_kind] = toEnumValue( item->kind );
+                if( item->kind == svn_wc_conflict_kind_property )
+                {
+                    conflict[str_property_name] = utf8_string_or_none( item->property_name );
+                }
+                else
+                {
+                    conflict[str_property_name] = Py::None();
+                }
+
+                if( item->kind == svn_wc_conflict_kind_text )
+                {
+                    conflict[str_is_binary] = Py::Boolean( item->is_binary );
+                    conflict[str_mime_type] = utf8_string_or_none( item->mime_type );
+                }
+                else
+                {
+                    conflict[str_is_binary] = Py::None();
+                    conflict[str_mime_type] = Py::None();
+                }
+                conflict[str_action] = toEnumValue( item->action );
+                conflict[str_reason] = toEnumValue( item->reason );
+                conflict[str_base_abspath] = path_string_or_none( item->base_abspath, pool );
+                conflict[str_their_abspath] = path_string_or_none( item->their_abspath, pool );
+                conflict[str_my_abspath] = path_string_or_none( item->my_abspath, pool );
+                conflict[str_merged_file] = path_string_or_none( item->merged_file, pool );
+
+                conflict[str_operation] = toEnumValue( item->operation );
+                conflict[str_src_left_version] = toObject( item->src_left_version );
+                conflict[str_src_right_version] = toObject( item->src_right_version );
+
+                all_conflicts.append( conflict );
+            }
+
+            py_wc_info[str_conflicts] = all_conflicts;
+            }
+            break;
+        }
+
+        py_wc_info[str_wcroot_abspath] = utf8_string_or_none( info.wc_info->wcroot_abspath );
+        py_wc_info[str_moved_to_abspath] = utf8_string_or_none( info.wc_info->moved_to_abspath );
+        py_wc_info[str_moved_from_abspath] = utf8_string_or_none( info.wc_info->moved_from_abspath );
+
+        py_info[str_wc_info] = wrapper_wc_info.wrapDict( py_wc_info );
+    }
+
+    return wrapper_info.wrapDict( py_info );
+}
+#endif
+
 #if defined( PYSVN_HAS_CLIENT_LOCK )
 Py::Object toObject
     (

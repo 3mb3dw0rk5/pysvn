@@ -87,7 +87,8 @@ class ReplaceDirtInString:
         dateUnixLs2_re = re.compile(r'[JFMASOND][a-z][a-z]  \d\d\d\d')
         uuid_re = re.compile(r'[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}')
         pristine_re = re.compile( r'pristine[/\\][0-9a-z]{2}[/\\][0-9a-z]{40}' )
-        checksum_re = re.compile(r'[0-9a-z]{32}')
+        checksum_sha1_re = re.compile(r'[0-9a-z]{40}')
+        checksum_md5_re = re.compile(r'[0-9a-z]{32}')
         tmpSvnFile_re = re.compile(r'[/\\].svn[/\\]tmp[/\\]tempfile.\d+.tmp|[/\\].svn[/\\]tmp[/\\]svn-[a-zA-Z0-9]+')
 
 
@@ -96,7 +97,8 @@ class ReplaceDirtInString:
                         (dateAlphaNumeric_re,          '<alpha-date-and-time>'),
                         (dateNumeric_re,               '<numeric-date-and-time>'),
                         (uuid_re,                      '<UUID>'),
-                        (checksum_re,                  '<checksum>'),
+                        (checksum_sha1_re,             '<checksum>'),
+                        (checksum_md5_re,              '<checksum>'),
                         (dateUnixLs1_re,               '<ls-date-and-time>'),
                         (dateUnixLs2_re,               '<ls-date-and-time>'),
                         (tmpSvnFile_re,                '/.svn/tmp/<svn-tempfile>'),

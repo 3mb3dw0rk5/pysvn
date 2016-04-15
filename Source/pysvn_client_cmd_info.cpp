@@ -546,7 +546,7 @@ Py::Object pysvn_client::cmd_annotate( const Py::Tuple &a_args, const Py::Dict &
         PythonAllowThreads permission( m_context );
 
 #if defined( PYSVN_HAS_CLIENT_ANNOTATE4 )
-        svn_error_t *error = svn_client_blame4
+        svn_error_t *error = svn_client_blame4 // ignore deprecation warning - support old Client().annotate()
             (
             norm_path.c_str(),
             &peg_revision,
@@ -660,7 +660,17 @@ Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kw
 #if defined( PYSVN_HAS_WC_ADM_PROBE_OPEN3 )
         const char *c_norm_path = svn_dirent_internal_style( path.c_str(), pool );
         std::string norm_path( c_norm_path );
-        svn_error_t *error = svn_wc_adm_probe_open3( &adm_access, NULL, norm_path.c_str(), false, 0, NULL, NULL, pool );
+        svn_error_t *error = svn_wc_adm_probe_open3 // ignore deprecation warning - support old Client().info()
+                    (
+                    &adm_access,
+                    NULL,
+                    norm_path.c_str(),
+                    false,
+                    0,
+                    NULL,
+                    NULL,
+                    pool
+                    );
 #else
         std::string norm_path( svnNormalisedPath( path, pool ) );
         svn_error_t *error = svn_wc_adm_probe_open( &adm_access, NULL, norm_path.c_str(), false, false, pool );
@@ -671,7 +681,14 @@ Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kw
             throw SvnException( error );
 
         permission.allowOtherThreads();
-        error = svn_wc_entry( &entry, norm_path.c_str(), adm_access, false, pool );
+        error = svn_wc_entry // ignore deprecation warning - support old Client().info()
+                    (
+                    &entry,
+                    norm_path.c_str(),
+                    adm_access,
+                    false,
+                    pool
+                    );
         permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
@@ -692,13 +709,82 @@ Py::Object pysvn_client::cmd_info( const Py::Tuple &a_args, const Py::Dict &a_kw
     return toObject( *entry, pool, m_wrapper_entry );
 }
 
-#if defined( PYSVN_HAS_CLIENT_INFO )
+#if defined( PYSVN_HAS_CLIENT_INFO3 )
+extern "C" svn_error_t *info_receiver_c2( void *baton_, const char *abspath_or_url, const svn_client_info2_t *info, apr_pool_t *pool );
+
 class InfoReceiveBaton
 {
 public:
     InfoReceiveBaton
         (
         PythonAllowThreads *permission,
+        SvnPool &pool,
+        Py::List &info_list,
+        const DictWrapper &wrapper_info,
+        const DictWrapper &wrapper_lock,
+        const DictWrapper &wrapper_wc_info
+        )
+    : m_permission( permission )
+    , m_pool( pool )
+    , m_info_list( info_list )
+    , m_wrapper_info( wrapper_info )
+    , m_wrapper_lock( wrapper_lock )
+    , m_wrapper_wc_info( wrapper_wc_info )
+    {}
+    ~InfoReceiveBaton()
+    {}
+
+    void *baton() { return reinterpret_cast<void *>( this ); }
+    svn_client_info_receiver2_t callback() { return &info_receiver_c2; }
+
+    PythonAllowThreads  *m_permission;
+    SvnPool             &m_pool;
+    Py::List            &m_info_list;
+    const DictWrapper   &m_wrapper_info;
+    const DictWrapper   &m_wrapper_lock;
+    const DictWrapper   &m_wrapper_wc_info;
+};
+
+extern "C" svn_error_t *info_receiver_c2( void *baton_, const char *abspath_or_url, const svn_client_info2_t *info, apr_pool_t * )
+{
+    InfoReceiveBaton *baton = reinterpret_cast<InfoReceiveBaton *>( baton_ );
+
+    PythonDisallowThreads callback_permission( baton->m_permission );
+
+    if( abspath_or_url != NULL )
+    {
+        std::string std_path( abspath_or_url );
+        if( std_path.empty() )
+        {
+            std_path = ".";
+        }
+        Py::String py_path( utf8_string_or_none( std_path ) );
+
+        Py::Tuple py_pair( 2 );
+        py_pair[0] = py_path;
+        py_pair[1] = toObject(
+                    *info,
+                    baton->m_pool,
+                    baton->m_wrapper_info,
+                    baton->m_wrapper_lock,
+                    baton->m_wrapper_wc_info );
+
+        baton->m_info_list.append( py_pair );
+    }
+
+    return SVN_NO_ERROR;
+}
+
+#elif defined( PYSVN_HAS_CLIENT_INFO )
+extern "C" svn_error_t *info_receiver_c( void *baton_, const char *path, const svn_info_t *info, apr_pool_t *pool );
+
+class InfoReceiveBaton
+{
+public:
+    InfoReceiveBaton
+        (
+        PythonAllowThreads *permission,
+        SvnPool &,
         Py::List &info_list,
         const DictWrapper &wrapper_info,
         const DictWrapper &wrapper_lock,
@@ -713,6 +799,9 @@ public:
     ~InfoReceiveBaton()
     {}
 
+    void *baton() { return reinterpret_cast<void *>( this ); }
+    svn_info_receiver_t callback() { return &info_receiver_c; }
+
     PythonAllowThreads  *m_permission;
     Py::List            &m_info_list;
     const DictWrapper   &m_wrapper_info;
@@ -720,9 +809,7 @@ public:
     const DictWrapper   &m_wrapper_wc_info;
 };
 
-extern "C"
-{
-static svn_error_t *info_receiver_c( void *baton_, const char *path, const svn_info_t *info, apr_pool_t *pool )
+extern "C" svn_error_t *info_receiver_c( void *baton_, const char *path, const svn_info_t *info, apr_pool_t *pool )
 {
     InfoReceiveBaton *baton = reinterpret_cast<InfoReceiveBaton *>( baton_ );
 
@@ -735,7 +822,7 @@ static svn_error_t *info_receiver_c( void *baton_, const char *path, const svn_i
         {
             std_path = ".";
         }
-        Py::String py_path( std_path );
+        Py::String py_path( utf8_string_or_none( std_path ) );
 
         Py::Tuple py_pair( 2 );
         py_pair[0] = py_path;
@@ -750,8 +837,9 @@ static svn_error_t *info_receiver_c( void *baton_, const char *path, const svn_i
 
     return SVN_NO_ERROR;
 }
-}
+#endif
 
+#if defined( PYSVN_HAS_CLIENT_INFO )
 Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
     static argument_description args_desc[] =
@@ -763,6 +851,10 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
 #if defined( PYSVN_HAS_CLIENT_INFO2 )
     { false, name_depth },
     { false, name_changelists },
+#endif
+#if defined( PYSVN_HAS_CLIENT_INFO3 )
+    { false, name_fetch_excluded },
+    { false, name_fetch_actual_only },
 #endif
     { false, NULL }
     };
@@ -793,6 +885,11 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
     bool recurse = args.getBoolean( name_recurse, true );
 #endif
 
+#if defined( PYSVN_HAS_CLIENT_INFO3 )
+    bool fetch_excluded = args.getBoolean( name_fetch_excluded, false );
+    bool fetch_actual_only = args.getBoolean( name_fetch_actual_only, true );
+#endif
+
     bool is_url = is_svn_url( path );
     revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
     revisionKindCompatibleCheck( is_url, revision, name_revision, name_url_or_path );
@@ -807,17 +904,47 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
 
         PythonAllowThreads permission( m_context );
 
-        InfoReceiveBaton info_baton( &permission, info_list, m_wrapper_info, m_wrapper_lock, m_wrapper_wc_info );
+        InfoReceiveBaton info_baton( &permission, pool, info_list, m_wrapper_info, m_wrapper_lock, m_wrapper_wc_info );
 
-#if defined( PYSVN_HAS_CLIENT_INFO2 )
+#if defined( PYSVN_HAS_CLIENT_INFO3 )
+        svn_error_t *error = SVN_NO_ERROR;
+        const char *abspath_or_url = NULL;
+        if( !svn_path_is_url( norm_path.c_str() )
+        &&  !svn_dirent_is_absolute( norm_path.c_str() ) )
+        {
+            error = svn_dirent_get_absolute( &abspath_or_url, norm_path.c_str(), pool );
+        }
+        else
+        {
+            abspath_or_url = norm_path.c_str();
+        }
+
+        if( error == SVN_NO_ERROR )
+        {
+            error = svn_client_info3
+                    (
+                    abspath_or_url,
+                    &peg_revision,
+                    &revision,
+                    depth,
+                    fetch_excluded,
+                    fetch_actual_only,
+                    changelists,
+                    info_baton.callback(),
+                    info_baton.baton(),
+                    m_context,
+                    pool
+                    );
+        }
+#elif defined( PYSVN_HAS_CLIENT_INFO2 )
         svn_error_t *error = 
             svn_client_info2
                 (
                 norm_path.c_str(),
                 &peg_revision,
                 &revision,
-                info_receiver_c,
-                reinterpret_cast<void *>( &info_baton ),
+                info_baton.callback(),
+                info_baton.baton(),
                 depth,
                 changelists,
                 m_context,
@@ -830,8 +957,8 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
                 norm_path.c_str(),
                 &peg_revision,
                 &revision,
-                info_receiver_c,
-                reinterpret_cast<void *>( &info_baton ),
+                info_baton.callback(),
+                info_baton.baton(),
                 recurse,
                 m_context,
                 pool

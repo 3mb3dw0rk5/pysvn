@@ -1296,7 +1296,9 @@ info2( url_or_path,
        revision=pysvn.Revision( opt_revision_kind.unspecified ),
        peg_revision=pysvn.Revision( opt_revision_kind.unspecified ),
        recurse=True<span class="svn_1005000">,
-       depth=depth</span> )
+       depth=depth</span><span class="svn_1007000">
+       fetch_excluded=False,
+       fetch_actual_only=True</span> )
 
 </pre>
 <p>return information on url_or_path as a list of (path, info_dict)
@@ -1311,6 +1313,17 @@ WC targets.
 </span></p>
 <div class="svn_1005000">
 <p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
+</p>
+</div>
+
+<div class="svn_1007000">
+<p>
+If fetch_excluded is True, also also send excluded nodes in the working
+copy to receiver, otherwise these are skipped.
+</p>
+<p>If fetch_actual_only
+is True also send nodes that don't exist as versioned but are still
+tree conflicted.
 </p>
 </div>
 

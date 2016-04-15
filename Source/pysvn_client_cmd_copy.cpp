@@ -273,7 +273,7 @@ Py::Object pysvn_client::cmd_copy( const Py::Tuple &a_args, const Py::Dict &a_kw
             PythonAllowThreads permission( m_context );
 #if defined( PYSVN_HAS_CLIENT_COPY3 )
             // behavior changed
-            svn_error_t *error = svn_client_copy3
+            svn_error_t *error = svn_client_copy3 // ignore deprecation warning - support old Client().copy()
                 (
                 &commit_info,
                 norm_src_path.c_str(),
@@ -525,7 +525,7 @@ Py::Object pysvn_client::cmd_move( const Py::Tuple &a_args, const Py::Dict &a_kw
 
 #if defined( PYSVN_HAS_CLIENT_MOVE4 )
             // behavior changed
-            svn_error_t *error = svn_client_move4
+            svn_error_t *error = svn_client_move4 // ignore deprecation warning - support old Client().move()
                 (
                 &commit_info,
                 norm_src_path.c_str(),
