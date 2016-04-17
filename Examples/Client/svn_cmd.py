@@ -740,14 +740,21 @@ class SvnCommand:
         revision = args.getOptionalRevision( '--revision', 'head' )
         verbose = args.getBooleanOption( '--verbose', True )
         fetch_locks = args.getBooleanOption( '--fetch-locks', True )
+        include_externals = args.getBooleanOption( '--include-externals', True )
         positional_args = args.getPositionalArgs( 0 )
         if len(positional_args) == 0:
             positional_args.append( '.' )
 
         for arg in positional_args:
-            all_entries = self.client.list( arg, revision=revision, recurse=recurse, fetch_locks=fetch_locks )
+            if self.pysvn_testing >= '01.08.00':
+                all_entries = self.client.list( arg, revision=revision, recurse=recurse, fetch_locks=fetch_locks, include_externals=include_externals )
+            else:
+                all_entries = self.client.list( arg, revision=revision, recurse=recurse, fetch_locks=fetch_locks )
+
             if verbose:
-                for entry, lock_info in all_entries:
+                for entry_tuple in all_entries:
+                    entry = entry_tuple[0]
+                    lock_info = entry_tuple[1]
                     args = {}
                     args.update( entry )
                     args['time_str'] = fmtDateTime( entry.time )
@@ -760,11 +767,13 @@ class SvnCommand:
                             print( '        Lock created: %s' % (time.strftime( '%Y-%m-%d %H:%M:%S', time.localtime( lock_info.creation_date ) ),) )
                         if lock_info.expiration_date is not None:
                             print( '        Lock expires: %s' % (time.strftime( '%Y-%m-%d %H:%M:%S', time.localtime( lock_info.expiration_date ) ),) )
-
+                    if self.pysvn_testing >= '01.08.00' and include_externals and entry_tuple[2] is not None:
+                        print( '        External target %s' % (entry_tuple[3],) )
+                        print( '        External    URL %s' % (entry_tuple[2],) )
 
             else:
-                for entry, Q in all_entries:
-                    print( '%(path)s' % entry )
+                for entry_tuple in all_entries:
+                    print( '%(path)s' % entry_tuple[0] )
 
     def cmd_merge( self, args ):
         recurse = args.getBooleanOption( '--recursive', True )
@@ -1145,6 +1154,7 @@ long_opt_info = {
     '--fetch-locks': 0,         # as list to fetch lock info
     '--force': 0,               # force operation to run
     '--force-log': 0,           # force validity of log message source
+    '--include-externals': 0,   # include external information in list() output
     '--incremental': 0,         # give output suitable for concatenation
     '--limit': 1,               # number of logs to fetch
     '--new': 1,                 # use ARG as the newer target

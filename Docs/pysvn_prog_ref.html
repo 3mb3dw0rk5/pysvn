@@ -1442,6 +1442,8 @@ one of these values to return only the selected fields:
 <ul>
 <li>0 - PysvnList containing the dirent information</li>
 <li>1 - PysvnLock containing the lock information or None</li>
+<li>2 - external_parent_url - string or None</li>
+<li>3 - external_target - string or None</li>
 </ul>
 
 <p>The PysvnList object contains the requested dirent fields:
@@ -1468,6 +1470,25 @@ one of these values to return only the selected fields:
 <li>is_dav_comment - boolean - true is a commment from DAV</li>
 <li>creation_date - int - time the lock was created</li>
 </ul>
+
+<div class="svn_1008000">
+<p>
+If list() was called with include_externals set to True,
+external_parent_url and external_target will be set.
+external_parent_url is url of the directory which has the
+externals definitions. external_target is the target subdirectory of
+externals definitions which is relative to the parent directory that holds
+the external item.
+</p>
+<p>
+If external_parent_url and external_target are defined, the item being
+listed is part of the external described by external_parent_url and
+external_target. Else, the item is not part of any external.
+Moreover, we will never mix items which are part of separate
+externals, and will always finish listing an external before listing
+the next one.
+</p>
+</div>
 
 <div class="svn_1002000">
 <h4><a name="pysvn_client_lock"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.lock</a></h4>

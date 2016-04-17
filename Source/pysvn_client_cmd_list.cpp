@@ -146,41 +146,69 @@ Py::Object pysvn_client::cmd_ls( const Py::Tuple &a_args, const Py::Dict &a_kws 
 }
 
 #if defined( PYSVN_HAS_CLIENT_LIST )
-class ListReceiveBaton
-{
-public:
-    ListReceiveBaton( PythonAllowThreads *permission, Py::List &list_list )
-        : m_permission( permission )
-        , m_list_list( list_list )
-        {}
-    ~ListReceiveBaton()
-        {}
-
-    PythonAllowThreads  *m_permission;
-
-    apr_uint32_t        m_dirent_fields;
-    bool                m_fetch_locks;
-    bool                m_is_url;
-    std::string         m_url_or_path;
-    DictWrapper         *m_wrapper_lock;
-    DictWrapper         *m_wrapper_list;
-
-    Py::List            &m_list_list;
-};
-
-extern "C"
-{
-svn_error_t *list_receiver_c
+extern "C" svn_error_t *list_receiver_c
     (
     void *baton_,
     const char *path,
     const svn_dirent_t *dirent,
     const svn_lock_t *lock,
     const char *abs_path,
+#if defined( PYSVN_HAS_CLIENT_LIST3 )
+    const char *external_parent_url,
+    const char *external_target,
+#endif
+    apr_pool_t *pool
+    );
+
+class ListReceiveBaton
+{
+public:
+    ListReceiveBaton( PythonAllowThreads *permission, Py::List &list_list, SvnPool &pool )
+        : m_permission( permission )
+        , m_include_externals( false )
+        , m_list_list( list_list )
+        , m_pool( pool )
+        {}
+    ~ListReceiveBaton()
+        {}
+
+    void *baton() { return reinterpret_cast<void *>( this ); }
+#if defined( PYSVN_HAS_CLIENT_LIST3 )
+    svn_client_list_func2_t callback() { return &list_receiver_c; }
+#else
+    svn_client_list_func_t callback() { return &list_receiver_c; }
+#endif
+    static ListReceiveBaton *castBaton( void *baton_ ) { return reinterpret_cast<ListReceiveBaton *>( baton_ ); }
+
+    PythonAllowThreads  *m_permission;
+
+    apr_uint32_t        m_dirent_fields;
+    bool                m_fetch_locks;
+    bool                m_include_externals;
+    bool                m_is_url;
+    std::string         m_url_or_path;
+    DictWrapper         *m_wrapper_lock;
+    DictWrapper         *m_wrapper_list;
+
+    Py::List            &m_list_list;
+    SvnPool             &m_pool;
+};
+
+extern "C" svn_error_t *list_receiver_c
+    (
+    void *baton_,
+    const char *path,
+    const svn_dirent_t *dirent,
+    const svn_lock_t *lock,
+    const char *abs_path,
+#if defined( PYSVN_HAS_CLIENT_LIST3 )
+    const char *external_parent_url,
+    const char *external_target,
+#endif
     apr_pool_t *pool
     )
 {
-    ListReceiveBaton *baton = reinterpret_cast<ListReceiveBaton *>( baton_ );
+    ListReceiveBaton *baton = ListReceiveBaton::castBaton( baton_ );
 
     PythonDisallowThreads callback_permission( baton->m_permission );
 
@@ -195,7 +223,7 @@ svn_error_t *list_receiver_c
         full_repos_path += path;
     }
 
-    Py::Tuple py_tuple( 2 );
+    Py::Tuple py_tuple( baton->m_include_externals ? 4 : 2 );
 
     Py::Dict entry_dict;
     entry_dict[ *py_name_path ] = Py::String( full_path, name_utf8 );
@@ -238,10 +266,18 @@ svn_error_t *list_receiver_c
     {
         py_tuple[1] = toObject( *lock, *baton->m_wrapper_lock );
     }
+
+#if defined( PYSVN_HAS_CLIENT_LIST3 )
+    if( baton->m_include_externals )
+    {
+        py_tuple[2] = path_string_or_none( external_parent_url, baton->m_pool );
+        py_tuple[3] = path_string_or_none( external_target, baton->m_pool );
+    }
+#endif
+
     baton->m_list_list.append( py_tuple );
 
     return SVN_NO_ERROR;
-}
 }
 
 Py::Object pysvn_client::cmd_list( const Py::Tuple &a_args, const Py::Dict &a_kws )
@@ -256,6 +292,9 @@ Py::Object pysvn_client::cmd_list( const Py::Tuple &a_args, const Py::Dict &a_kw
     { false, name_fetch_locks },
 #if defined( PYSVN_HAS_CLIENT_LIST2 )
     { false, name_depth },
+#endif
+#if defined( PYSVN_HAS_CLIENT_LIST3 )
+    { false, name_include_externals },
 #endif
     { false, NULL }
     };
@@ -278,6 +317,10 @@ Py::Object pysvn_client::cmd_list( const Py::Tuple &a_args, const Py::Dict &a_kw
     apr_uint32_t dirent_fields = args.getLong( name_dirent_fields, SVN_DIRENT_ALL );
     bool fetch_locks = args.getBoolean( name_fetch_locks, false );
 
+#if defined( PYSVN_HAS_CLIENT_LIST3 )
+    bool include_externals = args.getBoolean( name_include_externals, false );
+#endif
+
     revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
     revisionKindCompatibleCheck( is_url, revision, name_revision, name_url_or_path );
 
@@ -292,15 +335,33 @@ Py::Object pysvn_client::cmd_list( const Py::Tuple &a_args, const Py::Dict &a_kw
 
         PythonAllowThreads permission( m_context );
 
-        ListReceiveBaton list_baton( &permission, list_list );
+        ListReceiveBaton list_baton( &permission, list_list, pool );
         list_baton.m_dirent_fields = dirent_fields;
         list_baton.m_is_url = is_url;
         list_baton.m_fetch_locks = fetch_locks;
         list_baton.m_url_or_path = norm_path;
         list_baton.m_wrapper_lock = &m_wrapper_lock;
         list_baton.m_wrapper_list = &m_wrapper_list;
+#if defined( PYSVN_HAS_CLIENT_LIST3 )
+        list_baton.m_include_externals = include_externals;
+#endif
 
-#if defined( PYSVN_HAS_CLIENT_LIST2 )
+#if defined( PYSVN_HAS_CLIENT_LIST3 )
+        svn_error_t *error = svn_client_list3
+            (
+            norm_path.c_str(),
+            &peg_revision,
+            &revision,
+            depth,
+            dirent_fields,
+            fetch_locks,
+            include_externals,
+            list_baton.callback(),
+            list_baton.baton(),
+            m_context,
+            pool
+            );
+#elif defined( PYSVN_HAS_CLIENT_LIST2 )
         svn_error_t *error = svn_client_list2
             (
             norm_path.c_str(),
@@ -309,8 +370,8 @@ Py::Object pysvn_client::cmd_list( const Py::Tuple &a_args, const Py::Dict &a_kw
             depth,
             dirent_fields,
             fetch_locks,
-            list_receiver_c,
-            reinterpret_cast<void *>( &list_baton ),
+            list_baton.callback(),
+            list_baton.baton(),
             m_context,
             pool
             );
@@ -323,8 +384,8 @@ Py::Object pysvn_client::cmd_list( const Py::Tuple &a_args, const Py::Dict &a_kw
             recurse,
             dirent_fields,
             fetch_locks,
-            list_receiver_c,
-            reinterpret_cast<void *>( &list_baton ),
+            list_baton.callback(),
+            list_baton.baton(),
             m_context,
             pool
             );
