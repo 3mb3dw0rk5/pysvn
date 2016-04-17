@@ -237,6 +237,9 @@ Py::Object pysvn_client::cmd_merge_peg2( const Py::Tuple &a_args, const Py::Dict
 #if defined( PYSVN_HAS_CLIENT_MERGE_PEG4 )
     { false, name_allow_mixed_revisions },
 #endif
+#if defined( PYSVN_HAS_CLIENT_MERGE_PEG4 )
+    { false, name_ignore_mergeinfo },
+#endif
     { false, NULL }
     };
     FunctionArguments args( "merge_peg2", args_desc, a_args, a_kws );
@@ -252,6 +255,9 @@ Py::Object pysvn_client::cmd_merge_peg2( const Py::Tuple &a_args, const Py::Dict
     bool dry_run = args.getBoolean( name_dry_run, false );
 #if defined( PYSVN_HAS_CLIENT_MERGE4 )
     bool allow_mixed_revisions = args.getBoolean( name_allow_mixed_revisions, false );
+#endif
+#if defined( PYSVN_HAS_CLIENT_MERGE5 )
+    bool ignore_mergeinfo = args.getBoolean( name_ignore_mergeinfo, false );
 #endif
 
     Py::List merge_options_list;
@@ -344,7 +350,25 @@ Py::Object pysvn_client::cmd_merge_peg2( const Py::Tuple &a_args, const Py::Dict
 
         PythonAllowThreads permission( m_context );
 
-#if defined( PYSVN_HAS_CLIENT_MERGE_PEG4 )
+#if defined( PYSVN_HAS_CLIENT_MERGE_PEG5 )
+        svn_error_t *error = svn_client_merge_peg5
+            (
+            norm_sources.c_str(),
+            ranges_to_merge,
+            &peg_revision,
+            norm_target_wcpath.c_str(),
+            depth,
+            ignore_mergeinfo,
+            !notice_ancestry,   // diff_ignore_ancestry
+            force,              // force_delete
+            record_only,
+            dry_run,
+            allow_mixed_revisions,
+            merge_options,
+            m_context,
+            pool
+            );
+#elif defined( PYSVN_HAS_CLIENT_MERGE_PEG4 )
         svn_error_t *error = svn_client_merge_peg4
             (
             norm_sources.c_str(),

@@ -1635,7 +1635,7 @@ user has explicitly requested a merge into a mixed-revision working copy.
 </p>
 </div>
 
-<div class="svn_1007000">
+<div class="svn_1008000">
 <p>
 If ignore_mergeinfo is true, disable merge tracking, by treating the
 two sources as unrelated even if they actually have a common ancestor.
@@ -1701,7 +1701,8 @@ merge_peg2( sources,
             dry_run=False,
             record_only=True,
             merge_options=[]<span class="svn_1007000">,
-            allow_mixed_revisions=false</span> )
+            allow_mixed_revisions=false</span><span class="svn_1008000">,
+            ignore_mergeinfo=false</span> )
 </pre>
 <p>Apply the differences between the ranges_to_merge in sources to a working copy path, target_wcpath.
 ranges_to_merge is a list of tuples with the start and end revisions to be merged.
@@ -1740,6 +1741,13 @@ it is recommended to set this parameter to FALSE by default unless the
 user has explicitly requested a merge into a mixed-revision working copy.
 </p>
 </div>
+<div class="svn_1008000">
+<p>
+If ignore_mergeinfo is true, disable merge tracking, by treating the
+two sources as unrelated even if they actually have a common ancestor.
+</p>
+</div>
+
 
 <div class="svn_1005000">
 <h4><a name="pysvn_client_merge_reintegrate"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.merge_reintegrate</a></h4>
