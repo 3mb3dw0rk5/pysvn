@@ -727,14 +727,6 @@ class SvnCommand:
                     args['time_str'] = fmtDateTime( entry.time )
                     args['created_rev_num'] = entry.created_rev.number
                     print( '%(created_rev_num)7d %(last_author)-10s %(size)6d %(time_str)s %(name)s' % args )
-                    if hasattr( entry, 'lock' ) and entry.lock is not None:
-                        info = args['lock']
-                        print( '        Lock   owner: %s' % (info.owner,) )
-                        print( '        Lock comment: %s' % (info.comment,) )
-                        if info.creation_date is not None:
-                            print( '        Lock created: %s' % (time.strftime( '%Y-%m-%d %H:%M:%S', time.localtime( info.creation_date ) ),) )
-                        if info.expiration_date is not None:
-                            print( '        Lock expires: %s' % (time.strftime( '%Y-%m-%d %H:%M:%S', time.localtime( info.expiration_date ) ),) )
 
             else:
                 for entry in all_entries:
@@ -747,19 +739,29 @@ class SvnCommand:
         recurse = args.getBooleanOption( '--recursive', True )
         revision = args.getOptionalRevision( '--revision', 'head' )
         verbose = args.getBooleanOption( '--verbose', True )
+        fetch_locks = args.getBooleanOption( '--fetch-locks', True )
         positional_args = args.getPositionalArgs( 0 )
         if len(positional_args) == 0:
             positional_args.append( '.' )
 
         for arg in positional_args:
-            all_entries = self.client.list( arg, revision=revision, recurse=recurse )
+            all_entries = self.client.list( arg, revision=revision, recurse=recurse, fetch_locks=fetch_locks )
             if verbose:
-                for entry, Q in all_entries:
+                for entry, lock_info in all_entries:
                     args = {}
                     args.update( entry )
                     args['time_str'] = fmtDateTime( entry.time )
                     args['created_rev_num'] = entry.created_rev.number
                     print( '%(created_rev_num)7d %(last_author)-10s %(size)6d %(time_str)s %(path)s' % args )
+                    if lock_info is not None:
+                        print( '        Lock   owner: %s' % (lock_info.owner,) )
+                        print( '        Lock comment: %s' % (lock_info.comment,) )
+                        if lock_info.creation_date is not None:
+                            print( '        Lock created: %s' % (time.strftime( '%Y-%m-%d %H:%M:%S', time.localtime( lock_info.creation_date ) ),) )
+                        if lock_info.expiration_date is not None:
+                            print( '        Lock expires: %s' % (time.strftime( '%Y-%m-%d %H:%M:%S', time.localtime( lock_info.expiration_date ) ),) )
+
+
             else:
                 for entry, Q in all_entries:
                     print( '%(path)s' % entry )
@@ -1140,6 +1142,7 @@ long_opt_info = {
     '--dry-run': 0,             # try operation but make no changes
     '--editor-cmd': 1,          # use ARG as external editor
     '--encoding': 1,            # treat value as being in charset encoding ARG
+    '--fetch-locks': 0,         # as list to fetch lock info
     '--force': 0,               # force operation to run
     '--force-log': 0,           # force validity of log message source
     '--incremental': 0,         # give output suitable for concatenation

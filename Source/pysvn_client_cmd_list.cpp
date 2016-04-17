@@ -54,10 +54,6 @@ Py::Object pysvn_client::cmd_ls( const Py::Tuple &a_args, const Py::Dict &a_kws 
 #endif
     revisionKindCompatibleCheck( is_url, revision, name_revision, name_url_or_path );
 
-#if defined( PYSVN_HAS_CLIENT_LS3 )
-    apr_hash_t *locks = NULL;
-#endif
-
     try
     {
         checkThreadPermission();
@@ -65,10 +61,10 @@ Py::Object pysvn_client::cmd_ls( const Py::Tuple &a_args, const Py::Dict &a_kws 
         PythonAllowThreads permission( m_context );
 
 #if defined( PYSVN_HAS_CLIENT_LS3 )
-        svn_error_t *error = svn_client_ls3
+        svn_error_t *error = svn_client_ls3 // ignore deprecation warning - support old Client().ls()
             (
             &dirents,
-            &locks,
+            NULL,
             norm_path.c_str(),
             &peg_revision,
             &revision,
@@ -142,18 +138,6 @@ Py::Object pysvn_client::cmd_ls( const Py::Tuple &a_args, const Py::Dict &a_kws 
         entry_dict[ *py_name_created_rev ] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, dirent->created_rev ) );
         entry_dict[ *py_name_time ] = toObject( dirent->time );
         entry_dict[ *py_name_last_author ] = utf8_string_or_none( dirent->last_author );
-
-#if defined( PYSVN_HAS_CLIENT_LS3 )
-        svn_lock_t *lock_value = reinterpret_cast<svn_lock_t *>( apr_hash_get( locks, key, APR_HASH_KEY_STRING ) );
-        if( lock_value == NULL )
-        {
-            entry_dict[ *py_name_lock ] = Py::None();
-        }
-        else
-        {
-            entry_dict[ *py_name_lock ] = toObject( *lock_value, m_wrapper_lock );
-        }
-#endif
 
         entries_list.append( m_wrapper_dirent.wrapDict( entry_dict ) );
     }

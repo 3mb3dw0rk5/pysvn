@@ -42,9 +42,9 @@ call :cmd_pysvn status --verbose b:\wc1
 echo Info: Test - info2 of unlocked files
 call :cmd_pysvn info2 b:\wc1\test\file1.txt
 
-echo Info: Test - ls of unlocked files
-call :cmd_pysvn ls --verbose b:\wc1\test\file1.txt
-call :cmd_pysvn ls --verbose b:\wc1\test
+echo Info: Test - list of unlocked files
+call :cmd_pysvn list --verbose --fetch-locks b:\wc1\test\file1.txt
+call :cmd_pysvn list --verbose --fetch-locks b:\wc1\test
 
 echo Info: Test - lock unlocked file
 call :cmd_pysvn lock b:\wc1\test\file1.txt
@@ -55,9 +55,9 @@ call :cmd_pysvn status --verbose b:\wc1
 echo Info: Test - info2 of locked files
 call :cmd_pysvn info2 b:\wc1\test\file1.txt
 
-echo Info: Test - ls of locked files
-call :cmd_pysvn ls --verbose b:\wc1\test\file1.txt
-call :cmd_pysvn ls --verbose b:\wc1\test
+echo Info: Test - list of locked files
+call :cmd_pysvn list --verbose --fetch-locks b:\wc1\test\file1.txt
+call :cmd_pysvn list --verbose --fetch-locks b:\wc1\test
 
 echo Info: Test - attempt to checkin over a locked file
 call :cmd_shell cd b:\wc2\test
@@ -77,8 +77,8 @@ call :cmd_pysvn info2 b:\wc2\test\file1.txt
 echo Info: Test - status of locked files
 call :cmd_pysvn status --verbose b:\wc2
 
-echo Info: Test - ls of locked files
-call :cmd_pysvn ls --recursive --verbose b:\wc2
+echo Info: Test - list of locked files
+call :cmd_pysvn list --verbose --fetch-locks --recursive b:\wc2
 
 echo Info: Test - commit with lock
 call :cmd_pysvn commit -m "change when file locked in this wc" .
@@ -86,8 +86,8 @@ call :cmd_pysvn commit -m "change when file locked in this wc" .
 echo Info: Test - status of locked files
 call :cmd_pysvn status --verbose b:\wc2
 
-echo Info: Test - ls of locked files
-call :cmd_pysvn ls --recursive --verbose b:\wc2
+echo Info: Test - list of locked files
+call :cmd_pysvn list --verbose --fetch-locks --recursive b:\wc2
 
 echo Info: Test - unlock locked file
 call :cmd_pysvn unlock b:\wc2\test\file1.txt
@@ -95,14 +95,14 @@ call :cmd_pysvn unlock b:\wc2\test\file1.txt
 echo Info: Test - status of unlocked files
 call :cmd_pysvn status --verbose b:\wc2
 
-echo Info: Test - ls of unlocked files
-call :cmd_pysvn ls --recursive --verbose b:\wc2
+echo Info: Test - list of unlocked files
+call :cmd_pysvn list --verbose --fetch-locks --recursive b:\wc2
 
 echo Info: Test - status of locked files
 call :cmd_pysvn status --verbose b:\wc1
 
-echo Info: Test - ls of unlocked files
-call :cmd_pysvn ls --recursive --verbose b:\wc1
+echo Info: Test - list of unlocked files
+call :cmd_pysvn list --verbose --fetch-locks --recursive b:\wc1
 
 echo Info: Test - update with stolen lock
 call :cmd_pysvn update b:\wc1\test
@@ -113,8 +113,8 @@ call :cmd_pysvn status --verbose b:\wc1
 echo Info: Test - info2 of URL
 call :cmd_pysvn info2 --revision HEAD file:///b:/repos/trunk/test/file1.txt
 
-echo Info: Test - ls of locked files
-call :cmd_pysvn ls --recursive --verbose b:\wc1
+echo Info: Test - list of locked files
+call :cmd_pysvn list --verbose --fetch-locks --recursive b:\wc1
 
 goto :eof
 endlocal

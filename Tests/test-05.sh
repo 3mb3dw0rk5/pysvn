@@ -1,4 +1,4 @@
-#!/bin/bash
+!/bin/bash
 #
 #   test-05.sh
 #       test info2 with locked files
@@ -62,9 +62,9 @@ cmd_pysvn status --verbose ${TESTROOT}/wc1
 echo Info: Test - info2 of unlocked files
 cmd_pysvn info2 ${TESTROOT}/wc1/test/file1.txt
 
-echo Info: Test - ls of unlocked files
-cmd_pysvn ls --verbose ${TESTROOT}/wc1/test/file1.txt
-cmd_pysvn ls --verbose ${TESTROOT}/wc1/test
+echo Info: Test - list of unlocked files
+cmd_pysvn list --verbose --fetch-locks ${TESTROOT}/wc1/test/file1.txt
+cmd_pysvn list --verbose --fetch-locks ${TESTROOT}/wc1/test
 
 echo Info: Test - lock unlocked file
 cmd_pysvn lock ${TESTROOT}/wc1/test/file1.txt -m "lock comment test 05"
@@ -75,9 +75,9 @@ cmd_pysvn status --verbose ${TESTROOT}/wc1
 echo Info: Test - info2 of locked files
 cmd_pysvn info2 ${TESTROOT}/wc1/test/file1.txt
 
-echo Info: Test - ls of locked files
-cmd_pysvn ls --verbose ${TESTROOT}/wc1/test/file1.txt
-cmd_pysvn ls --verbose ${TESTROOT}/wc1/test
+echo Info: Test - list of locked files
+cmd_pysvn list --verbose --fetch-locks ${TESTROOT}/wc1/test/file1.txt
+cmd_pysvn list --verbose --fetch-locks ${TESTROOT}/wc1/test
 
 echo Info: Test - attempt to checkin over a locked file
 cmd cd ${TESTROOT}/wc2/test
@@ -97,17 +97,14 @@ cmd_pysvn info2 ${TESTROOT}/wc2/test/file1.txt
 echo Info: Test - status of locked files
 cmd_pysvn status --verbose ${TESTROOT}/wc2
 
-echo Info: Test - ls of locked files
-cmd_pysvn ls --recursive --verbose ${TESTROOT}/wc2
-
 echo Info: Test - commit with lock
 cmd_pysvn commit -m "change when file locked in this wc" .
 
 echo Info: Test - status of locked files
 cmd_pysvn status --verbose ${TESTROOT}/wc2
 
-echo Info: Test - ls of locked files
-cmd_pysvn ls --recursive --verbose ${TESTROOT}/wc2
+echo Info: Test - list of locked files
+cmd_pysvn list --verbose --fetch-locks --recursive ${TESTROOT}/wc2
 
 echo Info: Test - unlock locked file
 cmd_pysvn unlock ${TESTROOT}/wc2/test/file1.txt
@@ -115,14 +112,14 @@ cmd_pysvn unlock ${TESTROOT}/wc2/test/file1.txt
 echo Info: Test - status of unlocked files
 cmd_pysvn status --verbose ${TESTROOT}/wc2
 
-echo Info: Test - ls of unlocked files
-cmd_pysvn ls --recursive --verbose ${TESTROOT}/wc2
+echo Info: Test - list of unlocked files
+cmd_pysvn list --verbose --fetch-locks --recursive ${TESTROOT}/wc2
 
 echo Info: Test - status of locked files
 cmd_pysvn status --verbose ${TESTROOT}/wc1
 
-echo Info: Test - ls of unlocked files
-cmd_pysvn ls --recursive --verbose ${TESTROOT}/wc1
+echo Info: Test - list of unlocked files
+cmd_pysvn list --verbose --fetch-locks --recursive ${TESTROOT}/wc1
 
 echo Info: Test - update with stolen lock
 cmd_pysvn update ${TESTROOT}/wc1/test
@@ -133,7 +130,7 @@ cmd_pysvn status --verbose ${TESTROOT}/wc1
 echo Info: Test - info2 of URL
 cmd_pysvn info2 --revision HEAD file://${TESTROOT}/repos/trunk/test/file1.txt
 
-echo Info: Test - ls of locked files
-cmd_pysvn ls --recursive --verbose ${TESTROOT}/wc1
+echo Info: Test - list of locked files
+cmd_pysvn list --verbose --fetch-locks --recursive ${TESTROOT}/wc1
 
 true
