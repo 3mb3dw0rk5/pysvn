@@ -1,7 +1,7 @@
 @echo off
 @prompt $P$S$G
 @rem
-@rem   test-08.sh
+@rem   test-08.cmd
 @rem       test patch
 @rem
 

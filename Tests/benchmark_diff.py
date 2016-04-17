@@ -82,7 +82,7 @@ class ReplaceDirtInString:
         #
 
         dateAlphaNumeric_re = re.compile(r'\d+-[JFMASOND][a-z][a-z]-\d+ [ 0-9]\d:\d\d:\d\d')
-        dateNumeric_re = re.compile(r'\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d(.\d+)?Z?')
+        dateNumeric_re = re.compile(r'\d\d\d\d-\d\d-\d\d[T ]\d\d:\d\d:\d\d(.\d+)?Z?')
         dateUnixLs1_re = re.compile(r'[JFMASOND][a-z][a-z] \d+ \d\d:\d\d')
         dateUnixLs2_re = re.compile(r'[JFMASOND][a-z][a-z]  \d\d\d\d')
         uuid_re = re.compile(r'[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}')

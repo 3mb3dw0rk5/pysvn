@@ -864,7 +864,7 @@ Py::Object toObject
     py_lock[str_token] = utf8_string_or_none( lock.token );
     py_lock[str_owner] = utf8_string_or_none( lock.owner );
     py_lock[str_comment] = utf8_string_or_none( lock.comment );
-    py_lock[str_is_dav_comment] = Py::Int( lock.is_dav_comment != 0 );
+    py_lock[str_is_dav_comment] = Py::Boolean( lock.is_dav_comment != 0 );
     if( lock.creation_date == 0 )
     {
         py_lock[str_creation_date] = Py::None();
@@ -1229,5 +1229,4 @@ Py::Object toObject( CommitInfoResult &commit_info, const DictWrapper &wrapper_c
         throw Py::RuntimeError( "commit_style value invalid" );
     }
 }
-
 #endif

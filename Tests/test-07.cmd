@@ -1,7 +1,7 @@
 @echo off
 @prompt $P$S$G
 @rem
-@rem   test-07.sh
+@rem   test-07.cmd
 @rem       test copy2, move2 and changelist
 @rem
 @echo WorkDir: %BUILDER_TOP_DIR%

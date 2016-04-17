@@ -1563,6 +1563,16 @@ WC targets.
 <li>name - string - name of the file</li>
 <li>size - long - size of file</li>
 <li>time - float - the time of the last change</li>
+<li>lock - dictionary contains:</li>
+<ul>
+    <li>path - string - name of the file</li>
+    <li>token - string - the lock token</li>
+    <li>owner - string - name of the user who locked the file</li>
+    <li>comment - string - the lock comment</li>
+    <li>is_dav_comment - boolean - true if the comment is from generic DAV client</li>
+    <li>creation_date - None or float - time in seconds since epoch</li>
+    <li>expiration_date - None of float - time in seconds since epoch</li>
+</ul>
 </ul>
 
 <h4><a name="pysvn_client_merge"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.merge</a></h4>

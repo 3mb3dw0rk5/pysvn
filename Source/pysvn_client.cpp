@@ -50,6 +50,7 @@ static void init_py_names()
     py_name_has_props = new Py::String( name_has_props );
     py_name_kind = new Py::String( name_kind );
     py_name_last_author = new Py::String( name_last_author );
+    py_name_lock = new Py::String( name_lock );
     py_name_name = new Py::String( name_name );
     py_name_node_kind = new Py::String( name_node_kind );
     py_name_path = new Py::String( name_path );

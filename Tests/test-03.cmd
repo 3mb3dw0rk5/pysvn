@@ -1,6 +1,6 @@
 @prompt $P$S$G
 @rem
-@rem   test-03.sh
+@rem   test-03.cmd
 @rem       test callbacks
 @rem
 

@@ -1,6 +1,6 @@
 @prompt $P$S$G$S
 @rem
-@rem   test-04.sh
+@rem   test-04.cmd
 @rem       test Tranaction object
 @rem
 

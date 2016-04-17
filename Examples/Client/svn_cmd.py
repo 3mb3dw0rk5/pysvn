@@ -717,20 +717,28 @@ class SvnCommand:
             positional_args.append( '.' )
 
         for arg in positional_args:
-            all_files = self.client.ls( arg, revision=revision, recurse=recurse )
-            all_files.sort( key=self.__sortKeyLsList )
+            all_entries = self.client.ls( arg, revision=revision, recurse=recurse )
+            all_entries.sort( key=self.__sortKeyLsList )
             if verbose:
-                for file in all_files:
+                for entry in all_entries:
                     args = {}
-                    args.update( file )
-                    args['name'] = args['name']  
+                    args.update( entry )
                     args['last_author'] = args['last_author']  
-                    args['time_str'] = fmtDateTime( file.time )
-                    args['created_rev_num'] = file.created_rev.number
+                    args['time_str'] = fmtDateTime( entry.time )
+                    args['created_rev_num'] = entry.created_rev.number
                     print( '%(created_rev_num)7d %(last_author)-10s %(size)6d %(time_str)s %(name)s' % args )
+                    if hasattr( entry, 'lock' ) and entry.lock is not None:
+                        info = args['lock']
+                        print( '        Lock   owner: %s' % (info.owner,) )
+                        print( '        Lock comment: %s' % (info.comment,) )
+                        if info.creation_date is not None:
+                            print( '        Lock created: %s' % (time.strftime( '%Y-%m-%d %H:%M:%S', time.localtime( info.creation_date ) ),) )
+                        if info.expiration_date is not None:
+                            print( '        Lock expires: %s' % (time.strftime( '%Y-%m-%d %H:%M:%S', time.localtime( info.expiration_date ) ),) )
+
             else:
-                for file in all_files:
-                    print( '%(name)s' % file )
+                for entry in all_entries:
+                    print( '%(name)s' % entry )
 
     def __sortKeyLsList( self, entry ):
         return entry['name']
@@ -744,17 +752,17 @@ class SvnCommand:
             positional_args.append( '.' )
 
         for arg in positional_args:
-            all_files = self.client.list( arg, revision=revision, recurse=recurse )
+            all_entries = self.client.list( arg, revision=revision, recurse=recurse )
             if verbose:
-                for file, Q in all_files:
+                for entry, Q in all_entries:
                     args = {}
-                    args.update( file )
-                    args['time_str'] = fmtDateTime( file.time )
-                    args['created_rev_num'] = file.created_rev.number
+                    args.update( entry )
+                    args['time_str'] = fmtDateTime( entry.time )
+                    args['created_rev_num'] = entry.created_rev.number
                     print( '%(created_rev_num)7d %(last_author)-10s %(size)6d %(time_str)s %(path)s' % args )
             else:
-                for file, Q in all_files:
-                    print( '%(path)s' % file )
+                for entry, Q in all_entries:
+                    print( '%(path)s' % entry )
 
     def cmd_merge( self, args ):
         recurse = args.getBooleanOption( '--recursive', True )
@@ -994,52 +1002,52 @@ class SvnCommand:
 
         positional_args = args.getPositionalArgs( 0 )
         if len(positional_args) == 0:
-            all_files = self.client.status( '', recurse=recurse, get_all=verbose, ignore=ignore, update=update )
-            self._cmd_status_print( all_files, verbose, update, ignore, quiet )
+            all_entries = self.client.status( '', recurse=recurse, get_all=verbose, ignore=ignore, update=update )
+            self._cmd_status_print( all_entries, verbose, update, ignore, quiet )
         else:
             for arg in positional_args:
-                all_files = self.client.status( arg, recurse=recurse, get_all=verbose, ignore=ignore, update=update )
-                self._cmd_status_print( all_files, verbose, update, ignore, quiet )
+                all_entries = self.client.status( arg, recurse=recurse, get_all=verbose, ignore=ignore, update=update )
+                self._cmd_status_print( all_entries, verbose, update, ignore, quiet )
 
-    def _cmd_status_print( self, all_files, detailed, update, ignore, quiet ):
-        all_files.sort( key=self.key_by_path )
-        for file in all_files:
-            if file.text_status == pysvn.wc_status_kind.ignored and ignore:
+    def _cmd_status_print( self, all_entries, detailed, update, ignore, quiet ):
+        all_entries.sort( key=self.key_by_path )
+        for entry in all_entries:
+            if entry.text_status == pysvn.wc_status_kind.ignored and ignore:
                 continue
 
-            if file.text_status == pysvn.wc_status_kind.unversioned and quiet:
+            if entry.text_status == pysvn.wc_status_kind.unversioned and quiet:
                 continue
 
-            state = '%s%s%s%s%s' % (wc_status_kind_map[ file.text_status ],
-                    wc_status_kind_map[ file.prop_status ],
-                    ' L'[ file.is_locked ],
-                    ' +'[ file.is_copied ],
-                    ' S'[ file.is_switched ])
+            state = '%s%s%s%s%s' % (wc_status_kind_map[ entry.text_status ],
+                    wc_status_kind_map[ entry.prop_status ],
+                    ' L'[ entry.is_locked ],
+                    ' +'[ entry.is_copied ],
+                    ' S'[ entry.is_switched ])
 
-            if( file.repos_text_status != pysvn.wc_status_kind.none
-            or  file.repos_prop_status != pysvn.wc_status_kind.none ):
-                odd_status = '%s%s' % (wc_status_kind_map[ file.repos_text_status ],
-                    wc_status_kind_map[ file.repos_prop_status ])
+            if( entry.repos_text_status != pysvn.wc_status_kind.none
+            or  entry.repos_prop_status != pysvn.wc_status_kind.none ):
+                odd_status = '%s%s' % (wc_status_kind_map[ entry.repos_text_status ],
+                    wc_status_kind_map[ entry.repos_prop_status ])
             else:
                 odd_status = '  '
 
             lock_state = ' '
-            if file.entry is not None and hasattr( file.entry, 'lock_token' ):
-                if file.entry.lock_token is not None:
+            if entry.entry is not None and hasattr( entry.entry, 'lock_token' ):
+                if entry.entry.lock_token is not None:
                     lock_state = 'K'
 
-            if hasattr( file, 'repos_lock' ) and file.repos_lock is not None:
+            if hasattr( entry, 'repos_lock' ) and entry.repos_lock is not None:
                 lock_state = 'O'
 
-            if file.entry is not None and detailed:
+            if entry.entry is not None and detailed:
                 print( '%s%s %s %6d %6d %-14s %s' %
                     (state,
                     lock_state,
                     odd_status,
-                    file.entry.revision.number,
-                    file.entry.commit_revision.number,
-                    file.entry.commit_author,
-                    file.path) )
+                    entry.entry.revision.number,
+                    entry.entry.commit_revision.number,
+                    entry.entry.commit_author,
+                    entry.path) )
 
             elif detailed:
                 print( '%s%s %s %6s %6s %-14s %s' %
@@ -1049,20 +1057,20 @@ class SvnCommand:
                     '',
                     '',
                     '',
-                    file.path) )
+                    entry.path) )
 
             elif update:
                 print( '%s%s %s %s' %
                     (state,
                     lock_state,
                     odd_status,
-                    file.path) )
+                    entry.path) )
 
             else:
-                if( file.text_status != pysvn.wc_status_kind.normal
-                or file.prop_status != pysvn.wc_status_kind.normal
+                if( entry.text_status != pysvn.wc_status_kind.normal
+                or entry.prop_status != pysvn.wc_status_kind.normal
                 or lock_state.strip() != ''):
-                    print( '%s%s %s' % (state, lock_state, file.path) )
+                    print( '%s%s %s' % (state, lock_state, entry.path) )
 
     cmd_st = cmd_status
     cmd_stat = cmd_status

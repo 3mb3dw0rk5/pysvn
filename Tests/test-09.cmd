@@ -1,7 +1,7 @@
 @echo off
 @prompt $P$S$G
 @rem
-@rem   test-09.sh
+@rem   test-09.cmd
 @rem       test annotate and annotate2
 @rem
 

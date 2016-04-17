@@ -42,7 +42,7 @@ Py::Object pysvn_client::cmd_ls( const Py::Tuple &a_args, const Py::Dict &a_kws 
     svn_opt_revision_t revision = args.getRevision( name_revision, svn_opt_revision_head );
 
     SvnPool pool( m_context );
-    apr_hash_t *hash = NULL;
+    apr_hash_t *dirents = NULL;
     std::string norm_path( svnNormalisedIfPath( path, pool ) );
 #if defined( PYSVN_HAS_CLIENT_LS2 )
     svn_opt_revision_t peg_revision = args.getRevision( name_peg_revision, revision );
@@ -54,16 +54,32 @@ Py::Object pysvn_client::cmd_ls( const Py::Tuple &a_args, const Py::Dict &a_kws 
 #endif
     revisionKindCompatibleCheck( is_url, revision, name_revision, name_url_or_path );
 
+#if defined( PYSVN_HAS_CLIENT_LS3 )
+    apr_hash_t *locks = NULL;
+#endif
+
     try
     {
         checkThreadPermission();
 
         PythonAllowThreads permission( m_context );
 
-#if defined( PYSVN_HAS_CLIENT_LS2 )
+#if defined( PYSVN_HAS_CLIENT_LS3 )
+        svn_error_t *error = svn_client_ls3
+            (
+            &dirents,
+            &locks,
+            norm_path.c_str(),
+            &peg_revision,
+            &revision,
+            recurse,
+            m_context,
+            pool
+            );
+#elif defined( PYSVN_HAS_CLIENT_LS2 )
         svn_error_t *error = svn_client_ls2
             (
-            &hash,
+            &dirents,
             norm_path.c_str(),
             &peg_revision,
             &revision,
@@ -74,7 +90,7 @@ Py::Object pysvn_client::cmd_ls( const Py::Tuple &a_args, const Py::Dict &a_kws 
 #else
         svn_error_t *error = svn_client_ls
             (
-            &hash,
+            &dirents,
             norm_path.c_str(),
             &revision,
             recurse,
@@ -104,7 +120,7 @@ Py::Object pysvn_client::cmd_ls( const Py::Tuple &a_args, const Py::Dict &a_kws 
     // convert the entries into python objects
     Py::List entries_list;
 
-    for( apr_hash_index_t *hi = apr_hash_first( pool, hash );
+    for( apr_hash_index_t *hi = apr_hash_first( pool, dirents );
             hi != NULL;
                 hi = apr_hash_next( hi ) )
     {
@@ -126,6 +142,18 @@ Py::Object pysvn_client::cmd_ls( const Py::Tuple &a_args, const Py::Dict &a_kws 
         entry_dict[ *py_name_created_rev ] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, dirent->created_rev ) );
         entry_dict[ *py_name_time ] = toObject( dirent->time );
         entry_dict[ *py_name_last_author ] = utf8_string_or_none( dirent->last_author );
+
+#if defined( PYSVN_HAS_CLIENT_LS3 )
+        svn_lock_t *lock_value = reinterpret_cast<svn_lock_t *>( apr_hash_get( locks, key, APR_HASH_KEY_STRING ) );
+        if( lock_value == NULL )
+        {
+            entry_dict[ *py_name_lock ] = Py::None();
+        }
+        else
+        {
+            entry_dict[ *py_name_lock ] = toObject( *lock_value, m_wrapper_lock );
+        }
+#endif
 
         entries_list.append( m_wrapper_dirent.wrapDict( entry_dict ) );
     }
