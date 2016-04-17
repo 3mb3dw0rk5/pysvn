@@ -597,7 +597,7 @@ Py::Object pysvn_client::cmd_merge_reintegrate( const Py::Tuple &a_args, const P
 
         PythonAllowThreads permission( m_context );
 
-        svn_error_t *error = svn_client_merge_reintegrate
+        svn_error_t *error = svn_client_merge_reintegrate // ignore deprecation warning - support old Client().merge_reintegrate()
             (
             norm_path.c_str(),
             &revision,
