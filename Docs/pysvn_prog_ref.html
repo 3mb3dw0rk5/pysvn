@@ -1600,7 +1600,7 @@ merge( url_or_path1,
        depth=depth,
        record_only=False,
        merge_options=[]</span><span class="svn_1007000">,
-       allow_mixed_rev=not notice_ancestry</span>,<span class="svn_1008000">,
+       allow_mixed_revisions=false</span><span class="svn_1008000">,
        ignore_mergeinfo=not notice_ancestry</span> )
 </pre>
 <p>Apply the differences between two sources to a working copy path.
@@ -1625,7 +1625,7 @@ processes (internal or external).</p>
 </ul>
 <div class="svn_1007000">
 <p>
-If allow_mixed_rev is False, and merge_target is a mixed-revision
+If allow_mixed_revisions is False, and merge_target is a mixed-revision
 working copy, raise SVN_ERR_CLIENT_MERGE_UPDATE_REQUIRED.
 </p>
 <p>
@@ -1700,7 +1700,8 @@ merge_peg2( sources,
             force=False,
             dry_run=False,
             record_only=True,
-            merge_options=[] )
+            merge_options=[]<span class="svn_1007000">,
+            allow_mixed_revisions=false</span> )
 </pre>
 <p>Apply the differences between the ranges_to_merge in sources to a working copy path, target_wcpath.
 ranges_to_merge is a list of tuples with the start and end revisions to be merged.
@@ -1727,6 +1728,17 @@ processes (internal or external).</p>
 <li>--unified, -u (for compatibility, does nothing).</li>
 </ul>
 
+</div>
+<div class="svn_1007000">
+<p>
+If allow_mixed_revisions is False, and merge_target is a mixed-revision
+working copy, raise SVN_ERR_CLIENT_MERGE_UPDATE_REQUIRED.
+</p>
+<p>
+Because users rarely intend to merge into mixed-revision working copies,
+it is recommended to set this parameter to FALSE by default unless the
+user has explicitly requested a merge into a mixed-revision working copy.
+</p>
 </div>
 
 <div class="svn_1005000">
