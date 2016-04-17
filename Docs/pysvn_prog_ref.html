@@ -1579,7 +1579,8 @@ merge( url_or_path1,
        depth=depth,
        record_only=False,
        merge_options=[]</span><span class="svn_1007000">,
-       allow_mixed_rev=False</span> )
+       allow_mixed_rev=not notice_ancestry</span>,<span class="svn_1008000">,
+       ignore_mergeinfo=not notice_ancestry</span> )
 </pre>
 <p>Apply the differences between two sources to a working copy path.
 </p>
@@ -1610,6 +1611,13 @@ working copy, raise SVN_ERR_CLIENT_MERGE_UPDATE_REQUIRED.
 Because users rarely intend to merge into mixed-revision working copies,
 it is recommended to set this parameter to FALSE by default unless the
 user has explicitly requested a merge into a mixed-revision working copy.
+</p>
+</div>
+
+<div class="svn_1007000">
+<p>
+If ignore_mergeinfo is true, disable merge tracking, by treating the
+two sources as unrelated even if they actually have a common ancestor.
 </p>
 </div>
 
