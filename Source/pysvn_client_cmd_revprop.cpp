@@ -32,9 +32,36 @@ Py::Object pysvn_client::cmd_revpropdel( const Py::Tuple &a_args, const Py::Dict
     FunctionArguments args( "revpropdel", args_desc, a_args, a_kws );
     args.check();
 
-    std::string propname( args.getUtf8String( name_prop_name ) );
-    std::string path( args.getUtf8String( name_url ) );
+    return common_revpropset( args, false );
+}
 
+Py::Object pysvn_client::cmd_revpropset( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_prop_name },
+    { true,  name_prop_value },
+    { true,  name_url },
+    { false, name_revision },
+    { false, name_force },
+    { false, NULL }
+    };
+    FunctionArguments args( "revpropset", args_desc, a_args, a_kws );
+    args.check();
+
+    return common_revpropset( args, true );
+}
+
+Py::Object pysvn_client::common_revpropset( FunctionArguments &args, bool is_set )
+{
+    std::string propname( args.getUtf8String( name_prop_name ) );
+    std::string propval;
+    if( is_set )
+    {
+        propval = args.getUtf8String( name_prop_value );
+    }
+
+    std::string path( args.getUtf8String( name_url ) );
     svn_opt_revision_t revision = args.getRevision( name_revision, svn_opt_revision_head );
 
     bool force = args.getBoolean( name_force, false );
@@ -50,10 +77,16 @@ Py::Object pysvn_client::cmd_revpropdel( const Py::Tuple &a_args, const Py::Dict
 
         PythonAllowThreads permission( m_context );
 
+        const svn_string_t *svn_propval = NULL;
+        if( is_set )
+        {
+            svn_propval = svn_string_ncreate( propval.c_str(), propval.size(), pool );
+        }
+
         svn_error_t *error = svn_client_revprop_set
             (
             propname.c_str(),
-            NULL,            // value = NULL
+            svn_propval,
             norm_path.c_str(),
             &revision,
             &revnum,
@@ -196,63 +229,4 @@ Py::Object pysvn_client::cmd_revproplist( const Py::Tuple &a_args, const Py::Dic
     result[1] = propsToObject( props, pool );
 
     return result;
-}
-
-Py::Object pysvn_client::cmd_revpropset( const Py::Tuple &a_args, const Py::Dict &a_kws )
-{
-    static argument_description args_desc[] =
-    {
-    { true,  name_prop_name },
-    { true,  name_prop_value },
-    { true,  name_url },
-    { false, name_revision },
-    { false, name_force },
-    { false, NULL }
-    };
-    FunctionArguments args( "revpropset", args_desc, a_args, a_kws );
-    args.check();
-
-    std::string propname( args.getUtf8String( name_prop_name ) );
-    std::string propval( args.getUtf8String( name_prop_value ) );
-    std::string path( args.getUtf8String( name_url ) );
-    svn_opt_revision_t revision = args.getRevision( name_revision, svn_opt_revision_head );
-
-    bool force = args.getBoolean( name_force, false );
-
-    SvnPool pool( m_context );
-
-    svn_revnum_t revnum = 0;
-    try
-    {
-        std::string norm_path( svnNormalisedIfPath( path, pool ) );
-
-        checkThreadPermission();
-
-        PythonAllowThreads permission( m_context );
-
-        const svn_string_t *svn_propval = svn_string_ncreate( propval.c_str(), propval.size(), pool );
-        svn_error_t *error = svn_client_revprop_set
-            (
-            propname.c_str(),
-            svn_propval,
-            norm_path.c_str(),
-            &revision,
-            &revnum,
-            force,
-            m_context,
-            pool
-            );
-        permission.allowThisThread();
-        if( error != NULL )
-            throw SvnException( error );
-    }
-    catch( SvnException &e )
-    {
-        // use callback error over ClientException
-        m_context.checkForError( m_module.client_error );
-
-        throw_client_error( e );
-    }
-
-    return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, revnum ) );
 }

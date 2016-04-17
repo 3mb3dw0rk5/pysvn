@@ -275,9 +275,10 @@ public:
     Py::Object cmd_patch( const Py::Tuple& args, const Py::Dict &kws );
 #endif
     Py::Object cmd_propdel( const Py::Tuple& args, const Py::Dict &kws );
+    Py::Object cmd_propset( const Py::Tuple& args, const Py::Dict &kws );
+    Py::Object common_propset( FunctionArguments &args, bool is_set );
     Py::Object cmd_propget( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_proplist( const Py::Tuple& args, const Py::Dict &kws );
-    Py::Object cmd_propset( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_relocate( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_remove( const Py::Tuple& args, const Py::Dict &kws );
 #ifdef PYSVN_HAS_CLIENT_REMOVE_FROM_CHANGELISTS
@@ -286,9 +287,10 @@ public:
     Py::Object cmd_resolved( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_revert( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_revpropdel( const Py::Tuple& args, const Py::Dict &kws );
+    Py::Object cmd_revpropset( const Py::Tuple& args, const Py::Dict &kws );
+    Py::Object common_revpropset( FunctionArguments &args, bool is_set );
     Py::Object cmd_revpropget( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_revproplist( const Py::Tuple& args, const Py::Dict &kws );
-    Py::Object cmd_revpropset( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_status( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_switch( const Py::Tuple& args, const Py::Dict &kws );
 #if defined( PYSVN_HAS_CLIENT_LOCK )

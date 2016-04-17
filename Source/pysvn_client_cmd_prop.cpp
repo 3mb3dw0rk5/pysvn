@@ -41,8 +41,44 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a
     FunctionArguments args( "propdel", args_desc, a_args, a_kws );
     args.check();
 
+    return common_propset( args, false );
+}
+
+Py::Object pysvn_client::cmd_propset( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_prop_name },
+    { true,  name_prop_value },
+    { true,  name_url_or_path },
+    { false, name_revision },
+    { false, name_recurse },
+#if defined( PYSVN_HAS_CLIENT_PROPSET2 )
+    { false, name_skip_checks },
+#endif
+#if defined( PYSVN_HAS_CLIENT_PROPSET3 )
+    { false, name_depth },
+    { false, name_base_revision_for_url },
+    { false, name_changelists },
+    { false, name_revprops },
+#endif
+    { false, NULL }
+    };
+    FunctionArguments args( "propset", args_desc, a_args, a_kws );
+    args.check();
+
+    return common_propset( args, true );
+}
+
+Py::Object pysvn_client::common_propset( FunctionArguments &args, bool is_set )
+{
     std::string propname( args.getUtf8String( name_prop_name ) );
     std::string path( args.getUtf8String( name_url_or_path ) );
+    std::string propval;
+    if( is_set )
+    {
+        propval = args.getUtf8String( name_prop_value );
+    }
 
     svn_opt_revision_t revision;
     if( is_svn_url( path ) )
@@ -53,12 +89,6 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a
     SvnPool pool( m_context );
 
 #if defined( PYSVN_HAS_CLIENT_PROPSET3 )
-    svn_revnum_t base_revision_for_url;
-    if( is_svn_url( path ) )
-        base_revision_for_url = args.getInteger( name_base_revision_for_url, 0 );
-    else
-        base_revision_for_url = args.getInteger( name_base_revision_for_url, SVN_INVALID_REVNUM );
-
     apr_array_header_t *changelists = NULL;
 
     if( args.hasArg( name_changelists ) )
@@ -66,16 +96,12 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a
         changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
     }
 
-    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_files, svn_depth_infinity, svn_depth_empty );
-#else
-    bool recurse = args.getBoolean( name_recurse, false );
-#endif
-#if defined( PYSVN_HAS_CLIENT_PROPSET2 )
-    bool skip_checks = args.getBoolean( name_skip_checks, false );
-#endif
-
-#if defined( PYSVN_HAS_CLIENT_PROPSET3 )
-    pysvn_commit_info_t *commit_info = NULL;
+    svn_revnum_t base_revision_for_url;
+    if( is_svn_url( path ) )
+        base_revision_for_url = args.getInteger( name_base_revision_for_url, 0 );
+    else
+        base_revision_for_url = args.getInteger( name_base_revision_for_url, SVN_INVALID_REVNUM );
+    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_empty, svn_depth_infinity, svn_depth_empty );
 
     apr_hash_t *revprops = NULL;
     if( args.hasArg( name_revprops ) )
@@ -86,6 +112,15 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a
             revprops = hashOfStringsFromDictOfStrings( py_revprop, pool );
         }
     }
+#else
+    bool recurse = args.getBoolean( name_recurse, false );
+#endif
+#if defined( PYSVN_HAS_CLIENT_PROPSET2 )
+    bool skip_checks = args.getBoolean( name_skip_checks, false );
+#endif
+
+#if defined( PYSVN_HAS_CLIENT_PROPSET3 )
+    pysvn_commit_info_t *commit_info = NULL;
 #endif
 
     try
@@ -96,12 +131,18 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a
 
         PythonAllowThreads permission( m_context );
 
+        const svn_string_t *svn_propval = NULL;
+        if( is_set )
+        {
+            svn_propval = svn_string_ncreate( propval.c_str(), propval.size(), pool );
+        }
+
 #if defined( PYSVN_HAS_CLIENT_PROPSET3 )
         svn_error_t *error = svn_client_propset3
             (
             &commit_info,
             propname.c_str(),
-            NULL, // value = NULL
+            svn_propval,
             norm_path.c_str(),
             depth,
             skip_checks,
@@ -115,7 +156,7 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a
         svn_error_t *error = svn_client_propset2
             (
             propname.c_str(),
-            NULL, // value = NULL
+            svn_propval,
             norm_path.c_str(),
             recurse,
             skip_checks,
@@ -126,7 +167,7 @@ Py::Object pysvn_client::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a
         svn_error_t *error = svn_client_propset
             (
             propname.c_str(),
-            NULL, // value = NULL
+            svn_propval,
             norm_path.c_str(),
             recurse,
             pool
@@ -560,137 +601,3 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
     return list_of_proplists;
 }
 
-Py::Object pysvn_client::cmd_propset( const Py::Tuple &a_args, const Py::Dict &a_kws )
-{
-    static argument_description args_desc[] =
-    {
-    { true,  name_prop_name },
-    { true,  name_prop_value },
-    { true,  name_url_or_path },
-    { false, name_revision },
-    { false, name_recurse },
-#if defined( PYSVN_HAS_CLIENT_PROPSET2 )
-    { false, name_skip_checks },
-#endif
-#if defined( PYSVN_HAS_CLIENT_PROPSET3 )
-    { false, name_depth },
-    { false, name_base_revision_for_url },
-    { false, name_changelists },
-    { false, name_revprops },
-#endif
-    { false, NULL }
-    };
-    FunctionArguments args( "propset", args_desc, a_args, a_kws );
-    args.check();
-
-    std::string propname( args.getUtf8String( name_prop_name ) );
-    std::string propval( args.getUtf8String( name_prop_value ) );
-    std::string path( args.getUtf8String( name_url_or_path ) );
-
-    svn_opt_revision_t revision;
-    if( is_svn_url( path ) )
-        revision = args.getRevision( name_revision, svn_opt_revision_head );
-    else
-        revision = args.getRevision( name_revision, svn_opt_revision_working );
-
-    SvnPool pool( m_context );
-
-#if defined( PYSVN_HAS_CLIENT_PROPSET3 )
-    apr_array_header_t *changelists = NULL;
-
-    if( args.hasArg( name_changelists ) )
-    {
-        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
-    }
-
-    svn_revnum_t base_revision_for_url;
-    if( is_svn_url( path ) )
-        base_revision_for_url = args.getInteger( name_base_revision_for_url, 0 );
-    else
-        base_revision_for_url = args.getInteger( name_base_revision_for_url, SVN_INVALID_REVNUM );
-    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_empty, svn_depth_infinity, svn_depth_empty );
-
-    apr_hash_t *revprops = NULL;
-    if( args.hasArg( name_revprops ) )
-    {
-        Py::Object py_revprop = args.getArg( name_revprops );
-        if( !py_revprop.isNone() )
-        {
-            revprops = hashOfStringsFromDictOfStrings( py_revprop, pool );
-        }
-    }
-#else
-    bool recurse = args.getBoolean( name_recurse, false );
-#endif
-#if defined( PYSVN_HAS_CLIENT_PROPSET2 )
-    bool skip_checks = args.getBoolean( name_skip_checks, false );
-#endif
-
-#if defined( PYSVN_HAS_CLIENT_PROPSET3 )
-    pysvn_commit_info_t *commit_info = NULL;
-#endif
-
-    try
-    {
-        std::string norm_path( svnNormalisedIfPath( path, pool ) );
-
-        checkThreadPermission();
-
-        PythonAllowThreads permission( m_context );
-
-        const svn_string_t *svn_propval = svn_string_ncreate( propval.c_str(), propval.size(), pool );
-
-#if defined( PYSVN_HAS_CLIENT_PROPSET3 )
-        svn_error_t *error = svn_client_propset3
-            (
-            &commit_info,
-            propname.c_str(),
-            svn_propval,
-            norm_path.c_str(),
-            depth,
-            skip_checks,
-            base_revision_for_url,
-            changelists,
-            revprops,
-            m_context.ctx(),
-            pool
-            );
-#elif defined( PYSVN_HAS_CLIENT_PROPSET2 )
-        svn_error_t *error = svn_client_propset2
-            (
-            propname.c_str(),
-            svn_propval,
-            norm_path.c_str(),
-            recurse,
-            skip_checks,
-            m_context.ctx(),
-            pool
-            );
-#else
-        svn_error_t *error = svn_client_propset
-            (
-            propname.c_str(),
-            svn_propval,
-            norm_path.c_str(),
-            recurse,
-            pool
-            );
-#endif
-        permission.allowThisThread();
-        if( error != NULL )
-            throw SvnException( error );
-    }
-    catch( SvnException &e )
-    {
-        // use callback error over ClientException
-        m_context.checkForError( m_module.client_error );
-
-        throw_client_error( e );
-    }
-
-#if defined( PYSVN_HAS_CLIENT_PROPSET3 )
-    return toObject( commit_info, m_commit_info_style );
-#else
-    return Py::None();
-#endif
-}
