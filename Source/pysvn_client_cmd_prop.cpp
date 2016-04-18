@@ -681,31 +681,39 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
     }
 }
 
-#if defined( PYSVN_HAS_CLIENT_PROPLIST3 )
+#if defined( PYSVN_HAS_CLIENT_PROPLIST3 ) || defined( PYSVN_HAS_CLIENT_PROPLIST4 )
 extern "C" svn_error_t *proplist_receiver_c
     (
     void *baton_,
     const char *path,
     apr_hash_t *prop_hash,
+#if defined( PYSVN_HAS_CLIENT_PROPLIST4 )
+    apr_array_header_t *inherited_props,
+#endif
     apr_pool_t *pool
     );
 class ProplistReceiveBaton
 {
 public:
-    ProplistReceiveBaton( PythonAllowThreads *permission, SvnPool &pool, Py::List &prop_list )
+    ProplistReceiveBaton( PythonAllowThreads *permission, SvnPool &pool, Py::List &prop_list, bool get_inherited_props )
         : m_permission( permission )
         , m_pool( pool )
+        , m_get_inherited_props( get_inherited_props )
         , m_prop_list( prop_list )
         {}
     ~ProplistReceiveBaton()
         {}
-
+#if defined( PYSVN_HAS_CLIENT_PROPLIST4 )
+    svn_proplist_receiver2_t callback() { return &proplist_receiver_c; }
+#else
     svn_proplist_receiver_t callback() { return &proplist_receiver_c; }
+#endif
     void *baton() { return static_cast< void * >( this ); }
     static ProplistReceiveBaton *castBaton( void *baton_ ) { return static_cast<ProplistReceiveBaton *>( baton_ ); }
 
     PythonAllowThreads  *m_permission;
     SvnPool             &m_pool;
+    bool                m_get_inherited_props;
 
     Py::List            &m_prop_list;
 };
@@ -715,6 +723,9 @@ extern "C" svn_error_t *proplist_receiver_c
     void *baton_,
     const char *path,
     apr_hash_t *prop_hash,
+#if defined( PYSVN_HAS_CLIENT_PROPLIST4 )
+    apr_array_header_t *inherited_props,
+#endif
     apr_pool_t *pool
     )
 {
@@ -724,11 +735,25 @@ extern "C" svn_error_t *proplist_receiver_c
 
     Py::Dict prop_dict;
 
-    Py::Tuple py_tuple( 2 );
-    py_tuple[0] = Py::String( path );
-    py_tuple[1] = propsToObject( prop_hash, baton->m_pool );
+#if defined( PYSVN_HAS_CLIENT_PROPLIST4 )
+    if( baton->m_get_inherited_props )
+    {
+        Py::Tuple py_tuple( 2 );
+        py_tuple[0] = Py::String( path );
+        py_tuple[1] = propsToObject( prop_hash, baton->m_pool );
+        py_tuple[2] = inheritedPropsToObject( inherited_props, baton->m_pool );
 
-    baton->m_prop_list.append( py_tuple );
+        baton->m_prop_list.append( py_tuple );
+    }
+    else
+#endif
+    {
+        Py::Tuple py_tuple( 2 );
+        py_tuple[0] = Py::String( path );
+        py_tuple[1] = propsToObject( prop_hash, baton->m_pool );
+
+        baton->m_prop_list.append( py_tuple );
+    }
 
     return SVN_NO_ERROR;
 }
@@ -747,6 +772,9 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 #if defined( PYSVN_HAS_CLIENT_PROPLIST3 )
     { false, name_depth },
     { false, name_changelists },
+#endif
+#if defined( PYSVN_HAS_CLIENT_PROPLIST4 )
+    { false, name_get_inherited_props },
 #endif
     { false, NULL }
     };
@@ -800,6 +828,10 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
     }
 #endif
 
+#if defined( PYSVN_HAS_CLIENT_PROPLIST4 )
+    bool get_inherited_props = args.getBoolean( name_get_inherited_props, false );
+#endif
+
     Py::List list_of_proplists;
 
     for( Py::List::size_type i=0; i<path_list.length(); i++ )
@@ -839,7 +871,22 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
 
             PythonAllowThreads permission( m_context );
 
-#if defined( PYSVN_HAS_CLIENT_PROPLIST3 )
+#if defined( PYSVN_HAS_CLIENT_PROPLIST4 )
+            ProplistReceiveBaton proplist_baton( &permission, pool, list_of_proplists, get_inherited_props );
+            svn_error_t *error = svn_client_proplist4
+                (
+                norm_path_c_str,
+                &peg_revision,
+                &revision,
+                depth,
+                changelists,
+                get_inherited_props,
+                proplist_baton.callback(),
+                proplist_baton.baton(),
+                m_context,
+                pool
+                );
+#elif defined( PYSVN_HAS_CLIENT_PROPLIST3 )
             ProplistReceiveBaton proplist_baton( &permission, pool, list_of_proplists );
             svn_error_t *error = svn_client_proplist3
                 (
