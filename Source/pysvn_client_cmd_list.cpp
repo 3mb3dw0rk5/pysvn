@@ -172,13 +172,13 @@ public:
     ~ListReceiveBaton()
         {}
 
-    void *baton() { return reinterpret_cast<void *>( this ); }
 #if defined( PYSVN_HAS_CLIENT_LIST3 )
     svn_client_list_func2_t callback() { return &list_receiver_c; }
 #else
     svn_client_list_func_t callback() { return &list_receiver_c; }
 #endif
-    static ListReceiveBaton *castBaton( void *baton_ ) { return reinterpret_cast<ListReceiveBaton *>( baton_ ); }
+    void *baton() { return static_cast<void *>( this ); }
+    static ListReceiveBaton *castBaton( void *baton_ ) { return static_cast<ListReceiveBaton *>( baton_ ); }
 
     PythonAllowThreads  *m_permission;
 

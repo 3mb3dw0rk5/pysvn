@@ -109,7 +109,7 @@ extern "C" svn_error_t *handlerLogMsg2
     apr_pool_t *pool
     )
 {
-    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+    SvnContext *context = SvnContext::castBaton( baton );
 
     std::string msg;
 
@@ -131,7 +131,7 @@ extern "C" svn_error_t *handlerLogMsg
     apr_pool_t *pool
     )
 {
-    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+    SvnContext *context = SvnContext::castBaton( baton );
 
     std::string msg;
 
@@ -153,7 +153,7 @@ extern "C" void handlerNotify2
     apr_pool_t *pool
     )
 {
-    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+    SvnContext *context = SvnContext::castBaton( baton );
 
     context->contextNotify2( notify, pool );
 }
@@ -172,7 +172,7 @@ extern "C" void handlerNotify
 {
     pysvn_bpt();
 
-    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+    SvnContext *context = SvnContext::castBaton( baton );
 
     context->contextNotify( path, action, kind, mime_type, content_state, prop_state, revision );
 }
@@ -187,7 +187,7 @@ extern "C" void handlerProgress
     apr_pool_t *pool
     )
 {
-    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+    SvnContext *context = SvnContext::castBaton( baton );
 
     context->contextProgress( progress, total );
 }
@@ -202,7 +202,7 @@ extern "C" svn_error_t *handlerConflictResolver
     apr_pool_t *pool
     )
 {
-    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+    SvnContext *context = SvnContext::castBaton( baton );
 
     if( context->contextConflictResolver( result, description, pool ) )
         return SVN_NO_ERROR;
@@ -216,7 +216,7 @@ extern "C" svn_error_t *handlerCancel
     void * baton
     )
 {
-    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+    SvnContext *context = SvnContext::castBaton( baton );
 
     if( context->contextCancel() )
         return svn_error_create( SVN_ERR_CANCELLED, NULL, "cancelled by user" );
@@ -234,7 +234,7 @@ extern "C" svn_error_t *handlerSimplePrompt
     apr_pool_t *pool
     )
 {
-    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+    SvnContext *context = SvnContext::castBaton( baton );
 
     bool may_save = a_may_save != 0;
 
@@ -271,7 +271,7 @@ extern "C" svn_error_t *handlerSslServerTrustPrompt
     apr_pool_t *pool
     )
 {
-    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+    SvnContext *context = SvnContext::castBaton( baton );
 
     apr_uint32_t accepted_failures = failures;
     bool accept_permanently = true;
@@ -310,7 +310,7 @@ extern "C" svn_error_t *handlerSslClientCertPrompt
     apr_pool_t *pool
     )
 {
-    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+    SvnContext *context = SvnContext::castBaton( baton );
 
     if( a_realm == NULL )
         a_realm = "";
@@ -340,7 +340,7 @@ extern "C" svn_error_t *handlerSslClientCertPwPrompt
     apr_pool_t *pool
     )
 {
-    SvnContext *context = reinterpret_cast<SvnContext *>( baton );
+    SvnContext *context = SvnContext::castBaton( baton );
 
     if( a_realm == NULL )
         a_realm = "";

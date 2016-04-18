@@ -274,6 +274,16 @@ public:
 #if defined( PYSVN_HAS_CLIENT_PATCH )
     Py::Object cmd_patch( const Py::Tuple& args, const Py::Dict &kws );
 #endif
+#if defined( PYSVN_HAS_CLIENT_PROPSET_LOCAL )
+    Py::Object cmd_propdel_local( const Py::Tuple& args, const Py::Dict &kws );
+    Py::Object cmd_propset_local( const Py::Tuple& args, const Py::Dict &kws );
+    Py::Object common_propset_local( FunctionArguments &args, bool is_set );
+#endif
+#if defined( PYSVN_HAS_CLIENT_PROPSET_REMOTE )
+    Py::Object cmd_propdel_remote( const Py::Tuple& args, const Py::Dict &kws );
+    Py::Object cmd_propset_remote( const Py::Tuple& args, const Py::Dict &kws );
+    Py::Object common_propset_remote( FunctionArguments &args, bool is_set );
+#endif
     Py::Object cmd_propdel( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_propset( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object common_propset( FunctionArguments &args, bool is_set );
@@ -464,8 +474,9 @@ public:
     svn_wc_conflict_choice_t getWcConflictChoice( const char *choice_name );
 #endif
 
-private:
+public:
     const std::string           m_function_name;
+private:
     const argument_description  *m_arg_desc;
     const Py::Tuple             &m_args;
     const Py::Dict              &m_kws;
@@ -496,6 +507,8 @@ public:
     const svn_commit_info_t *result( int index );
 
 private:
+    static CommitInfoResult *castBaton( void *baton_ ) { return static_cast<CommitInfoResult *>( baton_ ); }
+
     apr_array_header_t  *m_all_results;
 };
 #endif

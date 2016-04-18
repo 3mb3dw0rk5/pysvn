@@ -19,6 +19,240 @@
 #include "pysvn.hpp"
 #include "pysvn_static_strings.hpp"
 
+#if defined( PYSVN_HAS_CLIENT_PROPSET_LOCAL )
+Py::Object pysvn_client::cmd_propdel_local( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_prop_name },
+    { true,  name_path },
+    { false, name_depth },
+    { false, name_changelists },
+    { false, NULL }
+    };
+    FunctionArguments args( "propdel_local", args_desc, a_args, a_kws );
+    args.check();
+
+    return common_propset_local( args, false );
+}
+
+Py::Object pysvn_client::cmd_propset_local( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_prop_name },
+    { true,  name_prop_value },
+    { true,  name_path },
+    { false, name_depth },
+    { false, name_skip_checks },
+    { false, name_changelists },
+    { false, NULL }
+    };
+    FunctionArguments args( "propset_local", args_desc, a_args, a_kws );
+    args.check();
+
+    return common_propset_local( args, true );
+}
+
+Py::Object pysvn_client::common_propset_local( FunctionArguments &args, bool is_set )
+{
+    SvnPool pool( m_context );
+
+    std::string propname( args.getUtf8String( name_prop_name ) );
+    std::string propval;
+    if( is_set )
+    {
+        propval = args.getUtf8String( name_prop_value );
+    }
+
+    // path
+    apr_array_header_t *targets = targetsFromStringOrList( args.getArg( name_path ), pool );
+
+    // depth
+    svn_depth_t depth = args.getDepth( name_depth, svn_depth_empty );
+
+    // skip_check
+    bool skip_checks = false;
+    if( is_set )
+    {
+        skip_checks = args.getBoolean( name_skip_checks, false );
+    }
+
+    // changelist
+    apr_array_header_t *changelists = NULL;
+    if( args.hasArg( name_changelists ) )
+    {
+        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
+    }
+
+    try
+    {
+        checkThreadPermission();
+
+        PythonAllowThreads permission( m_context );
+
+        const svn_string_t *svn_propval = NULL;
+        if( is_set )
+        {
+            svn_propval = svn_string_ncreate( propval.c_str(), propval.size(), pool );
+        }
+
+        svn_error_t *error = svn_client_propset_local
+            (
+            propname.c_str(),
+            svn_propval,
+            targets,
+            depth,
+            skip_checks,
+            changelists,
+            m_context.ctx(),
+            pool
+            );
+
+        permission.allowThisThread();
+        if( error != NULL )
+            throw SvnException( error );
+    }
+    catch( SvnException &e )
+    {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
+        throw_client_error( e );
+    }
+
+    return Py::None();
+}
+#endif
+
+#if defined( PYSVN_HAS_CLIENT_PROPSET_REMOTE )
+Py::Object pysvn_client::cmd_propdel_remote( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_prop_name },
+    { true,  name_url },
+    { false, name_base_revision_for_url },
+    { false, NULL }
+    };
+    FunctionArguments args( "propdel_remote", args_desc, a_args, a_kws );
+    args.check();
+
+    return common_propset_remote( args, false );
+}
+
+Py::Object pysvn_client::cmd_propset_remote( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_prop_name },
+    { true,  name_prop_value },
+    { true,  name_url },
+    { false, name_skip_checks },
+    { false, name_base_revision_for_url },
+    { false, name_revprops },
+    { false, NULL }
+    };
+    FunctionArguments args( "propset_remote", args_desc, a_args, a_kws );
+    args.check();
+
+    return common_propset_remote( args, true );
+}
+
+Py::Object pysvn_client::common_propset_remote( FunctionArguments &args, bool is_set )
+{
+    SvnPool pool( m_context );
+
+    std::string propname( args.getUtf8String( name_prop_name ) );
+    std::string propval;
+    if( is_set )
+    {
+        propval = args.getUtf8String( name_prop_value );
+    }
+
+    // url
+    std::string url( args.getUtf8String( name_url ) );
+
+    // skip_check
+    bool skip_checks = false;
+    if( is_set )
+    {
+        skip_checks = args.getBoolean( name_skip_checks, false );
+    }
+
+    // base_revision_for_url
+    svn_revnum_t base_revision_for_url = SVN_INVALID_REVNUM;
+    if( args.hasArg( name_base_revision_for_url ) )
+    {
+        svn_opt_revision_t revision = args.getRevision( name_base_revision_for_url );
+        if( revision.kind == svn_opt_revision_number )
+        {
+            base_revision_for_url = revision.value.number;
+        }
+        else
+        {
+            std::string msg = args.m_function_name;
+            msg += "() expects ";
+            msg += name_base_revision_for_url;
+            msg += " to be a number kind revision";
+            throw Py::TypeError( msg );
+        }
+    }
+
+    // revprops
+    apr_hash_t *revprops = NULL;
+    if( is_set && args.hasArg( name_revprops ) )
+    {
+        Py::Object py_revprop = args.getArg( name_revprops );
+        if( !py_revprop.isNone() )
+        {
+            revprops = hashOfStringsFromDictOfStrings( py_revprop, pool );
+        }
+    }
+
+    CommitInfoResult commit_baton( pool );
+
+    try
+    {
+        checkThreadPermission();
+
+        PythonAllowThreads permission( m_context );
+
+        const svn_string_t *svn_propval = NULL;
+        if( is_set )
+        {
+            svn_propval = svn_string_ncreate( propval.c_str(), propval.size(), pool );
+        }
+
+        svn_error_t *error = svn_client_propset_remote
+            (
+            propname.c_str(),
+            svn_propval,
+            url.c_str(),
+            skip_checks,
+            base_revision_for_url,
+            revprops,
+            commit_baton.callback(),
+            commit_baton.baton(),
+            m_context.ctx(),
+            pool
+            );
+        permission.allowThisThread();
+        if( error != NULL )
+            throw SvnException( error );
+    }
+    catch( SvnException &e )
+    {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
+        throw_client_error( e );
+    }
+
+    return toObject( commit_baton, m_wrapper_commit_info, m_commit_info_style );
+}
+#endif
+
 Py::Object pysvn_client::cmd_propdel( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
     static argument_description args_desc[] =
@@ -96,11 +330,24 @@ Py::Object pysvn_client::common_propset( FunctionArguments &args, bool is_set )
         changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
     }
 
-    svn_revnum_t base_revision_for_url;
-    if( is_svn_url( path ) )
-        base_revision_for_url = args.getInteger( name_base_revision_for_url, 0 );
-    else
-        base_revision_for_url = args.getInteger( name_base_revision_for_url, SVN_INVALID_REVNUM );
+    svn_revnum_t base_revision_for_url = SVN_INVALID_REVNUM;
+    if( args.hasArg( name_base_revision_for_url ) )
+    {
+        svn_opt_revision_t revision = args.getRevision( name_base_revision_for_url );
+        if( revision.kind == svn_opt_revision_number )
+        {
+            base_revision_for_url = revision.value.number;
+        }
+        else
+        {
+            std::string msg = args.m_function_name;
+            msg += "() expects ";
+            msg += name_base_revision_for_url;
+            msg += " to be a number kind revision";
+            throw Py::TypeError( msg );
+        }
+    }
+
     svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_empty, svn_depth_infinity, svn_depth_empty );
 
     apr_hash_t *revprops = NULL;
@@ -394,6 +641,13 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
 }
 
 #if defined( PYSVN_HAS_CLIENT_PROPLIST3 )
+extern "C" svn_error_t *proplist_receiver_c
+    (
+    void *baton_,
+    const char *path,
+    apr_hash_t *prop_hash,
+    apr_pool_t *pool
+    );
 class ProplistReceiveBaton
 {
 public:
@@ -405,15 +659,17 @@ public:
     ~ProplistReceiveBaton()
         {}
 
+    svn_proplist_receiver_t callback() { return &proplist_receiver_c; }
+    void *baton() { return static_cast< void * >( this ); }
+    static ProplistReceiveBaton *castBaton( void *baton_ ) { return static_cast<ProplistReceiveBaton *>( baton_ ); }
+
     PythonAllowThreads  *m_permission;
     SvnPool             &m_pool;
 
     Py::List            &m_prop_list;
 };
 
-extern "C"
-{
-svn_error_t *proplist_receiver_c
+extern "C" svn_error_t *proplist_receiver_c
     (
     void *baton_,
     const char *path,
@@ -421,7 +677,7 @@ svn_error_t *proplist_receiver_c
     apr_pool_t *pool
     )
 {
-    ProplistReceiveBaton *baton = reinterpret_cast<ProplistReceiveBaton *>( baton_ );
+    ProplistReceiveBaton *baton = ProplistReceiveBaton::castBaton( baton_ );
 
     PythonDisallowThreads callback_permission( baton->m_permission );
 
@@ -434,7 +690,6 @@ svn_error_t *proplist_receiver_c
     baton->m_prop_list.append( py_tuple );
 
     return SVN_NO_ERROR;
-}
 }
 #endif
 
@@ -552,8 +807,8 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
                 &revision,
                 depth,
                 changelists,
-                proplist_receiver_c,
-                reinterpret_cast<void *>( &proplist_baton ),
+                proplist_baton.callback(),
+                proplist_baton.baton(),
                 m_context,
                 pool
                 );

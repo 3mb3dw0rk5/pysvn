@@ -88,6 +88,13 @@ Py::Object pysvn_client::cmd_add_to_changelist( const Py::Tuple &a_args, const P
 #endif
 
 #ifdef PYSVN_HAS_CLIENT_GET_CHANGELIST
+extern "C" svn_error_t *changelistReceiver
+    (
+    void *baton_,
+    const char *path,
+    const char *changelist,
+    apr_pool_t *pool
+    );
 class ChangelistBaton
 {
 public:
@@ -99,12 +106,17 @@ public:
     ~ChangelistBaton()
         {}
 
+    svn_changelist_receiver_t callback() { return &changelistReceiver; }
+    void *baton() { return static_cast< void * >( this ); }
+    static ChangelistBaton *castBaton( void *baton_ ) { return static_cast<ChangelistBaton *>( baton_ ); }
+
+
     PythonAllowThreads  *m_permission;
     SvnPool             &m_pool;
     Py::List            &m_changelist_list;
 };
 
-svn_error_t *changelistReceiver
+extern "C" svn_error_t *changelistReceiver
     (
     void *baton_,
     const char *path,
@@ -112,7 +124,7 @@ svn_error_t *changelistReceiver
     apr_pool_t *pool
     )
 {
-    ChangelistBaton *baton = reinterpret_cast<ChangelistBaton *>( baton_ );
+    ChangelistBaton *baton = ChangelistBaton::castBaton( baton_ );
 
     PythonDisallowThreads callback_permission( baton->m_permission );
 
@@ -180,8 +192,8 @@ Py::Object pysvn_client::cmd_get_changelist( const Py::Tuple &a_args, const Py::
                 norm_path.c_str(),
                 changelists,
                 depth,
-                changelistReceiver,
-                reinterpret_cast<void *>( &baton ),
+                baton.callback(),
+                baton.baton(),
                 m_context,
                 pool
                 );

@@ -907,7 +907,6 @@ class SvnCommand:
     def cmd_propset( self, args ):
         recurse = args.getBooleanOption( '--recursive', True )
         revision = args.getOptionalRevision( '--revision', 'working' )
-        verbose = args.getBooleanOption( '--verbose', True )
         positional_args = args.getPositionalArgs( 2, 3 )
         if len(positional_args) == 2:
             positional_args.append( '.' )
@@ -920,7 +919,6 @@ class SvnCommand:
     def cmd_propdel( self, args ):
         recurse = args.getBooleanOption( '--recursive', True )
         revision = args.getOptionalRevision( '--revision', 'working' )
-        verbose = args.getBooleanOption( '--verbose', True )
         positional_args = args.getPositionalArgs( 1, 2 )
         if len(positional_args) == 1:
             positional_args.append( '.' )
@@ -929,6 +927,46 @@ class SvnCommand:
 
         self.client.propdel( positional_args[0], positional_args[1], revision=revision, recurse=recurse )
     cmd_pd = cmd_propdel
+
+    def cmd_propset_local( self, args ):
+        skip_checks = args.getBooleanOption( '--skip-checks', True )
+        changelist = args.getOptionalValue( '--change-list', None )
+        positional_args = args.getPositionalArgs( 3, 3 )
+
+        if changelist is not None:
+            changelist = [s.strip() for s in changelist.split(',')]
+            self.client.propset_local( positional_args[0], positional_args[1], positional_args[2], skip_checks=skip_checks, changelist=changelist )
+
+        else:
+            self.client.propset_local( positional_args[0], positional_args[1], positional_args[2], skip_checks=skip_checks )
+
+    def cmd_propdel_local( self, args ):
+        changelist = args.getOptionalValue( '--change-list', None )
+        positional_args = args.getPositionalArgs( 2, 2 )
+
+        if changelist is not None:
+            changelist = [s.strip() for s in changelist.split(',')]
+            self.client.propdel_local( positional_args[0], positional_args[1], changelist=changelist )
+
+        else:
+            self.client.propdel_local( positional_args[0], positional_args[1] )
+
+    def cmd_propset_remote( self, args ):
+        skip_checks = args.getBooleanOption( '--skip-checks', True )
+        revision = args.getOptionalRevision( '--revision', '0' )
+        positional_args = args.getPositionalArgs( 3, 3 )
+
+        if args.haveOption( '--revision' ):
+            self.client.propset_remote( positional_args[0], positional_args[1], positional_args[2], skip_checks=skip_checks, base_revision_for_url=revision )
+
+        else:
+            self.client.propset_remote( positional_args[0], positional_args[1], positional_args[2], skip_checks=skip_checks )
+
+    def cmd_propdel_remote( self, args ):
+        revision = args.getOptionalRevision( '--revision', '0' )
+        positional_args = args.getPositionalArgs( 2, 2 )
+
+        self.client.propdel_remote( positional_args[0], positional_args[1], base_revision_for_url=revision )
 
     def cmd_revproplist( self, args ):
         revision = args.getOptionalRevision( '--revision', 'head' )
@@ -1145,6 +1183,7 @@ long_opt_info = {
     '--pause': 0,
 
     '--auto-props': 0,          # enable automatic properties
+    '--change-list': 1,         # changelist
     '--config-dir': 1,          # read user configuration files from directory ARG
     '--diff-cmd': 1,            # use ARG as diff command
     '--diff3-cmd': 1,           # use ARG as merge command
@@ -1170,6 +1209,7 @@ long_opt_info = {
     '--relocate': 0,            # relocate via URL-rewriting
     '--revprop': 0,             # operate on a revision property (use with -r)
     '--show-inherited-props': 0, # show inherited props
+    '--skip-checks': 0,         # skip-checks
     '--strict': 0,              # use strict semantics
     '--targets': 1,             # pass contents of file ARG as additional args
     '--username': 1,            # specify a username ARG

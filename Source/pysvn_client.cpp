@@ -870,7 +870,7 @@ void pysvn_client::init_type()
     add_keyword_method("diff_summarize_peg", &pysvn_client::cmd_diff_summarize_peg, pysvn_client_diff_summarize_peg_doc );
 #endif
     add_keyword_method("export", &pysvn_client::cmd_export, pysvn_client_export_doc );
-#ifdef PYSVN_HAS_CLIENT_GET_CHANGELIST
+#if defined( PYSVN_HAS_CLIENT_GET_CHANGELIST )
     add_keyword_method("get_changelist", &pysvn_client::cmd_get_changelist, pysvn_client_get_changelist_doc );
 #endif
 #if defined( PYSVN_HAS_WC_ADM_DIR )
@@ -921,9 +921,17 @@ void pysvn_client::init_type()
     add_keyword_method("propget", &pysvn_client::cmd_propget, pysvn_client_propget_doc );
     add_keyword_method("proplist", &pysvn_client::cmd_proplist, pysvn_client_proplist_doc );
     add_keyword_method("propset", &pysvn_client::cmd_propset, pysvn_client_propset_doc );
+#if defined( PYSVN_HAS_CLIENT_PROPSET_LOCAL )
+    add_keyword_method("propdel_local", &pysvn_client::cmd_propdel_local, pysvn_client_propdel_local_doc );
+    add_keyword_method("propset_local", &pysvn_client::cmd_propset_local, pysvn_client_propset_local_doc );
+#endif
+#if defined( PYSVN_HAS_CLIENT_PROPSET_REMOTE )
+    add_keyword_method("propdel_remote", &pysvn_client::cmd_propdel_remote, pysvn_client_propdel_remote_doc );
+    add_keyword_method("propset_remote", &pysvn_client::cmd_propset_remote, pysvn_client_propset_remote_doc );
+#endif
     add_keyword_method("relocate", &pysvn_client::cmd_relocate, pysvn_client_relocate_doc );
     add_keyword_method("remove", &pysvn_client::cmd_remove, pysvn_client_remove_doc );
-#ifdef PYSVN_HAS_CLIENT_REMOVE_FROM_CHANGELISTS
+#if defined( PYSVN_HAS_CLIENT_REMOVE_FROM_CHANGELISTS )
     add_keyword_method("remove_from_changelists", &pysvn_client::cmd_remove_from_changelists, pysvn_client_remove_from_changelists_doc );
 #endif
     add_keyword_method("resolved", &pysvn_client::cmd_resolved, pysvn_client_resolved_doc );

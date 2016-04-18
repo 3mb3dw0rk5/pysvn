@@ -547,39 +547,47 @@ It is passed the conflict_description and must return a conflict_choice, merge_f
 <td><span class="svn_1005000"><a href="#pysvn_client_move2">move2</a></span></td>
 <td><span class="svn_1007000"><a href="#pysvn_client_patch">patch</a></span></td>
 <td><a href="#pysvn_client_propdel">propdel</a></td>
-<td><a href="#pysvn_client_propget">propget</a></td>
+<td><span class="svn_1007000"><a href="#pysvn_client_propdel_local">propdel_local</a></span></td>
 </tr>
 <tr bgcolor="#e0e0e0">
+<td><span class="svn_1005000"><a href="#pysvn_client_propdel_remote">propdel_remote</a></span></td>
+<td><a href="#pysvn_client_propget">propget</a></td>
 <td><a href="#pysvn_client_proplist">proplist</a></td>
 <td><a href="#pysvn_client_propset">propset</a></td>
+<td><span class="svn_1007000"><a href="#pysvn_client_propset_local">propset_local</a></span></td>
+<td><span class="svn_1007000"><a href="#pysvn_client_propset_remote">propset_remote</a></span></td>
+</tr>
+<tr>
 <td><a href="#pysvn_client_relocate">relocate</a></td>
 <td><a href="#pysvn_client_remove">remove</a></td>
 <td><span class="svn_1005000"><a href="#pysvn_client_remove_from_changelists">remove_from_changelists</a></span></td>
 <td><a href="#pysvn_client_resolved">resolved</a></td>
-</tr>
-<tr>
 <td><a href="#pysvn_client_revert">revert</a></td>
 <td><a href="#pysvn_client_revpropdel">revpropdel</a></td>
+</tr>
+<tr bgcolor="#e0e0e0">
 <td><a href="#pysvn_client_revpropget">revpropget</a></td>
 <td><a href="#pysvn_client_revproplist">revproplist</a></td>
 <td><a href="#pysvn_client_revpropset">revpropset</a></td>
 <td><span class="svn_1005000"><a href="#pysvn_client_root_url_from_path">root_url_from_path</a></span></td>
-</tr>
-<tr bgcolor="#e0e0e0">
 <td><span class="svn_1003000"><a href="#pysvn_client_set_adm_dir">set_adm_dir</a></span></td>
 <td><a href="#pysvn_client_set_auth_cache">set_auth_cache</a></td>
+</tr>
+<tr>
 <td><a href="#pysvn_client_set_auto_props">set_auto_props</a></td>
 <td><a href="#pysvn_client_set_default_password">set_default_password</a></td>
 <td><a href="#pysvn_client_set_default_username">set_default_username</a></td>
 <td><a href="#pysvn_client_set_interactive">set_interactive</a></td>
-</tr>
-<tr>
 <td><a href="#pysvn_client_set_store_passwords">set_store_passwords</a></td>
 <td><a href="#pysvn_client_status">status</a></td>
+</tr>
+<tr bgcolor="#e0e0e0">
 <td><a href="#pysvn_client_switch">switch</a></td>
 <td><span class="svn_1002000"><a href="#pysvn_client_unlock">unlock</a></span></td>
 <td><a href="#pysvn_client_update">update</a></td>
 <td><span class="svn_1007000"><a href="#pysvn_client_upgrade">upgrade</a></span></td>
+<td>&#160;</td>
+<td>&#160;</td>
 </tr>
 </table>
 
@@ -1963,7 +1971,7 @@ propdel( prop_name,
          recurse=False<span class="svn_1002000">,
          skip_checks=False</span><span class="svn_1005000">,
          depth=depth,
-         base_revision_for_url=[0 for URL, -1 for path],
+         base_revision_for_url=pysvn.Revision( opt_revision_kind.number, see-text ),
          revprops</span> )
 </pre>
 <p>Delete the property prop_name from url_or_path.
@@ -1989,6 +1997,66 @@ URL otherwise to pysvn.Revision( opt_revision_kind.working ).
 <p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
 </p>
 <p>revprops TBD</p>
+</div>
+
+<div class="svn_1007000">
+<h4><a name="pysvn_client_propdel_local"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.propdel_local</a></h4>
+<pre>
+propdel_local( prop_name,
+               path,
+               depth=empty,
+               changelist=None )
+</pre>
+<p>
+path is either a string path or a list of path strings.
+</p>
+<p>
+Delelte propname fromn each path in the list.
+The paths must be all working copy paths.
+</p>
+<p>
+If depth is svn_depth_empty, set the property on each member of
+targets only; if svn_depth_files, set it on targets and their
+file children (if any); if svn_depth_immediates, on targets and all
+of their immediate children (both files and directories); if
+svn_depth_infinity, on targets and everything beneath them.
+</p>
+<p>
+changelists is an list of string changelist
+names, used as a restrictive filter on items whose properties are
+set; that is, don't set properties on any item unless it's a member
+of one of those changelists. If changelists is empty (or
+altogether None), no changelist filtering occurs.
+</p>
+<p>
+The context cancel callback can be used to cannle propset_local.
+</p>
+</div>
+
+<div class="svn_1007000">
+<h4><a name="pysvn_client_propdel_remote"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.propdel_remote</a></h4>
+<pre>
+commit_info = \
+propdel_remote( prop_name,
+                prop_value,
+                url,
+                base_revision_for_url=pysvn.Revision( opt_revision_kind.number, 0 ), )
+</pre>
+<p>
+Delete propname from the url.
+</p>
+<p>
+Immediately attempt to commit the property change in the repository,
+using the log message returned from the context log messages callback.
+</p>
+<p>
+If the property has changed on url since revision
+base_revision_for_url (must be opt_revision_kind.number), no
+change will be made and an error will be returned.
+</p>
+<p>
+commit_info returns the detail of the successful commit.
+</p>
 </div>
 
 <h4><a name="pysvn_client_propget"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.propget</a></h4>
@@ -2100,6 +2168,101 @@ if there are any unversioned obstructing items.
 </p>
 <p>revprops TBD</p>
 
+</div>
+
+<div class="svn_1007000">
+<h4><a name="pysvn_client_propset_local"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.propset_local</a></h4>
+<pre>
+propset_local( prop_name,
+               prop_value,
+               path,
+               depth=empty,
+               skip_checks=False,
+               changelist=None )
+</pre>
+<p>
+path is either a string path or a list of path strings.
+</p>
+<p>
+Set propname to propval on each path in the list.
+The paths must be all working copy paths.
+</p>
+<p>
+If depth is svn_depth_empty, set the property on each member of
+targets only; if svn_depth_files, set it on targets and their
+file children (if any); if svn_depth_immediates, on targets and all
+of their immediate children (both files and directories); if
+svn_depth_infinity, on targets and everything beneath them.
+</p>
+<p>
+changelists is an list of string changelist
+names, used as a restrictive filter on items whose properties are
+set; that is, don't set properties on any item unless it's a member
+of one of those changelists. If changelists is empty (or
+altogether None), no changelist filtering occurs.
+</p>
+<p>
+If propname is an svn-controlled property (i.e. prefixed with
+"svn:"), then the caller is responsible for ensuring that
+the value uses LF line-endings.
+</p>
+<p>
+If skip_checks is True, do no validity checking. But if 
+skip_checks is False, and propname is not a valid property for 
+targets, return an error, either SVN_ERR_ILLEGAL_TARGET (if the
+property is not appropriate for targets), or
+SVN_ERR_BAD_MIME_TYPE (if propname is "svn:mime-type", but 
+propval is not a valid mime-type).
+</p>
+<p>
+The context cancel callback can be used to cannle propset_local.
+</p>
+</div>
+
+<div class="svn_1007000">
+<h4><a name="pysvn_client_propset_remote"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.propset_remote</a></h4>
+<pre>
+commit_info = \
+propset_remote( prop_name,
+                prop_value,
+                url,
+                skip_checks=False,
+                base_revision_for_url=0,
+                revprops=None )
+</pre>
+<p>
+Set propname to propval on url.
+</p>
+<p>
+Immediately attempt to commit the property change in the repository,
+using the log message returned from the context log messages callback.
+</p>
+<p>
+
+If the property has changed on url since revision
+base_revision_for_url (which must not be SVN_INVALID_REVNUM), no
+change will be made and an error will be returned.
+</p>
+<p>
+If non None, revprops is a list of tuples, (string names, string value),
+holding additional, custom revision properties to be set on the new revision. This
+list cannot contain any standard Subversion properties.
+</p>
+<p>
+commit_info returns the detail of the successful commit.
+</p>
+<p>
+If propname is an svn-controlled property (i.e. prefixed with
+"svn:"), then the caller is responsible for ensuring that
+the value uses LF line-endings.
+</p>
+<p>
+If skip_checks is True, do no validity checking. But if 
+skip_checks is False, and propname is not a valid property for 
+url, return an error, either SVN_ERR_ILLEGAL_TARGET (if the property is
+not appropriate for url), or SVN_ERR_BAD_MIME_TYPE (if propname
+is "svn:mime-type", but propval is not a valid mime-type).
+</p>
 </div>
 
 <h4><a name="pysvn_client_relocate"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.relocate</a></h4>
@@ -2534,7 +2697,7 @@ Return the contents of path as a string, file_text.
 file_text = \
 changed( copy_info=False,
          base_dir="",
-         low_water_mark=-1,
+         low_water_mark=pysvn.Revision( opt_revision_kind.number, -1 ),
          send_deltas=False )
 </pre>
 <p>
@@ -2555,7 +2718,7 @@ the following:
 
 <p>
 Changes will be limited to those within base_dir, and if
-low_water_mark is set to something other than SVN_INVALID_REVNUM (-1)
+low_water_mark is set to something other than SVN_INVALID_REVNUM(-1)
 it is assumed that the client has no knowledge of revisions prior to
 low_water_mark.  Together, these two arguments define the portion of
 the tree that the client is assumed to have knowledge of, and thus any

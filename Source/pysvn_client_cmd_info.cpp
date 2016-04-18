@@ -103,6 +103,21 @@ public:
     bool            m_local_change;
 };
 
+extern "C" svn_error_t *annotate3_receiver
+    (
+    void *baton,
+    svn_revnum_t start_revnum,
+    svn_revnum_t end_revnum,
+    apr_int64_t line_no,
+    svn_revnum_t revision,
+    apr_hash_t *rev_props,
+    svn_revnum_t merged_revision,
+    apr_hash_t *merged_rev_props,
+    const char *merged_path,
+    const char *line,
+    svn_boolean_t local_change,
+    apr_pool_t *pool
+    );
 class AnnotateBaton2
 {
 public:
@@ -114,13 +129,14 @@ public:
     {
     }
 
+    svn_client_blame_receiver3_t callback() { return &annotate3_receiver; }
     void *baton() { return static_cast<void *>( this ); };
-    svn_client_blame_receiver3_t callback();
+    static AnnotateBaton2 *castBaton( void *baton_ ) { return static_cast<AnnotateBaton2 *>( baton_ ); }
 
     std::list<AnnotatedLineInfo2> m_all_entries;
 };
 
-static svn_error_t *annotate3_receiver
+extern "C" svn_error_t *annotate3_receiver
     (
     void *baton,
     svn_revnum_t start_revnum,
@@ -143,7 +159,7 @@ static svn_error_t *annotate3_receiver
     if( line == NULL )
         line = "";
     
-    AnnotateBaton2 *annotate_baton = static_cast<AnnotateBaton2 *>( baton );
+    AnnotateBaton2 *annotate_baton = AnnotateBaton2::castBaton( baton );
 
     annotate_baton->m_all_entries.push_back(
         AnnotatedLineInfo2(
@@ -158,8 +174,6 @@ static svn_error_t *annotate3_receiver
 
     return NULL;
 }
-
-svn_client_blame_receiver3_t AnnotateBaton2::callback() { return &annotate3_receiver; }
 #endif
 
 #if defined( PYSVN_HAS_CLIENT_ANNOTATE4 )
@@ -235,6 +249,20 @@ public:
     std::string m_line;
 };
 
+extern "C" svn_error_t *annotate2_receiver
+    (
+    void *baton,
+    apr_int64_t line_no,
+    svn_revnum_t revision,
+    const char *author,
+    const char *date,
+    svn_revnum_t merged_revision,
+    const char *merged_author,
+    const char *merged_date,
+    const char *merged_path,
+    const char *line,
+    apr_pool_t *pool
+    );
 class AnnotateBaton
 {
 public:
@@ -246,13 +274,14 @@ public:
     {
     }
 
+    svn_client_blame_receiver2_t callback() { return &annotate2_receiver; }
     void *baton() { return static_cast<void *>( this ); };
-    svn_client_blame_receiver2_t callback();
+    static AnnotateBaton *castBaton( void *baton_ ) { return static_cast<AnnotateBaton *>( baton_ ); }
 
     std::list<AnnotatedLineInfo> m_all_entries;
 };
 
-static svn_error_t *annotate2_receiver
+extern "C" svn_error_t *annotate2_receiver
     (
     void *baton,
     apr_int64_t line_no,
@@ -282,7 +311,7 @@ static svn_error_t *annotate2_receiver
     if( line == NULL )
         line = "";
 
-    AnnotateBaton *annotate_baton = static_cast<AnnotateBaton *>( baton );
+    AnnotateBaton *annotate_baton = AnnotateBaton::castBaton( baton );
     annotate_baton->m_all_entries.push_back(
                     AnnotatedLineInfo(
                         line_no,
@@ -292,8 +321,6 @@ static svn_error_t *annotate2_receiver
 
     return NULL;
 }
-
-svn_client_blame_receiver2_t AnnotateBaton::callback() { return &annotate2_receiver; }
 
 #else
 class AnnotatedLineInfo
@@ -335,6 +362,17 @@ public:
     std::string m_line;
 };
 
+extern "C" svn_error_t *annotate1_receiver
+    (
+    void *baton,
+    apr_int64_t line_no,
+    svn_revnum_t revision,
+    const char *author,
+    const char *date,
+    const char *line,
+    apr_pool_t *pool
+    );
+
 class AnnotateBaton
 {
 public:
@@ -345,13 +383,14 @@ public:
     ~AnnotateBaton()
     {
     }
+    svn_client_blame_receiver_t callback() { return &annotate1_receiver; }
     void *baton() { return static_cast<void *>( this ); };
-    svn_client_blame_receiver_t callback();
+    static AnnotateBaton *castBaton( void *baton_ ) { return static_cast<AnnotateBaton *>( baton_ ); }
 
     std::list<AnnotatedLineInfo> m_all_entries;
 };
 
-static svn_error_t *annotate1_receiver
+extern "C" svn_error_t *annotate1_receiver
     (
     void *baton,
     apr_int64_t line_no,
@@ -371,14 +410,11 @@ static svn_error_t *annotate1_receiver
     if( line == NULL )
         line = "";
 
-    AnnotateBaton *annotate_baton = static_cast<AnnotateBaton *>( baton );
+    AnnotateBaton *annotate_baton = AnnotateBaton::castBaton( baton );
     annotate_baton->m_all_entries.push_back( AnnotatedLineInfo( line_no, revision, author, date, line ) );
 
     return NULL;
 }
-
-svn_client_blame_receiver_t AnnotateBaton::callback() { return &annotate1_receiver; }
-
 #endif
 
 #if defined( PYSVN_HAS_CLIENT_ANNOTATE5 )
@@ -734,8 +770,9 @@ public:
     ~InfoReceiveBaton()
     {}
 
-    void *baton() { return reinterpret_cast<void *>( this ); }
     svn_client_info_receiver2_t callback() { return &info_receiver_c2; }
+    void *baton() { return static_cast<void *>( this ); }
+    static InfoReceiveBaton *castBaton( void *baton_ ) { return static_cast<InfoReceiveBaton *>( baton_ ); }
 
     PythonAllowThreads  *m_permission;
     SvnPool             &m_pool;
@@ -747,7 +784,7 @@ public:
 
 extern "C" svn_error_t *info_receiver_c2( void *baton_, const char *abspath_or_url, const svn_client_info2_t *info, apr_pool_t * )
 {
-    InfoReceiveBaton *baton = reinterpret_cast<InfoReceiveBaton *>( baton_ );
+    InfoReceiveBaton *baton = InfoReceiveBaton::castBaton( baton_ );
 
     PythonDisallowThreads callback_permission( baton->m_permission );
 
@@ -799,8 +836,9 @@ public:
     ~InfoReceiveBaton()
     {}
 
-    void *baton() { return reinterpret_cast<void *>( this ); }
     svn_info_receiver_t callback() { return &info_receiver_c; }
+    void *baton() { return static_cast<void *>( this ); }
+    static InfoReceiveBaton *castBaton( void *baton_ ) { return static_cast<InfoReceiveBaton *>( baton_ ); }
 
     PythonAllowThreads  *m_permission;
     Py::List            &m_info_list;
@@ -811,7 +849,7 @@ public:
 
 extern "C" svn_error_t *info_receiver_c( void *baton_, const char *path, const svn_info_t *info, apr_pool_t *pool )
 {
-    InfoReceiveBaton *baton = reinterpret_cast<InfoReceiveBaton *>( baton_ );
+    InfoReceiveBaton *baton = InfoReceiveBaton::castBaton( baton_ );
 
     PythonDisallowThreads callback_permission( baton->m_permission );
 
@@ -981,6 +1019,13 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
 #endif
 
 #if defined( PYSVN_HAS_CLIENT_LOG4 )
+extern "C" svn_error_t *log4Receiver
+    (
+    void *baton_,
+    svn_log_entry_t *log_entry,
+    apr_pool_t *pool
+    );
+
 class Log4Baton
 {
 public:
@@ -996,6 +1041,10 @@ public:
     ~Log4Baton()
         {}
 
+    svn_log_entry_receiver_t callback() { return &log4Receiver; }
+    void *baton() { return static_cast< void * >( this ); }
+    static Log4Baton *castBaton( void *baton_ ) { return static_cast<Log4Baton *>( baton_ ); }
+
     PythonAllowThreads  *m_permission;
     SvnPool             &m_pool;
     apr_time_t          m_now;
@@ -1005,14 +1054,14 @@ public:
     bool                m_has_children;
 };
 
-static svn_error_t *log4Receiver
+extern "C" svn_error_t *log4Receiver
     (
     void *baton_,
     svn_log_entry_t *log_entry,
     apr_pool_t *pool
     )
 {
-    Log4Baton *baton = reinterpret_cast<Log4Baton *>( baton_ );
+    Log4Baton *baton = Log4Baton::castBaton( baton_ );
 
     if( log_entry->revision == 0 )
     {
@@ -1226,8 +1275,8 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
             strict_node_history,
             include_merged_revisions,
             revprops,
-            log4Receiver,
-            reinterpret_cast<void *>( &baton ),
+            baton.callback(),
+            baton.baton(),
             m_context,
             pool
             );
@@ -1243,8 +1292,8 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
             strict_node_history,
             include_merged_revisions,
             revprops,
-            log4Receiver,
-            reinterpret_cast<void *>( &baton ),
+            baton.callback(),
+            baton.baton(),
             m_context,
             pool
             );
@@ -1583,10 +1632,63 @@ Py::Object pysvn_client::cmd_log( const Py::Tuple &a_args, const Py::Dict &a_kws
 }
 #endif
 
-struct StatusEntriesBaton
+#if defined( PYSVN_HAS_CLIENT_STATUS5 )
+static svn_error_t *status5EntriesFunc
+    (
+    void *baton,
+    const char *path,
+    const svn_client_status_t *status,
+    apr_pool_t *scratch_pool
+    );
+#elif defined( PYSVN_HAS_CLIENT_STATUS4 )
+static svn_error_t *status4EntriesFunc
+    (
+    void *baton,
+    const char *path,
+    svn_wc_status2_t *status,
+    apr_pool_t *pool
+    );
+#elif defined( PYSVN_HAS_CLIENT_STATUS2 )
+static void status2EntriesFunc
+    (
+    void *baton,
+    const char *path,
+    svn_wc_status2_t *status
+    );
+#else
+static void status1EntriesFunc
+    (
+    void *baton,
+    const char *path,
+    svn_wc_status_t *status
+    );
+#endif
+
+class StatusEntriesBaton
 {
-    apr_pool_t* pool;
-    apr_hash_t* hash;
+public:
+    StatusEntriesBaton( SvnPool &pool )
+    : m_pool( pool )
+    , m_hash( apr_hash_make( pool ) )
+    {}
+
+    ~StatusEntriesBaton()
+    {}
+
+#if defined( PYSVN_HAS_CLIENT_STATUS5 )
+    svn_client_status_func_t callback() { return &status5EntriesFunc; }
+#elif defined( PYSVN_HAS_CLIENT_STATUS4 )
+    svn_wc_status_func3_t callback() { return &status4EntriesFunc; }
+#elif defined( PYSVN_HAS_CLIENT_STATUS2 )
+    svn_wc_status_func2_t callback() { return &status2EntriesFunc; }
+#else
+    svn_wc_status_func_t callback() { return &status1EntriesFunc; }
+#endif
+    void *baton() { return static_cast< void * >( this ); }
+    static StatusEntriesBaton *castBaton( void *baton_ ) { return static_cast<StatusEntriesBaton *>( baton_ ); }
+
+    SvnPool     &m_pool;
+    apr_hash_t  *m_hash;
 };
 
 #if defined( PYSVN_HAS_CLIENT_STATUS5 )
@@ -1598,11 +1700,11 @@ static svn_error_t *status5EntriesFunc
     apr_pool_t *scratch_pool
     )
 {
-    StatusEntriesBaton *seb = reinterpret_cast<StatusEntriesBaton *>( baton );
+    StatusEntriesBaton *seb = StatusEntriesBaton::castBaton( baton );
 
-    path = apr_pstrdup( seb->pool, path );
-    svn_client_status_t *stat = svn_client_status_dup( status, seb->pool );
-    apr_hash_set( seb->hash, path, APR_HASH_KEY_STRING, stat );
+    path = apr_pstrdup( seb->m_pool, path );
+    svn_client_status_t *stat = svn_client_status_dup( status, seb->m_pool );
+    apr_hash_set( seb->m_hash, path, APR_HASH_KEY_STRING, stat );
     return SVN_NO_ERROR;
 }
 
@@ -1615,11 +1717,11 @@ static svn_error_t *status4EntriesFunc
     apr_pool_t *pool
     )
 {
-    StatusEntriesBaton *seb = reinterpret_cast<StatusEntriesBaton *>( baton );
+    StatusEntriesBaton *seb = StatusEntriesBaton::castBaton( baton );
 
-    path = apr_pstrdup( seb->pool, path );
-    svn_wc_status2_t *stat = svn_wc_dup_status2( status, seb->pool ); // only a deprecation problem if we cannot use status5
-    apr_hash_set( seb->hash, path, APR_HASH_KEY_STRING, stat );
+    path = apr_pstrdup( seb->m_pool, path );
+    svn_wc_status2_t *stat = svn_wc_dup_status2( status, seb->m_pool ); // only a deprecation problem if we cannot use status5
+    apr_hash_set( seb->m_hash, path, APR_HASH_KEY_STRING, stat );
     return SVN_NO_ERROR;
 }
 #elif defined( PYSVN_HAS_CLIENT_STATUS2 )
@@ -1630,11 +1732,11 @@ static void status2EntriesFunc
     svn_wc_status2_t *status
     )
 {
-    StatusEntriesBaton *seb = reinterpret_cast<StatusEntriesBaton *>( baton );
+    StatusEntriesBaton *seb = StatusEntriesBaton::castBaton( baton );
 
-    path = apr_pstrdup( seb->pool, path );
-    svn_wc_status2_t *stat = svn_wc_dup_status2( status, seb->pool );
-    apr_hash_set( seb->hash, path, APR_HASH_KEY_STRING, stat );
+    path = apr_pstrdup( seb->m_pool, path );
+    svn_wc_status2_t *stat = svn_wc_dup_status2( status, seb->m_pool );
+    apr_hash_set( seb->m_hash, path, APR_HASH_KEY_STRING, stat );
 }
 #else
 static void status1EntriesFunc
@@ -1644,11 +1746,11 @@ static void status1EntriesFunc
     svn_wc_status_t *status
     )
 {
-    StatusEntriesBaton *seb = reinterpret_cast<StatusEntriesBaton *>( baton );
+    StatusEntriesBaton *seb = StatusEntriesBaton::castBaton( baton );
 
-    path = apr_pstrdup( seb->pool, path );
-    svn_wc_status2_t *stat = svn_wc_dup_status( status, seb->pool );
-    apr_hash_set( seb->hash, path, APR_HASH_KEY_STRING, stat );
+    path = apr_pstrdup( seb->m_pool, path );
+    svn_wc_status2_t *stat = svn_wc_dup_status( status, seb->m_pool );
+    apr_hash_set( seb->m_hash, path, APR_HASH_KEY_STRING, stat );
 }
 #endif
 
@@ -1702,7 +1804,7 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
     bool  depth_as_sticky = args.getBoolean( name_depth_as_sticky, true );
 #endif
 
-    apr_hash_t *status_hash = NULL;
+    StatusEntriesBaton baton( pool );
 
     Py::List entries_list;
     try
@@ -1716,11 +1818,6 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
         svn_revnum_t revnum;
         svn_opt_revision_t rev = { svn_opt_revision_head, {0} };
 
-        StatusEntriesBaton baton;
-
-        status_hash = apr_hash_make( pool );
-        baton.hash = status_hash;
-        baton.pool = pool;
 
 #if defined( PYSVN_HAS_CLIENT_STATUS5 )
         const char *abspath_or_url = NULL;
@@ -1741,8 +1838,8 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
                 ignore_externals,
                 depth_as_sticky,
                 changelists,
-                status5EntriesFunc, // status func
-                &baton,             // status baton
+                baton.callback()
+                baton.baton(),
                 pool
                 );
         }
@@ -1752,8 +1849,8 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
             &revnum,            // revnum
             norm_path.c_str(),  // path
             &rev,
-            status4EntriesFunc, // status func
-            &baton,             // status baton
+            baton.callback(),
+            baton.baton(),
             depth,
             get_all,
             update,
@@ -1769,8 +1866,8 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
             &revnum,            // revnum
             norm_path.c_str(),  // path
             &rev,
-            status2EntriesFunc, // status func
-            &baton,             // status baton
+            baton.callback(),
+            baton.baton(),
             depth,
             get_all,
             update,
@@ -1786,8 +1883,8 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
             &revnum,            // revnum
             norm_path.c_str(),  // path
             &rev,
-            status2EntriesFunc, // status func
-            &baton,             // status baton
+            baton.callback(),
+            baton.baton(),
             recurse,
             get_all,
             update,
@@ -1802,8 +1899,8 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
             &revnum,            // revnum
             norm_path.c_str(),  // path
             &rev,
-            status1EntriesFunc, // status func
-            &baton,             // status baton
+            baton.callback(),
+            baton.baton(),
             recurse,
             get_all,
             update,
@@ -1826,7 +1923,7 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
 
     // Loop over array, returning each name/status-structure
 
-    for( apr_hash_index_t *hi = apr_hash_first( pool, status_hash );
+    for( apr_hash_index_t *hi = apr_hash_first( pool, baton.m_hash );
             hi != NULL;
                 hi = apr_hash_next( hi ) )
     {

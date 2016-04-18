@@ -1012,17 +1012,18 @@ apr_array_header_t *targetsFromStringOrList( Py::Object arg, SvnPool &pool )
 
 apr_array_header_t *arrayOfStringsFromListOfStrings( Py::Object arg, SvnPool &pool )
 {
-    Py::List paths( arg );
-    int num_targets = paths.length();
-
-    apr_array_header_t *array = apr_array_make( pool, num_targets, sizeof( const char * ) );
+    apr_array_header_t *array = NULL;
 
     std::string type_error_message;
     try
     {
+        type_error_message = "expecting list of strings";
         Py::List path_list( arg );
+        Py::List::size_type num_targets = path_list.length();
 
-        for( Py::List::size_type i=0; i<path_list.length(); i++ )
+        array = apr_array_make( pool, num_targets, sizeof( const char * ) );
+
+        for( Py::List::size_type i=0; i<num_targets; i++ )
         {
             type_error_message = "expecting list members to be strings";
 
@@ -1139,7 +1140,7 @@ const svn_commit_info_t *CommitInfoResult::result( int index )
 
 extern "C" svn_error_t *CommitInfoResult_callback( const svn_commit_info_t *commit_info, void *baton, apr_pool_t *pool )
 {
-    CommitInfoResult *result = static_cast<CommitInfoResult *>( baton );
+    CommitInfoResult *result = CommitInfoResult::castBaton( baton );
 
     if( result->m_all_results == NULL )
     {

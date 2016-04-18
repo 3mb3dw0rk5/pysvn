@@ -716,6 +716,13 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
 #endif
 
 #if defined( PYSVN_HAS_CLIENT_DIFF_SUMMARIZE )
+extern "C" svn_error_t *diff_summarize_c
+    (
+    const svn_client_diff_summarize_t *diff,
+    void *baton_,
+    apr_pool_t *pool
+    );
+
 class DiffSummarizeBaton
 {
 public:
@@ -726,22 +733,24 @@ public:
     ~DiffSummarizeBaton()
         {}
 
+    svn_client_diff_summarize_func_t callback() { return &diff_summarize_c; }
+    void *baton() { return static_cast< void * >( this ); }
+    static DiffSummarizeBaton *castBaton( void *baton_ ) { return static_cast<DiffSummarizeBaton *>( baton_ ); }
+
     PythonAllowThreads  *m_permission;
 
     DictWrapper         *m_wrapper_diff_summary;
     Py::List            &m_diff_list;
 };
 
-extern "C"
-{
-svn_error_t *diff_summarize_c
+extern "C" svn_error_t *diff_summarize_c
     (
     const svn_client_diff_summarize_t *diff,
     void *baton_,
     apr_pool_t *pool
     )
 {
-    DiffSummarizeBaton *baton = reinterpret_cast<DiffSummarizeBaton *>( baton_ );
+    DiffSummarizeBaton *baton = DiffSummarizeBaton::castBaton( baton_ );
 
     PythonDisallowThreads callback_permission( baton->m_permission );
 
@@ -755,7 +764,6 @@ svn_error_t *diff_summarize_c
     baton->m_diff_list.append( baton->m_wrapper_diff_summary->wrapDict( diff_dict ) );
 
     return SVN_NO_ERROR;
-}
 }
 
 Py::Object pysvn_client::cmd_diff_summarize( const Py::Tuple &a_args, const Py::Dict &a_kws )
@@ -822,8 +830,8 @@ Py::Object pysvn_client::cmd_diff_summarize( const Py::Tuple &a_args, const Py::
             depth,
             ignore_ancestry,
             changelists,
-            diff_summarize_c,
-            reinterpret_cast<void *>( &diff_baton ),
+            diff_baton.callback(),
+            diff_baton.baton(),
             m_context,
             pool
             );
@@ -836,8 +844,8 @@ Py::Object pysvn_client::cmd_diff_summarize( const Py::Tuple &a_args, const Py::
             &revision2,
             recurse,
             ignore_ancestry,
-            diff_summarize_c,
-            reinterpret_cast<void *>( &diff_baton ),
+            diff_baton.callback(),
+            diff_baton.baton(),
             m_context,
             pool
             );
@@ -925,8 +933,8 @@ Py::Object pysvn_client::cmd_diff_summarize_peg( const Py::Tuple &a_args, const 
             depth,
             ignore_ancestry,
             changelists,
-            diff_summarize_c,
-            reinterpret_cast<void *>( &diff_baton ),
+            diff_baton.callback(),
+            diff_baton.baton(),
             m_context,
             pool
             );
@@ -939,8 +947,8 @@ Py::Object pysvn_client::cmd_diff_summarize_peg( const Py::Tuple &a_args, const 
             &revision_end,
             recurse,
             ignore_ancestry,
-            diff_summarize_c,
-            reinterpret_cast<void *>( &diff_baton ),
+            diff_baton.callback(),
+            diff_baton.baton(),
             m_context,
             pool
             );

@@ -195,8 +195,8 @@
 #define PYSVN_HAS_CLIENT_PATCH QQQ
 #define PYSVN_HAS_CLIENT_PATCH_FUNC_T QQQ
 #define PYSVN_HAS_CLIENT_PROPGET4 QQQ
-#define PYSVN_HAS_CLIENT_PROPSET_LOCAL QQQ
-#define PYSVN_HAS_CLIENT_PROPSET_REMOTE QQQ
+#define PYSVN_HAS_CLIENT_PROPSET_LOCAL 1
+#define PYSVN_HAS_CLIENT_PROPSET_REMOTE 1
 #define PYSVN_HAS_CLIENT_RELOCATE2 QQQ
 //Turning status5 is not compatible with status4 for the pysvn API
 // Comment out until I understand the replacement
@@ -312,6 +312,8 @@ public:
 
     operator svn_client_ctx_t *();
     svn_client_ctx_t *ctx();
+
+    static SvnContext *castBaton( void *baton_ ) { return static_cast<SvnContext *>( baton_ ); }
 
     // only use this pool for data that has a life time
     // that matches the life time of the context
