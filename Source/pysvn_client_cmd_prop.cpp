@@ -366,7 +366,10 @@ Py::Object pysvn_client::common_propset( FunctionArguments &args, bool is_set )
     bool skip_checks = args.getBoolean( name_skip_checks, false );
 #endif
 
-#if defined( PYSVN_HAS_CLIENT_PROPSET3 )
+#if defined( PYSVN_HAS_CLIENT_PROPSET_REMOTE )
+    CommitInfoResult commit_info( pool );
+
+#elif defined( PYSVN_HAS_CLIENT_PROPSET3 )
     pysvn_commit_info_t *commit_info = NULL;
 #endif
 
@@ -383,8 +386,42 @@ Py::Object pysvn_client::common_propset( FunctionArguments &args, bool is_set )
         {
             svn_propval = svn_string_ncreate( propval.c_str(), propval.size(), pool );
         }
+#if defined( PYSVN_HAS_CLIENT_PROPSET_LOCAL ) && defined( PYSVN_HAS_CLIENT_PROPSET_REMOTE )
+        svn_error_t *error;
+        if( is_svn_url( norm_path ) )
+        {
+            error = svn_client_propset_remote
+                (
+                propname.c_str(),
+                svn_propval,
+                norm_path.c_str(),
+                skip_checks,
+                base_revision_for_url,
+                revprops,
+                commit_info.callback(),
+                commit_info.baton(),
+                m_context.ctx(),
+                pool
+                );
+        }
+        else
+        {
+            apr_array_header_t *targets = apr_array_make( pool, 11, sizeof( const char * ) );
+            APR_ARRAY_PUSH( targets, const char * ) = apr_pstrdup( pool, norm_path.c_str() );
 
-#if defined( PYSVN_HAS_CLIENT_PROPSET3 )
+            error = svn_client_propset_local
+                (
+                propname.c_str(),
+                svn_propval,
+                targets,
+                depth,
+                skip_checks,
+                changelists,
+                m_context.ctx(),
+                pool
+                );
+        }
+#elif defined( PYSVN_HAS_CLIENT_PROPSET3 )
         svn_error_t *error = svn_client_propset3
             (
             &commit_info,
@@ -432,8 +469,12 @@ Py::Object pysvn_client::common_propset( FunctionArguments &args, bool is_set )
         throw_client_error( e );
     }
 
-#if defined( PYSVN_HAS_CLIENT_PROPSET3 )
+#if defined( PYSVN_HAS_CLIENT_PROPSET_REMOTE )
+    return toObject( commit_info, m_wrapper_commit_info, m_commit_info_style );
+
+#elif defined( PYSVN_HAS_CLIENT_PROPSET3 )
     return toObject( commit_info, m_commit_info_style );
+
 #else
     return Py::None();
 #endif
@@ -855,4 +896,3 @@ Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &
     
     return list_of_proplists;
 }
-
