@@ -1123,6 +1123,7 @@ Py::Object direntsToObject( apr_hash_t *dirents, SvnPool &pool )
 
 CommitInfoResult::CommitInfoResult( SvnPool &pool )
 : m_all_results( apr_array_make( pool, 16, sizeof( svn_commit_info_t * ) ) )
+, m_pool( pool )
 {
 }
 
@@ -1145,7 +1146,7 @@ const svn_commit_info_t *CommitInfoResult::result( int index )
     return APR_ARRAY_IDX( m_all_results, index, const svn_commit_info_t * );
 }
 
-extern "C" svn_error_t *CommitInfoResult_callback( const svn_commit_info_t *commit_info, void *baton, apr_pool_t *pool )
+extern "C" svn_error_t *CommitInfoResult_callback( const svn_commit_info_t *commit_info, void *baton, apr_pool_t * )
 {
     CommitInfoResult *result = CommitInfoResult::castBaton( baton );
 
@@ -1154,7 +1155,7 @@ extern "C" svn_error_t *CommitInfoResult_callback( const svn_commit_info_t *comm
         return svn_error_create( APR_ENOMEM, NULL, "no memory for commit info results" );
     }
 
-    svn_commit_info_t *copy = svn_commit_info_dup( commit_info, pool );
+    svn_commit_info_t *copy = svn_commit_info_dup( commit_info, result->m_pool );
     if( copy == NULL )
     {
         return svn_error_create( APR_ENOMEM, NULL, "no memory for commit info results" );
@@ -1172,7 +1173,16 @@ Py::Object toObject( const svn_commit_info_t *commit_info )
 
     commit_info_dict[ str_date ] = utf8_string_or_none( commit_info->date );
     commit_info_dict[ str_author ] = utf8_string_or_none( commit_info->author );
-    commit_info_dict[ str_post_commit_err ] = utf8_string_or_none( commit_info->post_commit_err );
+    if( commit_info->post_commit_err == NULL )
+    {
+        commit_info_dict[ str_post_commit_err ] = Py::None();
+    }
+    else
+    {
+        // this field is sometimes a pointer to a none UTF8 string
+        commit_info_dict[ str_post_commit_err ] = utf8_string_or_none( commit_info->post_commit_err );
+    }
+
     if( SVN_IS_VALID_REVNUM( commit_info->revision ) )
     {
         commit_info_dict[ str_revision ] =
@@ -1221,7 +1231,6 @@ Py::Object toObject( CommitInfoResult &commit_info, const DictWrapper &wrapper_c
     else
     if( commit_style == 2 )
     {
-
         Py::List all_results;
 
         for( int index=0; index<commit_info.count(); ++index )

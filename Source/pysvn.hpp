@@ -511,6 +511,7 @@ private:
     static CommitInfoResult *castBaton( void *baton_ ) { return static_cast<CommitInfoResult *>( baton_ ); }
 
     apr_array_header_t  *m_all_results;
+    SvnPool             &m_pool;
 };
 #endif
 
