@@ -2354,10 +2354,18 @@ rev = \
 revpropdel( prop_name,
             url,
             revision=pysvn.Revision( opt_revision_kind.head ),
-            force=False )
+            force=False<span class="svn_1008000">,
+            original_prop_value="old value"</span> )
 </pre>
-<p>Delete the revision property prop_name from url.
+<p>
+Delete the revision property prop_name from url at the revision.
 </p>
+<div class="svn_1008000">
+<p>
+If original_prop_value is specified its value is compared to the current value of the property and
+only if it matches does the revpropdel succeed.
+</p>
+</div>
 
 <h4><a name="pysvn_client_revpropget"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.revpropget</a></h4>
 <pre>
@@ -2390,11 +2398,18 @@ revpropset( prop_name,
             prop_value,
             url,
             revision=pysvn.Revision( opt_revision_kind.head ),
-            force=False )
+            force=False<span class="svn_1008000">,
+            original_prop_value="old value"</span> )
 </pre>
 <p>set the revision property prop_name to prop_value in path.
 <span class="svn_1007000">The old prop value is returned.</span>
 </p>
+<div class="svn_1008000">
+<p>
+If original_prop_value is specified its value is compared to the current value of the property and
+only if it matches does the revpropset succeed.
+</p>
+</div>
 
 <div class="svn_1003000">
 <h4><a name="pysvn_client_set_adm_dir"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.set_adm_dir</a></h4>

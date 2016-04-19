@@ -25,6 +25,9 @@ Py::Object pysvn_client::cmd_revpropdel( const Py::Tuple &a_args, const Py::Dict
     {
     { true,  name_prop_name },
     { true,  name_url },
+#if defined( PYSVN_HAS_CLIENT_REVPROP_SET2 )
+    { false, name_original_prop_value },
+#endif
     { false, name_revision },
     { false, name_force },
     { false, NULL }
@@ -42,6 +45,9 @@ Py::Object pysvn_client::cmd_revpropset( const Py::Tuple &a_args, const Py::Dict
     { true,  name_prop_name },
     { true,  name_prop_value },
     { true,  name_url },
+#if defined( PYSVN_HAS_CLIENT_REVPROP_SET2 )
+    { false, name_original_prop_value },
+#endif
     { false, name_revision },
     { false, name_force },
     { false, NULL }
@@ -59,6 +65,12 @@ Py::Object pysvn_client::common_revpropset( FunctionArguments &args, bool is_set
     if( is_set )
     {
         propval = args.getUtf8String( name_prop_value );
+    }
+    std::string original_propval;
+    bool has_original_propval = args.hasArg( name_original_prop_value );
+    if( has_original_propval )
+    {
+        original_propval = args.getUtf8String( name_original_prop_value );
     }
 
     std::string path( args.getUtf8String( name_url ) );
@@ -83,6 +95,26 @@ Py::Object pysvn_client::common_revpropset( FunctionArguments &args, bool is_set
             svn_propval = svn_string_ncreate( propval.c_str(), propval.size(), pool );
         }
 
+#if defined( PYSVN_HAS_CLIENT_REVPROP_SET2 )
+        const svn_string_t *svn_original_propval = NULL;
+        if( has_original_propval )
+        {
+            svn_original_propval = svn_string_ncreate( original_propval.c_str(), original_propval.size(), pool );
+        }
+
+        svn_error_t *error = svn_client_revprop_set2
+            (
+            propname.c_str(),
+            svn_propval,
+            svn_original_propval,
+            norm_path.c_str(),
+            &revision,
+            &revnum,
+            force,
+            m_context,
+            pool
+            );
+#else
         svn_error_t *error = svn_client_revprop_set
             (
             propname.c_str(),
@@ -94,6 +126,7 @@ Py::Object pysvn_client::common_revpropset( FunctionArguments &args, bool is_set
             m_context,
             pool
             );
+#endif
         permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
