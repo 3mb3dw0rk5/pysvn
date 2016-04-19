@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 #
 #   test-05.sh
 #       test info2 with locked files
