@@ -1208,7 +1208,7 @@ class UnixCompilerGCC(CompilerGCC):
         self._addVar( 'PYTHON_ARCH_SPECIFIC_INC',     distutils.sysconfig.get_python_inc( True ) )
 
         py_cflags_list = [
-                    '-Wall -fPIC -fexceptions -frtti',
+                    '-Wall -fPIC',
                     '-I. -I%(APR_INC)s -I%(APU_INC)s -I%(SVN_INC)s',
                     '-DPYCXX_PYTHON_2TO3 -I%(PYCXX)s -I%(PYCXX_SRC)s -I%(PYTHON_INC)s',
                     '-I%(PYTHON_ARCH_SPECIFIC_INC)s',
@@ -1227,7 +1227,8 @@ class UnixCompilerGCC(CompilerGCC):
             print( 'Info: Disable deprecated functions warnings' )
             py_cflags_list.append( '-Wno-deprecated-declarations' )
 
-        self._addVar( 'CCCFLAGS',   ' '.join( py_cflags_list ) )
+        self._addVar( 'CCFLAGS',    ' '.join( py_cflags_list ) )
+        self._addVar( 'CCCFLAGS',   ' '.join( py_cflags_list+['-fexceptions -frtti'] ) )
         self._addVar( 'LDLIBS',     ' '.join( self._getLdLibs() ) )
         self._addVar( 'LDSHARED',   '%(CCC)s -shared -g' )
 
