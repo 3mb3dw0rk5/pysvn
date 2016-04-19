@@ -183,9 +183,14 @@ bool FunctionArguments::hasArg( const char *arg_name )
     return m_checked_args.hasKey( arg_name );
 }
 
-bool FunctionArguments::hasArgNotNone( const chat *arg_name )
+bool FunctionArguments::hasArgNotNone( const char *arg_name )
 {
-    return hasArg( arg_name ) && !m_checked_args[ arg_name ].isNone()
+    if( !hasArg( arg_name ) )
+    {
+        return false;
+    }
+    Py::Object arg = m_checked_args[ arg_name ];
+    return !arg.isNone();
 }
 
 Py::Object FunctionArguments::getArg( const char *arg_name )
