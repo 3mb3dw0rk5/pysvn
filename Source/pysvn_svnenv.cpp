@@ -606,8 +606,15 @@ svn_error_t *SvnTransaction::init( const std::string &repos_path,
     const std::string &transaction_name, bool is_revision )
 {
     svn_error_t *error;
-#if defined( PYSNV_HAS_REPOS_OPEN2 )
+
+    SvnPool scratch_pool( *this );
+
+#if defined( PYSVN_HAS_REPOS_OPEN3 )
+    error = svn_repos_open3( &m_repos, repos_path.c_str(), NULL, m_pool, scratch_pool );
+
+#elif defined( PYSNV_HAS_REPOS_OPEN2 )
     error = svn_repos_open2( &m_repos, repos_path.c_str(), NULL, m_pool );
+
 #else
     error = svn_repos_open( &m_repos, repos_path.c_str(), m_pool );
 #endif
