@@ -101,6 +101,7 @@ Py::Object pysvn_client::cmd_checkin( const Py::Tuple &a_args, const Py::Dict &a
 #if defined( PYSVN_HAS_CLIENT_COMMIT6 )
         type_error_message = "expecting boolean for include_file_externals keyword arg";
         bool include_file_externals = args.getBoolean( name_include_file_externals, false );
+
         type_error_message = "expecting boolean for include_dir_externals keyword arg";
         bool include_dir_externals = args.getBoolean( name_include_dir_externals, false );
 #endif
