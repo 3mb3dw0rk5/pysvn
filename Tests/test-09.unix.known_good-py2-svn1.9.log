@@ -1,0 +1,92 @@
+WorkDir: /home/barry/wc/svn/pysvn-trunk/Extension
+PYTHON: /usr/bin/python2.7
+Username: barry
+Info: CWD: /home/barry/wc/svn/pysvn-trunk/Extension/Tests
+Info: Command: mkdir testroot-09
+Info: CWD: /home/barry/wc/svn/pysvn-trunk/Extension/Tests
+Info: Command: cd testroot-09
+Info: CWD: /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09
+Info: Command: mkdir tmp
+Info: PYSVN command /usr/bin/python2.7 /home/barry/wc/svn/pysvn-trunk/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.05.00 --config-dir /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/configdir
+Info: CWD: /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09
+Info: Command: svnadmin create /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/repos
+Info: Setup - mkdir
+Info: CWD: /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09
+Info: pysvn command: mkdir file:///home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/repos/trunk -m test-09 add trunk
+commit_finalizing .
+Info: Setup - checkout wc1
+Info: CWD: /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09
+Info: pysvn command: checkout file:///home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/repos/trunk /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1
+update_started /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1
+Checked out revision 1
+Info: CWD: /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09
+Info: Command: cd /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1
+Info: Setup - add files and folders
+Info: CWD: /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1
+Info: pysvn command: mkdir folder1
+A /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1/folder1
+Info: CWD: /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1
+Info: pysvn command: add folder1/file-a.txt
+A /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1/folder1/file-a.txt
+Info: CWD: /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1
+Info: pysvn command: checkin -m commit added files
+A /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1/folder1
+A /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1/folder1/file-a.txt
+commit_finalizing .
+Revision 2
+Info: CWD: /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1
+Info: pysvn command: checkin -m add line 2
+M /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1/folder1/file-a.txt
+commit_finalizing .
+Revision 3
+Info: CWD: /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1
+Info: pysvn command: annotate folder1/file-a.txt
+A /trunk/folder1/file-a.txt
+A /trunk/folder1/file-a.txt
+1| r2 | barry | 2016-04-19T18:51:23.558477Z | test add file 1
+2| r3 | barry | 2016-04-19T18:51:23.974274Z | test add line 2
+Info: CWD: /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1
+Info: pysvn command: annotate2 folder1/file-a.txt
+A /trunk/folder1/file-a.txt
+A /trunk/folder1/file-a.txt
+1| r2 | test add file 1
+2| r3 | test add line 2
+Info: propset_local
+Info: CWD: /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1
+Info: pysvn command: propset_local svn:eol native folder1/file-a.txt
+property_added /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1/folder1/file-a.txt
+Info: CWD: /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1
+Info: pysvn command: proplist --verbose folder1/file-a.txt
+Properties on 'folder1/file-a.txt':
+  svn:eol: native
+Info: CWD: /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1
+Info: pysvn command: checkin -m eol is native
+M /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1/folder1/file-a.txt
+commit_finalizing .
+Revision 4
+Info: CWD: /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1
+Info: pysvn command: propdel_local svn:eol folder1/file-a.txt
+property_deleted /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1/folder1/file-a.txt
+Info: CWD: /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1
+Info: pysvn command: proplist --verbose folder1/file-a.txt
+Info: CWD: /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1
+Info: pysvn command: checkin -m remove eol
+M /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1/folder1/file-a.txt
+commit_finalizing .
+Revision 5
+Info: CWD: /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1
+Info: pysvn command: propset_remote test-case 09 file:///home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/repos/trunk/folder1/file-a.txt --revision 5
+Log message
+--- -------
+commit_finalizing .
+Info: CWD: /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1
+Info: pysvn command: proplist --verbose file:///home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/repos/trunk/folder1/file-a.txt
+Properties on 'file:///home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/repos/trunk/folder1/file-a.txt':
+  test-case: 09
+Info: CWD: /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1
+Info: pysvn command: propdel_remote test-case file:///home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/repos/trunk/folder1/file-a.txt --revision 6
+Log message
+--- -------
+commit_finalizing .
+Info: CWD: /home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/wc1
+Info: pysvn command: proplist --verbose file:///home/barry/wc/svn/pysvn-trunk/Extension/Tests/testroot-09/repos/trunk/folder1/file-a.txt
