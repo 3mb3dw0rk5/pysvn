@@ -725,15 +725,22 @@ Py::Object toObject
         py_wc_info[str_copyfrom_url] = utf8_string_or_none( info.wc_info->copyfrom_url );
         py_wc_info[str_copyfrom_rev] = Py::asObject(
                             new pysvn_revision( svn_opt_revision_number, 0, info.wc_info->copyfrom_rev ) );
-        switch( info.wc_info->checksum->kind )
+        if( info.wc_info->checksum != NULL )
         {
-        case svn_checksum_md5:
-            py_wc_info[str_checksum] = toHex( info.wc_info->checksum->digest, 16 );
-            break;
-        case svn_checksum_sha1:
-            py_wc_info[str_checksum] = toHex( info.wc_info->checksum->digest, 20 );
-            break;
-        default:
+            switch( info.wc_info->checksum->kind )
+            {
+            case svn_checksum_md5:
+                py_wc_info[str_checksum] = toHex( info.wc_info->checksum->digest, 16 );
+                break;
+            case svn_checksum_sha1:
+                py_wc_info[str_checksum] = toHex( info.wc_info->checksum->digest, 20 );
+                break;
+            default:
+                py_wc_info[str_checksum] = Py::None();
+            }
+        }
+        else
+        {
             py_wc_info[str_checksum] = Py::None();
         }
 
