@@ -17,9 +17,9 @@ Info: Transaction( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos, 
 Info: revproplist() ...
 svn:author: barry
 svn:check-locks: true
-svn:date: 2013-08-04T18:35:24.618341Z
+svn:date: 2016-04-19T11:10:40.411656Z
 svn:log: pre-commit test 1
-svn:txn-client-compat-version: 1.8.1
+svn:txn-client-compat-version: 1.8.15
 Info: changed() ...
 trunk/test/a: action='A', kind=<node_kind.dir>, text_mod=0, prop_mod=0
 Info: changed( copy_info=True ) ...
@@ -35,7 +35,7 @@ Info: post-commit test 1
 Info: Transaction( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos, 3, is_revision=True) ...
 Info: revproplist() ...
 svn:author: barry
-svn:date: 2013-08-04T18:35:24.711174Z
+svn:date: 2016-04-19T11:10:40.468783Z
 svn:log: pre-commit test 1
 Info: changed() ...
 trunk/test/a: action='A', kind=<node_kind.dir>, text_mod=0, prop_mod=0
@@ -67,9 +67,9 @@ Info: Transaction( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos, 
 Info: revproplist() ...
 svn:author: barry
 svn:check-locks: true
-svn:date: 2013-08-04T18:35:25.175479Z
+svn:date: 2016-04-19T11:10:41.186150Z
 svn:log: Add two files
-svn:txn-client-compat-version: 1.8.1
+svn:txn-client-compat-version: 1.8.15
 Info: changed() ...
 trunk/test/a/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0
      contents: 'file1 A\n'
@@ -93,7 +93,7 @@ Info: post-commit test 1
 Info: Transaction( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos, 4, is_revision=True) ...
 Info: revproplist() ...
 svn:author: barry
-svn:date: 2013-08-04T18:35:25.230460Z
+svn:date: 2016-04-19T11:10:41.345239Z
 svn:log: Add two files
 Info: changed() ...
 trunk/test/a/file1.txt: action='A', kind=<node_kind.file>, text_mod=1, prop_mod=0
@@ -126,9 +126,9 @@ Info: Transaction( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos, 
 Info: revproplist() ...
 svn:author: barry
 svn:check-locks: true
-svn:date: 2013-08-04T18:35:26.131797Z
+svn:date: 2016-04-19T11:10:42.140600Z
 svn:log: Mod one file Mod one prop
-svn:txn-client-compat-version: 1.8.1
+svn:txn-client-compat-version: 1.8.15
 Info: changed() ...
 trunk/test/a/file1.txt: action='R', kind=<node_kind.file>, text_mod=0, prop_mod=1
      svn:eol-style: native
@@ -154,7 +154,7 @@ Info: post-commit test 1
 Info: Transaction( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos, 5, is_revision=True) ...
 Info: revproplist() ...
 svn:author: barry
-svn:date: 2013-08-04T18:35:26.183065Z
+svn:date: 2016-04-19T11:10:42.195617Z
 svn:log: Mod one file Mod one prop
 Info: changed() ...
 trunk/test/a/file1.txt: action='R', kind=<node_kind.file>, text_mod=0, prop_mod=1
@@ -188,9 +188,9 @@ Info: Transaction( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos, 
 Info: revproplist() ...
 svn:author: barry
 svn:check-locks: true
-svn:date: 2013-08-04T18:35:27.207856Z
+svn:date: 2016-04-19T11:10:43.142282Z
 svn:log: Delete one file
-svn:txn-client-compat-version: 1.8.1
+svn:txn-client-compat-version: 1.8.15
 Info: changed() ...
 trunk/test/a/file1.txt: action='D', kind=<node_kind.file>, text_mod=0, prop_mod=0
 Info: changed( copy_info=True ) ...
@@ -207,7 +207,7 @@ Info: post-commit test 1
 Info: Transaction( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos, 6, is_revision=True) ...
 Info: revproplist() ...
 svn:author: barry
-svn:date: 2013-08-04T18:35:27.280501Z
+svn:date: 2016-04-19T11:10:43.187778Z
 svn:log: Delete one file
 Info: changed() ...
 trunk/test/a/file1.txt: action='D', kind=<node_kind.file>, text_mod=0, prop_mod=0
@@ -223,7 +223,7 @@ Info: Copy one file
 Info: Command: /Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir cp /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/file1.txt /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/file1copy.txt
 A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/file1copy.txt
 Info: Command: /Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.01.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/configdir checkin -m Copy one file /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc
-A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/file1copy.txt
+commit_copied /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/wc/file1copy.txt
 Revision 7
 Info: pre_test_1.output start ------------------------------------
 /Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Tests/test_04_commit_hook_test_1.py pre-commit /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos 6-6
@@ -232,9 +232,9 @@ Info: Transaction( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos, 
 Info: revproplist() ...
 svn:author: barry
 svn:check-locks: true
-svn:date: 2013-08-04T18:35:29.074183Z
+svn:date: 2016-04-19T11:10:45.084009Z
 svn:log: Copy one file
-svn:txn-client-compat-version: 1.8.1
+svn:txn-client-compat-version: 1.8.15
 Info: changed() ...
 trunk/test/file1copy.txt: action='A', kind=<node_kind.file>, text_mod=0, prop_mod=0
      contents: 'file1 ROOT ln 2\n'
@@ -254,7 +254,7 @@ Info: post-commit test 1
 Info: Transaction( /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-04/repos, 7, is_revision=True) ...
 Info: revproplist() ...
 svn:author: barry
-svn:date: 2013-08-04T18:35:29.122110Z
+svn:date: 2016-04-19T11:10:45.132995Z
 svn:log: Copy one file
 Info: changed() ...
 trunk/test/file1copy.txt: action='A', kind=<node_kind.file>, text_mod=0, prop_mod=0
