@@ -448,6 +448,7 @@ public:
     void check();
 
     bool hasArg( const char *arg_name );
+    bool hasArgNotNone( const char *arg_name );
     Py::Object getArg( const char *arg_name );
 
     bool getBoolean( const char *name );

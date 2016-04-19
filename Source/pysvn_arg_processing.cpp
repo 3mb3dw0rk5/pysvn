@@ -174,13 +174,18 @@ bool FunctionArguments::hasArg( const char *arg_name )
     if( !found_arg_name )
     {
         std::string msg = m_function_name;
-        msg += "() coding error: function does not have a arg called '";
+        msg += "() coding error: function does not have an arg called '";
         msg += std_arg_name;
         msg += "'";
         throw Py::RuntimeError( msg );
     }
 
     return m_checked_args.hasKey( arg_name );
+}
+
+bool FunctionArguments::hasArgNotNone( const chat *arg_name )
+{
+    return hasArg( arg_name ) && !m_checked_args[ arg_name ].isNone()
 }
 
 Py::Object FunctionArguments::getArg( const char *arg_name )

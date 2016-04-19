@@ -2355,14 +2355,14 @@ revpropdel( prop_name,
             url,
             revision=pysvn.Revision( opt_revision_kind.head ),
             force=False<span class="svn_1008000">,
-            original_prop_value="old value"</span> )
+            original_prop_value=None</span> )
 </pre>
 <p>
 Delete the revision property prop_name from url at the revision.
 </p>
 <div class="svn_1008000">
 <p>
-If original_prop_value is specified its value is compared to the current value of the property and
+If original_prop_value is specified its string value is compared to the current value of the property and
 only if it matches does the revpropdel succeed.
 </p>
 </div>
@@ -2399,14 +2399,14 @@ revpropset( prop_name,
             url,
             revision=pysvn.Revision( opt_revision_kind.head ),
             force=False<span class="svn_1008000">,
-            original_prop_value="old value"</span> )
+            original_prop_value=None</span> )
 </pre>
 <p>set the revision property prop_name to prop_value in path.
 <span class="svn_1007000">The old prop value is returned.</span>
 </p>
 <div class="svn_1008000">
 <p>
-If original_prop_value is specified its value is compared to the current value of the property and
+If original_prop_value is specified its string value is compared to the current value of the property and
 only if it matches does the revpropset succeed.
 </p>
 </div>

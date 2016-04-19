@@ -67,7 +67,7 @@ Py::Object pysvn_client::common_revpropset( FunctionArguments &args, bool is_set
         propval = args.getUtf8String( name_prop_value );
     }
     std::string original_propval;
-    bool has_original_propval = args.hasArg( name_original_prop_value );
+    bool has_original_propval = args.hasArgNotNone( name_original_prop_value );
     if( has_original_propval )
     {
         original_propval = args.getUtf8String( name_original_prop_value );
