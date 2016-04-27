@@ -894,6 +894,9 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
     { false, name_fetch_excluded },
     { false, name_fetch_actual_only },
 #endif
+#if defined( PYSVN_HAS_CLIENT_INFO3 )
+    { false, name_include_externals },
+#endif
     { false, NULL }
     };
     FunctionArguments args( "info2", args_desc, a_args, a_kws );
@@ -927,6 +930,9 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
     bool fetch_excluded = args.getBoolean( name_fetch_excluded, false );
     bool fetch_actual_only = args.getBoolean( name_fetch_actual_only, true );
 #endif
+#if defined( PYSVN_HAS_CLIENT_INFO3 )
+    bool include_externals = args.getBoolean( name_include_externals, false );
+#endif
 
     bool is_url = is_svn_url( path );
     revisionKindCompatibleCheck( is_url, peg_revision, name_peg_revision, name_url_or_path );
@@ -956,7 +962,29 @@ Py::Object pysvn_client::cmd_info2( const Py::Tuple &a_args, const Py::Dict &a_k
         {
             abspath_or_url = norm_path.c_str();
         }
+#endif
 
+
+#if defined( PYSVN_HAS_CLIENT_INFO4 )
+        if( error == SVN_NO_ERROR )
+        {
+            error = svn_client_info4
+                    (
+                    abspath_or_url,
+                    &peg_revision,
+                    &revision,
+                    depth,
+                    fetch_excluded,
+                    fetch_actual_only,
+                    include_externals,
+                    changelists,
+                    info_baton.callback(),
+                    info_baton.baton(),
+                    m_context,
+                    pool
+                    );
+        }
+#elif defined( PYSVN_HAS_CLIENT_INFO3 )
         if( error == SVN_NO_ERROR )
         {
             error = svn_client_info3
