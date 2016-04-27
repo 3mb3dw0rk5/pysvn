@@ -866,7 +866,7 @@ class Win32CompilerMSVC90(Compiler):
         rules.append( '\t' 'wb-diff.cmd test-%(TN)s.win32.known_good-%(KGV)s.log.clean test-%(TN)s.win32.new.log.clean' % v )
         rules.append( '' )
         rules.append( 'new-%(TN)s: test-%(TN)s.win32.new.log' % v )
-        rules.append( '\t' 'copy test-%(TN)s.win32.new.log test-%(TN)s.win32.known_good-%(KGV)s.log' % v )
+        rules.append( '\t' 'move /y test-%(TN)s.win32.new.log test-%(TN)s.win32.known_good-%(KGV)s.log' % v )
 
         self.makePrint( self.expand( '\n'.join( rules ) ) )
 
