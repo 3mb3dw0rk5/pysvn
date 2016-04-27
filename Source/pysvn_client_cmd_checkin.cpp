@@ -399,6 +399,73 @@ Py::Object pysvn_client::cmd_cleanup( const Py::Tuple &a_args, const Py::Dict &a
 
     return Py::None();
 }
+#if defined( PYSVN_HAS_CLIENT_VACUUM )
+Py::Object pysvn_client::cmd_vacuum( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_path },
+    { false, name_remove_unversioned_items },
+    { false, name_remove_ignored_items },
+    { false, name_fix_recorded_timestamps },
+    { false, name_vacuum_pristines },
+    { false, name_include_externals },
+    { false, NULL }
+    };
+    FunctionArguments args( "vacuum", args_desc, a_args, a_kws );
+    args.check();
+
+    std::string path( args.getUtf8String( name_path ) );
+
+    bool remove_unversioned_items = args.getBoolean( name_remove_unversioned_items, false );
+    bool remove_ignored_items = args.getBoolean( name_remove_ignored_items, false );
+    bool fix_recorded_timestamps = args.getBoolean( name_fix_recorded_timestamps, true );
+    bool vacuum_pristines = args.getBoolean( name_vacuum_pristines, true );
+    bool include_externals = args.getBoolean( name_include_externals, false );
+
+    SvnPool pool( m_context );
+
+    try
+    {
+        std::string norm_path( svnNormalisedIfPath( path, pool ) );
+
+        checkThreadPermission();
+
+        PythonAllowThreads permission( m_context );
+
+        const char *abspath = NULL;
+        svn_error_t *error = svn_dirent_get_absolute( &abspath, norm_path.c_str(), pool );
+
+        if( error == NULL )
+        {
+            error = svn_client_vacuum
+                (
+                abspath,
+                remove_unversioned_items,
+                remove_ignored_items,
+                fix_recorded_timestamps,
+                vacuum_pristines,
+                include_externals,
+                m_context,
+                pool
+                );
+        }
+
+        permission.allowThisThread();
+        if( error != NULL )
+            throw SvnException( error );
+    }
+    catch( SvnException &e )
+    {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
+        throw_client_error( e );
+    }
+
+    return Py::None();
+}
+#endif
 
 Py::Object pysvn_client::cmd_resolved( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {

@@ -970,4 +970,7 @@ void pysvn_client::init_type()
     add_keyword_method("upgrade", &pysvn_client::cmd_upgrade, pysvn_client_upgrade_doc );
 #endif
     add_keyword_method("update", &pysvn_client::cmd_update, pysvn_client_update_doc );
+#if defined( PYSVN_HAS_CLIENT_VACUUM )
+    add_keyword_method("vacuum", &pysvn_client::cmd_vacuum, pysvn_client_vacuum_doc );
+#endif
 }

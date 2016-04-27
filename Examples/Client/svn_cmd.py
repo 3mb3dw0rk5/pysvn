@@ -1261,6 +1261,26 @@ class SvnCommand:
 
     cmd_up = cmd_update
 
+    def cmd_vacuum( self, args ):
+        remove_unversioned_items = args.getBooleanOption( '--remove-unversioned-items', True )
+        remove_ignored_items = args.getBooleanOption( '--remove-ignored-items', True )
+        fix_recorded_timestamps = args.getBooleanOption( '--fix-recorded-timestamps', True )
+        vacuum_pristines = args.getBooleanOption( '--vacuum-pristines', True )
+        include_externals = args.getBooleanOption( '--include-externals', True )
+
+        positional_args = args.getPositionalArgs( 0, 1 )
+        if len(positional_args) == 0:
+            positional_args.append( '.' )
+
+        self.client.vacuum(
+                positional_args[0],
+                remove_unversioned_items=remove_unversioned_items,
+                remove_ignored_items=remove_ignored_items,
+                fix_recorded_timestamps=fix_recorded_timestamps,
+                vacuum_pristines=vacuum_pristines,
+                include_externals=include_externals
+                )
+
     def cmd_help( self, args ):
         print( 'Version: pysvn %d.%d.%d-%d' % pysvn.version,'svn %d.%d.%d-%s' % pysvn.svn_version )
         valid_cmd_names = [name for name in SvnCommand.__dict__.keys() if name.find('cmd_') == 0]
@@ -1277,8 +1297,12 @@ class SvnCommand:
 
 # key is long option name, value is 1 if need next arg as value
 long_opt_info = {
+    # svn_cmd.py control
     '--pause': 0,
+    '--pysvn-testing': 1,       # modify behaviour to assist testing pysvn
+    '--debug': 0,               # do debug stuff
 
+    # command options
     '--auto-props': 0,          # enable automatic properties
     '--change-list': 1,         # changelist
     '--config-dir': 1,          # read user configuration files from directory ARG
@@ -1287,12 +1311,18 @@ long_opt_info = {
     '--dry-run': 0,             # try operation but make no changes
     '--editor-cmd': 1,          # use ARG as external editor
     '--encoding': 1,            # treat value as being in charset encoding ARG
+    '--extensions': 1,          # pass ARG as bundled options to GNU diff
     '--fetch-locks': 0,         # as list to fetch lock info
+    '--file': 1,                # read data from file ARG
+    '--fix-recorded-timestamps': 0,
     '--force': 0,               # force operation to run
     '--force-log': 0,           # force validity of log message source
+    '--include-externals': 0,
     '--include-externals': 0,   # include external information in list() output
     '--incremental': 0,         # give output suitable for concatenation
     '--limit': 1,               # number of logs to fetch
+    '--message': 1,             # specify commit message ARG
+    '--native-eol': 1,          # native eol ARG
     '--new': 1,                 # use ARG as the newer target
     '--no-auth-cache': 0,       # do not cache authentication tokens
     '--no-auto-props': 0,       # disable automatic properties
@@ -1300,30 +1330,27 @@ long_opt_info = {
     '--no-ignore': 0,           # disregard default and svn:ignore property ignores
     '--no-remove-tempfiles': 0, # do not remove temp files
     '--non-interactive': 0,     # do no interactive prompting
+    '--non-recursive': 0,       # operate on single directory only
     '--notice-ancestry': 0,     # notice ancestry when calculating differences
     '--old': 1,                 # use ARG as the older target
     '--password': 1,            # specify a password ARG
+    '--quiet': 0,               # print as little as possible
+    '--recursive': 0,           # descend recursively
     '--relocate': 0,            # relocate via URL-rewriting
+    '--remove-ignored-items': 0,
+    '--remove-unversioned-items': 0,
+    '--revision': 1,            # revision X or X:Y range.  X or Y can be one of:
     '--revprop': 0,             # operate on a revision property (use with -r)
     '--show-inherited-props': 0, # show inherited props
+    '--show-updates': 0,        # display update information
     '--skip-checks': 0,         # skip-checks
     '--strict': 0,              # use strict semantics
     '--targets': 1,             # pass contents of file ARG as additional args
     '--username': 1,            # specify a username ARG
+    '--vacuum-pristines': 0,
+    '--verbose': 0,             # print extra information
     '--version': 0,             # print client version info
     '--xml': 0,                 # output in xml
-    '--file': 1,                # read data from file ARG
-    '--native-eol': 1,          # native eol ARG
-    '--non-recursive': 0,       # operate on single directory only
-    '--recursive': 0,           # descend recursively
-    '--message': 1,             # specify commit message ARG
-    '--quiet': 0,               # print as little as possible
-    '--revision': 1,            # revision X or X:Y range.  X or Y can be one of:
-    '--show-updates': 0,        # display update information
-    '--verbose': 0,             # print extra information
-    '--extensions': 1,          # pass ARG as bundled options to GNU diff
-    '--pysvn-testing': 1,       # modify behaviour to assist testing pysvn
-    '--debug': 0,               # do debug stuff
 }
 
 # map short name to long

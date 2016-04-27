@@ -587,7 +587,7 @@ It is passed the conflict_description and must return a conflict_choice, merge_f
 <td><span class="svn_1002000"><a href="#pysvn_client_unlock">unlock</a></span></td>
 <td><a href="#pysvn_client_update">update</a></td>
 <td><span class="svn_1007000"><a href="#pysvn_client_upgrade">upgrade</a></span></td>
-<td>&#160;</td>
+<td><span class="svn_1009000"><a href="#pysvn_client_vacuum">vacuum</a></span></td>
 </tr>
 </table>
 
@@ -2825,6 +2825,44 @@ This option lets you use the Transation object to write post-commit
 hooks with the same API than pre-commit hooks, and lets you easily test
 your pre-commit hook on revisions.
 </p>
+
+<div class="svn_1009000">
+<h4><a name="pysvn_client_vacuum"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.vacuum</a></h4>
+<pre>
+vacuum( path,
+        remove_unversioned_items=False,
+        remove_ignored_items=False,
+        fix_recorded_timestamps=True,
+        vacuum_pristines=True,
+        include_externals=False )
+</pre>
+<p>
+Clean up any locks in the working copy at path. Usually such
+locks are the result of a failed or interrupted operation.
+</p>
+
+<p>
+If remove_unversioned_items is True, remove unversioned items
+in path after successful working copy cleanup.
+</p>
+<p>
+If remove_ignored_items is True, remove ignored unversioned items
+in path after successful working copy cleanup.
+</p>
+
+<p>
+If fix_recorded_timestamps is True, this function fixes recorded
+timestamps for unmodified files in the working copy, reducing comparision
+time on future checks.
+</p>
+<p>If vacuum_pristines is True, and dir_abspath points to the working
+copy root unreferenced files in the pristine store are removed.
+</p>
+<p>If include_externals is True, recurse into externals and clean
+them up as well.
+</p>
+
+</div>
 
 <h3><a name="pysvn_transaction_methods">Transaction methods</a></h3>
 

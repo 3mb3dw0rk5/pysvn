@@ -313,7 +313,9 @@ public:
     Py::Object cmd_upgrade( const Py::Tuple& args, const Py::Dict &kws );
 #endif
     Py::Object cmd_update( const Py::Tuple& args, const Py::Dict &kws );
-
+#if defined( PYSVN_HAS_CLIENT_VACUUM )
+    Py::Object cmd_vacuum( const Py::Tuple& args, const Py::Dict &kws );
+#endif
     // SVN commands
     Py::Object is_url( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object get_auth_cache( const Py::Tuple& args, const Py::Dict &kws );
