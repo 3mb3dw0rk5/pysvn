@@ -13,8 +13,8 @@ setlocal
 set PYTHONPATH=%BUILDER_TOP_DIR%\Source;%BUILDER_TOP_DIR%\Examples\Client
 set PYSVN=%PYTHON% %BUILDER_TOP_DIR%\Examples\Client\svn_cmd.py --pysvn-testing 01.01.00 --config-dir b:\configdir
 echo Info: PYSVN CMD %PYSVN%
-call :cmd_shell mkdir testroot-08
-call :cmd_shell subst b: %CD%\testroot-08
+call :cmd_shell mkdir testroot-09
+call :cmd_shell subst b: %CD%\testroot-09
 call :cmd_shell cd /d b:\
 
 call :cmd_shell mkdir tmp
@@ -23,7 +23,7 @@ set TMPDIR=b:\tmp
 call :cmd_shell svnadmin create b:\repos
 
 echo Info: Setup - mkdir
-call :cmd_pysvn mkdir file:///b:/repos/trunk -m "test-08 add trunk"
+call :cmd_pysvn mkdir file:///b:/repos/trunk -m "test-09 add trunk"
 
 echo Info: Setup - checkout wc1
 call :cmd_pysvn checkout file:///b:/repos/trunk b:\wc1
