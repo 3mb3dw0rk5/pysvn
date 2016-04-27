@@ -1718,6 +1718,10 @@ Py::Object pysvn_client::cmd_status2( const Py::Tuple &a_args, const Py::Dict &a
     { false, name_depth },
     { false, name_changelists },
     { false, name_depth_as_sticky },
+#if defined( PYSVN_HAS_CLIENT_STATUS6 )
+    { false, name_check_out_of_date },
+    { false, name_check_working_copy },
+#endif
     { false, NULL }
     };
     FunctionArguments args( "status2", args_desc, a_args, a_kws );
@@ -1739,7 +1743,12 @@ Py::Object pysvn_client::cmd_status2( const Py::Tuple &a_args, const Py::Dict &a
     bool update = args.getBoolean( name_update, false );
     bool ignore = args.getBoolean( name_ignore, false );
     bool ignore_externals = args.getBoolean( name_ignore_externals, false );
-    bool  depth_as_sticky = args.getBoolean( name_depth_as_sticky, true );
+    bool depth_as_sticky = args.getBoolean( name_depth_as_sticky, true );
+
+#if defined( PYSVN_HAS_CLIENT_STATUS6 )
+    bool  check_out_of_date = args.getBoolean( name_check_out_of_date, update );
+    bool  check_working_copy = args.getBoolean( name_check_working_copy, true );
+#endif
 
     Status2EntriesBaton baton( pool );
 
@@ -1759,6 +1768,29 @@ Py::Object pysvn_client::cmd_status2( const Py::Tuple &a_args, const Py::Dict &a
         const char *abspath_or_url = NULL;
         svn_error_t *error = svn_dirent_get_absolute( &abspath_or_url, norm_path.c_str(), pool );
 
+#if defined( PYSVN_HAS_CLIENT_STATUS6 )
+        if( error == NULL )
+        {
+            error = svn_client_status6
+                (
+                &revnum,            // revnum
+                m_context,
+                abspath_or_url,     // path
+                &rev,
+                depth,
+                get_all,
+                check_out_of_date,
+                check_working_copy,
+                !ignore,
+                ignore_externals,
+                depth_as_sticky,
+                changelists,
+                baton.callback(),
+                baton.baton(),
+                pool
+                );
+        }
+#else
         if( error == NULL )
         {
             error = svn_client_status5
@@ -1779,7 +1811,7 @@ Py::Object pysvn_client::cmd_status2( const Py::Tuple &a_args, const Py::Dict &a
                 pool
                 );
         }
-
+#endif
         permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );

@@ -45,6 +45,8 @@ PYSVN_STATIC_STRING( name_callback_ssl_server_trust_prompt, "callback_ssl_server
 PYSVN_STATIC_STRING( name_changed_paths, "changed_paths" )
 PYSVN_STATIC_STRING( name_changelist, "changelist" )
 PYSVN_STATIC_STRING( name_changelists, "changelists" )
+PYSVN_STATIC_STRING( name_check_out_of_date, "check_out_of_date" )
+PYSVN_STATIC_STRING( name_check_working_copy, "check_working_copy" )
 PYSVN_STATIC_STRING( name_clear_changelists, "clear_changelists" )
 PYSVN_STATIC_STRING( name_clear_dav_cache, "clear_dav_cache" )
 PYSVN_STATIC_STRING( name_comment, "comment" )

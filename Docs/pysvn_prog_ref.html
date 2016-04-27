@@ -2564,7 +2564,9 @@ status2( path,
          ignore_externals=False,
          depth=depth,
          changelist=[],
-         depth_as_sticky=False )
+         depth_as_sticky=False<span class="svn_1009000">,
+         check_out_of_date=update,
+         check_working_copy=True</span> )
 </pre>
 <p>If path is a directory status is returned for all files in the
 directory in status_list. If path is a single file status is
@@ -2597,6 +2599,22 @@ Set ignore_externals to True to ignore externals definitions.
   wc_notify_action.completed after each.</li>
 
 <li>depth - can be used as in place of recurse. depth is one of the pysvn.depth enums.</li>
+
+<li class="svn_1009000">If check_out_of_date is set, contact the repository and
+  augment the status structures with information about
+  out-of-dateness (with respect to revision).  Also, if
+  result_rev is not NULL, set *result_rev to the actual
+  revision against which the working copy was compared (
+  result_rev is not meaningful unless check_out_of_date is
+  True). check_out_of_date deafults to the value of update.</li>
+
+<li class="svn_1009000">If check_working_copy is not set, do not scan the working
+  copy for local modifications. This parameter will be ignored
+  unless check_out_of_date is set.  When set, the status
+  report will not contain any information about local changes in
+  the working copy; this includes local deletions and
+  replacements.</li>
+
 </ul>
 </p>
 </div>
