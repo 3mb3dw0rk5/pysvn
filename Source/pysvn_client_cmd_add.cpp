@@ -251,6 +251,7 @@ Py::Object pysvn_client::cmd_cat( const Py::Tuple &a_args, const Py::Dict &a_kws
     // return the bytes as is to the application
     // we can assume nothing about them
     Py::Bytes contents( stringbuf->data, (int)stringbuf->len );
+#if defined( PYSVN_HAS_CLIENT_CAT3 )
     if( get_props )
     {
         Py::Tuple result( 2 );
@@ -261,10 +262,10 @@ Py::Object pysvn_client::cmd_cat( const Py::Tuple &a_args, const Py::Dict &a_kws
         return result;
     }
     else
+#endif
     {
         return contents;
     }
-
 }
 
 Py::Object pysvn_client::cmd_mkdir( const Py::Tuple &a_args, const Py::Dict &a_kws )
