@@ -1,11 +1,11 @@
-WorkDir: C:\wc\svn\pysvn\Extension
-PYTHON: c:\python27.win32\python.exe
+WorkDir: C:\Users\barry\wc\svn\PySVN\Extension
+PYTHON: c:\python27.Win64\python.exe
 Username: barry
-Info: PYSVN CMD c:\python27.win32\python.exe C:\wc\svn\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing 01.01.00 --config-dir b:\configdir
+Info: PYSVN CMD c:\python27.Win64\python.exe C:\Users\barry\wc\svn\PySVN\Extension\Examples\Client\svn_cmd.py --pysvn-testing 01.01.00 --config-dir b:\configdir
 
 Info: CMD mkdir testroot-08
 
-Info: CMD subst b: C:\wc\svn\pysvn\Extension\Tests\testroot-08
+Info: CMD subst b: C:\Users\barry\wc\svn\PySVN\Extension\Tests\testroot-08
 
 Info: CMD cd /d b:\
 
@@ -95,7 +95,7 @@ b:\wc2 >echo.  1>&2
 b:\wc2 >echo Info: PYSVN CMD patch b:\diff-1.patch b:\wc2 --no-remove-tempfiles  1>&2 
 Info: PYSVN CMD patch b:\diff-1.patch b:\wc2 --no-remove-tempfiles 
 
-b:\wc2 >c:\python27.win32\python.exe C:\wc\svn\pysvn\Extension\Examples\Client\svn_cmd.py --pysvn-testing 01.01.00 --config-dir b:\configdir patch b:\diff-1.patch b:\wc2 --no-remove-tempfiles 
+b:\wc2 >c:\python27.Win64\python.exe C:\Users\barry\wc\svn\PySVN\Extension\Examples\Client\svn_cmd.py --pysvn-testing 01.01.00 --config-dir b:\configdir patch b:\diff-1.patch b:\wc2 --no-remove-tempfiles 
 patch B:/wc2/folder1/file-a.txt
 patch_applied_hunk B:/wc2/folder1/file-a.txt
 
@@ -130,12 +130,4 @@ FC: no differences encountered
 
 b:\wc2 >goto :eof 
 
-b:\wc2 >endlocal
-
-C:\wc\svn\pysvn\Extension\Tests >echo.
-
-
-C:\wc\svn\pysvn\Extension\Tests >echo Info: CMD  
-Info: CMD 
-
-C:\wc\svn\pysvn\Extension\Tests >goto :eof 
+b:\wc2 >goto :eof 
