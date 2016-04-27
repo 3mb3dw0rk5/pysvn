@@ -153,6 +153,10 @@ Py::Object pysvn_client::cmd_cat( const Py::Tuple &a_args, const Py::Dict &a_kws
 #if defined( PYSVN_HAS_CLIENT_CAT2 )
     { false, name_peg_revision },
 #endif
+#if defined( PYSVN_HAS_CLIENT_CAT3 )
+    { false, name_expand_keywords },
+    { false, name_get_props },
+#endif
     { false, NULL }
     };
     FunctionArguments args( "cat", args_desc, a_args, a_kws );
@@ -175,6 +179,22 @@ Py::Object pysvn_client::cmd_cat( const Py::Tuple &a_args, const Py::Dict &a_kws
     svn_stringbuf_t * stringbuf = svn_stringbuf_create( empty_string, pool );
     svn_stream_t * stream = svn_stream_from_stringbuf( stringbuf, pool );
 
+#if defined( PYSVN_HAS_CLIENT_CAT3 )
+    bool get_props = args.getBoolean( name_get_props, false );
+    bool expand_keywords = args.getBoolean( name_expand_keywords, false );
+
+    apr_hash_t *props = NULL;
+    apr_hash_t **props_ptr;
+    if( get_props )
+    {
+        props_ptr = &props;
+    }
+    else
+    {
+        props_ptr = NULL;
+    }
+#endif
+
     try
     {
         std::string norm_path( svnNormalisedIfPath( path, pool ) );
@@ -182,7 +202,20 @@ Py::Object pysvn_client::cmd_cat( const Py::Tuple &a_args, const Py::Dict &a_kws
         checkThreadPermission();
 
         PythonAllowThreads permission( m_context );
-#if defined( PYSVN_HAS_CLIENT_CAT2 )
+#if defined( PYSVN_HAS_CLIENT_CAT3 )
+        svn_error_t *error = svn_client_cat3
+            (
+            props_ptr,
+            stream,
+            norm_path.c_str(),
+            &peg_revision,
+            &revision,
+            expand_keywords,
+            m_context,
+            pool,
+            pool
+            );
+#elif defined( PYSVN_HAS_CLIENT_CAT2 )
         svn_error_t *error = svn_client_cat2
             (
             stream,
@@ -217,7 +250,21 @@ Py::Object pysvn_client::cmd_cat( const Py::Tuple &a_args, const Py::Dict &a_kws
 
     // return the bytes as is to the application
     // we can assume nothing about them
-    return Py::Bytes( stringbuf->data, (int)stringbuf->len );
+    Py::Bytes contents( stringbuf->data, (int)stringbuf->len );
+    if( get_props )
+    {
+        Py::Tuple result( 2 );
+
+        result[0] = contents;
+        result[1] = propsToObject( props, pool );
+
+        return result;
+    }
+    else
+    {
+        return contents;
+    }
+
 }
 
 Py::Object pysvn_client::cmd_mkdir( const Py::Tuple &a_args, const Py::Dict &a_kws )
@@ -467,6 +514,10 @@ Py::Object pysvn_client::cmd_revert( const Py::Tuple &a_args, const Py::Dict &a_
     { false, name_depth },
     { false, name_changelists },
 #endif
+#if defined( PYSVN_HAS_CLIENT_REVERT3 )
+    { false, name_clear_changelists },
+    { false, name_metadata_only },
+#endif
     { false, NULL }
     };
     FunctionArguments args( "revert", args_desc, a_args, a_kws );
@@ -491,13 +542,28 @@ Py::Object pysvn_client::cmd_revert( const Py::Tuple &a_args, const Py::Dict &a_
         bool recurse = args.getBoolean( name_recurse, false );
 #endif
 
+#if defined( PYSVN_HAS_CLIENT_REVERT3 )
+    bool clear_changelists = args.getBoolean( name_clear_changelists, false );
+    bool metadata_only = args.getBoolean( name_metadata_only, false );
+#endif
         try
         {
             checkThreadPermission();
 
             PythonAllowThreads permission( m_context );
 
-#if defined( PYSVN_HAS_CLIENT_REVERT2 )
+#if defined( PYSVN_HAS_CLIENT_REVERT3 )
+            svn_error_t *error = svn_client_revert3
+                (
+                targets,
+                depth,
+                changelists,
+                clear_changelists,
+                metadata_only,
+                m_context,
+                pool
+                );
+#elif defined( PYSVN_HAS_CLIENT_REVERT2 )
             svn_error_t *error = svn_client_revert2
                 (
                 targets,

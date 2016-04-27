@@ -720,18 +720,37 @@ Note: To find the author and date of the lines in the annotation use
 file_text = \
 cat( url_or_path,
      revision=pysvn.Revision( opt_revision_kind.head )<span class="svn_1002000">,
-     peg_revision=pysvn.Revision( opt_revision_kind.unspecified )</span> )
+     peg_revision=pysvn.Revision( opt_revision_kind.unspecified )</span>,<span class="svn_1009000">
+     expand_keywords=false,
+     get_props=false</span> )
+
+<div class="svn_1009000">
+file_text, props = \
+cat( url_or_path,
+     revision=pysvn.Revision( opt_revision_kind.head ),
+     peg_revision=pysvn.Revision( opt_revision_kind.unspecified ),
+     expand_keywords=False,
+     get_props=True )
+</div>
 </pre>
 <p>
 Return the contents of url_or_path for the specified revision as
-a string, file_text.
+a string, file_text. 
 </p>
-<p><span class="svn_1002000">peg_revision indicates in
+<div class="svn_1009000">
+<p>
+When get_props is True the props of the file are returned in a dictionary.
+</p>
+</div>
+<div class="svn_1002000">
+<p>
+peg_revision indicates in
 which revision url_or_path is valid.  If peg_revision.kind
 is opt_revision_kind.unspecified, then it defaults to
 opt_revision_kind.head for URLs or opt_revision_kind.working for
 WC targets.
-</span></p>
+</p>
+</div>
 
 
 <h4><a name="pysvn_client_checkin"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.checkin</a></h4>
@@ -2335,10 +2354,16 @@ resolved( path,
 <pre>
 revert( path,
         recurse=False<span class="svn_1005000">,
-        depth=depth</span> )
+        depth=depth,
+        changelists=[]</span><span class="svn_1009000">,
+        clear_changelists=false,
+        metadata_only=false</span> )
 revert( [path,path],
         recurse=False<span class="svn_1005000">,
-        depth=depth</span> )
+        depth=depth,
+        changelists=[]</span><span class="svn_1009000">,
+        clear_changelists=false,
+        metadata_only=false</span> )
 </pre>
 <p>Discard any changes in the working copy at path.
 Set recurse to True to recursively revert a directory's children.
