@@ -864,12 +864,37 @@ This is what the svn command does.
 
 <h4><a name="pysvn_client_cleanup"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.cleanup</a></h4>
 <pre>
-cleanup( path )
+cleanup( path<span cleanup="svn_1009000">,
+         fix_recorded_timestamps=True,
+         clear_dav_cache=True,
+         vacuum_pristines=True,
+         include_externals=False</span> )
 </pre>
 <p>
 Clean up any locks in the working copy at path. Usually such
 locks are the result of a failed or interrupted operation.
 </p>
+
+<div class="svn_1009000">
+<p>
+If break_locks is True, existing working copy locks at or below
+dir_abspath are broken, otherwise a normal write lock is obtained.
+</p>
+<p>If fix_recorded_timestamps is True, this function fixes recorded
+timestamps for unmodified files in the working copy, reducing comparision
+time on future checks.
+</p>
+<p>If clear_dav_cache is True, the caching of DAV information for older
+mod_dav served repositories is cleared. This clearing invalidates some
+cached information used for pre-HTTPv2 repositories.
+</p>
+<p>If vacuum_pristines is True, and dir_abspath points to the working
+copy root unreferenced files in the pristine store are removed.
+</p>
+<p>If include_externals is True, recurse into externals and clean
+them up as well.
+</p>
+</div>
 
 <h4><a name="pysvn_client_copy"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.copy</a></h4>
 <pre>

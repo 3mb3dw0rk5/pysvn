@@ -106,6 +106,10 @@ cmd_pysvn cat -r head file://${TESTROOT}/repos/trunk/test/file1.txt
 cmd_pysvn cat -r 4 file://${TESTROOT}/repos/trunk/test/file6.txt
 
 echo Info: Testing - cleanup
+cmd_pysvn cleanup ${TESTROOT}/wc1
+cmd cd ${TESTROOT}/wc1
+cmd_pysvn cleanup .
+cmd cd ${TESTROOT}/wc1/test
 
 echo Info: Testing - copy
 cmd_pysvn mkdir file://${TESTROOT}/repos/tags -m "test-01 add tags"

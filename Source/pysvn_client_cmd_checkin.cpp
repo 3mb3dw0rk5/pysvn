@@ -327,12 +327,27 @@ Py::Object pysvn_client::cmd_cleanup( const Py::Tuple &a_args, const Py::Dict &a
     static argument_description args_desc[] =
     {
     { true,  name_path },
+#if defined( PYSVN_HAS_CLIENT_CLEANUP2 )
+    { false, name_break_locks },
+    { false, name_fix_recorded_timestamps },
+    { false, name_clear_dav_cache },
+    { false, name_vacuum_pristines },
+    { false, name_include_externals },
+#endif
     { false, NULL }
     };
     FunctionArguments args( "cleanup", args_desc, a_args, a_kws );
     args.check();
 
     std::string path( args.getUtf8String( name_path ) );
+
+#if defined( PYSVN_HAS_CLIENT_CLEANUP2 )
+    bool break_locks = args.getBoolean( name_break_locks, true );
+    bool fix_recorded_timestamps = args.getBoolean( name_fix_recorded_timestamps, true );
+    bool clear_dav_cache = args.getBoolean( name_clear_dav_cache, true );
+    bool vacuum_pristines = args.getBoolean( name_vacuum_pristines, true );
+    bool include_externals = args.getBoolean( name_include_externals, false );
+#endif
 
     SvnPool pool( m_context );
 
@@ -344,8 +359,32 @@ Py::Object pysvn_client::cmd_cleanup( const Py::Tuple &a_args, const Py::Dict &a
 
         PythonAllowThreads permission( m_context );
 
-        svn_error_t * error = svn_client_cleanup( norm_path.c_str(), m_context, pool);
+#if defined( PYSVN_HAS_CLIENT_CLEANUP2 )
+        const char *abspath = NULL;
+        svn_error_t *error = svn_dirent_get_absolute( &abspath, norm_path.c_str(), pool );
 
+        if( error == NULL )
+        {
+            error = svn_client_cleanup2
+                (
+                abspath,
+                break_locks,
+                fix_recorded_timestamps,
+                clear_dav_cache,
+                vacuum_pristines,
+                include_externals,
+                m_context,
+                pool
+                );
+        }
+#else
+        svn_error_t * error = svn_client_cleanup
+            (
+            norm_path.c_str(),
+            m_context,
+            pool
+            );
+#endif
         permission.allowThisThread();
         if( error != NULL )
             throw SvnException( error );
