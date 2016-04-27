@@ -19,7 +19,7 @@
 #include "pysvn.hpp"
 #include "pysvn_static_strings.hpp"
 
-#if defined( PYSVN_HAS_CLIENT_COPY4 ) || defined( PYSVN_HAS_CLIENT_COPY5 ) || defined( PYSVN_HAS_CLIENT_COPY6 )
+#if defined( PYSVN_HAS_CLIENT_COPY4 ) || defined( PYSVN_HAS_CLIENT_COPY5 ) || defined( PYSVN_HAS_CLIENT_COPY6 ) || defined( PYSVN_HAS_CLIENT_COPY7 )
 Py::Object pysvn_client::cmd_copy2( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {
     static argument_description args_desc[] =
@@ -31,6 +31,11 @@ Py::Object pysvn_client::cmd_copy2( const Py::Tuple &a_args, const Py::Dict &a_k
     { false, name_revprops },
 #if defined( PYSVN_HAS_CLIENT_COPY5 )
     { false, name_ignore_externals },
+#endif
+#if defined( PYSVN_HAS_CLIENT_COPY7 )
+    { false, name_metadata_only },
+    { false, name_pin_externals },
+    { false, name_externals_to_pin },
 #endif
     { false, NULL }
     };
@@ -55,6 +60,7 @@ Py::Object pysvn_client::cmd_copy2( const Py::Tuple &a_args, const Py::Dict &a_k
 
         for( unsigned int index=0; index<list_all_sources.length(); index++ )
         {
+            type_error_message = "expecting tuple in list for sources (arg 1)";
             Py::Tuple tuple_src_rev_pegrev( list_all_sources[ index ] );
 
             std::string src_url_or_path;
@@ -157,67 +163,135 @@ Py::Object pysvn_client::cmd_copy2( const Py::Tuple &a_args, const Py::Dict &a_k
         type_error_message = "expecting boolean for keyword ignore_externals";
         bool ignore_externals = args.getBoolean( name_ignore_externals, false );
 #endif
-        try
+
+#if defined( PYSVN_HAS_CLIENT_COPY7 )
+        bool metadata_only = args.getBoolean( name_metadata_only, false );
+        bool pin_externals = args.getBoolean( name_pin_externals, false );
+        apr_hash_t *externals_to_pin = NULL;
+
+        if( pin_externals && args.hasArg( name_externals_to_pin ) )
         {
-            std::string norm_dest_path( svnNormalisedIfPath( dest_path, pool ) );
+            // apr_hash_t key=abspath_or_url, value=apr_array_header_t from 
+            // svn_wc_parse_externals_description3()
+            externals_to_pin = apr_hash_make( pool );
 
-            checkThreadPermission();
+            type_error_message = "expecting list of (path_or_url, description) for externals_to_pin";
+            Py::List py_externals_to_pin( args.getArg( name_externals_to_pin ) );
 
-            PythonAllowThreads permission( m_context );
-
-#if defined( PYSVN_HAS_CLIENT_COPY6 )
-            svn_error_t *error = svn_client_copy6
-                (
-                all_sources,
-                norm_dest_path.c_str(),
-                copy_as_child,
-                make_parents,
-                ignore_externals,
-                revprops,
-                commit_info.callback(),
-                commit_info.baton(),
-                m_context,
-                pool
-                );
-#elif defined( PYSVN_HAS_CLIENT_COPY5 )
-            svn_error_t *error = svn_client_copy5
-                (
-                &commit_info,
-                all_sources,
-                norm_dest_path.c_str(),
-                copy_as_child,
-                make_parents,
-                ignore_externals,
-                revprops,
-                m_context,
-                pool
-                );
-#else
-            svn_error_t *error = svn_client_copy4
-                (
-                &commit_info,
-                all_sources,
-                norm_dest_path.c_str(),
-                copy_as_child,
-                make_parents,
-                revprops,
-                m_context,
-                pool
-                );
-#endif
-            permission.allowThisThread();
-            if( error != NULL )
+            for( int index=0; index<py_externals_to_pin.size(); ++index )
             {
-                throw SvnException( error );
+                Py::Tuple py_tuple( py_externals_to_pin[ index ] );
+                if( py_tuple.size() != 2 )
+                {
+                    throw Py::ValueError( "Expecting list of tuples of (abspath_or_url, externals_spec)" );
+                }
+
+                Py::String py_path_or_url( py_tuple[0] );
+                std::string path_or_url( py_path_or_url.as_std_string( name_utf8 ) );
+                if( !is_svn_url( path_or_url ) )
+                {
+                    const char *abspath = NULL;
+                    svn_error_t *error = svn_dirent_get_absolute( &abspath, path_or_url.c_str(), pool );
+                    if( error != NULL )
+                    {
+                        throw SvnException( error );
+                    }
+
+                    path_or_url = abspath;
+                }
+
+                Py::String py_desc( py_tuple[1] );
+                std::string desc( py_desc.as_std_string( name_utf8 ) );
+
+                apr_array_header_t *hash_value = NULL;
+                svn_error_t *error = svn_wc_parse_externals_description3( &hash_value, path_or_url.c_str(), desc.c_str(), FALSE, pool );
+                if( error != NULL )
+                {
+                    throw SvnException( error );
+                }
+
+                svn_string_t *hash_key = svn_string_ncreate( path_or_url.c_str(), path_or_url.size(), pool );
+
+                apr_hash_set( externals_to_pin, hash_key, APR_HASH_KEY_STRING, hash_value );
             }
         }
-        catch( SvnException &e )
-        {
-            // use callback error over ClientException
-            m_context.checkForError( m_module.client_error );
+#endif
 
-            throw_client_error( e );
+        std::string norm_dest_path( svnNormalisedIfPath( dest_path, pool ) );
+
+        checkThreadPermission();
+
+        PythonAllowThreads permission( m_context );
+
+#if defined( PYSVN_HAS_CLIENT_COPY7 )
+        svn_error_t *error = svn_client_copy7
+            (
+            all_sources,
+            norm_dest_path.c_str(),
+            copy_as_child,
+            make_parents,
+            ignore_externals,
+            metadata_only,
+            pin_externals,
+            externals_to_pin,
+            revprops,
+            commit_info.callback(),
+            commit_info.baton(),
+            m_context,
+            pool
+            );
+#elif defined( PYSVN_HAS_CLIENT_COPY6 )
+        svn_error_t *error = svn_client_copy6
+            (
+            all_sources,
+            norm_dest_path.c_str(),
+            copy_as_child,
+            make_parents,
+            ignore_externals,
+            revprops,
+            commit_info.callback(),
+            commit_info.baton(),
+            m_context,
+            pool
+            );
+#elif defined( PYSVN_HAS_CLIENT_COPY5 )
+        svn_error_t *error = svn_client_copy5
+            (
+            &commit_info,
+            all_sources,
+            norm_dest_path.c_str(),
+            copy_as_child,
+            make_parents,
+            ignore_externals,
+            revprops,
+            m_context,
+            pool
+            );
+#else
+        svn_error_t *error = svn_client_copy4
+            (
+            &commit_info,
+            all_sources,
+            norm_dest_path.c_str(),
+            copy_as_child,
+            make_parents,
+            revprops,
+            m_context,
+            pool
+            );
+#endif
+        permission.allowThisThread();
+        if( error != NULL )
+        {
+            throw SvnException( error );
         }
+    }
+    catch( SvnException &e )
+    {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
+        throw_client_error( e );
     }
     catch( Py::TypeError & )
     {

@@ -900,7 +900,8 @@ them up as well.
 <pre>
 copy( src_url_or_path,
       dest_url_or_path,
-      src_revision=pysvn.Revision( opt_revision_kind.head ))
+      src_revision=pysvn.Revision( opt_revision_kind.head )
+      )
 </pre>
 <p>
 Duplicate something in working copy or repos, remembering history.
@@ -921,6 +922,8 @@ working copy (WC) path or URL:
 callback must be implemented to return a log message.
 </p>
 
+
+
 <div class="svn_1005000">
 <h4><a name="pysvn_client_copy2"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.copy2</a></h4>
 <pre>
@@ -929,7 +932,10 @@ copy2( sources,
        copy_as_child=False,
        make_parents=False,
        revprops<span class="svn_1006000">,
-       ignore_externals=False</span> )
+       ignore_externals=False</span><span class="svn_1009000">,
+       metadata_only=False,
+       pin_externals=False,
+       externals_to_pin=[(path_or_url, externals_description),...]</span> )
 </pre>
 <p>
 Duplicate something in working copy or repos, remembering history.
@@ -945,6 +951,37 @@ TBD better docs here.</p>
 
 <div class="svn_1006000">
 <p>set ignore_externals to True to ignore externals.
+</p>
+</div>
+
+<div class="svn_1009000">
+<p>
+If metadata_only is True and copying a file in a working copy,
+everything in the metadata is updated as if the node is moved, but the
+actual disk copy operation is not performed. This feature is useful for
+clients that want to keep the working copy in sync while the actual working
+copy is updated by some other task.
+</p>
+<p>
+If pin_externals is set, pin URLs in copied externals definitions
+to their current revision unless they were already pinned to a
+particular revision. A pinned external uses a URL which points at a
+fixed revision, rather than the HEAD revision. Externals in the copy
+destination are pinned to either a working copy base revision or the
+HEAD revision of a repository (as of the time the copy operation is
+performed), depending on the type of the copy source:
+</p>
+<p>
+If not None, externals_to_pin restricts pinning to a subset of externals.
+It is a dictionary keyed by either a local absolute path or a URL at which
+an svn:externals property is set. The dictionary contains externals description
+each of which corresponds to a single line of an svn:externals definition.
+</p>
+<p>
+Externals corresponding to
+these items will be pinned, other externals will not be pinned.
+If externals_to_pin is None then all externals are pinned.
+If pin_externals is False then externals_to_pin is ignored.
 </p>
 </div>
 
