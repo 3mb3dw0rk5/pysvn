@@ -617,7 +617,6 @@ class Compiler:
         debug( '__find_dir base_dir_list=%r' % (base_dir_list,) )
 
         # expect to find check_file in one of the dir
-        print( 'qqq %s base_dir_list %r' % (name, base_dir_list,) )
         for dirname in base_dir_list:
             full_check_file = os.path.join( dirname, check_file )
             if self.verbose:
