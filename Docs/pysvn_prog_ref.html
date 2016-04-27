@@ -579,14 +579,14 @@ It is passed the conflict_description and must return a conflict_choice, merge_f
 <td><a href="#pysvn_client_set_default_username">set_default_username</a></td>
 <td><a href="#pysvn_client_set_interactive">set_interactive</a></td>
 <td><a href="#pysvn_client_set_store_passwords">set_store_passwords</a></td>
-<td><a href="#pysvn_client_status">status</a></td>
+<td><a href="#pysvn_client_status2">status2</a></td>
 </tr>
 <tr bgcolor="#e0e0e0">
+<td><a href="#pysvn_client_status">status</a></td>
 <td><a href="#pysvn_client_switch">switch</a></td>
 <td><span class="svn_1002000"><a href="#pysvn_client_unlock">unlock</a></span></td>
 <td><a href="#pysvn_client_update">update</a></td>
 <td><span class="svn_1007000"><a href="#pysvn_client_upgrade">upgrade</a></span></td>
-<td>&#160;</td>
 <td>&#160;</td>
 </tr>
 </table>
@@ -2465,6 +2465,55 @@ set_store_passwords( enable )
 <p>When enable is True subversion will store any passwords that subversion prompted for.
 </p>
 
+<div class="svn_1008000">
+<h4><a name="pysvn_client_status2"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.status2</a></h4>
+<pre>
+status_list = \
+status2( path,
+         recurse=True,
+         get_all=True,
+         update=False,
+         ignore=False,
+         ignore_externals=False,
+         depth=depth,
+         changelist=[],
+         depth_as_sticky=False )
+</pre>
+<p>If path is a directory status is returned for all files in the
+directory in status_list. If path is a single file status is
+returned for that single file in status_list.
+Set ignore_externals to True to ignore externals definitions.
+</p>
+<p>The status_list is a list of <a href="#pysvn_status">PysvnStatus</a> objects. 
+</p>
+
+<p>Options:
+<ul>
+<li>recurse - If recurse is True, recurse fully, else do only
+  immediate children.</li>
+
+<li>get_all - If get_all is True, retrieve all entries; otherwise,
+  retrieve only "interesting" entries (local mods and/or out-of-date).</li>
+
+<li>update - If update is set, contact the repository and augment the
+  status structures with information about out-of-dateness.</li>
+
+<li>ignore - If ignore is False, the item will be added regardless of
+  whether it is ignored.</li>
+
+<li>ignore_externals - 
+  If ignore_externals is False, then recurse into externals
+  definitions (if any exist) after handling the main target. 
+  This calls the client notification function
+  with the wc_notify_action.external action before 
+  handling each externals definition, and with 
+  wc_notify_action.completed after each.</li>
+
+<li>depth - can be used as in place of recurse. depth is one of the pysvn.depth enums.</li>
+</ul>
+</p>
+</div>
+
 <h4><a name="pysvn_client_status"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.status</a></h4>
 <pre>
 status_list = \
@@ -2512,6 +2561,7 @@ returned for that single file in status_list.
 </div></li>
 </ul>
 </p>
+
 <h4><a name="pysvn_client_switch"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.switch</a></h4>
 <pre>
 switch( path,

@@ -71,6 +71,10 @@ class PysvnWcInfo(PysvnDictBase):
     def __init__( self, value_dict ):
         PysvnDictBase.__init__( self, value_dict )
 
+class PysvnStatus2(PysvnDictBase):
+    def __init__( self, value_dict ):
+        PysvnDictBase.__init__( self, value_dict, value_dict.get( 'path', None ) )
+
 class PysvnStatus(PysvnDictBase):
     def __init__( self, value_dict ):
         PysvnDictBase.__init__( self, value_dict, value_dict.get( 'path', None ) )

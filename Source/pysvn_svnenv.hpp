@@ -199,10 +199,8 @@
 #define PYSVN_HAS_CLIENT_PROPSET_LOCAL 1
 #define PYSVN_HAS_CLIENT_PROPSET_REMOTE 1
 #define PYSVN_HAS_CLIENT_RELOCATE2 QQQ
-//Turning status5 is not compatible with status4 for the pysvn API
-// Comment out until I understand the replacement
-//#define PYSVN_HAS_CLIENT_STATUS5 QQQ
-//#define PYSVN_HAS_CLIENT_STATUS_T QQQ
+#define PYSVN_HAS_CLIENT_STATUS5 1
+#define PYSVN_HAS_CLIENT_STATUS_T 1
 #define PYSVN_HAS_CLIENT_SWITCH3 1
 #define PYSVN_HAS_CLIENT_UPDATE4 QQQ
 #define PYSVN_HAS_CLIENT_UPGRADE QQQ
@@ -245,11 +243,7 @@
 #define PYSVN_HAS_REPOS_OPEN3 1
 #endif
 
-
-#if defined( PYSVN_HAS_CLIENT_STATUS_T )
-// nothing to defined from here on in
-
-#elif defined( PYSVN_HAS_CLIENT_STATUS3 )
+#if defined( PYSVN_HAS_CLIENT_STATUS3 )
 typedef svn_wc_status2_t pysvn_wc_status_t;
 
 #elif defined( PYSVN_HAS_CLIENT_STATUS2 )

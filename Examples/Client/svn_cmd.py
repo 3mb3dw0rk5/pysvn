@@ -1124,6 +1124,103 @@ class SvnCommand:
     cmd_st = cmd_status
     cmd_stat = cmd_status
 
+    def cmd_status2( self, args ):
+        recurse = args.getBooleanOption( '--non-recursive', False )
+        verbose = args.getBooleanOption( '--verbose', True )
+        quiet = args.getBooleanOption( '--quiet', True )
+        ignore = args.getBooleanOption( '--no-ignore', False )
+        update = args.getBooleanOption( '--show-updates', True )
+
+        positional_args = args.getPositionalArgs( 0 )
+        if len(positional_args) == 0:
+            all_entries = self.client.status2( '', recurse=recurse, get_all=verbose, ignore=ignore, update=update )
+            self._cmd_status2_print( all_entries, verbose, update, ignore, quiet )
+        else:
+            for arg in positional_args:
+                all_entries = self.client.status2( arg, recurse=recurse, get_all=verbose, ignore=ignore, update=update )
+                self._cmd_status2_print( all_entries, verbose, update, ignore, quiet )
+
+    def _cmd_status2_print( self, all_entries, detailed, update, ignore, quiet ):
+        all_entries.sort( key=self.key_by_path )
+        for entry in all_entries:
+            if entry.text_status == pysvn.wc_status_kind.ignored and ignore:
+                continue
+
+            if entry.text_status == pysvn.wc_status_kind.unversioned and quiet:
+                continue
+
+            if entry.text_status == pysvn.wc_status_kind.none and quiet:
+                continue
+
+            if entry.text_status == pysvn.wc_status_kind.none:
+                text_status = '?'
+            else:
+                text_status = wc_status_kind_map[ entry.text_status ]
+
+            state = '%s%s%s%s%s' % (text_status,
+                    wc_status_kind_map[ entry.prop_status ],
+                    ' L'[ entry.wc_is_locked ],
+                    ' +'[ entry.is_copied ],
+                    ' S'[ entry.is_switched ])
+
+            if( entry.repos_text_status != pysvn.wc_status_kind.none
+            or  entry.repos_prop_status != pysvn.wc_status_kind.none ):
+                odd_status = '%s%s' % (wc_status_kind_map[ entry.repos_text_status ],
+                    wc_status_kind_map[ entry.repos_prop_status ])
+            else:
+                odd_status = '  '
+
+            lock_state = ' '
+            if entry.lock is not None and entry.lock.token is not None:
+                lock_state = 'K'
+
+            if entry.repos_lock is not None:
+                lock_state = 'O'
+
+            # convert from abs to rel path
+            cwd = os.getcwd()
+            if entry.path == cwd:
+                path = '.'
+
+            elif entry.path.startswith( cwd + '/' ):
+                path = entry.path[len(cwd)+1:]
+
+            else:
+                path = entry.path
+
+            if detailed and entry.is_versioned:
+                print( '%s%s %s %6d %6d %-14s %s' %
+                    (state,
+                    lock_state,
+                    odd_status,
+                    entry.revision.number,
+                    entry.changed_revision.number,
+                    entry.changed_author,
+                    path) )
+
+            elif detailed:
+                print( '%s%s %s %6s %6s %-14s %s' %
+                    (state,
+                    lock_state,
+                    odd_status,
+                    '',
+                    '',
+                    '',
+                    path) )
+
+            elif update:
+                print( '%s%s %s %s' %
+                    (state,
+                    lock_state,
+                    odd_status,
+                    path) )
+
+            else:
+                if( entry.text_status != pysvn.wc_status_kind.normal
+                or entry.prop_status != pysvn.wc_status_kind.normal
+                or lock_state.strip() != ''):
+                    print( '%s%s %s' % (state, lock_state, path) )
+
     def cmd_switch( self, args ):
         recurse = args.getBooleanOption( '--non-recursive', False )
         revision = args.getOptionalRevision( '--revision', 'head' )

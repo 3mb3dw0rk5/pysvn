@@ -301,6 +301,9 @@ public:
     Py::Object common_revpropset( FunctionArguments &args, bool is_set );
     Py::Object cmd_revpropget( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_revproplist( const Py::Tuple& args, const Py::Dict &kws );
+#if defined( PYSVN_HAS_CLIENT_STATUS5 )
+    Py::Object cmd_status2( const Py::Tuple& args, const Py::Dict &kws );
+#endif
     Py::Object cmd_status( const Py::Tuple& args, const Py::Dict &kws );
     Py::Object cmd_switch( const Py::Tuple& args, const Py::Dict &kws );
 #if defined( PYSVN_HAS_CLIENT_LOCK )
@@ -354,6 +357,9 @@ private:
     int                 m_exception_style;
     int                 m_commit_info_style;
 
+#if defined( PYSVN_HAS_CLIENT_STATUS_T )
+    DictWrapper         m_wrapper_status2;
+#endif
     DictWrapper         m_wrapper_status;
     DictWrapper         m_wrapper_entry;
     DictWrapper         m_wrapper_info;
@@ -872,12 +878,11 @@ extern Py::Object toObject
     Py::String path,
     svn_client_status_t &svn_status,
     SvnPool &pool,
-    const DictWrapper &wrapper_status,
-    const DictWrapper &wrapper_entry,
+    const DictWrapper &wrapper_status2,
     const DictWrapper &wrapper_lock
     );
+#endif
 
-#else
 extern Py::Object toObject
     (
     Py::String path,
@@ -887,7 +892,6 @@ extern Py::Object toObject
     const DictWrapper &wrapper_entry,
     const DictWrapper &wrapper_lock
     );
-#endif
 
 extern Py::Object toObject
     (

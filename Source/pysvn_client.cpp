@@ -64,6 +64,9 @@ static void init_py_names()
 }
 
 //--------------------------------------------------------------------------------
+#if defined( PYSVN_HAS_CLIENT_STATUS_T )
+std::string name_wrapper_status2("PysvnStatus2");
+#endif
 std::string name_wrapper_status("PysvnStatus");
 std::string name_wrapper_entry("PysvnEntry");
 std::string name_wrapper_info("PysvnInfo");
@@ -87,6 +90,9 @@ pysvn_client::pysvn_client
 , m_context( config_dir )
 , m_exception_style( 0 )
 , m_commit_info_style( 0 )
+#if defined( PYSVN_HAS_CLIENT_STATUS_T )
+, m_wrapper_status2( result_wrappers, name_wrapper_status2 )
+#endif
 , m_wrapper_status( result_wrappers, name_wrapper_status )
 , m_wrapper_entry( result_wrappers, name_wrapper_entry )
 , m_wrapper_info( result_wrappers, name_wrapper_info )
@@ -952,6 +958,9 @@ void pysvn_client::init_type()
     add_keyword_method("set_default_username", &pysvn_client::set_default_username, pysvn_client_set_default_username_doc );
     add_keyword_method("set_interactive", &pysvn_client::set_interactive, pysvn_client_set_interactive_doc );
     add_keyword_method("set_store_passwords", &pysvn_client::set_store_passwords, pysvn_client_set_store_passwords_doc );
+#if defined( PYSVN_HAS_CLIENT_STATUS5 )
+    add_keyword_method("status2", &pysvn_client::cmd_status2, pysvn_client_status2_doc );
+#endif
     add_keyword_method("status", &pysvn_client::cmd_status, pysvn_client_status_doc );
     add_keyword_method("switch", &pysvn_client::cmd_switch, pysvn_client_switch_doc );
 #if defined( PYSVN_HAS_CLIENT_LOCK )

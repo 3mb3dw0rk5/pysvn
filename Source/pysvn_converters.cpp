@@ -24,16 +24,19 @@ static const std::string str_URL( "URL" );
 static const std::string str_action( "action" );
 static const std::string str_author( "author" );
 static const std::string str_base_abspath( "base_abspath" );
+static const std::string str_changed_author( "changed_author" );
+static const std::string str_changed_date( "changed_date" );
+static const std::string str_changed_revision( "changed_revision" );
 static const std::string str_changelist( "changelist" );
 static const std::string str_checksum( "checksum" );
 static const std::string str_comment( "comment" );
 static const std::string str_commit_author( "commit_author" );
 static const std::string str_commit_revision( "commit_revision" );
 static const std::string str_commit_time( "commit_time" );
-static const std::string str_conflicts( "conflicts" );
 static const std::string str_conflict_new( "conflict_new" );
 static const std::string str_conflict_old( "conflict_old" );
 static const std::string str_conflict_work( "conflict_work" );
+static const std::string str_conflicts( "conflicts" );
 static const std::string str_copy_from_revision( "copy_from_revision" );
 static const std::string str_copy_from_url( "copy_from_url" );
 static const std::string str_copyfrom_rev( "copyfrom_rev" );
@@ -43,11 +46,14 @@ static const std::string str_date( "date" );
 static const std::string str_depth( "depth" );
 static const std::string str_entry( "entry" );
 static const std::string str_expiration_date( "expiration_date" );
+static const std::string str_filesize( "filesize" );
 static const std::string str_is_absent( "is_absent" );
 static const std::string str_is_binary( "is_binary" );
+static const std::string str_is_conflicted( "is_copied" );
 static const std::string str_is_copied( "is_copied" );
 static const std::string str_is_dav_comment( "is_dav_comment" );
 static const std::string str_is_deleted( "is_deleted" );
+static const std::string str_is_file_external( "is_file_external" );
 static const std::string str_is_locked( "is_locked" );
 static const std::string str_is_switched( "is_switched" );
 static const std::string str_is_versioned( "is_versioned" );
@@ -68,6 +74,11 @@ static const std::string str_moved_to_abspath( "moved_to_abspath" );
 static const std::string str_my_abspath( "my_abspath" );
 static const std::string str_name( "name" );
 static const std::string str_node_kind( "node_kind" );
+static const std::string str_node_status( "node_status" );
+static const std::string str_ood_changed_author( "ood_changed_author" );
+static const std::string str_ood_changed_date( "ood_changed_date" );
+static const std::string str_ood_changed_rev( "ood_changed_rev" );
+static const std::string str_ood_kind( "ood_kind" );
 static const std::string str_operation( "operation" );
 static const std::string str_owner( "owner" );
 static const std::string str_path( "path" );
@@ -84,12 +95,14 @@ static const std::string str_reason( "reason" );
 static const std::string str_recorded_size( "recorded_size" );
 static const std::string str_recorded_time( "recorded_time" );
 static const std::string str_repos( "repos" );
-static const std::string str_repos_url( "repos_url" );
 static const std::string str_repos_UUID( "repos_UUID" );
 static const std::string str_repos_lock( "repos_lock" );
+static const std::string str_repos_node_status( "repos_node_status" );
 static const std::string str_repos_prop_status( "repos_prop_status" );
+static const std::string str_repos_relpath( "repos_relpath" );
 static const std::string str_repos_root_URL( "repos_root_URL" );
 static const std::string str_repos_text_status( "repos_text_status" );
+static const std::string str_repos_url( "repos_url" );
 static const std::string str_rev( "rev" );
 static const std::string str_revision( "revision" );
 static const std::string str_schedule( "schedule" );
@@ -103,6 +116,7 @@ static const std::string str_token( "token" );
 static const std::string str_url( "url" );
 static const std::string str_uuid( "uuid" );
 static const std::string str_wc_info( "wc_info" );
+static const std::string str_wc_is_locked( "wc_is_locked" );
 static const std::string str_wcroot_abspath( "wcroot_abspath" );
 static const std::string str_working_size( "working_size" );
 
@@ -213,6 +227,10 @@ apr_time_t convertStringToTime( const std::string &text, apr_time_t now, SvnPool
     return result;
 }
 
+Py::Object toSvnRevNum( svn_revnum_t rev )
+{
+    return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, rev ) );
+}
 
 Py::Object toObject( apr_time_t t )
 {
@@ -230,7 +248,7 @@ Py::Object toObject( pysvn_commit_info_t *commit_info, int commit_style )
         if( !SVN_IS_VALID_REVNUM( commit_info->revision ) )
             return Py::None();
 
-        return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, commit_info->revision ) );
+        return toSvnRevNum( commit_info->revision );
     }
     else
     if( commit_style == 1 )
@@ -242,8 +260,7 @@ Py::Object toObject( pysvn_commit_info_t *commit_info, int commit_style )
         commit_info_dict[ str_post_commit_err ] = utf8_string_or_none( commit_info->post_commit_err );
         if( SVN_IS_VALID_REVNUM( commit_info->revision ) )
         {
-            commit_info_dict[ str_revision ] =
-                Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, commit_info->revision ) );
+            commit_info_dict[ str_revision ] = toSvnRevNum( commit_info->revision );
         }
         else
         {
@@ -263,9 +280,26 @@ Py::Object toObject( pysvn_commit_info_t *commit_info )
     if( commit_info == NULL || !SVN_IS_VALID_REVNUM( commit_info->revision ) )
         return Py::None();
 
-    return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, commit_info->revision ) );
+    return toSvnRevNum( commit_info->revision );
 }
 #endif
+
+Py::Object toFilesize( svn_filesize_t filesize )
+{
+    if( filesize == SVN_INVALID_FILESIZE )
+    {
+        return Py::None();
+    }
+    else
+    {
+#ifdef HAVE_LONG_LONG
+        return Py::LongLong( static_cast<PY_LONG_LONG>( filesize ) );
+#else
+        return Py::Int( static_cast<int>( filesize ) );
+#endif
+    }
+}
+
 
 #if defined( PYSVN_HAS_CLIENT_STATUS_T )
 Py::Object toObject
@@ -273,8 +307,7 @@ Py::Object toObject
     Py::String path,
     svn_client_status_t &svn_status,
     SvnPool &pool,
-    const DictWrapper &wrapper_status,
-    const DictWrapper &wrapper_entry,
+    const DictWrapper &wrapper_status2,
     const DictWrapper &wrapper_lock
     )
 {
@@ -282,108 +315,56 @@ Py::Object toObject
 
     status[ str_path ] = path;
     status[ str_local_abspath ] = path_string_or_none( svn_status.local_abspath, pool );
-
-    if( false )
+    status[ str_kind ] = toEnumValue( svn_status.kind );
+    status[ str_filesize ] = toFilesize( svn_status.filesize );
+    status[ str_is_versioned] = Py::Boolean( svn_status.versioned );
+    status[ str_is_conflicted ] = Py::Boolean( svn_status.conflicted );
+    status[ str_node_status ] = toEnumValue( svn_status.node_status );
+    status[ str_text_status ] = toEnumValue( svn_status.text_status );
+    status[ str_prop_status ] = toEnumValue( svn_status.prop_status );
+    status[ str_wc_is_locked ] = Py::Boolean( svn_status.wc_is_locked );
+    status[ str_is_copied ] = Py::Boolean( svn_status.copied );
+    status[ str_repos_root_URL ] = utf8_string_or_none( svn_status.repos_root_url );
+    status[ str_repos_UUID ] = utf8_string_or_none( svn_status.repos_uuid );
+    status[ str_repos_relpath ] = utf8_string_or_none( svn_status.repos_relpath );
+    status[ str_revision ] = toSvnRevNum( svn_status.revision );
+    status[ str_changed_revision ] = toSvnRevNum( svn_status.changed_rev );
+    status[ str_changed_date ] = toObject( svn_status.changed_date );
+    status[ str_changed_author ] = utf8_string_or_none( svn_status.changed_author );
+    status[ str_is_switched ] = Py::Boolean( svn_status.switched );
+    status[ str_is_file_external ] = Py::Boolean( svn_status.file_external );
+    if( svn_status.lock == NULL )
     {
-        status[ str_entry ] = Py::None();
+        status[ str_lock ] = Py::None();
     }
     else
     {
-        Py::Dict entry;
-
-        entry[ str_checksum ] = Py::None();
-        entry[ str_commit_author ] = utf8_string_or_none( svn_status.changed_author );
-        entry[ str_commit_revision ] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, svn_status.changed_rev ) );
-        entry[ str_commit_time ] = toObject( svn_status.changed_date );
-        entry[ str_conflict_new ] = path_string_or_none( svn_status.conflict_new, pool );
-        entry[ str_conflict_old ] = path_string_or_none( svn_status.conflict_old, pool );
-        entry[ str_conflict_work ] = path_string_or_none( svn_status.conflict_wrk, pool );
-        entry[ str_copy_from_revision ] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, svn_status.copyfrom_rev ) );
-        entry[ str_copy_from_url ] = utf8_string_or_none( svn_status.copyfrom_url );
-        entry[ str_is_absent ] = Py::Int( svn_status.absent );
-        entry[ str_is_copied ] = Py::Int( svn_status.copied );
-        entry[ str_is_deleted ] = Py::Int( svn_status.deleted );
-        entry[ str_kind ] = toEnumValue( svn_status.kind );
-        entry[ str_name ] = path_string_or_none( svn_status.name, pool );
-        entry[ str_properties_time ] = toObject( svn_status.prop_time );
-        //QQQ//entry[ str_property_reject_file ] = path_string_or_none( svn_status.prejfile, pool );
-        entry[ str_repos ] = utf8_string_or_none( svn_status.repos_root_url );
-        entry[ str_revision ] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, svn_status.revision ) );
-        entry[ str_schedule ] = toEnumValue( svn_status.schedule );
-        entry[ str_text_time ] = toObject( svn_status.text_time );
-        entry[ str_url ] = utf8_string_or_none( svn_status.url );
-        entry[ str_uuid ] = utf8_string_or_none( svn_status.uuid );
-        entry[ str_lock_token ] = utf8_string_or_none( svn_status.lock_token );
-        entry[ str_lock_owner ] = utf8_string_or_none( svn_status.lock_owner );
-        entry[ str_lock_comment ] = utf8_string_or_none( svn_status.lock_comment );
-        entry[ str_lock_creation_date ] = toObject( svn_status.lock_creation_date );
-
-        status[ str_entry ] = wrapper_entry.wrapDict( entry );
+        status[ str_lock ] = toObject( *svn_status.lock, wrapper_lock );
     }
-
+    status[ str_changelist ] = utf8_string_or_none( svn_status.changelist );
+    status[ str_depth ] = toEnumValue( svn_status.depth );
+    status[ str_ood_kind ] = toEnumValue( svn_status.ood_kind );
+    status[ str_repos_node_status ] = toEnumValue( svn_status.repos_node_status );
+    status[ str_repos_text_status ]  = toEnumValue( svn_status.repos_text_status );
+    status[ str_repos_prop_status ]  = toEnumValue( svn_status.repos_prop_status );
     if( svn_status.repos_lock == NULL )
     {
         status[ str_repos_lock ] = Py::None();
     }
-#if defined( PYSVN_HAS_CLIENT_STATUS2 )
     else
     {
         status[ str_repos_lock ] = toObject( *svn_status.repos_lock, wrapper_lock );
     }
+    status[ str_ood_changed_rev ] = toSvnRevNum( svn_status.ood_changed_rev );
+    status[ str_ood_changed_date ] = toObject( svn_status.ood_changed_date );
+    status[ str_ood_changed_author ] = utf8_string_or_none( svn_status.ood_changed_author );
+    status[ str_moved_from_abspath ] = utf8_string_or_none( svn_status.moved_from_abspath );
+    status[ str_moved_to_abspath ] = utf8_string_or_none( svn_status.moved_to_abspath );
+
+    return wrapper_status2.wrapDict( status );
+}
 #endif
 
-    long is_versioned;
-    switch( svn_status.text_status )
-    {
-    // exists, but uninteresting
-    case svn_wc_status_normal:
-    // is scheduled for addition
-    case svn_wc_status_added:
-    // under v.c., but is missing
-    case svn_wc_status_missing:
-    // scheduled for deletion
-    case svn_wc_status_deleted:
-    // was deleted and then re-added
-    case svn_wc_status_replaced:
-    // text or props have been modified
-    case svn_wc_status_modified:
-    // local mods received repos mods (### unused)
-    case svn_wc_status_merged:
-    // local mods received conflicting repos mods
-    case svn_wc_status_conflicted:
-        is_versioned = 1;
-
-    // an unversioned resource is in the way of the versioned resource
-    case svn_wc_status_obstructed:
-    // does not exist
-    case svn_wc_status_none:
-    // is not a versioned thing in this wc
-    case svn_wc_status_unversioned:
-    // is unversioned but configured to be ignored
-    case svn_wc_status_ignored:
-    // an unversioned directory path populated by an svn:externals
-    // property; this status is not used for file externals
-    case svn_wc_status_external:
-    // a directory doesn't contain a complete entries list
-    case svn_wc_status_incomplete:
-    // assume any new status not versioned
-    default:
-        is_versioned = 0;
-    }
-
-    status[ str_is_versioned ] = Py::Int( is_versioned );
-    status[ str_is_locked ] = Py::Int( svn_status.wc_is_locked );
-    status[ str_is_copied ] = Py::Int( svn_status.copied );
-    status[ str_is_switched ] = Py::Int( svn_status.switched );
-    status[ str_prop_status ] = toEnumValue( svn_status.prop_status );
-    status[ str_text_status ] = toEnumValue( svn_status.text_status );
-    status[ str_repos_prop_status ] = toEnumValue( svn_status.repos_prop_status );
-    status[ str_repos_text_status ] = toEnumValue( svn_status.repos_text_status );
-
-    return wrapper_status.wrapDict( status );
-}
-
-#else
 Py::Object toObject
     (
     Py::String path,
@@ -467,7 +448,6 @@ Py::Object toObject
 
     return wrapper_status.wrapDict( status );
 }
-#endif
 
 Py::Object toObject
     (
@@ -480,12 +460,12 @@ Py::Object toObject
 
     entry[ str_checksum ] = utf8_string_or_none( svn_entry.checksum );
     entry[ str_commit_author ] = utf8_string_or_none( svn_entry.cmt_author );
-    entry[ str_commit_revision ] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, svn_entry.cmt_rev ) );
+    entry[ str_commit_revision ] = toSvnRevNum( svn_entry.cmt_rev );
     entry[ str_commit_time ] = toObject( svn_entry.cmt_date );
     entry[ str_conflict_new ] = path_string_or_none( svn_entry.conflict_new, pool );
     entry[ str_conflict_old ] = path_string_or_none( svn_entry.conflict_old, pool );
     entry[ str_conflict_work ] = path_string_or_none( svn_entry.conflict_wrk, pool );
-    entry[ str_copy_from_revision ] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, svn_entry.copyfrom_rev ) );
+    entry[ str_copy_from_revision ] = toSvnRevNum( svn_entry.copyfrom_rev );
     entry[ str_copy_from_url ] = utf8_string_or_none( svn_entry.copyfrom_url );
     entry[ str_is_absent ] = Py::Int( svn_entry.absent );
     entry[ str_is_copied ] = Py::Int( svn_entry.copied );
@@ -495,7 +475,7 @@ Py::Object toObject
     entry[ str_properties_time ] = toObject( svn_entry.prop_time );
     entry[ str_property_reject_file ] = path_string_or_none( svn_entry.prejfile, pool );
     entry[ str_repos ] = utf8_string_or_none( svn_entry.repos );
-    entry[ str_revision ] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, svn_entry.revision ) );
+    entry[ str_revision ] = toSvnRevNum( svn_entry.revision );
     entry[ str_schedule ] = toEnumValue( svn_entry.schedule );
     entry[ str_text_time ] = toObject( svn_entry.text_time );
     entry[ str_url ] = utf8_string_or_none( svn_entry.url );
@@ -527,7 +507,7 @@ Py::Object toObject
     // The revision of the object.  If path_or_url is a working-copy
     // path, then this is its current working revnum.  If path_or_url
     // is a URL, then this is the repos revision that path_or_url lives in.
-    py_info[str_rev] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, info.rev ) );
+    py_info[str_rev] = toSvnRevNum( info.rev );
 
     // The node's kind.
     py_info[str_kind] = toEnumValue( info.kind );
@@ -539,8 +519,7 @@ Py::Object toObject
     py_info[str_repos_UUID] = utf8_string_or_none( info.repos_UUID );
 
     // The last revision in which this object changed.
-    py_info[str_last_changed_rev] = Py::asObject(
-                    new pysvn_revision( svn_opt_revision_number, 0, info.last_changed_rev ) );
+    py_info[str_last_changed_rev] = toSvnRevNum( info.last_changed_rev );
 
     // The date of the last_changed_rev.
     py_info[str_last_changed_date] = toObject( info.last_changed_date );
@@ -571,8 +550,7 @@ Py::Object toObject
 
         py_wc_info[str_schedule] = toEnumValue( info.schedule );
         py_wc_info[str_copyfrom_url] = utf8_string_or_none( info.copyfrom_url );
-        py_wc_info[str_copyfrom_rev] = Py::asObject(
-                            new pysvn_revision( svn_opt_revision_number, 0, info.copyfrom_rev ) );
+        py_wc_info[str_copyfrom_rev] = toSvnRevNum( info.copyfrom_rev );
         py_wc_info[str_text_time] = toObject( info.text_time );
         py_wc_info[str_prop_time] = toObject( info.prop_time );
         py_wc_info[str_checksum] = utf8_string_or_none( info.checksum );
@@ -626,7 +604,7 @@ Py::Object toObject
     Py::Dict d;
 
     d[str_repos_url] = utf8_string_or_none( info->repos_url );
-    d[str_peg_rev] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, info->peg_rev ) );
+    d[str_peg_rev] = toSvnRevNum( info->peg_rev );
     d[str_path_in_repos] = utf8_string_or_none( info->path_in_repos );
     d[str_node_kind] = toEnumValue( info->node_kind );
 #if defined( PYSVN_HAS_SVN_1_8 )
@@ -668,7 +646,7 @@ Py::Object toObject
     // The revision of the object.  If path_or_url is a working-copy
     // path, then this is its current working revnum.  If path_or_url
     // is a URL, then this is the repos revision that path_or_url lives in.
-    py_info[str_rev] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, info.rev ) );
+    py_info[str_rev] = toSvnRevNum( info.rev );
 
     // The root URL of the repository.
     py_info[str_repos_root_URL] = utf8_string_or_none( info.repos_root_URL );
@@ -679,22 +657,10 @@ Py::Object toObject
     // The node's kind.
     py_info[str_kind] = toEnumValue( info.kind );
 
-    if( info.size == SVN_INVALID_FILESIZE )
-    {
-        py_info[str_size] = Py::None();
-    }
-    else
-    {
-#ifdef HAVE_LONG_LONG
-        py_info[str_size] = Py::LongLong( static_cast<PY_LONG_LONG>( info.size ) );
-#else
-        py_info[str_size] = Py::Int( static_cast<int>( info.size ) );
-#endif
-    }
+    py_info[str_size] = toFilesize( info.size );
 
     // The last revision in which this object changed.
-    py_info[str_last_changed_rev] = Py::asObject(
-                    new pysvn_revision( svn_opt_revision_number, 0, info.last_changed_rev ) );
+    py_info[str_last_changed_rev] = toSvnRevNum( info.last_changed_rev );
 
     // The date of the last_changed_rev.
     py_info[str_last_changed_date] = toObject( info.last_changed_date );
@@ -723,8 +689,7 @@ Py::Object toObject
 
         py_wc_info[str_schedule] = toEnumValue( info.wc_info->schedule );
         py_wc_info[str_copyfrom_url] = utf8_string_or_none( info.wc_info->copyfrom_url );
-        py_wc_info[str_copyfrom_rev] = Py::asObject(
-                            new pysvn_revision( svn_opt_revision_number, 0, info.wc_info->copyfrom_rev ) );
+        py_wc_info[str_copyfrom_rev] = toSvnRevNum( info.wc_info->copyfrom_rev );
         if( info.wc_info->checksum != NULL )
         {
             switch( info.wc_info->checksum->kind )
@@ -955,10 +920,7 @@ Py::Object revnumListToObject( apr_array_header_t *revs, SvnPool &pool )
     for (int j = 0; j < revs->nelts; ++j)
     {
         svn_revnum_t revnum = ((svn_revnum_t *)revs->elts)[j];
-
-        Py::Object py_rev( Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, revnum ) ) );
-
-        py_list.append( py_rev );
+        py_list.append( toSvnRevNum( revnum ) );
     }
 
     return py_list;
@@ -1185,8 +1147,7 @@ Py::Object toObject( const svn_commit_info_t *commit_info )
 
     if( SVN_IS_VALID_REVNUM( commit_info->revision ) )
     {
-        commit_info_dict[ str_revision ] =
-            Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, commit_info->revision ) );
+        commit_info_dict[ str_revision ] = toSvnRevNum( commit_info->revision );
     }
     else
     {
@@ -1220,7 +1181,7 @@ Py::Object toObject( CommitInfoResult &commit_info, const DictWrapper &wrapper_c
             return Py::None();
         }
 
-        return Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, last->revision ) );
+        return toSvnRevNum( last->revision );
     }
     else
     if( commit_style == 1 )

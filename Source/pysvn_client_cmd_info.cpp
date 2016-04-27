@@ -1640,7 +1640,157 @@ static svn_error_t *status5EntriesFunc
     const svn_client_status_t *status,
     apr_pool_t *scratch_pool
     );
-#elif defined( PYSVN_HAS_CLIENT_STATUS4 )
+
+class Status2EntriesBaton
+{
+public:
+    Status2EntriesBaton( SvnPool &pool )
+    : m_pool( pool )
+    , m_hash( apr_hash_make( pool ) )
+    {}
+
+    ~Status2EntriesBaton()
+    {}
+
+    svn_client_status_func_t callback() { return &status5EntriesFunc; }
+
+    void *baton() { return static_cast< void * >( this ); }
+    static Status2EntriesBaton *castBaton( void *baton_ ) { return static_cast<Status2EntriesBaton *>( baton_ ); }
+
+    SvnPool     &m_pool;
+    apr_hash_t  *m_hash;
+};
+
+static svn_error_t *status5EntriesFunc
+    (
+    void *baton,
+    const char *path,
+    const svn_client_status_t *status,
+    apr_pool_t *scratch_pool
+    )
+{
+    Status2EntriesBaton *seb = Status2EntriesBaton::castBaton( baton );
+
+    path = apr_pstrdup( seb->m_pool, path );
+    svn_client_status_t *stat = svn_client_status_dup( status, seb->m_pool );
+    apr_hash_set( seb->m_hash, path, APR_HASH_KEY_STRING, stat );
+    return SVN_NO_ERROR;
+}
+
+Py::Object pysvn_client::cmd_status2( const Py::Tuple &a_args, const Py::Dict &a_kws )
+{
+    static argument_description args_desc[] =
+    {
+    { true,  name_path },
+    { false, name_recurse },
+    { false, name_get_all },
+    { false, name_update },
+    { false, name_ignore },
+    { false, name_ignore_externals },
+    { false, name_depth },
+    { false, name_changelists },
+    { false, name_depth_as_sticky },
+    { false, NULL }
+    };
+    FunctionArguments args( "status2", args_desc, a_args, a_kws );
+    args.check();
+
+    Py::String path( args.getUtf8String( name_path ) );
+
+    SvnPool pool( m_context );
+
+    apr_array_header_t *changelists = NULL;
+
+    if( args.hasArg( name_changelists ) )
+    {
+        changelists = arrayOfStringsFromListOfStrings( args.getArg( name_changelists ), pool );
+    }
+
+    svn_depth_t depth = args.getDepth( name_depth, name_recurse, svn_depth_infinity, svn_depth_infinity, svn_depth_immediates );
+    bool get_all = args.getBoolean( name_get_all, true );
+    bool update = args.getBoolean( name_update, false );
+    bool ignore = args.getBoolean( name_ignore, false );
+    bool ignore_externals = args.getBoolean( name_ignore_externals, false );
+    bool  depth_as_sticky = args.getBoolean( name_depth_as_sticky, true );
+
+    Status2EntriesBaton baton( pool );
+
+    Py::List entries_list;
+    try
+    {
+        std::string norm_path( svnNormalisedIfPath( path, pool ) );
+
+        checkThreadPermission();
+
+        PythonAllowThreads permission( m_context );
+
+        svn_revnum_t revnum;
+        svn_opt_revision_t rev = { svn_opt_revision_head, {0} };
+
+
+        const char *abspath_or_url = NULL;
+        svn_error_t *error = svn_dirent_get_absolute( &abspath_or_url, norm_path.c_str(), pool );
+
+        if( error == NULL )
+        {
+            error = svn_client_status5
+                (
+                &revnum,            // revnum
+                m_context,
+                abspath_or_url,     // path
+                &rev,
+                depth,
+                get_all,
+                update,
+                !ignore,
+                ignore_externals,
+                depth_as_sticky,
+                changelists,
+                baton.callback(),
+                baton.baton(),
+                pool
+                );
+        }
+
+        permission.allowThisThread();
+        if( error != NULL )
+            throw SvnException( error );
+    }
+    catch( SvnException &e )
+    {
+        // use callback error over ClientException
+        m_context.checkForError( m_module.client_error );
+
+        throw_client_error( e );
+    }
+
+    // Loop over array, returning each name/status-structure
+
+    for( apr_hash_index_t *hi = apr_hash_first( pool, baton.m_hash );
+            hi != NULL;
+                hi = apr_hash_next( hi ) )
+    {
+        const void *key;
+        void *val;
+        apr_hash_this( hi, &key, NULL, &val );
+
+        svn_client_status_t *status = static_cast<svn_client_status_t *>( val );
+
+        entries_list.append( toObject(
+                Py::String( osNormalisedPath( (const char *)key, pool ), "UTF-8" ),
+                *status,
+                pool,
+                m_wrapper_status2,
+                m_wrapper_lock ) );
+    }
+
+    entries_list.sort();
+
+    return entries_list;
+}
+#endif
+
+#if defined( PYSVN_HAS_CLIENT_STATUS4 )
 static svn_error_t *status4EntriesFunc
     (
     void *baton,
@@ -1675,9 +1825,7 @@ public:
     ~StatusEntriesBaton()
     {}
 
-#if defined( PYSVN_HAS_CLIENT_STATUS5 )
-    svn_client_status_func_t callback() { return &status5EntriesFunc; }
-#elif defined( PYSVN_HAS_CLIENT_STATUS4 )
+#if defined( PYSVN_HAS_CLIENT_STATUS4 )
     svn_wc_status_func3_t callback() { return &status4EntriesFunc; }
 #elif defined( PYSVN_HAS_CLIENT_STATUS2 )
     svn_wc_status_func2_t callback() { return &status2EntriesFunc; }
@@ -1691,24 +1839,7 @@ public:
     apr_hash_t  *m_hash;
 };
 
-#if defined( PYSVN_HAS_CLIENT_STATUS5 )
-static svn_error_t *status5EntriesFunc
-    (
-    void *baton,
-    const char *path,
-    const svn_client_status_t *status,
-    apr_pool_t *scratch_pool
-    )
-{
-    StatusEntriesBaton *seb = StatusEntriesBaton::castBaton( baton );
-
-    path = apr_pstrdup( seb->m_pool, path );
-    svn_client_status_t *stat = svn_client_status_dup( status, seb->m_pool );
-    apr_hash_set( seb->m_hash, path, APR_HASH_KEY_STRING, stat );
-    return SVN_NO_ERROR;
-}
-
-#elif defined( PYSVN_HAS_CLIENT_STATUS4 )
+#if defined( PYSVN_HAS_CLIENT_STATUS4 )
 static svn_error_t *status4EntriesFunc
     (
     void *baton,
@@ -1770,9 +1901,6 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
     { false, name_depth },
     { false, name_changelists },
 #endif
-#if defined( PYSVN_HAS_CLIENT_STATUS5 )
-    { false, name_depth_as_sticky },
-#endif
     { false, NULL }
     };
     FunctionArguments args( "status", args_desc, a_args, a_kws );
@@ -1800,9 +1928,6 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
 #if defined( PYSVN_HAS_CLIENT_STATUS2 )
     bool ignore_externals = args.getBoolean( name_ignore_externals, false );
 #endif
-#if defined( PYSVN_HAS_CLIENT_STATUS5 )
-    bool  depth_as_sticky = args.getBoolean( name_depth_as_sticky, true );
-#endif
 
     StatusEntriesBaton baton( pool );
 
@@ -1818,33 +1943,8 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
         svn_revnum_t revnum;
         svn_opt_revision_t rev = { svn_opt_revision_head, {0} };
 
-
-#if defined( PYSVN_HAS_CLIENT_STATUS5 )
-        const char *abspath_or_url = NULL;
-        svn_error_t *error = svn_dirent_get_absolute( &abspath_or_url, norm_path.c_str(), pool );
-
-        if( error == NULL )
-        {
-            error = svn_client_status5
-                (
-                &revnum,            // revnum
-                m_context,
-                abspath_or_url,     // path
-                &rev,
-                depth,
-                get_all,
-                update,
-                !ignore,
-                ignore_externals,
-                depth_as_sticky,
-                changelists,
-                baton.callback()
-                baton.baton(),
-                pool
-                );
-        }
-#elif defined( PYSVN_HAS_CLIENT_STATUS4 )
-        svn_error_t *error = svn_client_status4
+#if defined( PYSVN_HAS_CLIENT_STATUS4 )
+        svn_error_t *error = svn_client_status4 // ignore deprecation warning - support Client().status()
             (
             &revnum,            // revnum
             norm_path.c_str(),  // path
@@ -1931,12 +2031,7 @@ Py::Object pysvn_client::cmd_status( const Py::Tuple &a_args, const Py::Dict &a_
         void *val;
         apr_hash_this( hi, &key, NULL, &val );
 
-#if defined( PYSVN_HAS_CLIENT_STATUS_T )
-        svn_client_status_t *status = static_cast<svn_client_status_t *>( val );
-#else
         pysvn_wc_status_t *status = static_cast<pysvn_wc_status_t *>( val );
-#endif
-
         entries_list.append( toObject(
                 Py::String( osNormalisedPath( (const char *)key, pool ), "UTF-8" ),
                 *status,

@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #   test-09.sh
-#       test annotate and annotate2
+#       test annotate, annotate2 and status2
 #
 
 # need to get rid of any symbolic links in the WORKDIR
@@ -33,7 +33,7 @@ cmd mkdir tmp
 export TMPDIR=${TESTROOT}/tmp
 
 export PYTHONPATH=${WORKDIR}/Source:${WORKDIR}/Examples/Client
-export PYSVN="${PYTHON} ${WORKDIR}/Examples/Client/svn_cmd.py --pysvn-testing 01.05.00 --config-dir ${TESTROOT}/configdir"
+export PYSVN="${PYTHON} ${WORKDIR}/Examples/Client/svn_cmd.py --pysvn-testing 01.07.00 --config-dir ${TESTROOT}/configdir"
 echo Info: PYSVN command ${PYSVN}
 
 cmd svnadmin create ${TESTROOT}/repos
@@ -81,5 +81,18 @@ set custom prop
 EOF
 
 cmd_pysvn proplist --verbose file://${TESTROOT}/repos/trunk/folder1/file-a.txt
+
+cmd_pysvn update
+
+cmd cd folder1
+cmd touch unversioned.txt
+cmd_pysvn status2 
+cmd_pysvn status2 --verbose
+cmd_pysvn status2 --verbose --quiet
+
+cmd_pysvn lock file-a.txt
+cmd_pysvn status2 
+cmd_pysvn status2 --verbose
+cmd_pysvn status2 --verbose --quiet
 
 true

@@ -1,4 +1,3 @@
-./test-05.sh: line 1: !/bin/bash: No such file or directory
 WorkDir: /Users/barry/wc/svn/pysvn-next/Extension
 PYTHON: /usr/local/bin/python3.5
 Username: barry
@@ -60,23 +59,23 @@ Info: pysvn command: info2 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testro
 Path: /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file1.txt
 Url: file:///Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/repos/trunk/test/file1.txt
 Revision: 3
-Repository UUID: 005a1176-f7f5-4d16-a21e-f47e00b95904
+Repository UUID: 245868a2-5369-4ea2-9491-52ea4415460f
 Last changed author: barry
-Last Changed Date: 17-Apr-2016 12:48:14
+Last Changed Date: 26-Apr-2016 15:02:37
 Last changed revision: 3
 Node kind: file
 Schedule: normal
-Text Last Updated: 17-Apr-2016 12:48:14
+Text Last Updated: 26-Apr-2016 15:02:37
 Checksum: ae0e5a70bbd1dcadbb4ac8ffe321bdb7b7682b72
 Info: Test - list of unlocked files
 Info: CWD: /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test
 Info: pysvn command: list --verbose --fetch-locks /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file1.txt
-      3 barry          16 17-Apr-2016 12:48:14 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file1.txt
+      3 barry          16 26-Apr-2016 15:02:37 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file1.txt
 Info: CWD: /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test
 Info: pysvn command: list --verbose --fetch-locks /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test
-      3 barry          -1 17-Apr-2016 12:48:14 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test
-      3 barry          16 17-Apr-2016 12:48:14 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file1.txt
-      3 barry          16 17-Apr-2016 12:48:14 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file2.txt
+      3 barry          -1 26-Apr-2016 15:02:37 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test
+      3 barry          16 26-Apr-2016 15:02:37 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file1.txt
+      3 barry          16 26-Apr-2016 15:02:37 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file2.txt
 Info: Test - lock unlocked file
 Info: CWD: /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test
 Info: pysvn command: lock /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file1.txt -m lock comment test 05
@@ -95,34 +94,34 @@ Info: pysvn command: info2 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testro
 Path: /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file1.txt
 Url: file:///Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/repos/trunk/test/file1.txt
 Revision: 3
-Repository UUID: 005a1176-f7f5-4d16-a21e-f47e00b95904
+Repository UUID: 245868a2-5369-4ea2-9491-52ea4415460f
 Last changed author: barry
-Last Changed Date: 17-Apr-2016 12:48:14
+Last Changed Date: 26-Apr-2016 15:02:37
 Last changed revision: 3
 Node kind: file
 Lock Owner: barry
-Lock Creation Date: 17-Apr-2016 12:48:16
-Lock Token: opaquelocktoken:81932a63-d63c-4faa-8e92-5ead63821ed5
+Lock Creation Date: 26-Apr-2016 15:02:39
+Lock Token: opaquelocktoken:01767e5a-d767-4bde-8a4e-2ecd4758660e
 Lock Comment:
 lock comment test 05
 Schedule: normal
-Text Last Updated: 17-Apr-2016 12:48:14
+Text Last Updated: 26-Apr-2016 15:02:37
 Checksum: ae0e5a70bbd1dcadbb4ac8ffe321bdb7b7682b72
 Info: Test - list of locked files
 Info: CWD: /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test
 Info: pysvn command: list --verbose --fetch-locks /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file1.txt
-      3 barry          16 17-Apr-2016 12:48:14 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file1.txt
+      3 barry          16 26-Apr-2016 15:02:37 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file1.txt
         Lock   owner: barry
         Lock comment: lock comment test 05
-        Lock created: 2016-04-17 12:48:16
+        Lock created: 2016-04-26 15:02:39
 Info: CWD: /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test
 Info: pysvn command: list --verbose --fetch-locks /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test
-      3 barry          -1 17-Apr-2016 12:48:14 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test
-      3 barry          16 17-Apr-2016 12:48:14 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file1.txt
+      3 barry          -1 26-Apr-2016 15:02:37 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test
+      3 barry          16 26-Apr-2016 15:02:37 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file1.txt
         Lock   owner: barry
         Lock comment: lock comment test 05
-        Lock created: 2016-04-17 12:48:16
-      3 barry          16 17-Apr-2016 12:48:14 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file2.txt
+        Lock created: 2016-04-26 15:02:39
+      3 barry          16 26-Apr-2016 15:02:37 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file2.txt
 Info: Test - attempt to checkin over a locked file
 Info: CWD: /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test
 Info: Command: cd /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2/test
@@ -147,18 +146,18 @@ Info: pysvn command: info2 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testro
 Path: /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2/test/file1.txt
 Url: file:///Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/repos/trunk/test/file1.txt
 Revision: 3
-Repository UUID: 005a1176-f7f5-4d16-a21e-f47e00b95904
+Repository UUID: 245868a2-5369-4ea2-9491-52ea4415460f
 Last changed author: barry
-Last Changed Date: 17-Apr-2016 12:48:14
+Last Changed Date: 26-Apr-2016 15:02:37
 Last changed revision: 3
 Node kind: file
 Lock Owner: barry
-Lock Creation Date: 17-Apr-2016 12:48:17
-Lock Token: opaquelocktoken:c6ff4cba-004f-4e8c-bc3d-866eb3346459
+Lock Creation Date: 26-Apr-2016 15:02:40
+Lock Token: opaquelocktoken:6c82d79b-6f3e-4edb-950b-a580b36d389c
 Lock Comment:
 Stealing lock
 Schedule: normal
-Text Last Updated: 17-Apr-2016 12:48:15
+Text Last Updated: 26-Apr-2016 15:02:38
 Checksum: ae0e5a70bbd1dcadbb4ac8ffe321bdb7b7682b72
 Info: Test - status of locked files
 Info: CWD: /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2/test
@@ -183,13 +182,13 @@ Info: pysvn command: status --verbose /Users/barry/wc/svn/pysvn-next/Extension/T
 Info: Test - list of locked files
 Info: CWD: /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2/test
 Info: pysvn command: list --verbose --fetch-locks --recursive /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2
-      4 barry          -1 17-Apr-2016 12:48:17 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2
-      4 barry           0 17-Apr-2016 12:48:17 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2/test
-      4 barry          33 17-Apr-2016 12:48:17 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2/test/file1.txt
+      4 barry          -1 26-Apr-2016 15:02:40 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2
+      4 barry           0 26-Apr-2016 15:02:40 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2/test
+      4 barry          33 26-Apr-2016 15:02:40 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2/test/file1.txt
         Lock   owner: barry
         Lock comment: Stealing lock
-        Lock created: 2016-04-17 12:48:17
-      4 barry          33 17-Apr-2016 12:48:17 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2/test/file2.txt
+        Lock created: 2016-04-26 15:02:40
+      4 barry          33 26-Apr-2016 15:02:40 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2/test/file2.txt
 Info: Test - unlock locked file
 Info: CWD: /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2/test
 Info: pysvn command: unlock /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2/test/file1.txt
@@ -204,10 +203,10 @@ Info: pysvn command: status --verbose /Users/barry/wc/svn/pysvn-next/Extension/T
 Info: Test - list of unlocked files
 Info: CWD: /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2/test
 Info: pysvn command: list --verbose --fetch-locks --recursive /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2
-      4 barry          -1 17-Apr-2016 12:48:17 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2
-      4 barry           0 17-Apr-2016 12:48:17 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2/test
-      4 barry          33 17-Apr-2016 12:48:17 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2/test/file1.txt
-      4 barry          33 17-Apr-2016 12:48:17 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2/test/file2.txt
+      4 barry          -1 26-Apr-2016 15:02:40 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2
+      4 barry           0 26-Apr-2016 15:02:40 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2/test
+      4 barry          33 26-Apr-2016 15:02:40 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2/test/file1.txt
+      4 barry          33 26-Apr-2016 15:02:40 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2/test/file2.txt
 Info: Test - status of locked files
 Info: CWD: /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2/test
 Info: pysvn command: status --verbose /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1
@@ -218,10 +217,10 @@ Info: pysvn command: status --verbose /Users/barry/wc/svn/pysvn-next/Extension/T
 Info: Test - list of unlocked files
 Info: CWD: /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2/test
 Info: pysvn command: list --verbose --fetch-locks --recursive /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1
-      4 barry          -1 17-Apr-2016 12:48:17 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1
-      4 barry           0 17-Apr-2016 12:48:17 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test
-      4 barry          33 17-Apr-2016 12:48:17 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file1.txt
-      4 barry          33 17-Apr-2016 12:48:17 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file2.txt
+      4 barry          -1 26-Apr-2016 15:02:40 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1
+      4 barry           0 26-Apr-2016 15:02:40 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test
+      4 barry          33 26-Apr-2016 15:02:40 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file1.txt
+      4 barry          33 26-Apr-2016 15:02:40 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file2.txt
 Info: Test - update with stolen lock
 Info: CWD: /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2/test
 Info: pysvn command: update /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test
@@ -245,15 +244,15 @@ Info: pysvn command: info2 --revision HEAD file:///Users/barry/wc/svn/pysvn-next
 Path: file1.txt
 Url: file:///Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/repos/trunk/test/file1.txt
 Revision: 4
-Repository UUID: 005a1176-f7f5-4d16-a21e-f47e00b95904
+Repository UUID: 245868a2-5369-4ea2-9491-52ea4415460f
 Last changed author: barry
-Last Changed Date: 17-Apr-2016 12:48:17
+Last Changed Date: 26-Apr-2016 15:02:40
 Last changed revision: 4
 Node kind: file
 Info: Test - list of locked files
 Info: CWD: /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc2/test
 Info: pysvn command: list --verbose --fetch-locks --recursive /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1
-      4 barry          -1 17-Apr-2016 12:48:17 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1
-      4 barry           0 17-Apr-2016 12:48:17 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test
-      4 barry          33 17-Apr-2016 12:48:17 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file1.txt
-      4 barry          33 17-Apr-2016 12:48:17 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file2.txt
+      4 barry          -1 26-Apr-2016 15:02:40 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1
+      4 barry           0 26-Apr-2016 15:02:40 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test
+      4 barry          33 26-Apr-2016 15:02:40 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file1.txt
+      4 barry          33 26-Apr-2016 15:02:40 /Users/barry/wc/svn/pysvn-next/Extension/Tests/testroot-05/wc1/test/file2.txt
