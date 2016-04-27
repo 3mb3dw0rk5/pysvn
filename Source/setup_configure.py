@@ -657,12 +657,6 @@ class Win32CompilerMSVC90(Compiler):
         self._find_paths_pycxx_src = [
                         '%(PYCXX)s/Src',
                         ]
-        self._find_paths_svn_inc = []
-        self._find_paths_svn_bin = []
-        self._find_paths_svn_lib = []
-        self._find_paths_apr_inc = []
-        self._find_paths_apr_util_inc = []
-        self._find_paths_apr_lib = []
 
         if self.options.hasOption( '--distro-dir' ):
             all_distro_dirs = self.options.getOption( '--distro-dir' )
@@ -672,6 +666,14 @@ class Win32CompilerMSVC90(Compiler):
             self._find_paths_svn_inc = [r'%s\include\subversion-1' % (distro_dir,) for distro_dir in all_distro_dirs]
             self._find_paths_svn_lib = [r'%s\lib' % (distro_dir,) for distro_dir in all_distro_dirs]
             self._find_paths_svn_bin = [r'%s\bin' % (distro_dir,) for distro_dir in all_distro_dirs]
+
+        else:
+            self._find_paths_svn_inc = []
+            self._find_paths_svn_bin = []
+            self._find_paths_svn_lib = []
+            self._find_paths_apr_inc = []
+            self._find_paths_apr_util_inc = []
+            self._find_paths_apr_lib = []
 
         self._addVar( 'PYTHON_DIR',     sys.exec_prefix )
         self._addVar( 'PYTHON_INC',     r'%(PYTHON_DIR)s\include' )
