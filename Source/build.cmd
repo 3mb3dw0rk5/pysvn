@@ -17,6 +17,7 @@ set SVN_VER_MAJ_DASH_MIN=%SVN_VER_MAJ_MIN:.=-%
 set PY_MAJ=%PY_VER:~0,1%
 set PY_MIN=%PY_VER:~2%
 
+echo on
 rem Save CWD
 pushd .
 
@@ -25,8 +26,6 @@ call build-config.cmd %PY_VER% %SVN_VER_MAJ_MIN% %BUILD_ARCH%
 popd
 
 set PYCXX=%BUILDER_TOP_DIR%\Import\pycxx-%PYCXX_VER%
-set PY=c:\python%PY_MAJ%%PY_MIN%.%BUILD_ARCH%
-if not exist %PY%\python.exe set PY=c:\python%PY_MAJ%%PY_MIN%
 
 set PYTHONPATH=%BUILDER_TOP_DIR%\Source
 
@@ -40,7 +39,7 @@ popd
 
 %PYTHON% setup.py configure --verbose --platform=%BUILD_ARCH% --pycxx-dir=%USERPROFILE%\wc\svn\PyCxx --distro-dir=%TARGET%\dist
 
-del pysvn\_pysvn*
+if exist pysvn\_pysvn* del pysvn\_pysvn*
 
 if ERRORLEVEL 1 goto :EOF
 nmake clean

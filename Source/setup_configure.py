@@ -282,7 +282,7 @@ class Setup:
 
     def generateSourcesMakefile( self ):
         if not self.options.parseOptions():
-            raise SetupError( 'failed to parse options' )
+            raise SetupError( 'Failed to parse options' )
 
         self.__makefile = open( 'Makefile', 'wt' )
 
@@ -304,7 +304,7 @@ class Setup:
         self.__makefile = None
 
         if not self.options.checkAllOptionsUsed():
-            raise SetupError( 'not all options used' )
+            raise SetupError( 'Not all options used' )
 
         return 0
 
@@ -617,6 +617,7 @@ class Compiler:
         debug( '__find_dir base_dir_list=%r' % (base_dir_list,) )
 
         # expect to find check_file in one of the dir
+        print( 'qqq %s base_dir_list %r' % (name, base_dir_list,) )
         for dirname in base_dir_list:
             full_check_file = os.path.join( dirname, check_file )
             if self.verbose:
@@ -624,7 +625,7 @@ class Compiler:
             if os.path.exists( full_check_file ):
                 return os.path.abspath( dirname )
 
-        raise SetupError( 'cannot find %s %s - use %s' % (name, check_file, kw) )
+        raise SetupError( 'Cannot find %s %s - use %s' % (name, check_file, kw) )
 
     def __getSvnVersion( self, svn_include ):
         all_svn_version_lines = open( os.path.join( svn_include, 'svn_version.h' ) ).readlines()
@@ -664,10 +665,13 @@ class Win32CompilerMSVC90(Compiler):
         self._find_paths_apr_lib = []
 
         if self.options.hasOption( '--distro-dir' ):
-            distro_dir = self.options.getOption( '--distro-dir' )
-            self._find_paths_apr_inc.append( r'%s\include\apr' % (distro_dir,) )
-            self._find_paths_apr_util_inc.append( r'%s\include\apr-util' % (distro_dir,) )
-            self._find_paths_apr_lib.append( r'%s\lib\apr' % (distro_dir,) )
+            all_distro_dirs = self.options.getOption( '--distro-dir' )
+            self._find_paths_apr_inc = [r'%s\include' % (distro_dir,) for distro_dir in all_distro_dirs]
+            self._find_paths_apr_util_inc = [r'%s\include' % (distro_dir,) for distro_dir in all_distro_dirs]
+            self._find_paths_apr_lib = [r'%s\lib' % (distro_dir,) for distro_dir in all_distro_dirs]
+            self._find_paths_svn_inc = [r'%s\include\subversion-1' % (distro_dir,) for distro_dir in all_distro_dirs]
+            self._find_paths_svn_lib = [r'%s\lib' % (distro_dir,) for distro_dir in all_distro_dirs]
+            self._find_paths_svn_bin = [r'%s\bin' % (distro_dir,) for distro_dir in all_distro_dirs]
 
         self._addVar( 'PYTHON_DIR',     sys.exec_prefix )
         self._addVar( 'PYTHON_INC',     r'%(PYTHON_DIR)s\include' )
@@ -1501,7 +1505,7 @@ class Source(Target):
         if basename.endswith( '.c' ):
             return self.compiler.platformFilename( self.compiler.expand( '%s%s' % (basename[:-len('.c')], obj_ext) ) )
 
-        raise SetupError( 'unknown source %r' % (self.src_filename,) )
+        raise SetupError( 'Unknown source %r' % (self.src_filename,) )
 
     def _generateMakefile( self ):
         debug( 'Source:0x%8.8x.generateMakefile() for %r' % (id(self), self.src_filename,) )
