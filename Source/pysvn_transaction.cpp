@@ -153,7 +153,11 @@ Py::Object pysvn_transaction::cmd_cat( const Py::Tuple &a_args, const Py::Dict &
         apr_size_t len = BUFSIZ;
         do 
         {
+#if defined( PYSVN_HAS_STREAM_READ_FULL )
+            error = svn_stream_read_full( fstream, buf, &len );
+#else
             error = svn_stream_read( fstream, buf, &len );
+#endif
             if( error != NULL )
                 throw SvnException( error );
             error = svn_stream_write( stream, buf, &len );
