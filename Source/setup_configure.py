@@ -25,7 +25,7 @@ class SetupError(Exception):
     pass
 
 # version of PyCXX that we require
-pycxx_version = (6, 2, 7)
+pycxx_version = (6, 2, 8)
 
 _debug = False
 
@@ -490,7 +490,7 @@ class Compiler:
             if 'PYCXX_VERSION_PATCH' == words[1]:
                 patch = int( words[2] )
 
-        if (major, minor, patch) != pycxx_version:
+        if (major, minor, patch) < pycxx_version:
             raise SetupError( 'PyCXX version %d.%d.%d required, but found %d.%d.%d.' % (pycxx_version[0], pycxx_version[1], pycxx_version[2], major, minor, patch) )
 
         return pycxx_dir
@@ -1127,7 +1127,6 @@ class MacOsxCompilerGCC(CompilerGCC):
                 '-lsvn_subr-1',
                 '-lsvn_diff-1',
                 '-lapr-1',
-                '-lssl',
                 ]
 
         self._addVar( 'CCFLAGS', ' '.join( py_cflags_list ) )
