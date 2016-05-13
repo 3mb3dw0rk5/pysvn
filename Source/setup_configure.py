@@ -490,6 +490,7 @@ class Compiler:
             if 'PYCXX_VERSION_PATCH' == words[1]:
                 patch = int( words[2] )
 
+        # assume that newer version are always usable
         if (major, minor, patch) < pycxx_version:
             raise SetupError( 'PyCXX version %d.%d.%d required, but found %d.%d.%d.' % (pycxx_version[0], pycxx_version[1], pycxx_version[2], major, minor, patch) )
 
