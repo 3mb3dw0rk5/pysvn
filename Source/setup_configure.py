@@ -71,7 +71,7 @@ class Options:
         '--svn-bin-dir':        (1, '<dir>'),
         '--verbose':            (0, None),
         '--disable-deprecated-functions-warnings': (0, None),
-        '--python-framework-via-dynamic-lookup': (0, None),
+        '--link-python-framework-via-dynamic-lookup': (0, None),
         }
 
     def __init__( self, argv ):
@@ -1135,7 +1135,7 @@ class MacOsxCompilerGCC(CompilerGCC):
         self._addVar( 'CCCFLAGS', ' '.join( ['-fexceptions -frtti'] + py_cflags_list ) )
         self._addVar( 'LDLIBS', ' '.join( py_ld_libs ) )
 
-        if self.options.hasOption( '--python-framework-via-dynamic-lookup' ):
+        if self.options.hasOption( '--link-python-framework-via-dynamic-lookup' ):
             # preferred link method on homebrew for pysvn
             self._addVar( 'LDSHARED',   '%(CCC)s -bundle -g '
                                         '-framework System '
