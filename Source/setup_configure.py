@@ -71,6 +71,7 @@ class Options:
         '--svn-bin-dir':        (1, '<dir>'),
         '--verbose':            (0, None),
         '--disable-deprecated-functions-warnings': (0, None),
+        '--python-framework-via-dynamic-lookup': (0, None),
         }
 
     def __init__( self, argv ):
@@ -1133,7 +1134,18 @@ class MacOsxCompilerGCC(CompilerGCC):
         self._addVar( 'CCFLAGS', ' '.join( py_cflags_list ) )
         self._addVar( 'CCCFLAGS', ' '.join( ['-fexceptions -frtti'] + py_cflags_list ) )
         self._addVar( 'LDLIBS', ' '.join( py_ld_libs ) )
-        self._addVar( 'LDSHARED',       '%(CCC)s -bundle -g '
+
+        if self.options.hasOption( '--python-framework-via-dynamic-lookup' ):
+            # preferred link method on homebrew for pysvn
+            self._addVar( 'LDSHARED',   '%(CCC)s -bundle -g '
+                                        '-framework System '
+                                        '-framework CoreFoundation '
+                                        '-framework Kerberos '
+                                        '-framework Security '
+                                        '-undefined dynamic_lookup '
+                                        '%(LDLIBS)s' )
+        else:
+            self._addVar( 'LDSHARED',   '%(CCC)s -bundle -g '
                                         '-framework System '
                                         '%(PYTHON_FRAMEWORK)s '
                                         '-framework CoreFoundation '
