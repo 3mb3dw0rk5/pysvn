@@ -545,7 +545,7 @@ class Compiler:
                 last_exception = e
 
         if last_exception is not None:
-            raise e
+            raise last_exception
 
         # if we are using the Fink SVN then remember this
         self.is_mac_os_x_fink = folder.startswith( '/sw/' )
@@ -1020,7 +1020,7 @@ class MacOsxCompilerGCC(CompilerGCC):
                         '../Import/pycxx-%d.%d.%d' % pycxx_version,
                         distutils.sysconfig.get_python_inc() # typical Linux
                         ]
-        
+
         self._find_paths_pycxx_src = [
                         '%(PYCXX)s/Src',
                         '/usr/share/python%s/CXX' % (distutils.sysconfig.get_python_version(),) # typical Linux
@@ -1181,9 +1181,11 @@ class UnixCompilerGCC(CompilerGCC):
                         '/usr/local/lib64',                     # typical 64bit Linux
                         '/usr/local/lib',                       # typical *BSD
                         '/usr/pkg/lib',                         # netbsd
+                        '/usr/lib/x86_64-linux-gnu',            # debian/unbuntu
                         ]
         self._find_paths_apr_inc = [
                         '/usr/include/apr-1',                   # typical Linux
+                        '/usr/include/apr-1.0',                 # typical Linux
                         '/usr/local/apr/include/apr-1',         # Mac OS X www.metissian.com
                         '/usr/pkg/include/apr-1',               # netbsd
                         '/usr/include/apache2',                 # alternate Linux
@@ -1199,6 +1201,7 @@ class UnixCompilerGCC(CompilerGCC):
                         '/usr/local/lib',                       # typical *BSD
                         '/usr/local/apr/lib',                   # Mac OS X www.metissian.com
                         '/usr/pkg/lib',                         # netbsd
+                        '/usr/lib/x86_64-linux-gnu',            # debian/unbuntu
                         ]
 
         self._completeInit()
