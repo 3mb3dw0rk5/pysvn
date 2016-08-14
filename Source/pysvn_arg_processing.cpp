@@ -386,7 +386,7 @@ svn_depth_t FunctionArguments::getDepth
 
     if( hasArg( depth_name ) )
     {
-        return getDepth( depth_name );
+        return getDepth( depth_name, default_value );
     }
 
     return default_value;
@@ -400,7 +400,16 @@ svn_depth_t FunctionArguments::getDepth
 {
     if( hasArg( depth_name ) )
     {
-        return getDepth( depth_name );
+        Py::Object value( getArg( depth_name ) );
+        if( value.isNone() )
+        {
+            return default_value;
+        }
+        else
+        {
+            Py::ExtensionObject< pysvn_enum_value<svn_depth_t> > py_kind( value );
+            return svn_depth_t( py_kind.extensionObject()->m_value );
+        }
     }
 
     return default_value;
