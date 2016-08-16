@@ -445,14 +445,12 @@ called with information about the certificate in trust dict.
 a tuple of three values (retcode, accepted_failures, save).
 </p>
 <ul>
-<li>retcode - boolean, False if no username and password are
-  available. True if subversion is to use the username and password.</li>
-<li>accepted_failures - int, the accepted failures allowed</li>
+<li>retcode - boolean, True if the ssl server is trusted, False if not trusted.</li>
+<li>accepted_failures - int, the accepted failures allowed. Typically just return trust_dict["failures"].</li>
 <li>save - boolean, return True if you want subversion to remember
   the certificate in the configuration directory. return False
   to prevent saving the certificate.</li>
 </ul>
-
 
 <h4><a name="pysvn_client_callback_conflict_resolver"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.callback_conflict_resolver</a></h4>
 <pre>
