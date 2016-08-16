@@ -844,7 +844,9 @@ checkout( url,
           recurse=True,
           revision=pysvn.Revision( opt_revision_kind.head )<span class="svn_1002000">,
           peg_revision=pysvn.Revision( opt_revision_kind.unspecified )</span><span class="svn_1002000">,
-          ignore_externals=False</span> )
+          ignore_externals=False</span><span class="svn_1005000">,
+          allow_unver_obstructions=False,
+          depth=None</span> )
 </pre>
 <p>
 checkout the repository at url into the location specified by path.
@@ -858,6 +860,13 @@ is opt_revision_kind.unspecified, then it defaults to
 opt_revision_kind.head for URLs or opt_revision_kind.working for
 WC targets.
 </span></p>
+
+<div class="svn_1005000">
+<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
+</p>
+</div>
+
+
 <p>checkout returns a pysvn.Revision containing the number of the
 checked out revision.
 </p>

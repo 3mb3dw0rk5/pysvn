@@ -25,7 +25,8 @@ class SetupError(Exception):
     pass
 
 # version of PyCXX that we require
-pycxx_version = (6, 2, 8)
+#pycxx_version = (6, 2, 8)
+pycxx_version = (7, 0, 0)
 
 _debug = False
 
@@ -232,6 +233,9 @@ class Setup:
             Source( self.c_pysvn, '%(PYCXX_SRC)s/cxxextensions.c' ),
             Source( self.c_pysvn, '%(PYCXX_SRC)s/IndirectPythonInterface.cxx' ),
             ]
+        if pycxx_version >= (7, 0, 0):
+            self.pycxx_obj_file.append(
+                Source( self.c_pysvn, '%(PYCXX_SRC)s/cxx_exceptions.cxx' ) )
 
         pysvn_headers = ['pysvn.hpp', 'pysvn_docs.hpp', 'pysvn_svnenv.hpp', 'pysvn_static_strings.hpp', 'pysvn_version.hpp']
         self.pysvn_obj_files = [
