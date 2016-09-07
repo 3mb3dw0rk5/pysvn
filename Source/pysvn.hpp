@@ -1,6 +1,6 @@
 //
 // ====================================================================
-// Copyright (c) 2003-2013 Barry A Scott.  All rights reserved.
+// Copyright (c) 2003-2016 Barry A Scott.  All rights reserved.
 //
 // This software is licensed as described in the file LICENSE.txt,
 // which you should have received as part of this distribution.
@@ -8,6 +8,12 @@
 // ====================================================================
 //
 #include "Python.h"
+#include "CXX/Version.hxx"
+
+#if PYCXX_VERSION >= PYCXX_MAKEVERSION( 7, 0, 0 )
+#define PYCXX_6_2_COMPATIBILITY 1
+#endif
+
 #include "CXX/Objects.hxx"
 #include "CXX/Extensions.hxx"
 #include <iostream>

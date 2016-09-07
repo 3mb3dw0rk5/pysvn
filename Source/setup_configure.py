@@ -1,6 +1,6 @@
 #
 # ====================================================================
-# Copyright (c) 2005-2011 Barry A Scott.  All rights reserved.
+# Copyright (c) 2005-2016 Barry A Scott.  All rights reserved.
 #
 # This software is licensed as described in the file LICENSE.txt,
 # which you should have received as part of this distribution.
@@ -25,8 +25,7 @@ class SetupError(Exception):
     pass
 
 # version of PyCXX that we require
-#pycxx_version = (6, 2, 8)
-pycxx_version = (7, 0, 0)
+min_pycxx_version = (6, 2, 8)
 
 _debug = False
 
@@ -233,7 +232,9 @@ class Setup:
             Source( self.c_pysvn, '%(PYCXX_SRC)s/cxxextensions.c' ),
             Source( self.c_pysvn, '%(PYCXX_SRC)s/IndirectPythonInterface.cxx' ),
             ]
-        if pycxx_version >= (7, 0, 0):
+
+        # after 7.0.0 need to compile new file
+        if self.c_pysvn.pycxx_version >= (7, 0, 0):
             self.pycxx_obj_file.append(
                 Source( self.c_pysvn, '%(PYCXX_SRC)s/cxx_exceptions.cxx' ) )
 
@@ -371,7 +372,6 @@ class Compiler:
 
         self.__variables = {}
 
-        self._addVar( 'PYCXX_VER',       '%d.%d.%d' % pycxx_version)
         self._addVar( 'DEBUG',           'NDEBUG')
 
         self._addVar( 'PYSVN_SRC_DIR', os.path.dirname( os.getcwd() ) )
@@ -417,7 +417,17 @@ class Compiler:
 
         self._addVar( 'PYTHON',         sys.executable )
 
-        self._addVar( 'PYCXX',          self.find_pycxx() )
+        pycxx_dir = self.find_pycxx()
+        self._addVar( 'PYCXX',          pycxx_dir )
+
+        self.pycxx_version = self.__getPyCxxVersion( pycxx_dir )
+
+        # assume that newer version are always usable
+        if self.pycxx_version < min_pycxx_version:
+            raise SetupError( 'PyCXX version %d.%d.%d required, but found %d.%d.%d.' %
+                                (pycxx_version[0], pycxx_version[1], pycxx_version[2]
+                                ,self.pycxx_version[0], self.pycxx_version[1], self.pycxx_version[2]) )
+
         self._addVar( 'PYCXX_SRC',      self.find_pycxx_src() )
         svn_inc = self.find_svn_inc()
         self._addVar( 'SVN_INC',        svn_inc )
@@ -472,13 +482,14 @@ class Compiler:
 
 
     def find_pycxx( self ):
-        pycxx_dir = self.find_dir(
+        return self.find_dir(
                     'PyCXX include',
                     '--pycxx-dir',
                     None,
                     self._find_paths_pycxx_dir,
                     'CXX/Version.hxx' )
 
+    def __getPyCxxVersion( self, pycxx_dir ):
         major = None
         minor = None
         patch = None
@@ -495,14 +506,10 @@ class Compiler:
             if 'PYCXX_VERSION_PATCH' == words[1]:
                 patch = int( words[2] )
 
-        # assume that newer version are always usable
-        if (major, minor, patch) < pycxx_version:
-            raise SetupError( 'PyCXX version %d.%d.%d required, but found %d.%d.%d.' % (pycxx_version[0], pycxx_version[1], pycxx_version[2], major, minor, patch) )
-
-        return pycxx_dir
+        return (major, minor, patch)
 
     def find_pycxx_src( self ):
-        v = {'PYCXX': self.find_pycxx()}
+        v = {'PYCXX': self.expand( '%(PYCXX)s' )}
 
         return self.find_dir(
                     'PyCXX Source',
@@ -603,7 +610,7 @@ class Compiler:
         raise last_exception
 
     def get_lib_name_for_platform( self, libname ):
-        raise NotImplementedError
+        raise NotImplementedError( 'get_lib_name_for_platform' )
 
     def find_dir( self, name, kw, svn_root_suffix, base_dir_list, check_file ):
         dirname = self.__find_dir( name, kw, svn_root_suffix, base_dir_list, check_file )
@@ -1021,7 +1028,7 @@ class MacOsxCompilerGCC(CompilerGCC):
         self._addVar( 'CC',             'gcc %s' % (arch_options,) )
 
         self._find_paths_pycxx_dir = [
-                        '../Import/pycxx-%d.%d.%d' % pycxx_version,
+                        '../Import/pycxx-%d.%d.%d' % min_pycxx_version,
                         distutils.sysconfig.get_python_inc() # typical Linux
                         ]
 
@@ -1419,7 +1426,7 @@ class Target:
             source.setDependent( self )
 
     def getTargetFilename( self ):
-        raise NotImplementedError( '%s.getTargetFilename' % self.__class__.__name__ )
+        raise NotImplementedError( 'getTargetFilename' )
 
     def generateMakefile( self ):
         if self.__generated:

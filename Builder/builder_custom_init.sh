@@ -5,10 +5,12 @@ if [ ! -z "$1" ]
 then
     PREF_VER=$1.$2
 else
-    PREF_VER=3.4
+    PREF_VER=3.5
 fi
 
-for PY_VER in ${PREF_VER} 2.7 2.6
+export PYCXX_VER=7.0.1
+
+for PY_VER in ${PREF_VER} 3.5 3.4 2.7
 do
     # used in pick python to use in Builder driver makefile
     export PYTHON=$( which python${PY_VER} )
