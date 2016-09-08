@@ -790,7 +790,6 @@ class Win32CompilerMSVC90(Compiler):
         self._pysvnModuleSetup()
         self._addVar( 'PYSVN_MODULE_BASENAME', self.pysvn_module_name )
 
-
         py_cflags_list = [
                                         r'/Zi /MT /EHsc ',
                                         r'/I. /I%(APR_INC)s /I%(APU_INC)s /I%(SVN_INC)s',
@@ -800,6 +799,10 @@ class Win32CompilerMSVC90(Compiler):
                                         r'/DWIN32',
                                         r'/D%(DEBUG)s',
                                         ]
+        if self.pycxx_version >= (7, 0, 0):
+            # PYSVN uses PYCXX in backward compat mode
+            py_cflags_list.append( r'/DPYCXX_6_2_COMPATIBILITY=1' )
+
         for define, value in self.py_module_defines:
             py_cflags_list.append( '/D%s=%s' % (define, value) )
 
@@ -1125,6 +1128,11 @@ class MacOsxCompilerGCC(CompilerGCC):
                     '-DPYCXX_PYTHON_2TO3 -I%(PYCXX)s -I%(PYCXX_SRC)s -I%(PYTHON_INC)s',
                     '-D%(DEBUG)s',
                     ]
+
+        if self.pycxx_version >= (7, 0, 0):
+            # PYSVN uses PYCXX in backward compat mode
+            py_cflags_list.append( r'-DPYCXX_6_2_COMPATIBILITY=1' )
+
         for define, value in self.py_module_defines:
             py_cflags_list.append( '-D%s=%s' % (define, value) )
 
@@ -1246,6 +1254,11 @@ class UnixCompilerGCC(CompilerGCC):
                     '-I%(PYTHON_ARCH_SPECIFIC_INC)s',
                     '-D%(DEBUG)s',
                     ]
+
+        if self.pycxx_version >= (7, 0, 0):
+            # PYSVN uses PYCXX in backward compat mode
+            py_cflags_list.append( r'-DPYCXX_6_2_COMPATIBILITY=1' )
+
         for define, value in self.py_module_defines:
             py_cflags_list.append( '-D%s=%s' % (define, value) )
 

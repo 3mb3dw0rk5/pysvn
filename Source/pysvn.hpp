@@ -10,10 +10,6 @@
 #include "Python.h"
 #include "CXX/Version.hxx"
 
-#if PYCXX_VERSION >= PYCXX_MAKEVERSION( 7, 0, 0 )
-#define PYCXX_6_2_COMPATIBILITY 1
-#endif
-
 #include "CXX/Objects.hxx"
 #include "CXX/Extensions.hxx"
 #include <iostream>
