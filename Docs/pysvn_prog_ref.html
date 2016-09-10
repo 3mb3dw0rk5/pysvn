@@ -682,11 +682,10 @@ contains:
 <h4><a name="pysvn_client_annotate2"><a href="#pysvn_module">pysvn</a>.<a href="#pysvn_client">Client</a>.annotate2</a></h4>
 <pre>
 file_annotation = \
-annotate( url_or_path,
-          revision_start=pysvn.Revision( opt_revision_kind.number, 0 ),
-          revision_end=pysvn.Revision( opt_revision_kind.head )<span class="svn_1002000">,
-          peg_revision=pysvn.Revision( opt_revision_kind.unspecified )</span> )
- )
+annotate2( url_or_path,
+           revision_start=pysvn.Revision( opt_revision_kind.number, 0 ),
+           revision_end=pysvn.Revision( opt_revision_kind.head )<span class="svn_1002000">,
+           peg_revision=pysvn.Revision( opt_revision_kind.unspecified )</span> )
 </pre>
 <p>Return the annotation for each line in the url_or_path from
 revision_start to revision_end.
