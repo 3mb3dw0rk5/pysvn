@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 #
 #   make-devel-rpm-build.sh
 #
@@ -10,14 +10,17 @@ rm -rf /tmp/pysvn-${V}
 
 svn export --quiet .. /tmp/pysvn-${V}
 BUILD=$( svnversion .. )
-cat <<EOF >/tmp/pysvn-workbench-${V}/Builder/version.info
+cat <<EOF >/tmp/pysvn-${V}/Builder/version.info
 MAJOR=${MAJOR}
 MINOR=${MINOR}
 PATCH=${PATCH}
 BUILD=${BUILD}
 EOF
 echo Info: Creating source kit...
-tar czf ~/rpmbuild/SOURCES/pysvn-${V}.tar.gz -C /tmp pysvn-${V}
+mkdir -p /tmp/rpmbuild/SOURCES
+mkdir -p /tmp/rpmbuild/SPECS
+
+tar czf /tmp/rpmbuild/SOURCES/pysvn-${V}.tar.gz -C /tmp pysvn-${V}
 echo Info: Running rpmbuild
-cd ~/rpmbuild/SPECS
+cd /tmp/rpmbuild/SPECS
 rpmbuild -ba pysvn.spec
