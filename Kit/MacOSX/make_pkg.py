@@ -126,7 +126,7 @@ def findDylibs( image, dylib_list, depth=0 ):
                 #print( 'Info: ',depth,' Need lib',libpath,'for',image )
                 dylib_list.append( libpath )
                 findDylibs( libpath, dylib_list, depth+1 )
-        
+
 dylib_list = []
 findDylibs( '../../Source/pysvn/%s' % pysvn_so_string, dylib_list )
 
