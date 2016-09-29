@@ -1185,12 +1185,15 @@ class UnixCompilerGCC(CompilerGCC):
         CompilerGCC.__init__( self, setup )
 
         self._find_paths_pycxx_dir = [
-                        distutils.sysconfig.get_python_inc() # typical Linux
+                        distutils.sysconfig.get_python_inc(), # typical Linux
+                        '/usr/include'
                         ]
         self._find_paths_pycxx_src = [
                         '%(PYCXX)s/Src',
-                        '/usr/share/python%s/CXX' % distutils.sysconfig.get_python_version() # typical Linux
+                        '/usr/share/python%s/CXX' % distutils.sysconfig.get_python_version(), # typical Linux
+                        '/usr/src/CXX'
                         ]
+
         self._find_paths_svn_inc = [
                         '/usr/include/subversion-1',            # typical Linux
                         '/usr/local/include/subversion-1',      # typical *BSD
