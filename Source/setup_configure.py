@@ -202,6 +202,14 @@ class Setup:
             self.c_utils = LinuxCompilerGCC( self )
             self.c_pysvn = LinuxCompilerGCC( self )
 
+        elif self.platform == 'kfreebsd':
+            self.c_utils = LinuxCompilerGCC( self )
+            self.c_pysvn = LinuxCompilerGCC( self )
+
+        elif self.platform == 'hurd':
+            self.c_utils = LinuxCompilerGCC( self )
+            self.c_pysvn = LinuxCompilerGCC( self )
+
         elif self.platform == 'freebsd':
             self.c_utils = FreeBsdCompilerGCC( self )
             self.c_pysvn = FreeBsdCompilerGCC( self )
