@@ -1178,6 +1178,8 @@ class MacOsxCompilerGCC(CompilerGCC):
                                         '-framework CoreFoundation '
                                         '-framework Kerberos '
                                         '-framework Security '
+                                        '-rpath @loader_path '
+                                        '-headerpad_max_install_names '
                                         '%(LDLIBS)s' )
 
 class UnixCompilerGCC(CompilerGCC):
