@@ -1177,7 +1177,6 @@ class UnixCompilerGCC(CompilerGCC):
         CompilerGCC.__init__( self, setup )
 
         self._find_paths_pycxx_dir = [
-                        '../Import/pycxx-%d.%d.%d' % pycxx_version,
                         distutils.sysconfig.get_python_inc() # typical Linux
                         ]
         self._find_paths_pycxx_src = [
