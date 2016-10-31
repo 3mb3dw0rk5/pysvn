@@ -926,10 +926,10 @@ pysvn.Revision( opt_revision_kind.working ).
 working copy (WC) path or URL:
 </p>
 <ul>
-<li>WC  -&rt; WC:   copy and schedule for addition (with history)</li>
-<li>WC  -&rt; URL:  immediately commit a copy of WC to URL</li>
-<li>URL -&rt; WC:   check out URL into WC, schedule for addition</li>
-<li>URL -&rt; URL:  complete server-side copy; used to branch and tag</li>
+<li>WC -&gt; WC:   copy and schedule for addition (with history)</li>
+<li>WC -&gt; URL:  immediately commit a copy of WC to URL</li>
+<li>URL -&gt; WC:   check out URL into WC, schedule for addition</li>
+<li>URL -&gt; URL:  complete server-side copy; used to branch and tag</li>
 </ul>
 <p>If the destination is a URL the <a href="#pysvn_client_callback_get_log_message">client_get_log_message</a>
 callback must be implemented to return a log message.
