@@ -261,7 +261,7 @@ Py::Object pysvn_client::cmd_diff( const Py::Tuple &a_args, const Py::Dict &a_kw
     const char *relative_to_dir = NULL;
     if( args.hasArg( name_relative_to_dir ) )
     {
-        std_relative_to_dir = args.getUtf8String( name_relative_to_dir );
+        std_relative_to_dir = svnNormalisedIfPath( args.getUtf8String( name_relative_to_dir ), pool );
         relative_to_dir = std_relative_to_dir.c_str();
     }
 
@@ -491,7 +491,7 @@ Py::Object pysvn_client::cmd_diff_peg( const Py::Tuple &a_args, const Py::Dict &
     const char *relative_to_dir = NULL;
     if( args.hasArg( name_relative_to_dir ) )
     {
-        std_relative_to_dir = args.getBytes( name_relative_to_dir );
+        std_relative_to_dir = svnNormalisedIfPath( args.getUtf8String( name_relative_to_dir ), pool );
         relative_to_dir = std_relative_to_dir.c_str();
     }
 
