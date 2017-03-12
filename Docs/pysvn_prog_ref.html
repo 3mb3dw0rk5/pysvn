@@ -1504,7 +1504,7 @@ entries_list = \
 list( url_or_path,
       peg_revision=pysvn.Revision( opt_revision_kind.unspecified ) )
       revision=pysvn.Revision( opt_revision_kind.head ),
-      recurse=True,
+      recurse=False,
       dirent_fields=pysvn.SVN_DIRENT_ALL,
       fetch_locks=False<span class="svn_1005000">,
       depth=depth</span> )
@@ -1521,7 +1521,7 @@ defaults to opt_revision_kind.head for URLs or
 opt_revision_kind.working for WC targets.
 </p>
 <div class="svn_1005000">
-<p>The depth can be used as in place of recurse. depth is one of the pysvn.depth enums.
+<p>The depth can be used in place of recurse. depth is one of the pysvn.depth enums.
 </p>
 </div>
 
