@@ -39,7 +39,7 @@ if processor == 'i386':
         maxsize = sys.maxsize
     else:
         maxsize = sys.maxint
-    
+
     if maxsize == (2**31-1):
         processor = 'i386'
     else:
@@ -69,20 +69,8 @@ if pymaj == 2 and pymin == 7:
     else:
         install_dir = '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages'
 
-elif pymaj == 3 and pymin == 1:
-    install_dir = '/Library/Frameworks/Python.framework/Versions/3.1/lib/python3.1/site-packages'
-
-elif pymaj == 3 and pymin == 2:
-    install_dir = '/Library/Frameworks/Python.framework/Versions/3.2/lib/python3.2/site-packages'
-
-elif pymaj == 3 and pymin == 3:
-    install_dir = '/Library/Frameworks/Python.framework/Versions/3.3/lib/python3.3/site-packages'
-
-elif pymaj == 3 and pymin == 4:
-    install_dir = '/Library/Frameworks/Python.framework/Versions/3.4/lib/python3.4/site-packages'
-
-elif pymaj == 3 and pymin == 5:
-    install_dir = '/Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/site-packages'
+elif pymaj == 3:
+    install_dir = '/Library/Frameworks/Python.framework/Versions/3.%d/lib/python3.%d/site-packages' % (pymin, pymin)
 
 else:
     raise RuntimeError( 'Unsupported version of python' )
