@@ -43,8 +43,8 @@ Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-09/wc1
 Info: pysvn command: annotate folder1/file-a.txt
 A /trunk/folder1/file-a.txt
 A /trunk/folder1/file-a.txt
-1| r2 | barry | 2017-03-28T18:08:40.304052Z | test add file 1
-2| r3 | barry | 2017-03-28T18:08:41.151763Z | test add line 2
+1| r2 | barry | 2017-04-03T19:26:03.236318Z | test add file 1
+2| r3 | barry | 2017-04-03T19:26:04.123998Z | test add line 2
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-09/wc1
 Info: pysvn command: annotate2 folder1/file-a.txt
 A /trunk/folder1/file-a.txt
@@ -75,18 +75,14 @@ M /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-09/wc1/folder1/file-a.txt
 commit_finalizing .
 Revision 5
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-09/wc1
-Info: pysvn command: propset_remote test-case 09 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-09/repos/trunk/folder1/file-a.txt --revision 5
-Log message
---- -------
+Info: pysvn command: propset_remote test-case 09 file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-09/repos/trunk/folder1/file-a.txt --revision 5 -m set custom prop
 commit_finalizing .
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-09/wc1
 Info: pysvn command: proplist --verbose file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-09/repos/trunk/folder1/file-a.txt
 Properties on 'file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-09/repos/trunk/folder1/file-a.txt':
   test-case: 09
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-09/wc1
-Info: pysvn command: propdel_remote test-case file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-09/repos/trunk/folder1/file-a.txt --revision 6
-Log message
---- -------
+Info: pysvn command: propdel_remote test-case file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-09/repos/trunk/folder1/file-a.txt --revision 6 -m set custom prop
 commit_finalizing .
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-09/wc1
 Info: pysvn command: proplist --verbose file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-09/repos/trunk/folder1/file-a.txt
