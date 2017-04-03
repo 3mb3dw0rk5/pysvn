@@ -37,14 +37,93 @@ A B:/wc1/folder1
 A B:/wc1/folder1/file-a.txt
 commit_finalizing .
 Revision 2
-The system cannot find the batch label specified - cmd_appendfile
+Info: Append File folder1\file-a.txt - test add line 2     
+ 
+Info: PYSVN CMD checkin -m "add line 2" 
+M B:/wc1/folder1/file-a.txt
+commit_finalizing .
+Revision 3
  
 Info: PYSVN CMD diff folder1\file-a.txt 
  
 Info: PYSVN CMD annotate folder1\file-a.txt 
 A /trunk/folder1/file-a.txt
-1| r2 | barry | 2016-04-27T19:44:07.802434Z | test add file 1
+A /trunk/folder1/file-a.txt
+1| r2 | barry | 2017-04-03T17:17:40.367600Z | test add file 1
+2| r3 | barry | 2017-04-03T17:17:40.961541Z | test add line 2
  
 Info: PYSVN CMD annotate2 folder1\file-a.txt 
 A /trunk/folder1/file-a.txt
+A /trunk/folder1/file-a.txt
 1| r2 | test add file 1
+2| r3 | test add line 2
+Info: propset_local
+ 
+Info: PYSVN CMD propset_local svn:eol native folder1/file-a.txt 
+property_added B:/wc1/folder1/file-a.txt
+ 
+Info: PYSVN CMD proplist --verbose folder1/file-a.txt 
+Properties on 'folder1/file-a.txt':
+  svn:eol: native
+ 
+Info: PYSVN CMD checkin -m "eol is native" 
+M B:/wc1/folder1/file-a.txt
+commit_finalizing .
+Revision 4
+ 
+Info: PYSVN CMD propdel_local svn:eol folder1/file-a.txt 
+property_deleted B:/wc1/folder1/file-a.txt
+ 
+Info: PYSVN CMD proplist --verbose folder1/file-a.txt 
+ 
+Info: PYSVN CMD checkin -m "remove eol" 
+M B:/wc1/folder1/file-a.txt
+commit_finalizing .
+Revision 5
+ 
+Info: PYSVN CMD "propset_remote" test-case 09 file:///b:/repos/trunk/folder1/file-a.txt --revision 5 -m "set custom prop" 
+commit_finalizing .
+ 
+Info: PYSVN CMD proplist --verbose file:///b:/repos/trunk/folder1/file-a.txt 
+Properties on 'file:///B:/repos/trunk/folder1/file-a.txt':
+  test-case: 09
+ 
+Info: PYSVN CMD "propdel_remote" test-case file:///b:/repos/trunk/folder1/file-a.txt --revision 6 -m "set custom prop" 
+commit_finalizing .
+ 
+Info: PYSVN CMD proplist --verbose file:///b:/repos/trunk/folder1/file-a.txt 
+ 
+Info: PYSVN CMD update 
+update_started B:/wc1
+Updated to revision 7
+
+Info: CMD cd /d folder1
+Info: Create File unversioned.txt - empty        
+ 
+Info: PYSVN CMD status2 
+?      B:\wc1\folder1\unversioned.txt
+ 
+Info: PYSVN CMD status2 --verbose 
+               7      7 barry          B:\wc1\folder1
+               7      5 barry          B:\wc1\folder1\file-a.txt
+?                                      B:\wc1\folder1\unversioned.txt
+ 
+Info: PYSVN CMD status2 --verbose --quiet 
+               7      7 barry          B:\wc1\folder1
+               7      5 barry          B:\wc1\folder1\file-a.txt
+ 
+Info: PYSVN CMD lock file-a.txt 
+locked B:/wc1/folder1/file-a.txt
+ 
+Info: PYSVN CMD status2 
+     K B:\wc1\folder1\file-a.txt
+?      B:\wc1\folder1\unversioned.txt
+ 
+Info: PYSVN CMD status2 --verbose 
+               7      7 barry          B:\wc1\folder1
+     K         7      5 barry          B:\wc1\folder1\file-a.txt
+?                                      B:\wc1\folder1\unversioned.txt
+ 
+Info: PYSVN CMD status2 --verbose --quiet 
+               7      7 barry          B:\wc1\folder1
+     K         7      5 barry          B:\wc1\folder1\file-a.txt
