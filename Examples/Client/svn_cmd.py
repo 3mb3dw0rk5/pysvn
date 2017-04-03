@@ -219,6 +219,7 @@ class SvnCommand:
         self.notify_message_list = []
         self.pysvn_testing = False
         self.debug_enabled = False
+        self.next_log_message = None
 
     def debug( self, msg, args=() ):
         if self.debug_enabled:
@@ -309,10 +310,15 @@ class SvnCommand:
         while save_password.lower() not in ['y','ye','yes','n', 'no','']:
             sys.stdout.write( 'Save password? [y/n] ' )
             save_password = sys.stdin.readline().strip()
-        
+
         return 1, username, password, save_password in ['y','ye','yes']
 
     def getLogMessage( self ):
+        if self.next_log_message is not None:
+            message = self.next_log_message
+            self.next_log_message = None
+            return message
+
         sys.stdout.write( 'Log message\n' )
         sys.stdout.write( '--- -------\n' )
         message = sys.stdin.read()
@@ -469,7 +475,7 @@ class SvnCommand:
             positional_args.append( '.' )
         if msg == '':
             msg = self.getLogMessage()
-            
+
         commit_info = self.client.checkin( positional_args, msg, recurse=recurse )
         rev = commit_info["revision"]
         self.printNotifyMessages()
@@ -800,7 +806,6 @@ class SvnCommand:
             path2, rev2 = self.parsePathWithRevision( positional_args[1] )
             wcpath = positional_args[2]
 
-            
         self.client.merge( path1, revision1, path2, revision2, wcpath,
                 recurse=recurse, dry_run=dry_run, notice_ancestry=notice_ancestry )
 
@@ -952,6 +957,8 @@ class SvnCommand:
             self.client.propdel_local( positional_args[0], positional_args[1] )
 
     def cmd_propset_remote( self, args ):
+        self.next_log_message = args.getOptionalValue( '--message', None )
+
         skip_checks = args.getBooleanOption( '--skip-checks', True )
         revision = args.getOptionalRevision( '--revision', '0' )
         positional_args = args.getPositionalArgs( 3, 3 )
@@ -963,6 +970,8 @@ class SvnCommand:
             self.client.propset_remote( positional_args[0], positional_args[1], positional_args[2], skip_checks=skip_checks )
 
     def cmd_propdel_remote( self, args ):
+        self.next_log_message = args.getOptionalValue( '--message', None )
+
         revision = args.getOptionalRevision( '--revision', '0' )
         positional_args = args.getPositionalArgs( 2, 2 )
 
