@@ -172,6 +172,7 @@ Py::Object pysvn_client::common_propset_remote( FunctionArguments &args, bool is
 
     // url
     std::string url( args.getUtf8String( name_url ) );
+    std::string norm_url( svnNormalisedUrl( url, pool ) );
 
     // skip_check
     bool skip_checks = false;
@@ -228,7 +229,7 @@ Py::Object pysvn_client::common_propset_remote( FunctionArguments &args, bool is
             (
             propname.c_str(),
             svn_propval,
-            url.c_str(),
+            norm_url.c_str(),
             skip_checks,
             base_revision_for_url,
             revprops,
