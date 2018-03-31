@@ -134,7 +134,7 @@ Py::Object pysvn_client::cmd_ls( const Py::Tuple &a_args, const Py::Dict &a_kws 
         entry_dict[ *py_name_name ] = Py::String( full_name, name_utf8 );
         entry_dict[ *py_name_kind ] = toEnumValue( dirent->kind );
         entry_dict[ *py_name_has_props ] = Py::Int( dirent->has_props );
-        entry_dict[ *py_name_size ] = Py::Long( Py::Float( double( static_cast<signed_int64>( dirent->size ) ) ) );
+        entry_dict[ *py_name_size ] = toFilesize( dirent->size );
         entry_dict[ *py_name_created_rev ] = Py::asObject( new pysvn_revision( svn_opt_revision_number, 0, dirent->created_rev ) );
         entry_dict[ *py_name_time ] = toObject( dirent->time );
         entry_dict[ *py_name_last_author ] = utf8_string_or_none( dirent->last_author );

@@ -939,4 +939,9 @@ extern void revisionKindCompatibleCheck
     const char *url_or_path_name
     );
 
+extern Py::Object toFilesize
+    (
+    svn_filesize_t filesize
+    );
+
 //--------------------------------------------------------------------------------
