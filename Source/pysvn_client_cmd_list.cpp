@@ -237,7 +237,7 @@ extern "C" svn_error_t *list_receiver_c
         }
         if( baton->m_dirent_fields&SVN_DIRENT_SIZE )
         {
-            entry_dict[ *py_name_size ] = Py::Long( Py::Float( double( static_cast<signed_int64>( dirent->size ) ) ) );
+            entry_dict[ *py_name_size ] = toFilesize( dirent->size );
         }
         if( baton->m_dirent_fields&SVN_DIRENT_CREATED_REV )
         {

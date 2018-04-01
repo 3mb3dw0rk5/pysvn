@@ -43,8 +43,8 @@ Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-09/wc1
 Info: pysvn command: annotate folder1/file-a.txt
 A /trunk/folder1/file-a.txt
 A /trunk/folder1/file-a.txt
-1| r2 | barry | 2017-04-03T19:26:03.236318Z | test add file 1
-2| r3 | barry | 2017-04-03T19:26:04.123998Z | test add line 2
+1| r2 | barry | 2018-04-01T11:40:39.286366Z | test add file 1
+2| r3 | barry | 2018-04-01T11:40:40.138169Z | test add line 2
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-09/wc1
 Info: pysvn command: annotate2 folder1/file-a.txt
 A /trunk/folder1/file-a.txt
@@ -100,12 +100,12 @@ Info: pysvn command: status2
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-09/wc1/folder1
 Info: pysvn command: status2 --verbose
                7      7 barry          .
-               7      5 barry          file-a.txt
+               7      7 barry          file-a.txt
 ?                                      unversioned.txt
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-09/wc1/folder1
 Info: pysvn command: status2 --verbose --quiet
                7      7 barry          .
-               7      5 barry          file-a.txt
+               7      7 barry          file-a.txt
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-09/wc1/folder1
 Info: pysvn command: lock file-a.txt
 locked /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-09/wc1/folder1/file-a.txt
@@ -116,9 +116,9 @@ Info: pysvn command: status2
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-09/wc1/folder1
 Info: pysvn command: status2 --verbose
                7      7 barry          .
-     K         7      5 barry          file-a.txt
+     K         7      7 barry          file-a.txt
 ?                                      unversioned.txt
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-09/wc1/folder1
 Info: pysvn command: status2 --verbose --quiet
                7      7 barry          .
-     K         7      5 barry          file-a.txt
+     K         7      7 barry          file-a.txt
