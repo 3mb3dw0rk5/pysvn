@@ -729,10 +729,13 @@ class SvnCommand:
                 for entry in all_entries:
                     args = {}
                     args.update( entry )
-                    args['last_author'] = args['last_author']  
                     args['time_str'] = fmtDateTime( entry.time )
                     args['created_rev_num'] = entry.created_rev.number
-                    print( '%(created_rev_num)7d %(last_author)-10s %(size)6d %(time_str)s %(name)s' % args )
+                    if args['size'] is None:
+                        args['size'] = '-'
+                    else:
+                        args['size'] = '%d' % (args['size'],)
+                    print( '%(created_rev_num)7d %(last_author)-10s %(size)6s %(time_str)s %(name)s' % args )
 
             else:
                 for entry in all_entries:
@@ -765,7 +768,11 @@ class SvnCommand:
                     args.update( entry )
                     args['time_str'] = fmtDateTime( entry.time )
                     args['created_rev_num'] = entry.created_rev.number
-                    print( '%(created_rev_num)7d %(last_author)-10s %(size)6d %(time_str)s %(path)s' % args )
+                    if args['size'] is None:
+                        args['size'] = '-'
+                    else:
+                        args['size'] = '%d' % (args['size'],)
+                    print( '%(created_rev_num)7d %(last_author)-10s %(size)6s %(time_str)s %(path)s' % args )
                     if lock_info is not None:
                         print( '        Lock   owner: %s' % (lock_info.owner,) )
                         print( '        Lock comment: %s' % (lock_info.comment,) )
