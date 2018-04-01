@@ -5,10 +5,10 @@ if [ ! -z "$1" ]
 then
     PREF_VER=$1.$2
 else
-    PREF_VER=3.5
+    PREF_VER=3.6
 fi
 
-export PYCXX_VER=7.0.1
+export PYCXX_VER=7.0.3
 
 for PY_VER in ${PREF_VER} 3.5 3.4 2.7
 do
