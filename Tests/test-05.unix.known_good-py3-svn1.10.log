@@ -62,23 +62,23 @@ Info: pysvn command: info2 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05
 Path: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/repos/trunk/test/file1.txt
 Revision: 3
-Repository UUID: 57d62124-c1dd-443b-a094-7ebf1fec2f44
+Repository UUID: 07c33752-4911-485f-9e7c-24c50e925bfc
 Last changed author: barry
-Last Changed Date: 31-Mar-2018 10:24:04
+Last Changed Date: 01-Apr-2018 13:50:54
 Last changed revision: 3
 Node kind: file
 Schedule: normal
-Text Last Updated: 31-Mar-2018 10:24:04
+Text Last Updated: 01-Apr-2018 13:50:54
 Checksum: ae0e5a70bbd1dcadbb4ac8ffe321bdb7b7682b72
 Info: Test - list of unlocked files
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test
 Info: pysvn command: list --verbose --fetch-locks /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt
-      3 barry          16 31-Mar-2018 10:24:04 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt
+      3 barry          16 01-Apr-2018 13:50:54 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test
 Info: pysvn command: list --verbose --fetch-locks /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test
-      3 barry          -1 31-Mar-2018 10:24:04 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test
-      3 barry          16 31-Mar-2018 10:24:04 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt
-      3 barry          16 31-Mar-2018 10:24:04 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file2.txt
+      3 barry           - 01-Apr-2018 13:50:54 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test
+      3 barry          16 01-Apr-2018 13:50:54 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt
+      3 barry          16 01-Apr-2018 13:50:54 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file2.txt
 Info: Test - lock unlocked file
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test
 Info: pysvn command: lock /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt -m lock comment test 05
@@ -97,34 +97,34 @@ Info: pysvn command: info2 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05
 Path: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/repos/trunk/test/file1.txt
 Revision: 3
-Repository UUID: 57d62124-c1dd-443b-a094-7ebf1fec2f44
+Repository UUID: 07c33752-4911-485f-9e7c-24c50e925bfc
 Last changed author: barry
-Last Changed Date: 31-Mar-2018 10:24:04
+Last Changed Date: 01-Apr-2018 13:50:54
 Last changed revision: 3
 Node kind: file
 Lock Owner: barry
-Lock Creation Date: 31-Mar-2018 10:24:06
-Lock Token: opaquelocktoken:b00053c6-d34a-42ca-9e55-c4c4bc720d96
+Lock Creation Date: 01-Apr-2018 13:50:56
+Lock Token: opaquelocktoken:cb30f534-f114-42d9-8a51-d2efb0986fab
 Lock Comment:
 lock comment test 05
 Schedule: normal
-Text Last Updated: 31-Mar-2018 10:24:04
+Text Last Updated: 01-Apr-2018 13:50:54
 Checksum: ae0e5a70bbd1dcadbb4ac8ffe321bdb7b7682b72
 Info: Test - list of locked files
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test
 Info: pysvn command: list --verbose --fetch-locks /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt
-      3 barry          16 31-Mar-2018 10:24:04 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt
+      3 barry          16 01-Apr-2018 13:50:54 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt
         Lock   owner: barry
         Lock comment: lock comment test 05
-        Lock created: 2018-03-31 10:24:06
+        Lock created: 2018-04-01 13:50:56
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test
 Info: pysvn command: list --verbose --fetch-locks /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test
-      3 barry          -1 31-Mar-2018 10:24:04 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test
-      3 barry          16 31-Mar-2018 10:24:04 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt
+      3 barry           - 01-Apr-2018 13:50:54 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test
+      3 barry          16 01-Apr-2018 13:50:54 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt
         Lock   owner: barry
         Lock comment: lock comment test 05
-        Lock created: 2018-03-31 10:24:06
-      3 barry          16 31-Mar-2018 10:24:04 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file2.txt
+        Lock created: 2018-04-01 13:50:56
+      3 barry          16 01-Apr-2018 13:50:54 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file2.txt
 Info: Test - attempt to checkin over a locked file
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test
 Info: Command: cd /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test
@@ -152,18 +152,18 @@ Info: pysvn command: info2 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05
 Path: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test/file1.txt
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/repos/trunk/test/file1.txt
 Revision: 3
-Repository UUID: 57d62124-c1dd-443b-a094-7ebf1fec2f44
+Repository UUID: 07c33752-4911-485f-9e7c-24c50e925bfc
 Last changed author: barry
-Last Changed Date: 31-Mar-2018 10:24:04
+Last Changed Date: 01-Apr-2018 13:50:54
 Last changed revision: 3
 Node kind: file
 Lock Owner: barry
-Lock Creation Date: 31-Mar-2018 10:24:08
-Lock Token: opaquelocktoken:7356da80-9b5b-46c0-b90d-dee4782c7dc4
+Lock Creation Date: 01-Apr-2018 13:50:58
+Lock Token: opaquelocktoken:8d98c1c7-fb2c-4377-ab0d-00ac67996da0
 Lock Comment:
 Stealing lock
 Schedule: normal
-Text Last Updated: 31-Mar-2018 10:24:05
+Text Last Updated: 01-Apr-2018 13:50:55
 Checksum: ae0e5a70bbd1dcadbb4ac8ffe321bdb7b7682b72
 Info: Test - status of locked files
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test
@@ -189,13 +189,13 @@ Info: pysvn command: status --verbose /Users/barry/wc/svn/pysvn/Extension/Tests/
 Info: Test - list of locked files
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test
 Info: pysvn command: list --verbose --fetch-locks --recursive /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2
-      4 barry          -1 31-Mar-2018 10:24:08 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2
-      4 barry          -1 31-Mar-2018 10:24:08 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test
-      4 barry          33 31-Mar-2018 10:24:08 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test/file1.txt
+      4 barry           - 01-Apr-2018 13:50:58 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2
+      4 barry           - 01-Apr-2018 13:50:58 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test
+      4 barry          33 01-Apr-2018 13:50:58 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test/file1.txt
         Lock   owner: barry
         Lock comment: Stealing lock
-        Lock created: 2018-03-31 10:24:08
-      4 barry          33 31-Mar-2018 10:24:08 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test/file2.txt
+        Lock created: 2018-04-01 13:50:58
+      4 barry          33 01-Apr-2018 13:50:58 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test/file2.txt
 Info: Test - unlock locked file
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test
 Info: pysvn command: unlock /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test/file1.txt
@@ -210,10 +210,10 @@ Info: pysvn command: status --verbose /Users/barry/wc/svn/pysvn/Extension/Tests/
 Info: Test - list of unlocked files
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test
 Info: pysvn command: list --verbose --fetch-locks --recursive /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2
-      4 barry          -1 31-Mar-2018 10:24:08 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2
-      4 barry          -1 31-Mar-2018 10:24:08 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test
-      4 barry          33 31-Mar-2018 10:24:08 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test/file1.txt
-      4 barry          33 31-Mar-2018 10:24:08 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test/file2.txt
+      4 barry           - 01-Apr-2018 13:50:58 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2
+      4 barry           - 01-Apr-2018 13:50:58 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test
+      4 barry          33 01-Apr-2018 13:50:58 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test/file1.txt
+      4 barry          33 01-Apr-2018 13:50:58 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test/file2.txt
 Info: Test - status of locked files
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test
 Info: pysvn command: status --verbose /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1
@@ -224,10 +224,10 @@ Info: pysvn command: status --verbose /Users/barry/wc/svn/pysvn/Extension/Tests/
 Info: Test - list of unlocked files
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test
 Info: pysvn command: list --verbose --fetch-locks --recursive /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1
-      4 barry          -1 31-Mar-2018 10:24:08 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1
-      4 barry          -1 31-Mar-2018 10:24:08 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test
-      4 barry          33 31-Mar-2018 10:24:08 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt
-      4 barry          33 31-Mar-2018 10:24:08 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file2.txt
+      4 barry           - 01-Apr-2018 13:50:58 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1
+      4 barry           - 01-Apr-2018 13:50:58 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test
+      4 barry          33 01-Apr-2018 13:50:58 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt
+      4 barry          33 01-Apr-2018 13:50:58 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file2.txt
 Info: Test - update with stolen lock
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test
 Info: pysvn command: update /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test
@@ -251,15 +251,15 @@ Info: pysvn command: info2 --revision HEAD file:///Users/barry/wc/svn/pysvn/Exte
 Path: file1.txt
 Url: file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/repos/trunk/test/file1.txt
 Revision: 4
-Repository UUID: 57d62124-c1dd-443b-a094-7ebf1fec2f44
+Repository UUID: 07c33752-4911-485f-9e7c-24c50e925bfc
 Last changed author: barry
-Last Changed Date: 31-Mar-2018 10:24:08
+Last Changed Date: 01-Apr-2018 13:50:58
 Last changed revision: 4
 Node kind: file
 Info: Test - list of locked files
 Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc2/test
 Info: pysvn command: list --verbose --fetch-locks --recursive /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1
-      4 barry          -1 31-Mar-2018 10:24:08 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1
-      4 barry          -1 31-Mar-2018 10:24:08 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test
-      4 barry          33 31-Mar-2018 10:24:08 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt
-      4 barry          33 31-Mar-2018 10:24:08 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file2.txt
+      4 barry           - 01-Apr-2018 13:50:58 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1
+      4 barry           - 01-Apr-2018 13:50:58 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test
+      4 barry          33 01-Apr-2018 13:50:58 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file1.txt
+      4 barry          33 01-Apr-2018 13:50:58 /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-05/wc1/test/file2.txt
