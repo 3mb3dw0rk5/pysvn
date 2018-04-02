@@ -49,8 +49,8 @@ Info: PYSVN CMD diff folder1\file-a.txt
 Info: PYSVN CMD annotate folder1\file-a.txt 
 A /trunk/folder1/file-a.txt
 A /trunk/folder1/file-a.txt
-1| r2 | barry | 2017-04-03T17:17:40.367600Z | test add file 1
-2| r3 | barry | 2017-04-03T17:17:40.961541Z | test add line 2
+1| r2 | barry | 2018-04-02T10:51:53.374564Z | test add file 1
+2| r3 | barry | 2018-04-02T10:51:53.906843Z | test add line 2
  
 Info: PYSVN CMD annotate2 folder1\file-a.txt 
 A /trunk/folder1/file-a.txt
@@ -105,12 +105,12 @@ Info: PYSVN CMD status2
  
 Info: PYSVN CMD status2 --verbose 
                7      7 barry          B:\wc1\folder1
-               7      5 barry          B:\wc1\folder1\file-a.txt
+               7      7 barry          B:\wc1\folder1\file-a.txt
 ?                                      B:\wc1\folder1\unversioned.txt
  
 Info: PYSVN CMD status2 --verbose --quiet 
                7      7 barry          B:\wc1\folder1
-               7      5 barry          B:\wc1\folder1\file-a.txt
+               7      7 barry          B:\wc1\folder1\file-a.txt
  
 Info: PYSVN CMD lock file-a.txt 
 locked B:/wc1/folder1/file-a.txt
@@ -121,9 +121,9 @@ Info: PYSVN CMD status2
  
 Info: PYSVN CMD status2 --verbose 
                7      7 barry          B:\wc1\folder1
-     K         7      5 barry          B:\wc1\folder1\file-a.txt
+     K         7      7 barry          B:\wc1\folder1\file-a.txt
 ?                                      B:\wc1\folder1\unversioned.txt
  
 Info: PYSVN CMD status2 --verbose --quiet 
                7      7 barry          B:\wc1\folder1
-     K         7      5 barry          B:\wc1\folder1\file-a.txt
+     K         7      7 barry          B:\wc1\folder1\file-a.txt
