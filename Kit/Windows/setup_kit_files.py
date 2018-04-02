@@ -112,7 +112,7 @@ class InnoSetup:
 
         elif self.arch == 'Win64':
             redist_arch = 'x64'
-            code_file = 'pysvn_win32_code.iss'
+            code_file = 'pysvn_win64_code.iss'
             self.all_setup_items.append( 'ArchitecturesAllowed=x64' )
             self.all_setup_items.append( 'ArchitecturesInstallIn64BitMode=x64' )
 
