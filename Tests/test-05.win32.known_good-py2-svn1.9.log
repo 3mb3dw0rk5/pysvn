@@ -65,23 +65,23 @@ Path: B:/wc1/test/file1.txt
 Url: file:///B:/repos/trunk/test/file1.txt
 Revision: 3
 Repository root_URL: file:///B:/repos
-Repository UUID: d7a6abd0-250b-fd41-8705-c979a01c7f2b
+Repository UUID: 7ddeabd0-854d-d84f-afbc-db32d37161fe
 Last changed author: barry
-Last Changed Date: 28-Apr-2016 12:50:17
+Last Changed Date: 03-Apr-2018 09:18:17
 Last changed revision: 3
 Node kind: file
 Schedule: normal
-Text Last Updated: 28-Apr-2016 12:50:16
+Text Last Updated: 03-Apr-2018 09:18:16
 Checksum: d88eba14019658765c3dc2a2b46c4d0f1ee50e5f
 Info: Test - list of unlocked files
 
 Info: PYSVN CMD list --verbose --fetch-locks b:\wc1\test\file1.txt
-      3 barry          17 28-Apr-2016 12:50:17 B:/wc1/test/file1.txt
+      3 barry          17 03-Apr-2018 09:18:17 B:/wc1/test/file1.txt
 
 Info: PYSVN CMD list --verbose --fetch-locks b:\wc1\test
-      3 barry          -1 28-Apr-2016 12:50:17 B:/wc1/test
-      3 barry          17 28-Apr-2016 12:50:17 B:/wc1/test/file1.txt
-      3 barry          17 28-Apr-2016 12:50:17 B:/wc1/test/file2.txt
+      3 barry           - 03-Apr-2018 09:18:17 B:/wc1/test
+      3 barry          17 03-Apr-2018 09:18:17 B:/wc1/test/file1.txt
+      3 barry          17 03-Apr-2018 09:18:17 B:/wc1/test/file2.txt
 Info: Test - lock unlocked file
 
 Info: PYSVN CMD lock b:\wc1\test\file1.txt
@@ -101,33 +101,33 @@ Path: B:/wc1/test/file1.txt
 Url: file:///B:/repos/trunk/test/file1.txt
 Revision: 3
 Repository root_URL: file:///B:/repos
-Repository UUID: d7a6abd0-250b-fd41-8705-c979a01c7f2b
+Repository UUID: 7ddeabd0-854d-d84f-afbc-db32d37161fe
 Last changed author: barry
-Last Changed Date: 28-Apr-2016 12:50:17
+Last Changed Date: 03-Apr-2018 09:18:17
 Last changed revision: 3
 Node kind: file
 Lock Owner: barry
-Lock Creation Date: 28-Apr-2016 12:50:17
-Lock Token: opaquelocktoken:f49bd52c-c599-ce4e-b726-a88ab3dcc0c3
+Lock Creation Date: 03-Apr-2018 09:18:18
+Lock Token: opaquelocktoken:880cafc3-b1c9-414a-8e9e-49d9e30e6664
 Lock Comment:
 Schedule: normal
-Text Last Updated: 28-Apr-2016 12:50:16
+Text Last Updated: 03-Apr-2018 09:18:16
 Checksum: d88eba14019658765c3dc2a2b46c4d0f1ee50e5f
 Info: Test - list of locked files
 
 Info: PYSVN CMD list --verbose --fetch-locks b:\wc1\test\file1.txt
-      3 barry          17 28-Apr-2016 12:50:17 B:/wc1/test/file1.txt
+      3 barry          17 03-Apr-2018 09:18:17 B:/wc1/test/file1.txt
         Lock   owner: barry
         Lock comment: 
-        Lock created: 2016-04-28 12:50:17
+        Lock created: 2018-04-03 09:18:18
 
 Info: PYSVN CMD list --verbose --fetch-locks b:\wc1\test
-      3 barry          -1 28-Apr-2016 12:50:17 B:/wc1/test
-      3 barry          17 28-Apr-2016 12:50:17 B:/wc1/test/file1.txt
+      3 barry           - 03-Apr-2018 09:18:17 B:/wc1/test
+      3 barry          17 03-Apr-2018 09:18:17 B:/wc1/test/file1.txt
         Lock   owner: barry
         Lock comment: 
-        Lock created: 2016-04-28 12:50:17
-      3 barry          17 28-Apr-2016 12:50:17 B:/wc1/test/file2.txt
+        Lock created: 2018-04-03 09:18:18
+      3 barry          17 03-Apr-2018 09:18:17 B:/wc1/test/file2.txt
 Info: Test - attempt to checkin over a locked file
 
 Info: CMD cd b:\wc2\test
@@ -157,18 +157,18 @@ Path: B:/wc2/test/file1.txt
 Url: file:///B:/repos/trunk/test/file1.txt
 Revision: 3
 Repository root_URL: file:///B:/repos
-Repository UUID: d7a6abd0-250b-fd41-8705-c979a01c7f2b
+Repository UUID: 7ddeabd0-854d-d84f-afbc-db32d37161fe
 Last changed author: barry
-Last Changed Date: 28-Apr-2016 12:50:17
+Last Changed Date: 03-Apr-2018 09:18:17
 Last changed revision: 3
 Node kind: file
 Lock Owner: barry
-Lock Creation Date: 28-Apr-2016 12:50:18
-Lock Token: opaquelocktoken:5a2b8835-73b4-c741-bd05-2bbbf80c2bf0
+Lock Creation Date: 03-Apr-2018 09:18:19
+Lock Token: opaquelocktoken:4d721524-950c-2641-9bed-7ce6757ca31d
 Lock Comment:
 Stealing lock
 Schedule: normal
-Text Last Updated: 28-Apr-2016 12:50:17
+Text Last Updated: 03-Apr-2018 09:18:17
 Checksum: d88eba14019658765c3dc2a2b46c4d0f1ee50e5f
 Info: Test - status of locked files
 
@@ -180,13 +180,13 @@ M              3      3 barry          B:\wc2\test\file2.txt
 Info: Test - list of locked files
 
 Info: PYSVN CMD list --verbose --fetch-locks --recursive b:\wc2
-      3 barry          -1 28-Apr-2016 12:50:17 B:/wc2
-      3 barry           0 28-Apr-2016 12:50:17 B:/wc2/test
-      3 barry          17 28-Apr-2016 12:50:17 B:/wc2/test/file1.txt
+      3 barry           - 03-Apr-2018 09:18:17 B:/wc2
+      3 barry           0 03-Apr-2018 09:18:17 B:/wc2/test
+      3 barry          17 03-Apr-2018 09:18:17 B:/wc2/test/file1.txt
         Lock   owner: barry
         Lock comment: Stealing lock
-        Lock created: 2016-04-28 12:50:18
-      3 barry          17 28-Apr-2016 12:50:17 B:/wc2/test/file2.txt
+        Lock created: 2018-04-03 09:18:19
+      3 barry          17 03-Apr-2018 09:18:17 B:/wc2/test/file2.txt
 Info: Test - commit with lock
 
 Info: PYSVN CMD commit -m "change when file locked in this wc" .
@@ -204,13 +204,13 @@ Info: PYSVN CMD status --verbose b:\wc2
 Info: Test - list of locked files
 
 Info: PYSVN CMD list --verbose --fetch-locks --recursive b:\wc2
-      4 barry          -1 28-Apr-2016 12:50:18 B:/wc2
-      4 barry           0 28-Apr-2016 12:50:18 B:/wc2/test
-      4 barry          35 28-Apr-2016 12:50:18 B:/wc2/test/file1.txt
+      4 barry           - 03-Apr-2018 09:18:20 B:/wc2
+      4 barry           0 03-Apr-2018 09:18:20 B:/wc2/test
+      4 barry          35 03-Apr-2018 09:18:20 B:/wc2/test/file1.txt
         Lock   owner: barry
         Lock comment: Stealing lock
-        Lock created: 2016-04-28 12:50:18
-      4 barry          35 28-Apr-2016 12:50:18 B:/wc2/test/file2.txt
+        Lock created: 2018-04-03 09:18:19
+      4 barry          35 03-Apr-2018 09:18:20 B:/wc2/test/file2.txt
 Info: Test - unlock locked file
 
 Info: PYSVN CMD unlock b:\wc2\test\file1.txt
@@ -225,10 +225,10 @@ Info: PYSVN CMD status --verbose b:\wc2
 Info: Test - list of unlocked files
 
 Info: PYSVN CMD list --verbose --fetch-locks --recursive b:\wc2
-      4 barry          -1 28-Apr-2016 12:50:18 B:/wc2
-      4 barry           0 28-Apr-2016 12:50:18 B:/wc2/test
-      4 barry          35 28-Apr-2016 12:50:18 B:/wc2/test/file1.txt
-      4 barry          35 28-Apr-2016 12:50:18 B:/wc2/test/file2.txt
+      4 barry           - 03-Apr-2018 09:18:20 B:/wc2
+      4 barry           0 03-Apr-2018 09:18:20 B:/wc2/test
+      4 barry          35 03-Apr-2018 09:18:20 B:/wc2/test/file1.txt
+      4 barry          35 03-Apr-2018 09:18:20 B:/wc2/test/file2.txt
 Info: Test - status of locked files
 
 Info: PYSVN CMD status --verbose b:\wc1
@@ -239,10 +239,10 @@ Info: PYSVN CMD status --verbose b:\wc1
 Info: Test - list of unlocked files
 
 Info: PYSVN CMD list --verbose --fetch-locks --recursive b:\wc1
-      4 barry          -1 28-Apr-2016 12:50:18 B:/wc1
-      4 barry           0 28-Apr-2016 12:50:18 B:/wc1/test
-      4 barry          35 28-Apr-2016 12:50:18 B:/wc1/test/file1.txt
-      4 barry          35 28-Apr-2016 12:50:18 B:/wc1/test/file2.txt
+      4 barry           - 03-Apr-2018 09:18:20 B:/wc1
+      4 barry           0 03-Apr-2018 09:18:20 B:/wc1/test
+      4 barry          35 03-Apr-2018 09:18:20 B:/wc1/test/file1.txt
+      4 barry          35 03-Apr-2018 09:18:20 B:/wc1/test/file2.txt
 Info: Test - update with stolen lock
 
 Info: PYSVN CMD update b:\wc1\test
@@ -267,15 +267,15 @@ Path: file1.txt
 Url: file:///B:/repos/trunk/test/file1.txt
 Revision: 4
 Repository root_URL: file:///B:/repos
-Repository UUID: d7a6abd0-250b-fd41-8705-c979a01c7f2b
+Repository UUID: 7ddeabd0-854d-d84f-afbc-db32d37161fe
 Last changed author: barry
-Last Changed Date: 28-Apr-2016 12:50:18
+Last Changed Date: 03-Apr-2018 09:18:20
 Last changed revision: 4
 Node kind: file
 Info: Test - list of locked files
 
 Info: PYSVN CMD list --verbose --fetch-locks --recursive b:\wc1
-      4 barry          -1 28-Apr-2016 12:50:18 B:/wc1
-      4 barry           0 28-Apr-2016 12:50:18 B:/wc1/test
-      4 barry          35 28-Apr-2016 12:50:18 B:/wc1/test/file1.txt
-      4 barry          35 28-Apr-2016 12:50:18 B:/wc1/test/file2.txt
+      4 barry           - 03-Apr-2018 09:18:20 B:/wc1
+      4 barry           0 03-Apr-2018 09:18:20 B:/wc1/test
+      4 barry          35 03-Apr-2018 09:18:20 B:/wc1/test/file1.txt
+      4 barry          35 03-Apr-2018 09:18:20 B:/wc1/test/file2.txt
