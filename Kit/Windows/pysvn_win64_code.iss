@@ -33,18 +33,17 @@ begin
         Result := install_path;
     end
     else
+    begin
+        rcb := RegQueryStringValue( HKCU,
+            'SOFTWARE\Python\PythonCore\%(py_maj)d.%(py_min)d\InstallPath',
+            '', install_path );
+        if rcb then
         begin
-            rcb := RegQueryStringValue( HKCU,
-                'SOFTWARE\Python\PythonCore\%(py_maj)d.%(py_min)d\InstallPath',
-                '', install_path );
-            if rcb then
-            begin
-                Result := install_path;
-            end
-            else
-            begin
-                Result := 'c:\python%(py_maj)d.%(py_min)d';
-            end;
+            Result := install_path;
+        end
+        else
+        begin
+            Result := 'c:\python%(py_maj)d.%(py_min)d';
         end;
     end;
 end;

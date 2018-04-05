@@ -56,7 +56,7 @@ class InnoSetup:
 
         print( 'Info: Create setup_copy.cmd' )
         f = open( r'tmp\setup_copy.cmd', 'w' )
-        f.write( r'copy tmp\Output\setup.exe tmp\Output\py%d%d-pysvn-svn%s-%s-%s.exe' '\n' %
+        f.write( r'copy tmp\Output\mysetup.exe tmp\Output\py%d%d-pysvn-svn%s-%s-%s.exe' '\n' %
                     (self.py_maj, self.py_min, self.svn_version_package_string, self.pysvn_version_string, self.arch) )
         f.close()
 
