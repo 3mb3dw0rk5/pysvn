@@ -32,6 +32,7 @@ span.svn_example {display: inline; }
 </style>
 
 <style id="show_style" type="text/css">
+span.svn_1010000 {display: inline; }
 span.svn_1009000 {display: inline; }
 span.svn_1008000 {display: inline; }
 span.svn_1007000 {display: inline; }
@@ -41,6 +42,7 @@ span.svn_1004000 {display: inline; }
 span.svn_1003000 {display: inline; }
 span.svn_1002000 {display: inline; }
 span.svn_1001000 {display: inline; }
+div.svn_1010000 {display: block; }
 div.svn_1009000 {display: block; }
 div.svn_1008000 {display: block; }
 div.svn_1007000 {display: block; }
@@ -1507,9 +1509,12 @@ list( url_or_path,
       recurse=False,
       dirent_fields=pysvn.SVN_DIRENT_ALL,
       fetch_locks=False<span class="svn_1005000">,
-      depth=depth</span> )
+      depth=depth</span><span class="svn_1008000">,
+      include_externals=False</span><span class="svn_1010000">,
+      patterns=[pattern, pattern]</span> )
 </pre>
-
+<span class="svn_1005000">,
+      depth=depth</span>
 <p>
 Returns a list with a tuple of information for each file in the given
 path at the provided revision.
@@ -1520,8 +1525,20 @@ If peg_revision.kind is opt_revision_kind.unspecified, then it
 defaults to opt_revision_kind.head for URLs or
 opt_revision_kind.working for WC targets.
 </p>
+
 <div class="svn_1005000">
 <p>The depth can be used in place of recurse. depth is one of the pysvn.depth enums.
+</p>
+</div>
+
+<div class="svn_1008000">
+<p>Set include_externals to True to include externals.
+</p>
+</div>
+
+<div class="svn_1010000">
+<p>The patterns argument allows the set of files to be returned to be filter on the server.
+Provide a list if glob patterns. For example to get only python and C++ files: ["*.py", "*.cpp"]
 </p>
 </div>
 

@@ -296,6 +296,9 @@ Py::Object pysvn_client::cmd_list( const Py::Tuple &a_args, const Py::Dict &a_kw
 #if defined( PYSVN_HAS_CLIENT_LIST3 )
     { false, name_include_externals },
 #endif
+#if defined( PYSVN_HAS_CLIENT_LIST4 )
+    { false, name_patterns },
+#endif
     { false, NULL }
     };
     FunctionArguments args( "list", args_desc, a_args, a_kws );
@@ -331,6 +334,17 @@ Py::Object pysvn_client::cmd_list( const Py::Tuple &a_args, const Py::Dict &a_kw
 
     try
     {
+#if defined( PYSVN_HAS_CLIENT_LIST4 )
+        apr_array_header_t *patterns = NULL;
+        if( args.hasArg( name_patterns ) )
+        {
+            Py::Object py_patterns = args.getArg( name_patterns );
+            if( !py_patterns.isNone() )
+            {
+                patterns = arrayOfStringsFromListOfStrings( py_patterns, pool );
+            }
+        }
+#endif
         checkThreadPermission();
 
         PythonAllowThreads permission( m_context );
@@ -346,7 +360,23 @@ Py::Object pysvn_client::cmd_list( const Py::Tuple &a_args, const Py::Dict &a_kw
         list_baton.m_include_externals = include_externals;
 #endif
 
-#if defined( PYSVN_HAS_CLIENT_LIST3 )
+#if defined( PYSVN_HAS_CLIENT_LIST4 )
+        svn_error_t *error = svn_client_list4
+            (
+            norm_path.c_str(),
+            &peg_revision,
+            &revision,
+            patterns,
+            depth,
+            dirent_fields,
+            fetch_locks,
+            include_externals,
+            list_baton.callback(),
+            list_baton.baton(),
+            m_context,
+            pool
+            );
+#elif defined( PYSVN_HAS_CLIENT_LIST3 )
         svn_error_t *error = svn_client_list3
             (
             norm_path.c_str(),

@@ -1,0 +1,66 @@
+WorkDir: /Users/barry/wc/svn/pysvn/Extension
+PYTHON: /Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python
+Username: barry
+Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests
+Info: Command: mkdir testroot-11
+Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests
+Info: Command: cd testroot-11
+Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11
+Info: Command: mkdir tmp
+Info: PYSVN command /Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /Users/barry/wc/svn/pysvn/Extension/Examples/Client/svn_cmd.py --pysvn-testing 01.10.00 --config-dir /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/configdir
+Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11
+Info: Command: svnadmin create /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/repos
+Info: Setup - mkdir
+Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11
+Info: pysvn command: mkdir file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/repos/trunk -m test-11 add trunk
+commit_finalizing .
+Info: Setup - checkout wc1
+Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11
+Info: pysvn command: checkout file:///Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/repos/trunk /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/wc1
+update_started /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/wc1
+Checked out revision 1
+Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11
+Info: Command: cd /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/wc1
+Info: Setup - add files and folders
+Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/wc1
+Info: pysvn command: mkdir folder1
+A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/wc1/folder1
+Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/wc1
+Info: pysvn command: mkdir folder2
+A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/wc1/folder2
+Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/wc1
+Info: pysvn command: add folder1/file-a.txt
+A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/wc1/folder1/file-a.txt
+Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/wc1
+Info: pysvn command: add folder2/file-a.sh
+A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/wc1/folder2/file-a.sh
+Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/wc1
+Info: pysvn command: add folder2/file-a.cmd
+A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/wc1/folder2/file-a.cmd
+Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/wc1
+Info: pysvn command: checkin -m commit added files
+A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/wc1/folder1
+A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/wc1/folder1/file-a.txt
+A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/wc1/folder2
+A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/wc1/folder2/file-a.cmd
+A /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/wc1/folder2/file-a.sh
+commit_finalizing .
+Revision 2
+test list no patterns
+Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/wc1
+Info: pysvn command: list --recursive
+
+/folder1
+/folder1/file-a.txt
+/folder2
+/folder2/file-a.cmd
+/folder2/file-a.sh
+test list 1 pattern
+Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/wc1
+Info: pysvn command: list --recursive --search *.txt
+/folder1/file-a.txt
+test list 2 patterns
+Info: CWD: /Users/barry/wc/svn/pysvn/Extension/Tests/testroot-11/wc1
+Info: pysvn command: list --recursive --search *.sh --search *.txt
+/folder1/file-a.txt
+/folder2/file-a.sh

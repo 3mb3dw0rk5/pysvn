@@ -750,13 +750,18 @@ class SvnCommand:
         verbose = args.getBooleanOption( '--verbose', True )
         fetch_locks = args.getBooleanOption( '--fetch-locks', True )
         include_externals = args.getBooleanOption( '--include-externals', True )
+        search_pattern = args.getOptionalValue( '--search', None )
         positional_args = args.getPositionalArgs( 0 )
         if len(positional_args) == 0:
             positional_args.append( '.' )
 
         for arg in positional_args:
-            if self.pysvn_testing >= '01.08.00':
+            if self.pysvn_testing >= '01.10.00':
+                all_entries = self.client.list( arg, revision=revision, recurse=recurse, fetch_locks=fetch_locks, include_externals=include_externals, patterns=search_pattern )
+
+            elif self.pysvn_testing >= '01.08.00':
                 all_entries = self.client.list( arg, revision=revision, recurse=recurse, fetch_locks=fetch_locks, include_externals=include_externals )
+
             else:
                 all_entries = self.client.list( arg, revision=revision, recurse=recurse, fetch_locks=fetch_locks )
 
@@ -1357,6 +1362,7 @@ long_opt_info = {
     '--remove-unversioned-items': 0,
     '--revision': 1,            # revision X or X:Y range.  X or Y can be one of:
     '--revprop': 0,             # operate on a revision property (use with -r)
+    '--search': 2,              # search for pattern
     '--show-inherited-props': 0, # show inherited props
     '--show-updates': 0,        # display update information
     '--skip-checks': 0,         # skip-checks
@@ -1401,7 +1407,11 @@ class SvnArguments:
         name = ''
 
         for arg in all_args:
-            if need_next_arg:
+            if need_next_arg > 1:
+                self.named_options.setdefault( name, [] ).append( arg )
+                need_next_arg = 0
+
+            elif need_next_arg:
                 self.named_options[ name ] = arg
                 need_next_arg = 0
 
@@ -1421,7 +1431,7 @@ class SvnArguments:
 
     def _isOption( self, arg ):
         return arg[0] == '-'
-            
+
     def _optionInfo( self, opt ):
         # return long_name, arg_needed
         long_opt = short_opt_info.get( opt, opt )

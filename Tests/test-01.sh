@@ -13,17 +13,16 @@ echo PYTHON: ${PYTHON}
 echo Username: $(id -u -n)
 
 cmd () {
-        echo Info: CWD: $(pwd)
-	echo Info: Command: $*
-	"$@"
+    echo Info: CWD: $(pwd)
+    echo Info: Command: $*
+    "$@"
 }
 
 cmd_pysvn () {
-        echo Info: CWD: $(pwd)
-	echo Info: pysvn command: $*
-	${PYSVN} "$@"
+    echo Info: CWD: $(pwd)
+    echo Info: pysvn command: $*
+    ${PYSVN} "$@"
 }
-
 
 cmd mkdir testroot-01
 cmd cd testroot-01

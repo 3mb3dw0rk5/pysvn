@@ -13,8 +13,8 @@ echo PYTHON: ${PYTHON}
 echo Username: $(id -u -n)
 
 cmd () {
-	echo Info: Command: $*
-	"$@"
+    echo Info: Command: $*
+    "$@"
 }
 
 cmd mkdir testroot-04
