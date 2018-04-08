@@ -11,7 +11,7 @@
 
 setlocal
 set PYTHONPATH=%BUILDER_TOP_DIR%\Source;%BUILDER_TOP_DIR%\Examples\Client
-set PYSVN=%PYTHON% %BUILDER_TOP_DIR%\Examples\Client\svn_cmd.py --pysvn-testing 01.010.00 --config-dir b:\configdir
+set PYSVN=%PYTHON% %BUILDER_TOP_DIR%\Examples\Client\svn_cmd.py --pysvn-testing 01.10.00 --config-dir b:\configdir
 echo Info: PYSVN CMD %PYSVN%
 call :cmd_shell mkdir testroot-11
 call :cmd_shell subst b: %CD%\testroot-11
@@ -45,19 +45,14 @@ call :cmd_pysvn add folder2\file-a.cmd
 
 call :cmd_pysvn checkin -m "commit added files"
 
-echo Info: vacuum remove versioned
-call :cmd_pysvn status2 --verbose --no-ignore .
-call :cmd_pysvn vacuum --remove-unversioned-items
-
-
 echo Info: test list no patterns
 call :cmd_pysvn list --recursive
 
 echo Info: test list 1 pattern
-call :cmd_pysvn list --recursive --search '*.txt'
+call :cmd_pysvn list --recursive --search "*.txt"
 
 echo Info: test list 2 patterns
-call :cmd_pysvn list --recursive --search '*.sh' --search '*.txt'
+call :cmd_pysvn list --recursive --search "*.sh" --search "*.txt"
 
 goto :eof
 endlocal
