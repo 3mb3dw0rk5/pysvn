@@ -832,6 +832,7 @@ class Win32CompilerMSVC90(Compiler):
                     r'%(SVN_LIB)s\libsvn_ra-1.lib',
                     r'%(SVN_LIB)s\libsvn_ra_local-1.lib',
                     r'%(SVN_LIB)s\libsvn_ra_svn-1.lib',
+                    r'%(SVN_LIB)s\libsvn_ra_serf-1.lib',
                     r'%(SVN_LIB)s\libsvn_repos-1.lib',
                     r'%(SVN_LIB)s\libsvn_subr-1.lib',
                     r'%(SVN_LIB)s\libsvn_wc-1.lib',
