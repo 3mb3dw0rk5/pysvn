@@ -1,6 +1,6 @@
 #
 # ====================================================================
-# Copyright (c) 2005-2016 Barry A Scott.  All rights reserved.
+# Copyright (c) 2005-2018 Barry A Scott.  All rights reserved.
 #
 # This software is licensed as described in the file LICENSE.txt,
 # which you should have received as part of this distribution.
@@ -25,7 +25,7 @@ class SetupError(Exception):
     pass
 
 # version of PyCXX that we require
-min_pycxx_version = (6, 2, 8)
+min_pycxx_version = (7, 0, 2)
 
 _debug = False
 
@@ -1138,7 +1138,7 @@ class MacOsxCompilerGCC(CompilerGCC):
                     '-D%(DEBUG)s',
                     ]
 
-        if self.pycxx_version >= (7, 0, 0):
+        if False and self.pycxx_version >= (7, 0, 0):
             # PYSVN uses PYCXX in backward compat mode
             py_cflags_list.append( r'-DPYCXX_6_2_COMPATIBILITY=1' )
 

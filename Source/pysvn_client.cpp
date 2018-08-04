@@ -775,14 +775,14 @@ void pysvn_client::checkThreadPermission()
 {
     if( m_context.hasPermission() )
     {
-        throw Py::Exception( m_module.client_error,
+        throw Py::BaseException( m_module.client_error,
             "client in use on another thread" );
     }
 }
 
 void pysvn_client::throw_client_error( SvnException &e )
 {
-    throw Py::Exception(
+    throw Py::BaseException(
         m_module.client_error,
         e.pythonExceptionArg( m_exception_style ) );
 }

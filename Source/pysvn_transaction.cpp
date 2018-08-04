@@ -68,7 +68,7 @@ pysvn_transaction::~pysvn_transaction()
 
 void pysvn_transaction::throw_client_error( SvnException &e )
 {
-    throw Py::Exception(
+    throw Py::BaseException(
         m_module.client_error,
         e.pythonExceptionArg( m_exception_style ) );
 }

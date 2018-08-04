@@ -79,7 +79,7 @@ void pysvn_context::checkForError( Py::ExtensionExceptionType &exception_for_err
     // see if any errors occurred in the callbacks
     if( !m_error_message.empty() )
     {
-        throw Py::Exception( exception_for_error, m_error_message );
+        throw Py::BaseException( exception_for_error, m_error_message );
     }
 }
 
