@@ -17,10 +17,24 @@ block_end_index = pysvn__init__file_contents.index( '### IMPORT BLOCK END\n' ) +
 if sys.version_info[0] >= 3:
     module_name = 'pysvn.%s' % (module_name,)
 
-replacement = [ '    import %s\n' % (module_name,) ]
+replacement = []
+if sys.platform == 'win32':
+    replacement.append('''
+    import os
+    old_path = os.environ['PATH']
+    os.environ['PATH'] = '%s;%s' % (os.path.dirname( __file__ ), old_path)
+''')
+
+replacement.append( '    import %s\n' % (module_name,) )
 
 if module_name != '_pysvn':
     replacement.append( '    _pysvn = %s\n' % (module_name,) )
+
+if sys.platform == 'win32':
+    replacement.append('''
+    os.environ['PATH'] = old_path
+    del os
+''')
 
 pysvn__init__file_contents[ block_begin_index:block_end_index ] = replacement
 
