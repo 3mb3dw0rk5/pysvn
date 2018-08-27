@@ -36,6 +36,10 @@ extern "C" int pysvn_breakpoint()
     return 0;
 }
 
+#if defined(MS_WINDOWS)
+const svn_version_t *ra_ver;
+#endif
+
 pysvn_module::pysvn_module()
 : Py::ExtensionModule<pysvn_module>( "pysvn" )
 , client_error()
@@ -48,7 +52,7 @@ pysvn_module::pysvn_module()
 #if defined(MS_WINDOWS)
     // on windows the libsvn_ra-1.dll must be forced to load when pysvn loads
     // otherwise a random version from the PATH is loaded or none is found
-    const svn_version_t *ra_ver = svn_ra_version();
+    ra_ver = svn_ra_version();
 #endif
 
     client_error.init( *this, "ClientError" );
