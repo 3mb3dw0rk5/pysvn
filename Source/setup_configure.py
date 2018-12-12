@@ -715,7 +715,7 @@ class Win32CompilerMSVC90(Compiler):
         return '.obj'
 
     def getTouchCommand( self ):
-        return r'c:\UnxUtils\touch'
+        return r'C:\UnxUtils\usr\local\wbin\touch.exe'
 
     def generateMakefileHeader( self ):
         self.makePrint( '#' )

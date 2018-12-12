@@ -1,0 +1,71 @@
+WorkDir: C:\Users\barry\wc\svn\PySVN\Extension
+PYTHON: c:\python27.Win64\python.exe
+Username: barry
+Info: PYSVN CMD c:\python27.Win64\python.exe C:\Users\barry\wc\svn\PySVN\Extension\Examples\Client\svn_cmd.py --pysvn-testing 01.10.00 --config-dir b:\configdir
+
+Info: CMD mkdir testroot-11
+
+Info: CMD subst b: C:\Users\barry\wc\svn\PySVN\Extension\Tests\testroot-11
+
+Info: CMD cd /d b:\
+
+Info: CMD mkdir tmp
+
+Info: CMD svnadmin create b:\repos
+Info: Setup - mkdir
+ 
+Info: PYSVN CMD mkdir file:///b:/repos/trunk -m "test-11 add trunk" 
+commit_finalizing .
+Info: Setup - checkout wc1
+ 
+Info: PYSVN CMD checkout file:///b:/repos/trunk b:\wc1 
+update_started B:/wc1
+Checked out revision 1
+
+Info: CMD cd /d b:\wc1
+Info: Setup - add files and folders
+ 
+Info: PYSVN CMD mkdir folder1 
+A B:/wc1/folder1
+ 
+Info: PYSVN CMD mkdir folder2 
+A B:/wc1/folder2
+Info: Create File folder1\file-a.txt - test add file 1     
+ 
+Info: PYSVN CMD add folder1\file-a.txt 
+A B:/wc1/folder1/file-a.txt
+Info: Create File folder2\file-a.sh - test add file 2     
+ 
+Info: PYSVN CMD add folder2\file-a.sh 
+A B:/wc1/folder2/file-a.sh
+Info: Create File folder2\file-a.cmd - test add file 3     
+ 
+Info: PYSVN CMD add folder2\file-a.cmd 
+A B:/wc1/folder2/file-a.cmd
+ 
+Info: PYSVN CMD checkin -m "commit added files" 
+A B:/wc1/folder1
+A B:/wc1/folder1/file-a.txt
+A B:/wc1/folder2
+A B:/wc1/folder2/file-a.cmd
+A B:/wc1/folder2/file-a.sh
+commit_finalizing .
+Revision 2
+Info: test list no patterns
+ 
+Info: PYSVN CMD list --recursive 
+
+/folder1
+/folder1/file-a.txt
+/folder2
+/folder2/file-a.cmd
+/folder2/file-a.sh
+Info: test list 1 pattern
+ 
+Info: PYSVN CMD list --recursive --search "*.txt" 
+/folder1/file-a.txt
+Info: test list 2 patterns
+ 
+Info: PYSVN CMD list --recursive --search "*.sh" --search "*.txt" 
+/folder1/file-a.txt
+/folder2/file-a.sh

@@ -102,6 +102,9 @@ class InnoSetup:
         elif self.vc_ver == '14.0':
             redist_year = '2015'
 
+        elif self.vc_ver == '14.1':
+            redist_year = '2015'
+
         else:
             print( 'Error: Unsupported VC_VER of %s' % (self.vc_ver,) )
             return 1
