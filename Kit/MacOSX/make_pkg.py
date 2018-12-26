@@ -55,7 +55,7 @@ pysvn_short_version_string = '%d.%d.%d' % (pysvn.version[0], pysvn.version[1], p
 svn_version_package_string = '%d%d%d' % (pysvn.svn_version[0], pysvn.svn_version[1], pysvn.svn_version[2])
 svn_version_string = '%d.%d.%d' % (pysvn.svn_version[0], pysvn.svn_version[1], pysvn.svn_version[2])
 pysvn_so_string = '_pysvn_%d_%d.so' % (pymaj, pymin)
-pkg_filename = 'py%s%s_%s_pysvn_svn%s-%s-%s' % (pymaj, pymin, python_vendor, svn_version_package_string, pysvn_version_string, processor)
+pkg_filename = 'py%s%s-%s-pysvn-svn%s-%s-%s' % (pymaj, pymin, python_vendor, svn_version_package_string, pysvn_version_string, processor)
 
 print( 'Info: Packageing %s' % (pkg_filename,) )
 build_time  = time.time()
