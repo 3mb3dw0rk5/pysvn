@@ -39,7 +39,7 @@ popd
 
 if "%4" == "setup" goto :eof
 
-%PYTHON% setup.py configure --verbose --platform=%BUILD_ARCH% --pycxx-dir=%USERPROFILE%\wc\svn\PyCxx --distro-dir=%TARGET%\dist
+%PYTHON% setup.py configure --verbose --platform=%BUILD_ARCH% --pycxx-dir=%USERPROFILE%\Projects\PyCxx --distro-dir=%TARGET%\dist
 
 if exist pysvn\_pysvn* del pysvn\_pysvn*
 
