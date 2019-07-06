@@ -8,7 +8,7 @@ else
     PREF_VER=3.7
 fi
 
-export PYCXX_VER=7.1.2
+export PYCXX_VER=7.1.3
 
 for PY_VER in ${PREF_VER} 3.5 3.4 2.7
 do
