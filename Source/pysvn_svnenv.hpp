@@ -1,6 +1,6 @@
 //
 // ====================================================================
-// (c) 2003-2009 Barry A Scott.  All rights reserved.
+// (c) 2003-2019 Barry A Scott.  All rights reserved.
 //
 // This software is licensed as described in the file LICENSE.txt,
 // which you should have received as part of this distribution.
@@ -244,9 +244,33 @@
 #define PYSVN_HAS_REPOS_OPEN3 1
 #endif
 
+// SVN 1.10 or later
 #if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 10) || SVN_VER_MAJOR > 1
 #define PYSVN_HAS_SVN_1_10
 #define PYSVN_HAS_CLIENT_LIST4 1
+// Need to support svn_client_conflict_option_id_t
+#define PYSVN_HAS_CLIENT_conflict_option_get_moved_to_repos_relpath_candidates 1
+#define PYSVN_HAS_CLIENT_conflict_option_set_moved_to_repos_relpath 1
+#define PYSVN_HAS_CLIENT_conflict_option_get_moved_to_repos_abspath_candidates 1
+#define PYSVN_HAS_CLIENT_conflict_option_set_moved_to_repos_abspath 1
+#endif
+
+// SVN 1.11 or later
+#if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 11) || SVN_VER_MAJOR > 1
+#define PYSVN_HAS_SVN_1_11
+#define PYSVN_HAS_CLIENT_DIFF7 1
+#define PYSVN_HAS_CLIENT_REVERT4 1
+// Need to support svn_client_conflict_option_id_t
+#define PYSVN_HAS_CLIENT_conflict_option_get_moved_to_repos_relpath_candidates2 1
+#define PYSVN_HAS_CLIENT_conflict_option_set_moved_to_repos_relpath2 1
+#define PYSVN_HAS_CLIENT_conflict_option_get_moved_to_repos_abspath_candidates2 1
+#define PYSVN_HAS_CLIENT_conflict_option_set_moved_to_repos_abspath2 1
+#endif
+
+// SVN 1.12 or later
+#if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 12) || SVN_VER_MAJOR > 1
+#define PYSVN_HAS_SVN_1_12
+#define PYSVN_HAS_CLIENT_ANNOTATE6 1
 #endif
 
 #if defined( PYSVN_HAS_CLIENT_STATUS3 )
@@ -325,7 +349,7 @@ public:
     // this method will be called to retrieve
     // authentication information
     //
-    // WORKAROUND FOR apr_xlate PROBLEM: 
+    // WORKAROUND FOR apr_xlate PROBLEM:
     // STRINGS ALREADY HAVE TO BE UTF8!!!
     //
     // @retval true continue
@@ -334,12 +358,12 @@ public:
     virtual bool contextGetLogin
         (
         const std::string &realm,
-        std::string &username, 
+        std::string &username,
         std::string &password,
         bool &may_save
         ) = 0;
 
-    // 
+    //
     // this method will be called to notify about
     // the progress of an ongoing action
     //
@@ -408,12 +432,12 @@ public:
     // this method is called if there is ssl server
     // information, that has to be confirmed by the user
     //
-    // @param data 
+    // @param data
     // @return @a SslServerTrustAnswer
     //
     virtual bool contextSslServerTrustPrompt
         (
-        const svn_auth_ssl_server_cert_info_t &info, 
+        const svn_auth_ssl_server_cert_info_t &info,
         const std::string &relam,
         apr_uint32_t &acceptedFailures,
         bool &accept_permanent
