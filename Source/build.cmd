@@ -48,6 +48,14 @@ nmake clean
 if ERRORLEVEL 1 goto :EOF
 nmake
 if ERRORLEVEL 1 goto :EOF
+
+echo fake dll >pysvn\fake.dll
+del pysvn\*.dll
+if ERRORLEVEL 1 goto :EOF
+
+xcopy /q C:\BuildRoot\%BUILD_ARCH%-VC-%VC_VER%-%SVN_VER%\dist\bin\*.dll pysvn
+if ERRORLEVEL 1 goto :EOF
+
 cd ..\Tests
 if ERRORLEVEL 1 goto :EOF
 nmake clean
