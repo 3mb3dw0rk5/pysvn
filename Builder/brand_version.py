@@ -40,7 +40,7 @@ print( 'Info: revision %s' % build_revision )
 if build_revision[0] not in '0123456789':
     branding_info['BUILD'] = '0'
 else:
-    revision, modifiers = re.compile( '(\d+)(.*)' ).search( build_revision ).groups()
+    revision, modifiers = re.compile( r'(\d+)(.*)' ).search( build_revision ).groups()
 
     if modifiers:
         branding_info['BUILD'] = '0'
