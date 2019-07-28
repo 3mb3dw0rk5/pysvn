@@ -662,7 +662,7 @@ class Compiler:
                     minor = int(words[2])
                 elif words[1] == 'SVN_VER_PATCH':
                     patch = int(words[2])
- 
+
         print( 'Info: Building against SVN %d.%d.%d' % (major, minor, patch) )
         self.__svn_version_tuple = (major, minor, patch)
 
@@ -1747,8 +1747,15 @@ class PysvnModuleInit(Source):
                     ,self.compiler.platformFilename( 'generate_svn_error_codes/generate_svn_error_codes%s' % 
                                                         (self.compiler.getProgramExt(),) )
                     ,self.compiler.getPythonExtensionFileExt()) )
+        rules.append( '\t' r'xcopy /y /q %(SVN_BIN)s\*.dll pysvn' )
+
+        rules.append( '' )
+        rules.append( 'clean::' )
+        rules.append( '\t' r'if exist pysvn\*.dll del /q pysvn\*.dll' )
 
         self.makePrint( self.compiler.expand( '\n'.join( rules ) ) )
+
+
         self.ruleClean()
 
 class TestCase(Target):
