@@ -739,8 +739,8 @@ class Win32CompilerMSVC90(Compiler):
 
         rules.append( '' )
         rules.append( '%s : %s' % (pyd_filename, ' '.join( all_objects )) )
-        rules.append( '\t@echo Link %s' % (pyd_filename,) )
-        rules.append( '\t@$(LDEXE)  %%(CCCFLAGS)s /Fe%s /Fd%s %s $(LDLIBS)' %
+        rules.append( '	' r'@echo Link %s' % (pyd_filename,) )
+        rules.append( '	' r'@$(LDEXE)  %%(CCCFLAGS)s /Fe%s /Fd%s %s $(LDLIBS)' %
                             (pyd_filename, pdb_filename, ' '.join( all_objects )) )
 
         self.makePrint( self.expand( '\n'.join( rules ) ) )
@@ -755,8 +755,8 @@ class Win32CompilerMSVC90(Compiler):
 
         rules.append( '' )
         rules.append( '%s : %s' % (pyd_filename, ' '.join( all_objects )) )
-        rules.append( '\t@echo Link %s' % (pyd_filename,) )
-        rules.append( '\t@$(LDSHARED)  %%(CCCFLAGS)s /Fe%s /Fd%s %s %%(PYTHON_LIB)s\python%d%d.lib $(LDLIBS)' %
+        rules.append( '	' r'@echo Link %s' % (pyd_filename,) )
+        rules.append( '	' r'@$(LDSHARED)  %%(CCCFLAGS)s /Fe%s /Fd%s %s %%(PYTHON_LIB)s\python%d%d.lib $(LDLIBS)' %
                             (pyd_filename, pdb_filename, ' '.join( all_objects ), sys.version_info[0], sys.version_info[1]) )
 
         self.makePrint( self.expand( '\n'.join( rules ) ) )
@@ -767,8 +767,8 @@ class Win32CompilerMSVC90(Compiler):
         rules = []
 
         rules.append( '%s: %s %s' % (obj_filename, target.src_filename, ' '.join( target.all_dependencies )) )
-        rules.append( '\t@echo Compile: %s into %s' % (target.src_filename, target.getTargetFilename()) )
-        rules.append( '\t@$(CCC) /c %%(CCCFLAGS)s /Fo%s /Fd%s %s' % (obj_filename, target.dependent.getTargetFilename( '.pdb' ), target.src_filename) )
+        rules.append( '	' r'@echo Compile: %s into %s' % (target.src_filename, target.getTargetFilename()) )
+        rules.append( '	' r'@$(CCC) /c %%(CCCFLAGS)s /Fo%s /Fd%s %s' % (obj_filename, target.dependent.getTargetFilename( '.pdb' ), target.src_filename) )
 
         self.makePrint( self.expand( '\n'.join( rules ) ) )
 
@@ -779,7 +779,7 @@ class Win32CompilerMSVC90(Compiler):
     def ruleClean( self, filename ):
         rules = []
         rules.append( 'clean::' )
-        rules.append( '\tif exist %s del %s' % (filename, filename) )
+        rules.append( '	' r'if exist %s del %s' % (filename, filename) )
 
         self.makePrint( self.expand( '\n'.join( rules ) ) )
 
@@ -873,25 +873,25 @@ class Win32CompilerMSVC90(Compiler):
         rules.append( '' )
 
         rules.append( 'test-%(TN)s.win32.new.log: test-%(TN)s.cmd test-%(TN)s.win32.known_good-%(KGV)s.log' % v )
-        rules.append( '\t' '-subst b: /d >nul 2>&1' % v )
-        rules.append( '\t' 'if exist testroot-%(TN)s rmdir /s /q testroot-%(TN)s' % v )
-        rules.append( '\t' 'set PATH=%%(SVN_BIN)s;$(PATH)' % v )
-        rules.append( '\t' 'set PYTHON=%%(PYTHON)s' % v )
-        rules.append( '\t' 'test-%(TN)s.cmd >test-%(TN)s.win32.new.log 2>&1' % v )
+        rules.append( '	' r'-subst b: /d >nul 2>&1' % v )
+        rules.append( '	' r'if exist testroot-%(TN)s rmdir /s /q testroot-%(TN)s' % v )
+        rules.append( '	' r'set PATH=%%(SVN_BIN)s;$(PATH)' % v )
+        rules.append( '	' r'set PYTHON=%%(PYTHON)s' % v )
+        rules.append( '	' r'test-%(TN)s.cmd >test-%(TN)s.win32.new.log 2>&1' % v )
         rules.append( '' )
         rules.append( 'test-%(TN)s.win32.new.log.clean: test-%(TN)s.win32.new.log' % v )
-        rules.append( '\t' '%%(PYTHON)s benchmark_diff.py %(SVN_VERSION)s test-%(TN)s.win32.known_good-%(KGV)s.log test-%(TN)s.win32.new.log' % v )
+        rules.append( '	' r'%%(PYTHON)s benchmark_diff.py %(SVN_VERSION)s test-%(TN)s.win32.known_good-%(KGV)s.log test-%(TN)s.win32.new.log' % v )
         rules.append( '' )
         rules.append( 'clean-%(TN)s:' % v )
-        rules.append( '\t' '-subst b: /d >nul 2>&1' % v )
-        rules.append( '\t' 'if exist test-%(TN)s.win32.new.log del test-%(TN)s.win32.new.log' % v )
-        rules.append( '\t' 'if exist testroot-%(TN)s rmdir /s /q testroot-%(TN)s' % v )
+        rules.append( '	' r'-subst b: /d >nul 2>&1' % v )
+        rules.append( '	' r'if exist test-%(TN)s.win32.new.log del test-%(TN)s.win32.new.log' % v )
+        rules.append( '	' r'if exist testroot-%(TN)s rmdir /s /q testroot-%(TN)s' % v )
         rules.append( '' )
         rules.append( 'diff-%(TN)s: test-%(TN)s.win32.new.log' % v )
-        rules.append( '\t' 'wb-diff.cmd test-%(TN)s.win32.known_good-%(KGV)s.log.clean test-%(TN)s.win32.new.log.clean' % v )
+        rules.append( '	' r'wb-diff.cmd test-%(TN)s.win32.known_good-%(KGV)s.log.clean test-%(TN)s.win32.new.log.clean' % v )
         rules.append( '' )
         rules.append( 'new-%(TN)s: test-%(TN)s.win32.new.log' % v )
-        rules.append( '\t' 'move /y test-%(TN)s.win32.new.log test-%(TN)s.win32.known_good-%(KGV)s.log' % v )
+        rules.append( '	' r'move /y test-%(TN)s.win32.new.log test-%(TN)s.win32.known_good-%(KGV)s.log' % v )
 
         self.makePrint( self.expand( '\n'.join( rules ) ) )
 

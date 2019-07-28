@@ -14,7 +14,9 @@ class InnoSetup:
         self.arch = sys.argv[1]
         self.vc_ver = sys.argv[2]
 
-        sys.path.insert( 0, r'..\..\Source')
+        # Must not use relative parh to sources becuase DLLs will not be loaded
+        # by python 3.8 because of the Windows trusted DLL folders feature.
+        sys.path.insert( 0, os.path.abspath( r'..\..\Source' ) )
         import pysvn
 
         self.py_maj = sys.version_info[0]
