@@ -63,14 +63,14 @@ class InnoSetup:
         f.close()
 
         self.all_setup_items.extend( [
-                'AppName=Python %(py_maj)d.%(py_min)d PySVN for %(arch)s' % self.__dict__,
-                'AppVerName=Python %(py_maj)d.%(py_min)d PySVN %(pysvn_version_string)s on %(arch)s' % self.__dict__,
-                'AppCopyright=Copyright (C) 2003-%(year)s Barry A. Scott' % self.__dict__,
+                r'AppName=Python %(py_maj)d.%(py_min)d PySVN for %(arch)s' % self.__dict__,
+                r'AppVerName=Python %(py_maj)d.%(py_min)d PySVN %(pysvn_version_string)s on %(arch)s' % self.__dict__,
+                r'AppCopyright=Copyright (C) 2003-%(year)s Barry A. Scott' % self.__dict__,
                 r'DefaultDirName={code:pythondir}\lib\site-packages\pysvn',
-                'DefaultGroupName=PySVN for Python %(py_maj)d.%(py_min)d on %(arch)s' % self.__dict__,
-                'DisableStartupPrompt=yes',
-                'InfoBeforeFile=info_before.txt',
-                'Compression=bzip/9',
+                r'DefaultGroupName=PySVN for Python %(py_maj)d.%(py_min)d on %(arch)s' % self.__dict__,
+                r'DisableStartupPrompt=yes',
+                r'InfoBeforeFile=info_before.txt',
+                r'Compression=bzip/9',
                 ] )
 
         self.all_icon_items.extend( [
@@ -92,7 +92,8 @@ class InnoSetup:
                 r'Source: "..\..\..\Examples\Client\parse_datetime.py"; DestDir: "{app}\Examples\Client";',
                 ] )
 
-        for dll in [dll for dll in os.listdir( 'tmp' ) if dll.lower().endswith( '.dll' )]:
+        for dll_name in [dll for dll in os.listdir( os.path.abspath( r'..\..\Source\pysvn' ) ) if dll.lower().endswith( '.dll' )]:
+            dll = os.path.abspath( os.path.join( r'..\..\Source\pysvn', dll_name ) )
             self.all_file_items.append( 'Source: "%s"; DestDir: "{app}"; Flags: ignoreversion' % (dll,) )
 
         if self.vc_ver == '9.0':
@@ -167,6 +168,9 @@ class InnoSetup:
         for item in self.all_run_items:
             f.write( item )
             f.write( '\n' )
+
+        f.write( r'[UninstallDelete]' '\n' )
+        f.write( r'Type: filesandordirs; Name: "{app}\__pycache__"' '\n' )
 
         f.close()
 
