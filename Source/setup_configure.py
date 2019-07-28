@@ -1390,7 +1390,7 @@ class AixCompilerGCC(UnixCompilerGCC):
             if os.path.exists( python_exp ):
                 break
         else:
-            python_exp = os.path.abspath( os.path.join( sys.executable, os.path.pardir, os.path.pardir, 
+            python_exp = os.path.abspath( os.path.join( sys.executable, os.path.pardir, os.path.pardir,
                                               'lib', 'python%d.%d' % (sys.version_info[0], sys.version_info[1]), 'config', 'python.exp'))
             if not os.path.exists(python_exp):
                 python_exp = 'python.exp'
@@ -1599,7 +1599,7 @@ class PysvnSvnErrorsPy(Source):
                     ,self.compiler.platformFilename( '../Docs/generate_cpp_docs_from_html_docs.py' )
                     ,self.compiler.platformFilename( '../Docs/pysvn_prog_ref.html' )) )
         rules.append( '\t@ echo Info: Make %s' % self.getTargetFilename() )
-        rules.append( '\t%%(PYTHON)s -u %s %%(SVN_INC)s %s %s pysvn_docs.hpp pysvn_docs.cpp' % 
+        rules.append( '\t%%(PYTHON)s -u %s %%(SVN_INC)s %s %s pysvn_docs.hpp pysvn_docs.cpp' %
                     (self.getTargetFilename()
                     ,self.compiler.platformFilename( '../Docs/generate_cpp_docs_from_html_docs.py' )
                     ,self.compiler.platformFilename( '../Docs/pysvn_prog_ref.html' )) )
@@ -1627,7 +1627,7 @@ class PysvnDocsSource(Source):
                     ,self.compiler.platformFilename( '../Docs/generate_cpp_docs_from_html_docs.py' )
                     ,self.compiler.platformFilename( '../Docs/pysvn_prog_ref.html' )) )
         rules.append( '\t@ echo Info: Make %s' % self.getTargetFilename() )
-        rules.append( '\t%%(PYTHON)s -u %s %%(SVN_INC)s %s pysvn_docs.hpp pysvn_docs.cpp' % 
+        rules.append( '\t%%(PYTHON)s -u %s %%(SVN_INC)s %s pysvn_docs.hpp pysvn_docs.cpp' %
                     (self.compiler.platformFilename( '../Docs/generate_cpp_docs_from_html_docs.py' )
                     ,self.compiler.platformFilename( '../Docs/pysvn_prog_ref.html' )) )
 
@@ -1653,7 +1653,7 @@ class GenerateSvnErrorCodesHeader(Source):
                     (self.getTargetFilename()
                     ,self.compiler.platformFilename( 'generate_svn_error_codes/create_svn_error_codes_hpp.py' )) )
         rules.append( '\t@ echo Info: Make %s' % self.getTargetFilename() )
-        rules.append( '\t%%(PYTHON)s -u %s %%(SVN_INC)s' % 
+        rules.append( '\t%%(PYTHON)s -u %s %%(SVN_INC)s' %
                     (self.compiler.platformFilename( 'generate_svn_error_codes/create_svn_error_codes_hpp.py' ),) )
 
         self.makePrint( self.compiler.expand( '\n'.join( rules ) ) )
@@ -1709,7 +1709,7 @@ class PysvnVersionHeader(Source):
                     ,self.compiler.platformFilename( 'pysvn_version.hpp.template' )) )
         rules.append( '\t@ echo Info: Make %s' % self.getTargetFilename() )
 
-        rules.append( '\t%%(PYTHON)s -u %s %s %s' % 
+        rules.append( '\t%%(PYTHON)s -u %s %s %s' %
                     (self.compiler.platformFilename( '../Builder/brand_version.py' )
                     ,self.compiler.platformFilename( '../Builder/version.info' )
                     ,self.compiler.platformFilename( 'pysvn_version.hpp.template' )) )
@@ -1736,22 +1736,24 @@ class PysvnModuleInit(Source):
                     (self.getTargetFilename()
                     ,self.compiler.platformFilename( 'pysvn/__init__.py.template' )
                     ,self.compiler.platformFilename( 'create__init__.py' )
-                    ,self.compiler.platformFilename( 'generate_svn_error_codes/generate_svn_error_codes%s' % 
+                    ,self.compiler.platformFilename( 'generate_svn_error_codes/generate_svn_error_codes%s' %
                                                         (self.compiler.getProgramExt(),) )) )
         rules.append( '\t@ echo Info: Make %s' % self.getTargetFilename() )
 
-        rules.append( '\t%%(PYTHON)s -u %s %s %s %s %%(PYSVN_MODULE_BASENAME)s%s' % 
+        rules.append( '\t%%(PYTHON)s -u %s %s %s %s %%(PYSVN_MODULE_BASENAME)s%s' %
                     (self.compiler.platformFilename( 'create__init__.py' )
                     ,self.compiler.platformFilename( 'pysvn/__init__.py.template' )
                     ,self.getTargetFilename()
-                    ,self.compiler.platformFilename( 'generate_svn_error_codes/generate_svn_error_codes%s' % 
+                    ,self.compiler.platformFilename( 'generate_svn_error_codes/generate_svn_error_codes%s' %
                                                         (self.compiler.getProgramExt(),) )
                     ,self.compiler.getPythonExtensionFileExt()) )
-        rules.append( '\t' r'xcopy /y /q %(SVN_BIN)s\*.dll pysvn' )
 
-        rules.append( '' )
-        rules.append( 'clean::' )
-        rules.append( '\t' r'if exist pysvn\*.dll del /q pysvn\*.dll' )
+        if self.compiler.setup.platform in ('win32', 'win64'):
+            rules.append( '\t' r'xcopy /y /q %(SVN_BIN)s\*.dll pysvn' )
+
+            rules.append( '' )
+            rules.append( 'clean::' )
+            rules.append( '\t' r'if exist pysvn\*.dll del /q pysvn\*.dll' )
 
         self.makePrint( self.compiler.expand( '\n'.join( rules ) ) )
 
