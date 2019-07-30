@@ -90,7 +90,7 @@ PySVN %(pysvn_version_string)s for Python %(python_version_string)s and Subversi
 Copyright Barry A. Scott (c) 2003-2009
 
 mailto:barry@barrys-emacs.org
-http://pysvn.tigris.org
+https://pysvn.sourceforge.io
 
      Barry Scott
 

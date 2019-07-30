@@ -206,7 +206,7 @@ f.write('''<html>
 
 <h2>Mail <a href="mailto:barry@barrys-emacs.org">barry@barrys-emacs.org</a></h2>
 
-<h2>Pysvn home <a href="http://pysvn.tigris.org">http://pysvn.tigris.org</a></h2>
+<h2>Pysvn home <a href="https://pysvn.sourceforge.io">https://pysvn.sourceforge.io</a></h2>
 
 <h2>&#160;&#160;&#160;&#160;&#160;Barry Scott</h2>
 </body>

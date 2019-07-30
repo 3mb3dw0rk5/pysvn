@@ -38,15 +38,15 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
-            VALUE "CompanyName", "pysvn.tigris.org\0"
-            VALUE "FileDescription", "pysvn extension\0"
-            VALUE "FileVersion", "%(MAJOR)s, %(MINOR)s, %(PATCH)s, %(BUILD)s\0"
-            VALUE "InternalName", "_pysvn.pyd\0"
-            VALUE "LegalCopyright", "Copyright Barry Scott 2003-2007\0"
-            VALUE "OriginalFilename", "_pysvn.pyd\0"
-            VALUE "ProductName", "pysvn extension\0"
-            VALUE "ProductVersion", "%(MAJOR)s, %(MINOR)s, %(PATCH)s, %(BUILD)s\0"
-            VALUE "OLESelfRegister", "\0"
+            VALUE "CompanyName", "pysvn.sourceforge.io"
+            VALUE "FileDescription", "pysvn extension"
+            VALUE "FileVersion", "%(MAJOR)s, %(MINOR)s, %(PATCH)s, %(BUILD)s"
+            VALUE "InternalName", "_pysvn.pyd"
+            VALUE "LegalCopyright", "Copyright Barry Scott 2003-2007"
+            VALUE "OriginalFilename", "_pysvn.pyd"
+            VALUE "ProductName", "pysvn extension"
+            VALUE "ProductVersion", "%(MAJOR)s, %(MINOR)s, %(PATCH)s, %(BUILD)s"
+            VALUE "OLESelfRegister", ""
         END
     END
     BLOCK "VarFileInfo"

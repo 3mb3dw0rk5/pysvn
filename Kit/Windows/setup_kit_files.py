@@ -76,7 +76,7 @@ class InnoSetup:
         self.all_icon_items.extend( [
                 r'Name: "{group}\PySVN Documentation"; Filename: "{app}\pysvn.html";',
                 r'Name: "{group}\PySVN License"; Filename: "{app}\pysvn_LICENSE.txt";',
-                r'Name: "{group}\PySVN Web Site"; Filename: "http://pysvn.tigris.org";',
+                r'Name: "{group}\PySVN Web Site"; Filename: "https://pysvn.sourceforge.io";',
                 ] )
 
         self.all_file_items.extend( [
