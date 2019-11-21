@@ -384,25 +384,39 @@ SvnContext::SvnContext( const std::string &config_dir_str )
 
     svn_config_ensure( m_config_dir, m_pool );
 
+    // get the config based on the config dir passed in
+    svn_config_get_config( &m_context->config, m_config_dir, m_pool );
+
 #if defined( PYSVN_HAS_SVN_AUTH_PROVIDERS )
+    svn_auth_provider_object_t *provider = NULL;
     apr_array_header_t *providers = apr_array_make( m_pool, 11, sizeof( svn_auth_provider_object_t * ) );
 
     // simple providers
-    svn_auth_provider_object_t *provider = NULL;
-#if defined( WIN32 )
+# if defined( PYSVN_HAS_SVN_AUTH_GET_PLATFORM_SPECIFIC_CLIENT_PROVIDERS )
+    svn_config_t *cfg = (svn_config_t *)apr_hash_get
+        (
+        m_context->config,
+        SVN_CONFIG_CATEGORY_CONFIG,
+        APR_HASH_KEY_STRING
+        );
+    svn_auth_get_platform_specific_client_providers( &providers, cfg, m_pool );
+
+# else
+#  if defined( WIN32 )
     svn_auth_get_windows_simple_provider(&provider, m_pool);
     *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
-#endif
-#if defined( DARWIN )
+#  endif
+#  if defined( DARWIN )
     svn_auth_get_keychain_simple_provider(&provider, m_pool);
     *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
-#endif
-#if defined( PYSVN_HAS_AUTH_GET_SIMPLE_PROVIDER2 )
+#  endif
+#  if defined( PYSVN_HAS_AUTH_GET_SIMPLE_PROVIDER2 )
     svn_auth_get_simple_provider2( &provider, NULL, NULL, m_pool );
-#else
+#  else
     svn_auth_get_simple_provider( &provider, m_pool );
-#endif
+#  endif
     *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
+# endif
 
     svn_auth_get_username_provider( &provider, m_pool );
     *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
@@ -419,11 +433,11 @@ SvnContext::SvnContext( const std::string &config_dir_str )
     svn_auth_get_ssl_client_cert_file_provider( &provider, m_pool );
     *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
 
-#if defined( PYSVN_HAS_AUTH_GET_SSL_CLIENT_CERT_PW_FILE_PROVIDER2 )
+# if defined( PYSVN_HAS_AUTH_GET_SSL_CLIENT_CERT_PW_FILE_PROVIDER2 )
     svn_auth_get_ssl_client_cert_pw_file_provider2( &provider, NULL, NULL, m_pool );
-#else
+# else
     svn_auth_get_ssl_client_cert_pw_file_provider( &provider, m_pool );
-#endif
+# endif
     *(svn_auth_provider_object_t **)apr_array_push( providers ) = provider;
 
     svn_auth_get_ssl_server_trust_prompt_provider( &provider, handlerSslServerTrustPrompt, this, m_pool );
@@ -473,9 +487,6 @@ SvnContext::SvnContext( const std::string &config_dir_str )
 
     svn_auth_baton_t *auth_baton = NULL;
     svn_auth_open( &auth_baton, providers, m_pool );
-
-    // get the config based on the config dir passed in
-    svn_config_get_config( &m_context->config, m_config_dir, m_pool );
 
     // tell the auth functions where the config dir is
     svn_auth_set_parameter( auth_baton, SVN_AUTH_PARAM_CONFIG_DIR, m_config_dir );
@@ -612,7 +623,7 @@ svn_error_t *SvnTransaction::init( const std::string &repos_path,
 #if defined( PYSVN_HAS_REPOS_OPEN3 )
     error = svn_repos_open3( &m_repos, repos_path.c_str(), NULL, m_pool, scratch_pool );
 
-#elif defined( PYSNV_HAS_REPOS_OPEN2 )
+# elif defined( PYSNV_HAS_REPOS_OPEN2 )
     error = svn_repos_open2( &m_repos, repos_path.c_str(), NULL, m_pool );
 
 #else
