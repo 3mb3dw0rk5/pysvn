@@ -387,9 +387,10 @@ SvnContext::SvnContext( const std::string &config_dir_str )
     // get the config based on the config dir passed in
     svn_config_get_config( &m_context->config, m_config_dir, m_pool );
 
-#if defined( PYSVN_HAS_SVN_AUTH_PROVIDERS )
     svn_auth_provider_object_t *provider = NULL;
     apr_array_header_t *providers = apr_array_make( m_pool, 11, sizeof( svn_auth_provider_object_t * ) );
+
+#if defined( PYSVN_HAS_SVN_AUTH_PROVIDERS )
 
     // simple providers
 # if defined( PYSVN_HAS_SVN_AUTH_GET_PLATFORM_SPECIFIC_CLIENT_PROVIDERS )
