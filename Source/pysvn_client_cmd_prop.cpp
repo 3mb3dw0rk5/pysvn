@@ -682,15 +682,13 @@ Py::Object pysvn_client::cmd_propget( const Py::Tuple &a_args, const Py::Dict &a
     }
 }
 
-#if defined( PYSVN_HAS_CLIENT_PROPLIST3 ) || defined( PYSVN_HAS_CLIENT_PROPLIST4 )
+#if defined( PYSVN_HAS_CLIENT_PROPLIST4 )
 extern "C" svn_error_t *proplist_receiver_c
     (
     void *baton_,
     const char *path,
     apr_hash_t *prop_hash,
-#if defined( PYSVN_HAS_CLIENT_PROPLIST4 )
     apr_array_header_t *inherited_props,
-#endif
     apr_pool_t *pool
     );
 class ProplistReceiveBaton
@@ -704,11 +702,7 @@ public:
         {}
     ~ProplistReceiveBaton()
         {}
-#if defined( PYSVN_HAS_CLIENT_PROPLIST4 )
     svn_proplist_receiver2_t callback() { return &proplist_receiver_c; }
-#else
-    svn_proplist_receiver_t callback() { return &proplist_receiver_c; }
-#endif
     void *baton() { return static_cast< void * >( this ); }
     static ProplistReceiveBaton *castBaton( void *baton_ ) { return static_cast<ProplistReceiveBaton *>( baton_ ); }
 
@@ -724,9 +718,7 @@ extern "C" svn_error_t *proplist_receiver_c
     void *baton_,
     const char *path,
     apr_hash_t *prop_hash,
-#if defined( PYSVN_HAS_CLIENT_PROPLIST4 )
     apr_array_header_t *inherited_props,
-#endif
     apr_pool_t *pool
     )
 {
@@ -736,7 +728,6 @@ extern "C" svn_error_t *proplist_receiver_c
 
     Py::Dict prop_dict;
 
-#if defined( PYSVN_HAS_CLIENT_PROPLIST4 )
     if( baton->m_get_inherited_props )
     {
         Py::Tuple py_tuple( 2 );
@@ -747,7 +738,6 @@ extern "C" svn_error_t *proplist_receiver_c
         baton->m_prop_list.append( py_tuple );
     }
     else
-#endif
     {
         Py::Tuple py_tuple( 2 );
         py_tuple[0] = Py::String( path );
@@ -758,7 +748,60 @@ extern "C" svn_error_t *proplist_receiver_c
 
     return SVN_NO_ERROR;
 }
+
+#elif defined( PYSVN_HAS_CLIENT_PROPLIST3 )
+extern "C" svn_error_t *proplist_receiver_c
+    (
+    void *baton_,
+    const char *path,
+    apr_hash_t *prop_hash,
+    apr_pool_t *pool
+    );
+class ProplistReceiveBaton
+{
+public:
+    ProplistReceiveBaton( PythonAllowThreads *permission, SvnPool &pool, Py::List &prop_list )
+        : m_permission( permission )
+        , m_pool( pool )
+        , m_prop_list( prop_list )
+        {}
+    ~ProplistReceiveBaton()
+        {}
+    svn_proplist_receiver_t callback() { return &proplist_receiver_c; }
+    void *baton() { return static_cast< void * >( this ); }
+    static ProplistReceiveBaton *castBaton( void *baton_ ) { return static_cast<ProplistReceiveBaton *>( baton_ ); }
+
+    PythonAllowThreads  *m_permission;
+    SvnPool             &m_pool;
+    bool                m_get_inherited_props;
+
+    Py::List            &m_prop_list;
+};
+
+extern "C" svn_error_t *proplist_receiver_c
+    (
+    void *baton_,
+    const char *path,
+    apr_hash_t *prop_hash,
+    apr_pool_t *pool
+    )
+{
+    ProplistReceiveBaton *baton = ProplistReceiveBaton::castBaton( baton_ );
+
+    PythonDisallowThreads callback_permission( baton->m_permission );
+
+    Py::Dict prop_dict;
+
+    Py::Tuple py_tuple( 2 );
+    py_tuple[0] = Py::String( path );
+    py_tuple[1] = propsToObject( prop_hash, baton->m_pool );
+
+    baton->m_prop_list.append( py_tuple );
+
+    return SVN_NO_ERROR;
+}
 #endif
+
 
 Py::Object pysvn_client::cmd_proplist( const Py::Tuple &a_args, const Py::Dict &a_kws )
 {

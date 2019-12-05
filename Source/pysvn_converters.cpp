@@ -358,8 +358,10 @@ Py::Object toObject
     status[ str_ood_changed_rev ] = toSvnRevNum( svn_status.ood_changed_rev );
     status[ str_ood_changed_date ] = toObject( svn_status.ood_changed_date );
     status[ str_ood_changed_author ] = utf8_string_or_none( svn_status.ood_changed_author );
+#if defined(PYSVN_HAS_SVN_1_9)
     status[ str_moved_from_abspath ] = utf8_string_or_none( svn_status.moved_from_abspath );
     status[ str_moved_to_abspath ] = utf8_string_or_none( svn_status.moved_to_abspath );
+#endif
 
     return wrapper_status2.wrapDict( status );
 }
@@ -812,9 +814,10 @@ Py::Object toObject
         }
 
         py_wc_info[str_wcroot_abspath] = utf8_string_or_none( info.wc_info->wcroot_abspath );
+#if defined(PYSVN_HAS_SVN_1_8)
         py_wc_info[str_moved_to_abspath] = utf8_string_or_none( info.wc_info->moved_to_abspath );
         py_wc_info[str_moved_from_abspath] = utf8_string_or_none( info.wc_info->moved_from_abspath );
-
+#endif
         py_info[str_wc_info] = wrapper_wc_info.wrapDict( py_wc_info );
     }
 
